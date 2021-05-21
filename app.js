@@ -12,7 +12,7 @@ http.listen(PORT, '0.0.0.0', () => {
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/index.html');
 });
-app.get('/test/generation', (req, res) => {
-  res.sendFile(__dirname + '/client/generation.html');
+app.get('/test/gameWorld', (req, res) => {
+  res.sendFile(__dirname + '/client/gameWorld.html');
 });
 app.use('/', express.static(__dirname + '/client'));
