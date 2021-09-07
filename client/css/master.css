@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,700&display=swap');
+
 *{
   box-sizing: border-box;
 }
@@ -5,6 +7,14 @@ body{
   margin: 0;
   padding: 0;
 }
+#screen{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
 #renderer{
   outline: none;
   position: fixed;
@@ -12,4 +22,26 @@ body{
   top: 0;
   width: 100vw;
   height: 100vh;
+}
+#errorSection{
+  outline: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+#errorContainer{
+  width: 30vw;
+  height: 40vh;
+  margin: auto;
+}
+#errorText{
+  text-align: center;
+  font-size: 2vw;
+  font-weight: bold;
+  color: #333333;
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
 }

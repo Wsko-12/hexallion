@@ -1,14 +1,19 @@
 import {
-  RENDERER
-} from './modules/renderer.js'
+  GAME
+} from './game.js';
+import {
+  INTERFACE
+} from './interface/interface.js';
+
 
 
 const MAIN = {
-  init,
+  initInterface,
 };
 
-function init() {
-  RENDERER.init(true);
+function initInterface() {
+  MAIN.interface = INTERFACE;
+  MAIN.interface.screen = document.querySelector('#screen');
 };
 
 

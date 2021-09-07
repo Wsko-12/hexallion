@@ -14,3 +14,17 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', express.static(__dirname + '/client'));
+
+
+
+
+const io = require('socket.io')(http);
+
+io.on('connection', function(socket) {
+  console.log('connected');
+
+
+  socket.on('disconnect', function() {
+    console.log('disconnect');
+  });
+});

@@ -5,16 +5,43 @@
   <meta charset="utf-8">
   <title></title>
   <link rel="stylesheet" href="./css/master.css">
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 
-<body style="background-color:#b4d4fa">
-  <canvas id="renderer"></canvas>
+<body>
+  <section id="screen">
+
+  </section>
+  <!-- <canvas id="renderer"></canvas> -->
+
 </body>
 <script type="module">
-  import {
-    MAIN
-  } from './scripts/main.js';
-  MAIN.init();
+    import {
+      MAIN
+    } from './scripts/main.js';
+    import {
+      SOCKET
+    } from './scripts/modules/socket.js';
+
+    document.addEventListener("DOMContentLoaded", function(blaa) {
+      MAIN.initInterface();
+      MAIN.socket = io();
+      if(MAIN.socket){
+        SOCKET.init();
+        // MAIN.interface.showAuthPage();
+
+
+
+
+
+
+        
+
+      }else{
+        MAIN.interface.showError('Socket error');
+      };
+    });
+
 </script>
 
 </html>
