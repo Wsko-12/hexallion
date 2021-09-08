@@ -45,3 +45,14 @@ body{
   font-family: 'Roboto', sans-serif;
   font-style: italic;
 }
+
+.fullSection{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  outline: none;
+  position: fixed;
+}
+
+
+/* REGISTRATION */

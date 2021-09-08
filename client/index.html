@@ -15,30 +15,60 @@
   <!-- <canvas id="renderer"></canvas> -->
 
 </body>
+<script>
+  function  generateId(type,x){
+      if(type === undefined){
+        type = 'u'
+      }
+      if(x === undefined){
+        x = 5;
+      }
+      let letters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnPpQqRrSsTtUuVvWwXxYyZz';
+
+      let numbers = '0123456789';
+      let lettersMix,numbersMix;
+      for(let i=0; i<10;i++){
+        lettersMix += letters;
+        numbersMix += numbers;
+      }
+
+      let mainArr = lettersMix.split('').concat(numbersMix.split(''));
+      let shuffledArr = mainArr.sort(function(){
+                          return Math.random() - 0.5;
+                      });
+      let id = type +'_';
+      for(let i=0; i<=x;i++){
+          id += shuffledArr[i];
+      };
+      return id;
+  };
+
+</script>
 <script type="module">
     import {
       MAIN
     } from './scripts/main.js';
     import {
-      SOCKET
-    } from './scripts/modules/socket.js';
+      MODULES
+    } from './scripts/modules.js';
 
     document.addEventListener("DOMContentLoaded", function(blaa) {
-      MAIN.initInterface();
+      /*
+      * Сразу, как страница у пользователя загрузится, точнее socket.io,
+      * происходит подключение всех модулей
+      *
+      * ну и сразу показываем страницу регистрации
+      * MAIN.interface.auth.showAuthPage();
+      *
+      */
       MAIN.socket = io();
+
       if(MAIN.socket){
-        SOCKET.init();
-        // MAIN.interface.showAuthPage();
-
-
-
-
-
-
-        
-
+        MODULES.init();
+        MAIN.pages.auth.showPage();
+        console.log(MAIN)
       }else{
-        MAIN.interface.showError('Socket error');
+        console.log('Socket error');
       };
     });
 

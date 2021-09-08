@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Wsko-12/hexallion#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^4.1.1",
     "socket.io": "^4.2.0"
   }
 }
