@@ -71,7 +71,24 @@ io.on('connection', function(socket) {
     DEV_ROOM.members.push(data.login);
 
     if(DEV_ROOM.members.length === DEV_ROOM.maxMembers){
-      const owner = USERS[DEV_ROOM.owner].socket.emit('ROOM_ready',DEV_ROOM);
+
+      const ownerSocket = USERS[DEV_ROOM.owner].socket;
+      if(ownerSocket){
+        //Вызов у хозяина комнаты старта начала генерации игры
+        ownerSocket.emit('GAME_generate',DEV_ROOM);
+      };
+
+      DEV_ROOM.members.forEach((member, i) => {
+        if(member != DEV_ROOM.owner){
+          const memberSocket = USERS[member].socket;
+          if(memberSocket){
+            //Участникам комнаты уведомление, что комната готова и идет генерация игры
+            memberSocket.emit('ROOM_ready');
+          };
+        };
+      });
+
+
     };
 
   });
