@@ -10,14 +10,17 @@ import {
 import {
   PAGES
 } from './modules/pages/pages.js';
+import {
+  GAME
+} from './modules/game/game.js';
 
 
 
-const MODULES = {
-};
-MODULES.init = () =>{
+const MODULES = {};
+MODULES.init = () => {
   //подключаем старницы
   MAIN.pages = PAGES;
+  MAIN.game = GAME;
 
   //развешиваем все события socket.on
   SOCKET.init();
