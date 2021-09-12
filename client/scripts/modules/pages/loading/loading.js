@@ -115,6 +115,9 @@ LOADING.changeProgress = (progress) => {
   };
 };
 
+LOADING.close = () => {
+  MAIN.pages.screen.innerHTML = '';
+};
 
 
 

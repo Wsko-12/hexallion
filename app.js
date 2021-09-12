@@ -25,7 +25,7 @@ const ROOMS = {
     id: 'R_0000000000',
     gameID: null,
     owner: null,
-    maxMembers: 3,
+    maxMembers: 1,
     members: [],
     started: false,
   },
@@ -36,10 +36,10 @@ const GAMES = {
 
 
 
-
-DB.connectToDB().then(function() {
-  console.log('DB connected');
-});
+//
+// DB.connectToDB().then(function() {
+//   console.log('DB connected');
+// });
 
 
 
@@ -59,6 +59,37 @@ io.on('connection', function(socket) {
    * Если логин первый, то это хозяин комнаты
    * Дальше, как наберется нужное кол-во игроков, то Пользователь должен начать игру.
    */
+
+   /*
+    чтобы быстро перейти к созданию сцены
+   */
+ socket.emit('GAME_data', {
+  roomID: 'R_0000000000',
+  id: 'G_YWqMZUSFPr',
+  turns: [ 'u_9QxwzU' ],
+  mapArray: [
+    'meadow',  'forest',   'sand',      'meadow',     'sand',
+    'meadow',  'forest',   'meadow',    'meadow',     'meadow',
+    'meadow',  'meadow',   'meadow',    'meadow',     'meadow',
+    'meadow',  'meadow',   'forest',    'forest',     'forest',
+    'meadow',  'forest',   'mountain',  'forest',     'meadow',
+    'meadow',  'block',    'block',     'block',      'block',
+    'block',   'meadow',   'forest',    'block',      'swamps',
+    'block',   'sand',     'Southcity', 'meadow',     'meadow',
+    'block',   'mountain', 'block',     'block',      'block',
+    'sand',    'meadow',   'meadow',    'sand',       'meadow',
+    'block',   'block',    'block',     'sand',       'meadow',
+    'block',   'sea',      'meadow',    'meadow',     'block',
+    'meadow',  'swamps',   'block',     'meadow',     'block',
+    'forest',  'sea',      'meadow',    'block',      'sand',
+    'forest',  'sand',     'sea',       'sand',       'block',
+    'block',   'block',    'meadow',    'forest',     'block',
+    'block',   'block',    'mountain',  'Northfield', 'block',
+    'Westown', 'forest',   'meadow',    'sea',        'block',
+    'block'
+  ]
+ });
+
   socket.on('auth', (data) => {
 
     SOCKETS[socket.id].user = data.login;

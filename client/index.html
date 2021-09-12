@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <canvas id="renderer"></canvas>
   <section id="screen">
 
   </section>
@@ -66,7 +67,6 @@
       if(MAIN.socket){
         MODULES.init();
         MAIN.pages.auth.showPage();
-        console.log(MAIN)
       }else{
         console.log('Socket error');
       };

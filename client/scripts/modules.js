@@ -13,6 +13,9 @@ import {
 import {
   GAME
 } from './modules/game/game.js';
+import {
+  RENDERER
+} from './modules/renderer/renderer.js';
 
 
 
@@ -21,6 +24,7 @@ MODULES.init = () => {
   //подключаем старницы
   MAIN.pages = PAGES;
   MAIN.game = GAME;
+  MAIN.renderer = RENDERER;
 
   //развешиваем все события socket.on
   SOCKET.init();
