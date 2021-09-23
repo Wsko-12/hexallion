@@ -13,7 +13,13 @@ const GENERATION = {};
 GENERATION.start = (room) => {
   const game = {};
   game.roomID = room.id;
-  game.id = generateId('G', 9);
+
+/*ДЛЯ ОДНОГО ИГРОКА*/
+  game.id = 'G_0000000000';
+
+/*БОЛЬШЕ ОДНОГО ИГРОКА*/
+// game.id = generateId('G', 9);
+
 
   function turns(membersArray) {
     const turnsArray = [...membersArray];
@@ -40,7 +46,10 @@ GENERATION.start = (room) => {
   };
   game.mapArray = map();
 
+
+
   MAIN.socket.emit('GAME_generated', game);
+
 };
 
 export {

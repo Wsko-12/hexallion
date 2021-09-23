@@ -53,7 +53,7 @@
       MODULES
     } from './scripts/modules.js';
 
-    document.addEventListener("DOMContentLoaded", function(blaa) {
+    document.addEventListener("DOMContentLoaded", function() {
       /*
       * Сразу, как страница у пользователя загрузится, точнее socket.io,
       * происходит подключение всех модулей
@@ -67,6 +67,20 @@
       if(MAIN.socket){
         MODULES.init();
         MAIN.pages.auth.showPage();
+
+
+        /*ДЛЯ ОДНОГО ИГРОКА*/
+       // чтобы быстро перейти к созданию сцены
+        const data = {
+          login:generateId('p',5)
+        };
+        MAIN.socket.emit('auth',data);
+        /*ДЛЯ ОДНОГО ИГРОКА*/
+
+
+
+
+
       }else{
         console.log('Socket error');
       };
