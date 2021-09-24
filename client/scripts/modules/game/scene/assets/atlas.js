@@ -29,53 +29,16 @@ ATLAS.models = [
     folder:'',
     file:'waterCeilBottom.glb',
   },
+  { name:'tableBorders',
+    folder:'',
+    file:'tableBorders.glb',
+  },
 ];
 ATLAS.textures = [
-  {
-    name:'table_color',
-    folder:'',
-    file:'table_color.jpg',
+  { name:'sceneEnvMap',
+    folder:'scene/',
+    file:'sceneEnvMap.jpg',
   },
-  {
-    name:'table_normal',
-    folder:'',
-    file:'table_normal.jpg',
-  },
-  {
-    name:'table_roughness',
-    folder:'',
-    file:'table_roughness.jpg',
-  },
-  {
-    name:'table_bump',
-    folder:'',
-    file:'table_bump.png',
-  },
-  {
-    name:'ceils_color',
-    folder:'',
-    file:'ceils_color.png',
-  },
-  {
-    name:'ceils_normal',
-    folder:'',
-    file:'ceils_normal.png',
-  },
-
-  { name:'toonGradient',
-    folder:'',
-    file:'toonGradient.png',
-  },
-  { name:'waterMat',
-    folder:'',
-    file:'waterMat.jpg',
-  },
-
-  { name:'water_normal',
-    folder:'',
-    file:'water_normal.jpg',
-  },
-
 ];
 
 

@@ -25,6 +25,7 @@ function init() {
     canvas: canvasRenderer
   });
   RENDERER.renderer.shadowMap.enabled = true;
+  RENDERER.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
   RENDERER.camera = new THREE.PerspectiveCamera(40, 2, 0.2, 500);
   RENDERER.camera.position.set(30, 30, 0);

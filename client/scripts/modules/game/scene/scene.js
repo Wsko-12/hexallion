@@ -18,40 +18,23 @@ import * as DAT from '../../../libs/gui/dat.gui.module.js';
 
 function create() {
 
-  RENDERER.scene.background = new THREE.Color(0x94afb4);
-  const light = new THREE.DirectionalLight(0xffffff,1);
-  light.position.set(5,5,5);
+  MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
+  RENDERER.scene.background = MAIN.game.scene.assets.textures.sceneEnvMap;
+  const fieldBorder = new THREE.Mesh(MAIN.game.scene.assets.geometries.tableBorders.clone(), new THREE.MeshBasicMaterial());
+  fieldBorder.rotation.y = Math.PI / 2;
+  RENDERER.scene.add(fieldBorder);
+
+
+
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(5, 5, 5);
   RENDERER.scene.add(light);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff,0.2);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   RENDERER.scene.add(ambientLight);
-
-  //игровой стол
-  const table = new THREE.Mesh(
-    new THREE.BoxGeometry( 20, 1, 30 ),
-    new THREE.MeshPhongMaterial(
-      {
-        map:ASSETS.textures.table_color,
-        normalMap:ASSETS.textures.table_normal,
-        specularMap:ASSETS.textures.table_roughness,
-        bumpMap:ASSETS.textures.table_bump,
-      }));
-      table.position.y = -0.5;
-  RENDERER.scene.add(table);
-
-
-
-
-
 
 
   FIELD.create();
-
-
-
-
-
-
 
 
   RENDERER.render();
@@ -60,7 +43,9 @@ function create() {
 
 const SCENE = {
   create,
-  uTime:{value:0},
+  uTime: {
+    value: 0
+  },
 };
 
 

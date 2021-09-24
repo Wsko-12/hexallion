@@ -109,36 +109,14 @@ FIELD.create = () => {
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
-  const ceilsMaterial = new THREE.MeshPhongMaterial();
+  const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.4});
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
 
 
- /*Два типа воды, один с маткапом, второй с пфонгом
-  на маткапе мне не нравится блик от солнца
-  но он выглядит живее
-
-  возможно, если добавить на Phong envMap, то будет что-то похожее
- */
-
-
-  // const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  // const waterMaterial = new THREE.MeshMatcapMaterial({matcap:MAIN.game.scene.assets.textures.waterMat,normalMap:MAIN.game.scene.assets.textures.water_normal,blending:THREE.MultiplyBlending});
-  // const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
 
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  const waterMaterial = new THREE.MeshPhongMaterial({color:0x385e8b,normalMap:MAIN.game.scene.assets.textures.water_normal,shininess:200,transparent:true,opacity:0.7});
+  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:200,transparent:true,opacity:0.7,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
   const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
-
-  function animation(){
-    const texture = MAIN.game.scene.assets.textures.water_normal;
-    const time = MAIN.game.scene.uTime.value;
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    water.material.normalScale.x = Math.sin(time)-1;
-    water.material.normalScale.y = Math.sin(time)+1;
-    texture.offset.x =time*0.05;
-    requestAnimationFrame(animation);
-  }
-   animation()
 
   MAIN.renderer.scene.add( water );
 
