@@ -33,11 +33,19 @@ ATLAS.models = [
     folder:'',
     file:'tableBorders.glb',
   },
+  { name:'forestCeil',
+    folder:'',
+    file:'forestCeil.glb',
+  },
 ];
 ATLAS.textures = [
   { name:'sceneEnvMap',
     folder:'scene/',
     file:'sceneEnvMap.jpg',
+  },
+  { name:'common_color',
+    folder:'ceils/',
+    file:'common_color.png',
   },
 ];
 

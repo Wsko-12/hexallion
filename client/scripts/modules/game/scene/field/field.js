@@ -101,7 +101,7 @@ FIELD.create = () => {
           waterBottomGeometry.translate(position.x,0,position.z);
           geometriesArray.push(waterBottomGeometry);
         }else{
-          const ceilGeometry = MAIN.game.scene.assets.geometries.hex.clone();
+          const ceilGeometry = MAIN.game.scene.assets.geometries.forestCeil.clone();
           ceilGeometry.translate(position.x,0,position.z);
           geometriesArray.push(ceilGeometry);
         };
@@ -109,16 +109,16 @@ FIELD.create = () => {
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
-  const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.4});
+  const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1,map:MAIN.game.scene.assets.textures.common_color});
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
 
 
 
-  const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:200,transparent:true,opacity:0.7,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
-  const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
+  // const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
+  // const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:200,transparent:true,opacity:0.7,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
+  // const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
 
-  MAIN.renderer.scene.add( water );
+  // MAIN.renderer.scene.add( water );
 
   MAIN.renderer.scene.add(ceilsMesh)
 
