@@ -26,9 +26,6 @@ function create() {
   const ambientLight = new THREE.AmbientLight(0xffffff,0.2);
   RENDERER.scene.add(ambientLight);
 
-  // const mesh = new THREE.Mesh(new THREE.BoxGeometry(3,3,3),new THREE.MeshBasicMaterial({color:0xFF0000}))
-  // RENDERER.scene.add(mesh);
-
   //игровой стол
   const table = new THREE.Mesh(
     new THREE.BoxGeometry( 20, 1, 30 ),
@@ -63,6 +60,7 @@ function create() {
 
 const SCENE = {
   create,
+  uTime:{value:0},
 };
 
 

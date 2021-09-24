@@ -12,7 +12,7 @@ import {
 } from '../scene.js';
 import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
 import {BufferGeometryUtils} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
-import { Water } from '../../../../libs/ThreeJsLib/examples/jsm/objects/Water2.js';
+// import { Reflector } from '../../../../libs/ThreeJsLib/examples/jsm/objects/Reflector.js';
 
 
 
@@ -91,38 +91,56 @@ FIELD.create = () => {
   for (let z = 0; z < map.length; z++) {
     for (let x = 0; x < map[z].length; x++) {
       if(map[z][x] != 'block'){
-        const geometry = MAIN.game.scene.assets.geometries.meadow.clone();
+
         const position = getPositionByIndex(z,x);
-        geometry.translate(position.x,0,position.z);
         if(map[z][x] === 'sea'){
-          waterArray.push(geometry);
+          const waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
+          waterGeometry.translate(position.x,0,position.z);
+          waterArray.push(waterGeometry);
+          const waterBottomGeometry = MAIN.game.scene.assets.geometries.waterCeilBottom.clone();
+          waterBottomGeometry.translate(position.x,0,position.z);
+          geometriesArray.push(waterBottomGeometry);
         }else{
-          geometriesArray.push(geometry);
+          const ceilGeometry = MAIN.game.scene.assets.geometries.hex.clone();
+          ceilGeometry.translate(position.x,0,position.z);
+          geometriesArray.push(ceilGeometry);
         };
       };
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
-  const ceilsMaterial = new THREE.MeshToonMaterial({map:MAIN.game.scene.assets.textures.meadow_color,gradientMap:MAIN.game.scene.assets.textures.toonGradient,alphaTest:0.5});
+  const ceilsMaterial = new THREE.MeshPhongMaterial();
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
 
 
+ /*Два типа воды, один с маткапом, второй с пфонгом
+  на маткапе мне не нравится блик от солнца
+  но он выглядит живее
+
+  возможно, если добавить на Phong envMap, то будет что-то похожее
+ */
+
+
+  // const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
+  // const waterMaterial = new THREE.MeshMatcapMaterial({matcap:MAIN.game.scene.assets.textures.waterMat,normalMap:MAIN.game.scene.assets.textures.water_normal,blending:THREE.MultiplyBlending});
+  // const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
+
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  const water = new Water( mergedWaterGeometry, {
-					color: 0xacc8ff,//#acc8ff
-					scale: 0.5,
-					flowDirection: new THREE.Vector2( 1, 1 ),
-					textureWidth: 128,
-					textureHeight: 128,
-          clipBias:2,
-          reflectivity:0.5,
-				} );
+  const waterMaterial = new THREE.MeshPhongMaterial({color:0x385e8b,normalMap:MAIN.game.scene.assets.textures.water_normal,shininess:200,transparent:true,opacity:0.7});
+  const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
 
+  function animation(){
+    const texture = MAIN.game.scene.assets.textures.water_normal;
+    const time = MAIN.game.scene.uTime.value;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    water.material.normalScale.x = Math.sin(time)-1;
+    water.material.normalScale.y = Math.sin(time)+1;
+    texture.offset.x =time*0.05;
+    requestAnimationFrame(animation);
+  }
+   animation()
 
-
-
-
-        MAIN.renderer.scene.add( water );
+  MAIN.renderer.scene.add( water );
 
   MAIN.renderer.scene.add(ceilsMesh)
 

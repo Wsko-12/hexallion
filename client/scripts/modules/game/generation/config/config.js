@@ -8,18 +8,12 @@ import {
 const CONFIG = {};
 
 CONFIG.mapCeils = {
-  meadow: 30,
+  meadow: 50,
   sand: 9,
-  // sand_block : 2,
   forest: 12,
   mountain: 3,
-  // mountain_block : 10,
-  swamps: 2,
-  // swamps_block : 8,
-  sea: 4,
-  // sea_block : 8,
+  sea: 14,
   city: 3,
-  block: 28,
 };
 
 CONFIG.cities = [

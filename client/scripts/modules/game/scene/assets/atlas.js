@@ -21,9 +21,13 @@ ATLAS.models = [
     folder:'',
     file:'hex.glb',
   },
-  { name:'meadow',
+  { name:'waterCeil',
     folder:'',
-    file:'meadow.glb',
+    file:'waterCeil.glb',
+  },
+  { name:'waterCeilBottom',
+    folder:'',
+    file:'waterCeilBottom.glb',
   },
 ];
 ATLAS.textures = [
@@ -57,17 +61,19 @@ ATLAS.textures = [
     folder:'',
     file:'ceils_normal.png',
   },
-  { name:'meadow_color',
-    folder:'',
-    file:'meadow.png',
-  },
-  { name:'meadow_normal',
-    folder:'',
-    file:'meadow_normal.png',
-  },
+
   { name:'toonGradient',
     folder:'',
     file:'toonGradient.png',
+  },
+  { name:'waterMat',
+    folder:'',
+    file:'waterMat.jpg',
+  },
+
+  { name:'water_normal',
+    folder:'',
+    file:'water_normal.jpg',
   },
 
 ];
