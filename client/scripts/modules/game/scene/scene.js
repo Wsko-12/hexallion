@@ -28,6 +28,18 @@ function create() {
 
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(5, 5, 5);
+  light.castShadow = true;
+  light.shadow.camera.top = 6;
+  light.shadow.camera.bottom = -6;
+  light.shadow.camera.left = -10;
+  light.shadow.camera.right = 10;
+  light.shadow.camera.far = 20;
+  light.shadow.mapSize.x = 2048;
+  light.shadow.mapSize.y = 2048;
+
+  // console.log(light);
+  // const helper = new THREE.CameraHelper( light.shadow.camera );
+  // RENDERER.scene.add( helper );
   RENDERER.scene.add(light);
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 1);
