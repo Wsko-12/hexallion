@@ -36,6 +36,8 @@ function init() {
     // antialias:true,
   });
   RENDERER.renderer.shadowMap.enabled = true;
+  RENDERER.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
   RENDERER.renderer.toneMapping = THREE.LinearToneMapping;
 
   RENDERER.camera = new THREE.PerspectiveCamera(30, 2, 0.2, 500);
@@ -61,8 +63,10 @@ function init() {
 
   //Blur
   RENDERER.postrocessors.bokehPass = new BokehPass( RENDERER.scene, RENDERER.camera, {
-					focus: 6.0,
-					aperture: 0.004,
+					// focus: RENDERER.camera.position.distanceTo(new THREE.Vector3(0,0,0)),
+          focus: 8.0,
+
+					aperture: 0.003,
 					maxblur: 0.01,
 
 					width:  window.innerWidth,

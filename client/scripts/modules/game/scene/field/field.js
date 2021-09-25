@@ -97,9 +97,9 @@ FIELD.create = () => {
           const waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
           waterGeometry.translate(position.x,0,position.z);
           waterArray.push(waterGeometry);
-          const waterBottomGeometry = MAIN.game.scene.assets.geometries.waterCeilBottom.clone();
-          waterBottomGeometry.translate(position.x,0,position.z);
-          geometriesArray.push(waterBottomGeometry);
+          // const waterBottomGeometry = MAIN.game.scene.assets.geometries.waterCeilBottom.clone();
+          // waterBottomGeometry.translate(position.x,0,position.z);
+          // geometriesArray.push(waterBottomGeometry);
         }else{
           const ceilGeometry = MAIN.game.scene.assets.geometries.forestCeil.clone();
           ceilGeometry.translate(position.x,0,position.z);
@@ -111,14 +111,18 @@ FIELD.create = () => {
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
   const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1,map:MAIN.game.scene.assets.textures.common_color});
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
+  ceilsMesh.castShadow = true;
+  ceilsMesh.receiveShadow = true;
 
 
 
-  // const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  // const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:200,transparent:true,opacity:0.7,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
-  // const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
 
-  // MAIN.renderer.scene.add( water );
+  const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
+  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:200,transparent:true,opacity:1,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
+  const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
+  water.receiveShadow = true;
+
+  MAIN.renderer.scene.add( water );
 
   MAIN.renderer.scene.add(ceilsMesh)
 
