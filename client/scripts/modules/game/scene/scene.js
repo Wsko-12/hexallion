@@ -12,12 +12,11 @@ import {
 } from './field/field.js';
 import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 
-import * as DAT from '../../../libs/gui/dat.gui.module.js';
+// import * as DAT from '../../../libs/gui/dat.gui.module.js';
 // import { BufferGeometryUtils } from '../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 
 
 function create() {
-
   MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
   RENDERER.scene.background = MAIN.game.scene.assets.textures.sceneEnvMap;
   const fieldBorder = new THREE.Mesh(MAIN.game.scene.assets.geometries.tableBorders.clone(), new THREE.MeshBasicMaterial());

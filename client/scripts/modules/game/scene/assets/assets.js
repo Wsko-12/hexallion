@@ -75,6 +75,7 @@ ASSETS.load = async function(){
          textureLoader.load(path,(texture)=>{
            ASSETS.textures[textureData.name] = texture;
            ASSETS.textures[textureData.name].flipY = false;
+           ASSETS.textures[textureData.name].magFilter = THREE.NearestFilter;
            loadTextures();
          });
        }else{

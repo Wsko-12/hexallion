@@ -27,10 +27,11 @@ function init() {
 
     MAIN.socket.on('GAME_data', function(gameData) {
       //Происходит, когда вся gameData сгенерирована
-      MAIN.renderer.init();
+
       MAIN.game.data = {};
       MAIN.game.commonData = gameData;
       MAIN.game.scene.assets.load().then((result) => {
+        MAIN.renderer.init();
         MAIN.game.scene.create();
       });
     });

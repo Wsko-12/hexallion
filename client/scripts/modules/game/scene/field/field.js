@@ -93,23 +93,70 @@ FIELD.create = () => {
       if(map[z][x] != 'block'){
 
         const position = getPositionByIndex(z,x);
-        if(map[z][x] === 'sea'){
-          const waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
-          waterGeometry.translate(position.x,0,position.z);
-          waterArray.push(waterGeometry);
-          // const waterBottomGeometry = MAIN.game.scene.assets.geometries.waterCeilBottom.clone();
-          // waterBottomGeometry.translate(position.x,0,position.z);
-          // geometriesArray.push(waterBottomGeometry);
-        }else{
-          const ceilGeometry = MAIN.game.scene.assets.geometries.forestCeil.clone();
-          ceilGeometry.translate(position.x,0,position.z);
-          geometriesArray.push(ceilGeometry);
+        // if(map[z][x] === 'sea'){
+        //   // const waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
+        //   // waterGeometry.translate(position.x,0,position.z);
+        //   // waterArray.push(waterGeometry);
+        //   // const waterBottomGeometry = MAIN.game.scene.assets.geometries.waterCeilBottom.clone();
+        //   // waterBottomGeometry.translate(position.x,0,position.z);
+        //   // geometriesArray.push(waterBottomGeometry);
+        // }else{
+        //   const ceilGeometry = MAIN.game.scene.assets.geometries.forestCeil.clone();
+        //   ceilGeometry.translate(position.x,0,position.z);
+        //   geometriesArray.push(ceilGeometry);
+        // };
+
+
+        function getRandomDeg(){
+          const deg = Math.floor(Math.random() * 6)*60 * Math.PI/180;
+          return deg;
         };
+
+        let geometry;
+        let cityGeometry;
+        let waterGeometry;
+        switch (map[z][x] ) {
+          case 'forest':
+            geometry = MAIN.game.scene.assets.geometries.forestCeil.clone();
+            break;
+          case 'sand':
+            geometry = MAIN.game.scene.assets.geometries.sandCeil.clone();
+            break;
+          case 'sea':
+            waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
+            geometry = MAIN.game.scene.assets.geometries.waterBottom.clone();
+            break;
+          case 'mountain':
+            geometry = MAIN.game.scene.assets.geometries.mountainCeil.clone();
+          break;
+          case 'Westown':
+            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone()
+          break;
+          default:
+            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+        };
+
+          geometry.rotateY(getRandomDeg());
+          geometry.translate(position.x,0,position.z);
+          geometriesArray.push(geometry);
+          if(cityGeometry){
+            cityGeometry.rotateY(getRandomDeg());
+            cityGeometry.translate(position.x,0,position.z);
+            geometriesArray.push(cityGeometry);
+          };
+
+          if(waterGeometry){
+            waterGeometry.translate(position.x,0,position.z);
+            waterArray.push(waterGeometry);
+          };
       };
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
-  const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1,map:MAIN.game.scene.assets.textures.common_color});
+  const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.7,map:MAIN.game.scene.assets.textures.ceils_color,shininess:10});
+  // const ceilsMaterial = new THREE.MeshStandardMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,metalness:0.7,map:MAIN.game.scene.assets.textures.ceils_color,roughness:0});
+
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
   ceilsMesh.castShadow = true;
   ceilsMesh.receiveShadow = true;
@@ -118,7 +165,7 @@ FIELD.create = () => {
 
 
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:200,transparent:true,opacity:1,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
+  const waterMaterial = new THREE.MeshPhongMaterial({color:0x6baadd,shininess:500,transparent:true,opacity:0.5,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
   const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
   water.receiveShadow = true;
 

@@ -17,36 +17,75 @@ ATLAS.texturePath = './scripts/modules/game/scene/assets/textures/';
 
 
 ATLAS.models = [
-  { name:'hex',
-    folder:'',
-    file:'hex.glb',
-  },
-  { name:'waterCeil',
-    folder:'',
-    file:'waterCeil.glb',
-  },
-  { name:'waterCeilBottom',
-    folder:'',
-    file:'waterCeilBottom.glb',
-  },
+  // { name:'hex',
+  //   folder:'',
+  //   file:'hex.glb',
+  // },
+  // { name:'waterCeil',
+  //   folder:'',
+  //   file:'waterCeil.glb',
+  // },
+  // { name:'waterCeilBottom',
+  //   folder:'',
+  //   file:'waterCeilBottom.glb',
+  // },
+
+  // { name:'forestCeil',
+  //   folder:'',
+  //   file:'forestCeil.glb',
+  // },
   { name:'tableBorders',
     folder:'',
     file:'tableBorders.glb',
   },
+
   { name:'forestCeil',
-    folder:'',
+    folder:'ceils/',
     file:'forestCeil.glb',
   },
+  { name:'meadowCeil',
+    folder:'ceils/',
+    file:'meadowCeil.glb',
+  },
+  { name:'sandCeil',
+    folder:'ceils/',
+    file:'sandCeil.glb',
+  },
+  { name:'waterCeil',
+    folder:'ceils/',
+    file:'waterCeil.glb',
+  },
+  { name:'waterBottom',
+    folder:'ceils/',
+    file:'waterBottom.glb',
+  },
+  { name:'mountainCeil',
+    folder:'ceils/',
+    file:'mountainCeil.glb',
+  },
+  { name:'westownCeil',
+    folder:'ceils/',
+    file:'westownCeil.glb',
+  },
+
+
+
+
+
+
+
+
 ];
 ATLAS.textures = [
   { name:'sceneEnvMap',
     folder:'scene/',
     file:'sceneEnvMap.jpg',
   },
-  { name:'common_color',
+  { name:'ceils_color',
     folder:'ceils/',
-    file:'common_color.png',
+    file:'ceils_color.png',
   },
+
 ];
 
 

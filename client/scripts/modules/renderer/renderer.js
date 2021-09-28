@@ -19,22 +19,23 @@ import { FXAAShader } from '../../libs/ThreeJsLib/examples/jsm/shaders/FXAAShade
 import { BokehPass } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/BokehPass.js';
 
 
-
-
-
-
 let clock = new THREE.Clock();
 
 
-function init() {
+
+
+
+
+function init(){
   const canvasRenderer = document.querySelector('#renderer');
   canvasRenderer.style.display = 'block';
   RENDERER.renderer = new THREE.WebGLRenderer({
     canvas: canvasRenderer,
 
-    /*В принципе можно ставить, подлагиваетБ но 50 фпс на телефоне есть, надо будет еще с постпроцами проверить*/
-    // antialias:true,
+  /*В принципе можно ставить, подлагиваетБ но 50 фпс на телефоне есть, надо будет еще с постпроцами проверить*/
+  antialias:true,
   });
+  RENDERER.uResolution = {value:new THREE.Vector2(  window.innerWidth,window.innerHeight)};
   RENDERER.renderer.shadowMap.enabled = true;
   RENDERER.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -61,20 +62,149 @@ function init() {
   RENDERER.postrocessors.FXAA.material.uniforms[ 'resolution' ].value.y = 1 / ( window.innerHeight * Math.min(window.devicePixelRatio, 2) );
   RENDERER.composer.addPass( RENDERER.postrocessors.FXAA );
 
-  //Blur
-  RENDERER.postrocessors.bokehPass = new BokehPass( RENDERER.scene, RENDERER.camera, {
-					// focus: RENDERER.camera.position.distanceTo(new THREE.Vector3(0,0,0)),
-          focus: 8.0,
+  //shadowNoise
+  const shadowNoise = {
+    uniforms: {
+      tDiffuse: { value: null },
+      uIntensity:{value:null},
+      uBright:{value:null},
+      uSize:{value:null},
 
-					aperture: 0.003,
-					maxblur: 0.01,
+    },
 
-					width:  window.innerWidth,
-					height:  window.innerHeight
-				} );
-  RENDERER.composer.addPass(   RENDERER.postrocessors.bokehPass );
+    vertexShader: /* glsl */`
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+      }`,
+
+    fragmentShader: /* glsl */`
+      #include <common>
+      uniform sampler2D tDiffuse;
+      uniform float uIntensity;
+      uniform float uBright;
+      uniform float uSize;
+      uniform float uTime;
+
+      varying vec2 vUv;
+      void main() {
+        vec4 renderColor = texture2D( tDiffuse, vUv );
+
+        float noise = rand( floor(vUv*100.0*uSize)/100.0*uSize );
+
+        float brightValueMax = 1.0-(renderColor.r + renderColor.g + renderColor.b)/uBright;
+
+        float Cmax = max(renderColor.r, renderColor.g);
+        Cmax = 1.0 - max(Cmax, renderColor.b);
+
+        float bright = Cmax+uBright;
+        float value = clamp(bright, 0.0, 1.0);
+        vec4 color = renderColor - (noise*uIntensity)*(value);
 
 
+        gl_FragColor = vec4( color );
+      }`
+
+  };
+
+ RENDERER.postrocessors.shadowNoise = new ShaderPass( shadowNoise );
+ RENDERER.postrocessors.shadowNoise.material.uniforms.uIntensity.value = 0.15;
+ RENDERER.postrocessors.shadowNoise.material.uniforms.uBright.value = 0.04;
+ RENDERER.postrocessors.shadowNoise.material.uniforms.uSize.value = 20/ Math.min(window.devicePixelRatio, 2);
+
+
+ const shadowNoiseGUI =  MAIN.GUI.addFolder('shadowNoise');
+ shadowNoiseGUI.add(    RENDERER.postrocessors.shadowNoise.material.uniforms.uIntensity, 'value', 0, 1 ).step(0.01).name('uIntensity');
+ shadowNoiseGUI.add(    RENDERER.postrocessors.shadowNoise.material.uniforms.uBright, 'value', -1, 1 ).step(0.01).name('uBright');
+ shadowNoiseGUI.add(    RENDERER.postrocessors.shadowNoise.material.uniforms.uSize, 'value', 0, 15 ).step(1).name('uSize');
+
+
+ RENDERER.composer.addPass(  RENDERER.postrocessors.shadowNoise );
+
+
+
+
+ //myBlur
+ const blur = {
+   uniforms: {
+     tDiffuse: { value: null },
+     uResolution:{value:null},
+     uStrength:{value:null},
+     uFocus:{value:null},
+
+
+   },
+
+   vertexShader: /* glsl */`
+     varying vec2 vUv;
+     void main() {
+       vUv = uv;
+       gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+     }`,
+
+   fragmentShader: /* glsl */`
+     #include <common>
+     uniform sampler2D tDiffuse;
+     uniform vec2 uResolution;
+     uniform float uStrength;
+     uniform float uFocus;
+
+
+     varying vec2 vUv;
+     void main() {
+       vec4 renderColor = texture2D( tDiffuse, vUv );
+
+       float Directions = 16.0;
+       float Quality = 3.0;
+      //получаем число от 0 до 1, где 0 в центре;
+       float uvShift = abs(vUv.y - 0.5)*2.0;
+
+       //насколько широкая средняя полоса
+       uvShift = max(uvShift - uFocus,0.0);
+
+       //сила размытия, чем дальше от центра, тем больше
+       float Size = (uvShift*2.0)*uStrength;
+
+
+       vec2 Radius = Size/uResolution.xy;
+
+       vec4 Color;
+      for( float d=0.0; d<3.0; d+=1.0){
+        for(float i = 0.0;i<3.0;i+=1.0){
+            vec2 cords = vec2(cos(d),sin(d))*Radius*i;
+            Color += texture2D( tDiffuse, vUv+cords );
+        }
+      }
+        Color /= Quality * Directions - 15.0;
+       gl_FragColor = vec4( Color*3.5 );
+     }`
+
+ };
+
+ RENDERER.postrocessors.blur = new ShaderPass( blur );
+ RENDERER.postrocessors.blur.material.uniforms.uResolution = RENDERER.uResolution;
+ RENDERER.postrocessors.blur.material.uniforms.uStrength.value = 8;
+  RENDERER.postrocessors.blur.material.uniforms.uFocus.value = 0.5;
+
+ RENDERER.composer.addPass(  RENDERER.postrocessors.blur );
+const blurGUI =  MAIN.GUI.addFolder('blur');
+blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uStrength, 'value', 0, 20 ).step(1).name('uStrength');
+blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uFocus, 'value', 0,1 ).step(0.01).name('uFocus');
+
+
+ //Blur
+ // RENDERER.postrocessors.bokehPass = new BokehPass( RENDERER.scene, RENDERER.camera, {
+ //        // focus: RENDERER.camera.position.distanceTo(new THREE.Vector3(0,0,0)),
+ //         focus: 8.0,
+ //
+ //        aperture: 0.003,
+ //        maxblur: 0.01,
+ //
+ //        width:  window.innerWidth,
+ //        height:  window.innerHeight
+ //      } );
+ // RENDERER.composer.addPass(   RENDERER.postrocessors.bokehPass );
 
 
 
@@ -95,8 +225,7 @@ function setSize() {
   const windowPixelRatio = Math.min(window.devicePixelRatio, 2);
   RENDERER.renderer.setSize(windowWidth, windowHeight);
   RENDERER.renderer.setPixelRatio(windowPixelRatio);
-
-
+  RENDERER.uResolution.value = new THREE.Vector2(  window.innerWidth,window.innerHeight);
   RENDERER.camera.aspect = windowWidth / windowHeight;
   RENDERER.camera.updateProjectionMatrix();
   RENDERER.renderer.domElement.showContextMenu = function(e) {
@@ -119,6 +248,9 @@ function render() {
         MAIN.game.scene.uTime.value = clock.getElapsedTime()
     };
   };
+
+
+ new THREE.Vector2(window.innerWidth,window.innerHeight);
   RENDERER.controls.update();
   RENDERER.stats.update();
   // RENDERER.renderer.render(RENDERER.scene, RENDERER.camera);

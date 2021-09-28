@@ -8,10 +8,10 @@ import {
 const CONFIG = {};
 
 CONFIG.mapCeils = {
-  meadow: 50,
+  meadow: 39,
   sand: 9,
-  forest: 12,
-  mountain: 3,
+  forest: 20,
+  mountain: 6,
   sea: 14,
   city: 3,
 };
