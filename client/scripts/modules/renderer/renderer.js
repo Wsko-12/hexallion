@@ -31,9 +31,6 @@ function init(){
   canvasRenderer.style.display = 'block';
   RENDERER.renderer = new THREE.WebGLRenderer({
     canvas: canvasRenderer,
-
-  /*В принципе можно ставить, подлагиваетБ но 50 фпс на телефоне есть, надо будет еще с постпроцами проверить*/
-  antialias:true,
   });
   RENDERER.uResolution = {value:new THREE.Vector2(  window.innerWidth,window.innerHeight)};
   RENDERER.renderer.shadowMap.enabled = true;
@@ -188,9 +185,9 @@ function init(){
   RENDERER.postrocessors.blur.material.uniforms.uFocus.value = 0.5;
 
  RENDERER.composer.addPass(  RENDERER.postrocessors.blur );
-const blurGUI =  MAIN.GUI.addFolder('blur');
-blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uStrength, 'value', 0, 20 ).step(1).name('uStrength');
-blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uFocus, 'value', 0,1 ).step(0.01).name('uFocus');
+  const blurGUI =  MAIN.GUI.addFolder('blur');
+  blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uStrength, 'value', 0, 20 ).step(1).name('uStrength');
+  blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uFocus, 'value', 0,1 ).step(0.01).name('uFocus');
 
 
  //Blur
@@ -220,8 +217,13 @@ blurGUI.add(    RENDERER.postrocessors.blur.material.uniforms.uFocus, 'value', 0
 
 
 function setSize() {
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
+  //на айфонах оставляет белую полосу
+  // const windowWidth = window.innerWidth;
+  // const windowHeight = window.innerHeight;
+
+  const windowWidth =  document.body.clientWidth;
+  const windowHeight =  document.body.clientHeight;
+
   const windowPixelRatio = Math.min(window.devicePixelRatio, 2);
   RENDERER.renderer.setSize(windowWidth, windowHeight);
   RENDERER.renderer.setPixelRatio(windowPixelRatio);
@@ -236,9 +238,9 @@ function setSize() {
   if(windowPixelRatio > 1){
     RENDERER.composer.removePass( RENDERER.postrocessors.FXAA );
   }else{
-    RENDERER.postrocessors.FXAA.material.uniforms[ 'resolution' ].value.x = 1 / ( windowWidth * windowPixelRatio );
-    RENDERER.postrocessors.FXAA.material.uniforms[ 'resolution' ].value.y = 1 / ( windowHeight * windowPixelRatio );
-  }
+    RENDERER.postrocessors.FXAA.material.uniforms[ 'resolution' ].value.x = 1 / ( windowWidth * Math.min(window.devicePixelRatio, 2) );
+    RENDERER.postrocessors.FXAA.material.uniforms[ 'resolution' ].value.y = 1 / ( windowHeight * Math.min(window.devicePixelRatio, 2) );
+  };
 };
 
 function render() {
