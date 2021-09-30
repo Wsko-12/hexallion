@@ -25,23 +25,27 @@ function create() {
 
 
 
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5, 5, 5);
+  const light = new THREE.DirectionalLight(0xff896f, 1);
+  light.position.set(5, 2, 5);
   light.castShadow = true;
   light.shadow.camera.top = 6;
   light.shadow.camera.bottom = -6;
   light.shadow.camera.left = -10;
   light.shadow.camera.right = 10;
   light.shadow.camera.far = 20;
-  light.shadow.mapSize.x = 2048;
-  light.shadow.mapSize.y = 2048;
+  light.shadow.mapSize.x = 1024;
+  light.shadow.mapSize.y = 1024;
 
   // console.log(light);
   // const helper = new THREE.CameraHelper( light.shadow.camera );
   // RENDERER.scene.add( helper );
   RENDERER.scene.add(light);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const lightEditional = new THREE.DirectionalLight(0xffffff, 0.2);
+  lightEditional.position.set(-5, 2, -5);
+  RENDERER.scene.add(lightEditional);
+
+  const ambientLight = new THREE.AmbientLight(0x343434, 1);
   RENDERER.scene.add(ambientLight);
 
 

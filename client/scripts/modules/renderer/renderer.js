@@ -332,7 +332,7 @@ function init() {
   //shadowNoise
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.5;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright.value = 0.04;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 20 / Math.min(window.devicePixelRatio, 2);
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 / Math.min(window.devicePixelRatio, 2);
   //blur
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uResolution = RENDERER.uResolution;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 8;
@@ -343,7 +343,7 @@ function init() {
   const shadowNoiseGUI = MAIN.GUI.addFolder('shadowNoise');
   shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity, 'value', 0, 1).step(0.01).name('uIntensity');
   shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright, 'value', -1, 1).step(0.01).name('uBright');
-  shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize, 'value', 0, 15).step(1).name('uSize');
+  shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize, 'value', 0, 20).step(1).name('uSize');
   const blurGUI = MAIN.GUI.addFolder('blur');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength, 'value', 0, 20).step(1).name('uStrength');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus, 'value', 0, 1).step(0.01).name('uFocus');
@@ -367,6 +367,9 @@ function setSize() {
   const windowWidth = document.body.clientWidth;
   const windowHeight = document.body.clientHeight;
 
+
+
+
   const windowPixelRatio = Math.min(window.devicePixelRatio, 2);
   RENDERER.renderer.setSize(windowWidth, windowHeight);
   RENDERER.renderer.setPixelRatio(windowPixelRatio);
@@ -379,7 +382,7 @@ function setSize() {
 
   RENDERER.composer.setSize(windowWidth, windowHeight);
   if (windowPixelRatio > 1) {
-    RENDERER.composer.removePass(RENDERER.postrocessors.FXAA);
+    // RENDERER.composer.removePass(RENDERER.postrocessors.FXAA);
   } else {
     RENDERER.postrocessors.FXAA.material.uniforms['resolution'].value.x = 1 / (windowWidth * Math.min(window.devicePixelRatio, 2));
     RENDERER.postrocessors.FXAA.material.uniforms['resolution'].value.y = 1 / (windowHeight * Math.min(window.devicePixelRatio, 2));

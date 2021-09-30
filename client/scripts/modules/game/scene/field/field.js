@@ -154,7 +154,24 @@ FIELD.create = () => {
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
-  const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.7,map:MAIN.game.scene.assets.textures.ceils_color,shininess:10});
+  // const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.7,map:MAIN.game.scene.assets.textures.ceils_color,shininess:10});
+  const ceilsMaterial = new THREE.MeshPhongMaterial({color:0xd8d8d8,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0});
+
+  const ceilsMaterialGUI = MAIN.GUI.addFolder(' ceilsMaterial');
+  const ceilsMaterialConfig = {
+    color:'#d8d8d8',
+  }
+  ceilsMaterialGUI.addColor(ceilsMaterialConfig, 'color').onChange(()=>{
+    ceilsMaterial.color.set(ceilsMaterialConfig.color)
+  });
+  ceilsMaterialGUI.add(ceilsMaterial, 'reflectivity',0,1).step(0.05).name('reflectivity');
+  ceilsMaterialGUI.add(ceilsMaterial, 'shininess',0,500).step(5).name('shininess');
+
+
+
+
+
+
   // const ceilsMaterial = new THREE.MeshStandardMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,metalness:0.7,map:MAIN.game.scene.assets.textures.ceils_color,roughness:0});
 
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
