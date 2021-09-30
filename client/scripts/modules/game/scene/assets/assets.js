@@ -76,6 +76,7 @@ ASSETS.load = async function(){
            ASSETS.textures[textureData.name] = texture;
            ASSETS.textures[textureData.name].flipY = false;
            ASSETS.textures[textureData.name].magFilter = THREE.NearestFilter;
+            ASSETS.textures[textureData.name].minFilter = THREE.NearestFilter;
            loadTextures();
          });
        }else{

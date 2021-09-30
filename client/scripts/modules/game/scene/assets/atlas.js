@@ -67,6 +67,11 @@ ATLAS.models = [
     folder:'ceils/',
     file:'westownCeil.glb',
   },
+  { name:'westownLight',
+    folder:'ceils/',
+    file:'westownLight.glb',
+  },
+
 
 
 
@@ -84,6 +89,10 @@ ATLAS.textures = [
   { name:'ceils_color',
     folder:'ceils/',
     file:'ceils_color.png',
+  },
+  { name:'lights',
+    folder:'ceils/',
+    file:'lights.png',
   },
 
 ];

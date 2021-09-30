@@ -31,15 +31,16 @@ function create() {
   fieldBorder.rotation.y = Math.PI / 2;
   RENDERER.scene.add(fieldBorder);
 
-  const mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.5,0.5,0.5),new THREE.MeshBasicMaterial({color:0xffe325}));
-  mesh.position.set(0,1,0)
-  RENDERER.scene.add(mesh);
+  // const mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.5,0.5,0.5),new THREE.MeshBasicMaterial({color:0xffe325}));
+  // mesh.position.set(0,1,0)
+  // RENDERER.scene.add(mesh);
 
 
 
 
   //Бокс, в котором все лежит
   MAIN.game.scene.lights = {};
+    MAIN.game.scene.lights.buildingPointLights = [];
   const sky = new THREE.Mesh(new THREE.BoxBufferGeometry(100,100,100),new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:0.5,}));
   RENDERER.scene.add(sky);
   MAIN.game.scene.lights.sky = sky;
@@ -47,12 +48,10 @@ function create() {
 
   //Группы, чтобы перемещать орбиты солнца
   const lightsGroup = new THREE.Group();
-    lightsGroup.position.y = -5;
   lightsGroup.rotation.z = Math.PI/8;
 
     //Группа света противоположного солнцу, подсвечивает все сзади
   const lightsAdditionalGroup = new THREE.Group();
-  lightsAdditionalGroup.position.y = -5;
   lightsAdditionalGroup.rotation.z = -Math.PI/8;
 
   RENDERER.scene.add(lightsGroup);
@@ -91,6 +90,10 @@ function create() {
   MAIN.game.scene.lights.ambientLight = ambientLight;
   lightsGroup.add(ambientLight);
 
+  const moonlight = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+  moonlight.position.set(5,5,5)
+  MAIN.game.scene.lights.moonlight = moonlight;
+  RENDERER.scene.add(moonlight)
 
   FIELD.create();
 

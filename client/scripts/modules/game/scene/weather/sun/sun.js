@@ -5,33 +5,41 @@ import {
 
 //цвета солнца в зависимости от времени суток
 const colors = [
-  [210, 20, 0,0.5],
-  [255, 235, 85,1],
-  [200, 200, 200,1],
+  [200, 200, 200,1],//Полдень
   [200, 200, 200,1],
   [220, 150, 50,1],
   [235, 15, 5,0.5],
+  [120, 0, 0,0.3],
+  [0, 0, 0,1],
+  [0, 0, 0,1],
+  [120, 0, 0,1],
+  [210, 20, 0,0.5],
+  [255, 200, 150,1],
 ]
 
 //размыте блумом чтобы днем не пересвечивало
 const bloomTrashhold = [
-  [0.8],
-  [0.95],
   [1],
   [1],
   [0.9],
   [0.8],
-]
+  [0.75],
+  [0.75],
+  [0.8],
+  [0.8],
+  [1],
+  [1],
+];
 
 
 function changeColor(){
   const sun = MAIN.game.scene.lights.lightMain;
   const time = MAIN.game.scene.time;
-  const allMinutes = 12*60;
+  const allMinutes = 24*60;
   const currentMinute = time.h*60 + time.m;
   const colorsPart = allMinutes/colors.length;
   const currentPart = Math.floor(currentMinute/colorsPart);
-  const nextPart = currentPart+1 === colors.length? currentPart : currentPart+1;
+  const nextPart = currentPart+1 === colors.length? 0 : currentPart+1;
 
   const firstColorValue = colors[currentPart];
   const secondColorValue = colors[nextPart];
@@ -67,15 +75,26 @@ function changeColor(){
     interpolate(colors[currentPart][0],colors[nextPart][0],intValue),
     interpolate(colors[currentPart][1],colors[nextPart][1],intValue),
     interpolate(colors[currentPart][2],colors[nextPart][2],intValue),
-
   ];
 
   sun.color.set(`rgb(${sunColor})`);
   sun.intensity = interpolate(colors[currentPart][3],colors[nextPart][3],intValue);
   MAIN.game.scene.lights.sky.material.color.set(`rgb(${sunColor})`);
   MAIN.renderer.postrocessors.bloomPass.threshold =  interpolateBloom(bloomTrashhold[currentPart][0],bloomTrashhold[nextPart][0],intValue);
-  console.log(MAIN.renderer.postrocessors.bloomPass.threshold)
-
+  MAIN.game.scene.lights.moonlight.intensity = 1-MAIN.renderer.postrocessors.bloomPass.threshold;
+  if(currentPart === 2){
+    MAIN.game.scene.lights.buildingLights.visible = true;
+    MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
+      item.visible = true;
+    });
+  };
+  //currentPart === 0 чтобы вырубить в самом начале
+  if(currentPart === 7 || currentPart === 0){
+    MAIN.game.scene.lights.buildingLights.visible = false;
+    MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
+      item.visible = false;
+    });
+  };
 };
 
 function update(){
@@ -83,8 +102,7 @@ function update(){
   const time = MAIN.game.scene.time;
   const sun = MAIN.game.scene.lights.lightMain;
   const lightAdditional = MAIN.game.scene.lights.lightAdditional;
-  const deg = ((180/12)* time.h + (180/12/60)* time.m)-90;
-
+  const deg = ((180/12)* time.h + (180/12/60)* time.m);
   const p = {
     x:Math.sin(deg*Math.PI/180)*sunDistance,
     y:Math.cos(deg*Math.PI/180)*sunDistance,

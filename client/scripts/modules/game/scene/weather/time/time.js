@@ -10,7 +10,7 @@ function update(){
   if(TIME.m === 60){
     TIME.m = 0;
     TIME.h += 1;
-    if(TIME.h === 12){
+    if(TIME.h === 24){
       TIME.h = 0;
     };
   };
@@ -19,7 +19,7 @@ function update(){
 
   setTimeout(()=>{
     update();
-  },100)
+  },50);
 }
 function init(){
   TIME.m = 0;

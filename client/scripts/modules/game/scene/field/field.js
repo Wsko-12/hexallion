@@ -88,6 +88,7 @@ FIELD.create = () => {
   //раскидываем все поле
   const geometriesArray = [];
   const waterArray = [];
+  const lightArray = [];
   for (let z = 0; z < map.length; z++) {
     for (let x = 0; x < map[z].length; x++) {
       if(map[z][x] != 'block'){
@@ -114,6 +115,7 @@ FIELD.create = () => {
 
         let geometry;
         let cityGeometry;
+        let lightGeometry;
         let waterGeometry;
         switch (map[z][x] ) {
           case 'forest':
@@ -131,7 +133,8 @@ FIELD.create = () => {
           break;
           case 'Westown':
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
-            cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone()
+            cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone();
+            lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
           break;
           default:
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
@@ -140,10 +143,20 @@ FIELD.create = () => {
           geometry.rotateY(getRandomDeg());
           geometry.translate(position.x,0,position.z);
           geometriesArray.push(geometry);
+          const randomDeg = getRandomDeg();
           if(cityGeometry){
-            cityGeometry.rotateY(getRandomDeg());
+            cityGeometry.rotateY(randomDeg);
             cityGeometry.translate(position.x,0,position.z);
             geometriesArray.push(cityGeometry);
+          };
+          if(lightGeometry){
+            lightGeometry.rotateY(randomDeg);
+            lightGeometry.translate(position.x,0,position.z);
+            lightArray.push(lightGeometry);
+            const light = new THREE.PointLight( 0xffa900, 0.5, 2 );
+            light.position.set(position.x,0.5,position.z);
+              MAIN.renderer.scene.add( light );
+              MAIN.game.scene.lights.buildingPointLights.push(light);
           };
 
           if(waterGeometry){
@@ -167,18 +180,17 @@ FIELD.create = () => {
   ceilsMaterialGUI.add(ceilsMaterial, 'reflectivity',0,1).step(0.05).name('reflectivity');
   ceilsMaterialGUI.add(ceilsMaterial, 'shininess',0,500).step(5).name('shininess');
 
-
-
-
-
-
-  // const ceilsMaterial = new THREE.MeshStandardMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,metalness:0.7,map:MAIN.game.scene.assets.textures.ceils_color,roughness:0});
-
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
   ceilsMesh.castShadow = true;
   ceilsMesh.receiveShadow = true;
 
 
+
+  const mergedLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+  const mergedLightMaterial = new THREE.MeshBasicMaterial({map:MAIN.game.scene.assets.textures.lights,transparent:true,alphaTest:0.5});
+  const lightMesh = new THREE.Mesh(mergedLightGeometry,mergedLightMaterial)
+  MAIN.renderer.scene.add( lightMesh );
+  MAIN.game.scene.lights.buildingLights = lightMesh;
 
 
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
