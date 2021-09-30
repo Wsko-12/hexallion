@@ -2,13 +2,26 @@ import {
   MAIN
 } from '../../../../../main.js';
 
+
+//цвета солнца в зависимости от времени суток
 const colors = [
-  [255, 20, 0],
-  [255, 120, 0],
-  [255, 255, 255],
-  [255, 10, 10],
+  [210, 20, 0,0.5],
+  [255, 235, 85,1],
+  [200, 200, 200,1],
+  [200, 200, 200,1],
+  [220, 150, 50,1],
+  [235, 15, 5,0.5],
 ]
 
+//размыте блумом чтобы днем не пересвечивало
+const bloomTrashhold = [
+  [0.8],
+  [0.95],
+  [1],
+  [1],
+  [0.9],
+  [0.8],
+]
 
 
 function changeColor(){
@@ -18,7 +31,7 @@ function changeColor(){
   const currentMinute = time.h*60 + time.m;
   const colorsPart = allMinutes/colors.length;
   const currentPart = Math.floor(currentMinute/colorsPart);
-  const nextPart = currentPart+1 === colors.length? currentPart:currentPart+1;
+  const nextPart = currentPart+1 === colors.length? currentPart : currentPart+1;
 
   const firstColorValue = colors[currentPart];
   const secondColorValue = colors[nextPart];
@@ -27,7 +40,6 @@ function changeColor(){
     const normalizeF = f/255;
     const normalizeS = s/255;
 
-
     const f_ = normalizeF*(1-value);
     const s_ = normalizeS*value;
 
@@ -35,9 +47,19 @@ function changeColor(){
 
   };
 
+  function interpolateBloom(f,s,value){
+    const normalizeF = f;
+    const normalizeS = s;
+
+    const f_ = normalizeF*(1-value);
+    const s_ = normalizeS*value;
+
+    return f_+s_;
+
+  };
+
+
   const intValue = (currentMinute - (currentPart*colorsPart))/colorsPart;
-
-
 
 
 
@@ -49,6 +71,10 @@ function changeColor(){
   ];
 
   sun.color.set(`rgb(${sunColor})`);
+  sun.intensity = interpolate(colors[currentPart][3],colors[nextPart][3],intValue);
+  MAIN.game.scene.lights.sky.material.color.set(`rgb(${sunColor})`);
+  MAIN.renderer.postrocessors.bloomPass.threshold =  interpolateBloom(bloomTrashhold[currentPart][0],bloomTrashhold[nextPart][0],intValue);
+  console.log(MAIN.renderer.postrocessors.bloomPass.threshold)
 
 };
 
@@ -63,9 +89,9 @@ function update(){
     x:Math.sin(deg*Math.PI/180)*sunDistance,
     y:Math.cos(deg*Math.PI/180)*sunDistance,
   }
-  sun.position.set(p.x,p.y,0);
+  sun.position.set(0,p.y,p.x);
   sun.lookAt(0,0,0);
-  lightAdditional.position.set(-p.x,p.y,0);
+  lightAdditional.position.set(0,p.y,-p.x);
   lightAdditional.lookAt(0,0,0);
 
   changeColor();

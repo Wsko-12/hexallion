@@ -27,7 +27,7 @@ import {
 import {
   BokehPass
 } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/BokehPass.js';
-
+import { UnrealBloomPass } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 let clock = new THREE.Clock();
 
@@ -59,7 +59,7 @@ function init() {
 
 
 
-
+  const postrocessorsGUI = MAIN.GUI.addFolder('Postrocessors');
   RENDERER.postrocessors = {};
   RENDERER.composer = new EffectComposer(RENDERER.renderer);
   RENDERER.composer.addPass(new RenderPass(RENDERER.scene, RENDERER.camera));
@@ -229,6 +229,35 @@ function init() {
   //      } );
   // RENDERER.composer.addPass(   RENDERER.postrocessors.bokehPass );
 
+  const paramsBloom = {
+  				bloomStrength: 1.5,
+  				bloomThreshold: 0.95,
+  				bloomRadius: 1,
+  			};
+  RENDERER.postrocessors.bloomPass = new UnrealBloomPass( RENDERER.uResolution.value );
+  RENDERER.postrocessors.threshold = paramsBloom.bloomThreshold;
+	RENDERER.postrocessors.strength = paramsBloom.bloomStrength;
+	RENDERER.postrocessors.radius = paramsBloom.bloomRadius;
+  RENDERER.postrocessors.bloomPass.strength = paramsBloom.bloomStrength ;
+  RENDERER.postrocessors.bloomPass.threshold = paramsBloom.bloomThreshold;
+  RENDERER.postrocessors.bloomPass.radius = paramsBloom.bloomRadius;
+  RENDERER.composer.addPass( RENDERER.postrocessors.bloomPass );
+
+
+  const bloomPassGUI = postrocessorsGUI.addFolder('bloomPass');
+
+
+
+    bloomPassGUI.add( paramsBloom, 'bloomStrength', 0.0, 3.0 ).onChange( function ( value ) {
+      RENDERER.postrocessors.bloomPass.strength = Number( value );
+    } );
+    bloomPassGUI.add( paramsBloom, 'bloomThreshold', 0.0, 1.0 ).onChange( function ( value ) {
+      RENDERER.postrocessors.bloomPass.threshold = Number( value );
+    } );
+
+    bloomPassGUI.add( paramsBloom, 'bloomRadius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value ) {
+      RENDERER.postrocessors.bloomPass.radius = Number( value );
+    } );
 
 
   const postrocessorMerged = {
@@ -340,11 +369,11 @@ function init() {
 
   RENDERER.composer.addPass(RENDERER.postrocessors.postrocessorMerged);
 
-  const shadowNoiseGUI = MAIN.GUI.addFolder('shadowNoise');
+  const shadowNoiseGUI = postrocessorsGUI.addFolder('shadowNoise');
   shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity, 'value', 0, 1).step(0.01).name('uIntensity');
   shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright, 'value', -1, 1).step(0.01).name('uBright');
   shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize, 'value', 0, 20).step(1).name('uSize');
-  const blurGUI = MAIN.GUI.addFolder('blur');
+  const blurGUI = postrocessorsGUI.addFolder('blur');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength, 'value', 0, 20).step(1).name('uStrength');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus, 'value', 0, 1).step(0.01).name('uFocus');
 
@@ -398,7 +427,6 @@ function render() {
   };
 
 
-  new THREE.Vector2(window.innerWidth, window.innerHeight);
   RENDERER.controls.update();
   RENDERER.stats.update();
   // RENDERER.renderer.render(RENDERER.scene, RENDERER.camera);

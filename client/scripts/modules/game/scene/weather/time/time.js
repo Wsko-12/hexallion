@@ -2,6 +2,7 @@ import {
   MAIN
 } from '../../../../../main.js';
 
+
 function update(){
   TIME.g += 1;
 
@@ -18,7 +19,7 @@ function update(){
 
   setTimeout(()=>{
     update();
-  },50)
+  },100)
 }
 function init(){
   TIME.m = 0;
