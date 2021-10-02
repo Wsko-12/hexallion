@@ -95,7 +95,7 @@ function changeColor(){
     });
   };
   //currentPart === 0 чтобы вырубить в самом начале
-  if(currentPart === 6){
+  if(currentPart === 5){
     MAIN.game.scene.lights.buildingLights.visible = false;
     MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
       item.visible = false;

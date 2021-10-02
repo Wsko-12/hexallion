@@ -139,7 +139,7 @@ FIELD.create = () => {
           case 'Northfield':
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
             cityGeometry = MAIN.game.scene.assets.geometries.northfieildCeil.clone();
-            // lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
+            lightGeometry = MAIN.game.scene.assets.geometries.northfieildLight.clone();
           break;
           default:
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
@@ -209,7 +209,7 @@ FIELD.create = () => {
   MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
     item.visible = false;
   });
-  
+
   MAIN.renderer.scene.add( water );
 
   MAIN.renderer.scene.add(ceilsMesh);
