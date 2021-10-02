@@ -19,11 +19,11 @@ function update(){
 
   setTimeout(()=>{
     update();
-  },50);
+  },150);
 }
 function init(){
   TIME.m = 0;
-  TIME.h = 0;
+  TIME.h = 12;
   TIME.g = 0;
   update();
 

@@ -71,6 +71,10 @@ ATLAS.models = [
     folder:'ceils/',
     file:'westownLight.glb',
   },
+  { name:'northfieildCeil',
+    folder:'ceils/',
+    file:'northfieildCeil.glb',
+  },
 
 
 

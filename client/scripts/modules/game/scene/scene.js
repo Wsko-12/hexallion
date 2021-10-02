@@ -36,8 +36,6 @@ function create() {
   // RENDERER.scene.add(mesh);
 
 
-
-
   //Бокс, в котором все лежит
   MAIN.game.scene.lights = {};
     MAIN.game.scene.lights.buildingPointLights = [];
@@ -91,6 +89,7 @@ function create() {
   lightsGroup.add(ambientLight);
 
   const moonlight = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+  // moonlight.castShadow = true;
   moonlight.position.set(5,5,5)
   MAIN.game.scene.lights.moonlight = moonlight;
   RENDERER.scene.add(moonlight)

@@ -5,30 +5,36 @@ import {
 
 //цвета солнца в зависимости от времени суток
 const colors = [
-  [200, 200, 200,1],//Полдень
-  [200, 200, 200,1],
-  [220, 150, 50,1],
-  [235, 15, 5,0.5],
-  [120, 0, 0,0.3],
-  [0, 0, 0,1],
-  [0, 0, 0,1],
-  [120, 0, 0,1],
-  [210, 20, 0,0.5],
-  [255, 200, 150,1],
+  [50, 0, 20,0.8],//0
+  [0, 0, 0,0.5],//2
+  [0, 0, 0,1],//4
+  [0, 0, 0,1],//6
+  [120, 0, 0,1],//8
+  [210, 50, 0,0.5],//10
+  [180, 150, 150,1],//12
+  [180, 180, 180,1],//14
+  [180, 180, 180,1],//16
+  [180, 180, 150,1],//18
+  [200, 100, 5,1],//20
+  [120, 0, 0,1],//22
+
 ]
 
 //размыте блумом чтобы днем не пересвечивало
 const bloomTrashhold = [
-  [1],
-  [1],
-  [0.9],
-  [0.8],
-  [0.75],
-  [0.75],
-  [0.8],
-  [0.8],
-  [1],
-  [1],
+  [0.75],//0
+  [0.75],//2
+  [0.75],//4
+  [0.8],//6
+  [1],//8
+  [1],//10
+  [1],//12
+  [1],//14
+  [1],//16
+  [1],//18
+  [1],//20
+  [0.9],//22
+
 ];
 
 
@@ -82,14 +88,14 @@ function changeColor(){
   MAIN.game.scene.lights.sky.material.color.set(`rgb(${sunColor})`);
   MAIN.renderer.postrocessors.bloomPass.threshold =  interpolateBloom(bloomTrashhold[currentPart][0],bloomTrashhold[nextPart][0],intValue);
   MAIN.game.scene.lights.moonlight.intensity = 1-MAIN.renderer.postrocessors.bloomPass.threshold;
-  if(currentPart === 2){
+  if(currentPart === 11){
     MAIN.game.scene.lights.buildingLights.visible = true;
     MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
       item.visible = true;
     });
   };
   //currentPart === 0 чтобы вырубить в самом начале
-  if(currentPart === 7 || currentPart === 0){
+  if(currentPart === 6){
     MAIN.game.scene.lights.buildingLights.visible = false;
     MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
       item.visible = false;
@@ -104,8 +110,8 @@ function update(){
   const lightAdditional = MAIN.game.scene.lights.lightAdditional;
   const deg = ((180/12)* time.h + (180/12/60)* time.m);
   const p = {
-    x:Math.sin(deg*Math.PI/180)*sunDistance,
-    y:Math.cos(deg*Math.PI/180)*sunDistance,
+    x:Math.sin((deg + 110)*Math.PI/180)*sunDistance,
+    y:Math.cos((deg + 110)*Math.PI/180)*sunDistance,
   }
   sun.position.set(0,p.y,p.x);
   sun.lookAt(0,0,0);

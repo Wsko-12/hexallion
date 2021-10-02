@@ -136,6 +136,11 @@ FIELD.create = () => {
             cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone();
             lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
           break;
+          case 'Northfield':
+            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            cityGeometry = MAIN.game.scene.assets.geometries.northfieildCeil.clone();
+            // lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
+          break;
           default:
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
         };
@@ -163,7 +168,9 @@ FIELD.create = () => {
             waterGeometry.translate(position.x,0,position.z);
             waterArray.push(waterGeometry);
           };
+
       };
+
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
@@ -198,9 +205,14 @@ FIELD.create = () => {
   const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
   water.receiveShadow = true;
 
+  MAIN.game.scene.lights.buildingLights.visible = false;
+  MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
+    item.visible = false;
+  });
+  
   MAIN.renderer.scene.add( water );
 
-  MAIN.renderer.scene.add(ceilsMesh)
+  MAIN.renderer.scene.add(ceilsMesh);
 
 
 
