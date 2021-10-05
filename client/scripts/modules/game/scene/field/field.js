@@ -141,6 +141,11 @@ FIELD.create = () => {
             cityGeometry = MAIN.game.scene.assets.geometries.northfieildCeil.clone();
             lightGeometry = MAIN.game.scene.assets.geometries.northfieildLight.clone();
           break;
+          case 'Southcity':
+            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            cityGeometry = MAIN.game.scene.assets.geometries.southcityCeil.clone();
+            lightGeometry = MAIN.game.scene.assets.geometries.southcityLight.clone();
+          break;
           default:
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
         };
@@ -201,7 +206,7 @@ FIELD.create = () => {
 
 
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  const waterMaterial = new THREE.MeshPhongMaterial({color:0x6baadd,shininess:500,transparent:true,opacity:0.5,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
+  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:500,transparent:true,opacity:1,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
   const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
   water.receiveShadow = true;
 

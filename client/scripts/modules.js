@@ -16,11 +16,29 @@ import {
 import {
   RENDERER
 } from './modules/renderer/renderer.js';
-
+import * as DAT from './libs/gui/dat.gui.module.js';
 
 
 const MODULES = {};
 MODULES.init = () => {
+  MAIN.GUI = new DAT.GUI;
+  const fullScreenButton = {
+    fullScreen: function() {
+      if (!document.fullscreenElement) {
+        document.body.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        };
+      };
+    },
+  };
+  MAIN.GUI.add(fullScreenButton, 'fullScreen');
+
+
+
+
+
   //подключаем старницы
   MAIN.pages = PAGES;
   MAIN.game = GAME;
