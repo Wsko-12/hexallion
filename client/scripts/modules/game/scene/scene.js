@@ -23,6 +23,8 @@ import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 
 
 function create() {
+  MAIN.game.scene.hitBoxGroup = new THREE.Group();
+  RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
   MAIN.game.scene.time = TIME;
   MAIN.game.scene.sun = SUN;
   MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
@@ -99,6 +101,7 @@ function create() {
   TIME.init();
   RENDERER.render();
   MAIN.pages.loading.close();
+  MAIN.interface.initGameInterface();
 };
 
 const SCENE = {

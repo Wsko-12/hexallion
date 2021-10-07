@@ -87,6 +87,27 @@ ATLAS.models = [
     folder:'ceils/',
     file:'southcityLight.glb',
   },
+  { name:'hitboxCeil',
+    folder:'ceils/hitboxes/',
+    file:'hitboxCeil.glb',
+  },
+  { name:'cityHitBox',
+    folder:'ceils/hitboxes/',
+    file:'cityHitBox.glb',
+  },
+  { name:'forestHitBox',
+    folder:'ceils/hitboxes/',
+    file:'forestHitBox.glb',
+  },
+  { name:'mountainHitBox',
+    folder:'ceils/hitboxes/',
+    file:'mountainHitBox.glb',
+  },
+  { name:'hexsectorTemporaryMesh',
+    folder:'ceils/',
+    file:'hexsectorTemporaryMesh.glb',
+  },
+
 
 
 

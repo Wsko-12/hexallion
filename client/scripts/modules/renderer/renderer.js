@@ -39,6 +39,7 @@ let clock = new THREE.Clock();
 function init() {
   const canvasRenderer = document.querySelector('#renderer');
   canvasRenderer.style.display = 'block';
+  RENDERER.raycaster = new THREE.Raycaster();
   RENDERER.renderer = new THREE.WebGLRenderer({
     canvas: canvasRenderer,
   });
@@ -377,12 +378,7 @@ function init() {
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength, 'value', 0, 20).step(1).name('uStrength');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus, 'value', 0, 1).step(0.01).name('uFocus');
 
-
-
-
   document.body.appendChild(RENDERER.stats.dom);
-
-
   window.addEventListener("resize", setSize);
   setSize();
 };

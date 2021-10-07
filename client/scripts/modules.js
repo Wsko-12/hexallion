@@ -16,6 +16,9 @@ import {
 import {
   RENDERER
 } from './modules/renderer/renderer.js';
+import {
+  INTERFACE
+} from './modules/interface/interface.js';
 import * as DAT from './libs/gui/dat.gui.module.js';
 
 
@@ -43,6 +46,8 @@ MODULES.init = () => {
   MAIN.pages = PAGES;
   MAIN.game = GAME;
   MAIN.renderer = RENDERER;
+  MAIN.interface = INTERFACE;
+  MAIN.interface.init();
 
   //развешиваем все события socket.on
   SOCKET.init();

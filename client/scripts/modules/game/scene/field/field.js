@@ -11,6 +11,7 @@ import {
   SCENE
 } from '../scene.js';
 import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
+import {FieldCeil} from './fieldCeil/fieldCeil.js';
 import {BufferGeometryUtils} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 // import { Reflector } from '../../../../libs/ThreeJsLib/examples/jsm/objects/Reflector.js';
 
@@ -54,6 +55,7 @@ function getPositionByIndex(z,x){
 
 
 
+
 const FIELD = {};
 FIELD.create = () => {
 
@@ -89,6 +91,12 @@ FIELD.create = () => {
   const geometriesArray = [];
   const waterArray = [];
   const lightArray = [];
+  const hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff0000,wireframe:true,visible:false});
+
+
+
+
+
   for (let z = 0; z < map.length; z++) {
     for (let x = 0; x < map[z].length; x++) {
       if(map[z][x] != 'block'){
@@ -117,19 +125,24 @@ FIELD.create = () => {
         let cityGeometry;
         let lightGeometry;
         let waterGeometry;
+        let hitboxGeometry = MAIN.game.scene.assets.geometries.hitboxCeil.clone();
         switch (map[z][x] ) {
           case 'forest':
             geometry = MAIN.game.scene.assets.geometries.forestCeil.clone();
+            const forestHitBox = MAIN.game.scene.assets.geometries.forestHitBox.clone();
+            hitboxGeometry = BufferGeometryUtils.mergeBufferGeometries([hitboxGeometry,forestHitBox]);
             break;
-          case 'sand':
-            geometry = MAIN.game.scene.assets.geometries.sandCeil.clone();
-            break;
+          // case 'sand':
+          //   geometry = MAIN.game.scene.assets.geometries.sandCeil.clone();
+          //   break;
           case 'sea':
             waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
             geometry = MAIN.game.scene.assets.geometries.waterBottom.clone();
             break;
           case 'mountain':
             geometry = MAIN.game.scene.assets.geometries.mountainCeil.clone();
+            const mountainHitBox = MAIN.game.scene.assets.geometries.mountainHitBox.clone();
+            hitboxGeometry = BufferGeometryUtils.mergeBufferGeometries([hitboxGeometry,mountainHitBox]);
           break;
           case 'Westown':
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
@@ -150,6 +163,8 @@ FIELD.create = () => {
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
         };
 
+
+
           geometry.rotateY(getRandomDeg());
           geometry.translate(position.x,0,position.z);
           geometriesArray.push(geometry);
@@ -158,6 +173,9 @@ FIELD.create = () => {
             cityGeometry.rotateY(randomDeg);
             cityGeometry.translate(position.x,0,position.z);
             geometriesArray.push(cityGeometry);
+            //add box to hitBoxes
+            const cityHitBox = MAIN.game.scene.assets.geometries.cityHitBox.clone();
+            hitboxGeometry = BufferGeometryUtils.mergeBufferGeometries([hitboxGeometry,cityHitBox]);
           };
           if(lightGeometry){
             lightGeometry.rotateY(randomDeg);
@@ -174,8 +192,25 @@ FIELD.create = () => {
             waterArray.push(waterGeometry);
           };
 
-      };
 
+          const hitBoxMesh = new THREE.Mesh(hitboxGeometry, hitBoxMaterial);
+          hitBoxMesh.position.set(position.x,0.01,position.z);
+          MAIN.game.scene.hitBoxGroup.add(hitBoxMesh);
+
+          //here add class names fieldCeil
+
+          const ceilPSroperties = {
+            position:position,
+            indexes:{z,x},
+            type:map[z][x],
+            hitBox: hitBoxMesh,
+          };
+          const ceil = new FieldCeil(ceilPSroperties);
+          map[z][x] = ceil;
+          // console.log(ceil);
+          hitBoxMesh.userData = ceil;
+
+      };
     };
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
@@ -199,7 +234,7 @@ FIELD.create = () => {
 
 
   const mergedLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-  const mergedLightMaterial = new THREE.MeshBasicMaterial({map:MAIN.game.scene.assets.textures.lights,transparent:true,alphaTest:0.5});
+  const mergedLightMaterial = new THREE.MeshBasicMaterial({map:MAIN.game.scene.assets.textures.lights,transparent:true,alphaTest:0.5,});
   const lightMesh = new THREE.Mesh(mergedLightGeometry,mergedLightMaterial)
   MAIN.renderer.scene.add( lightMesh );
   MAIN.game.scene.lights.buildingLights = lightMesh;
@@ -221,6 +256,11 @@ FIELD.create = () => {
 
 
 
+  for (let z = 0; z < map.length; z++) {
+    for (let x = 0; x < map[z].length; x++) {
+      map[z][x].findNeighbours();
+    };
+  };
 };
 
 export {
