@@ -47,7 +47,6 @@ MODULES.init = () => {
   MAIN.game = GAME;
   MAIN.renderer = RENDERER;
   MAIN.interface = INTERFACE;
-  MAIN.interface.init();
 
   //развешиваем все события socket.on
   SOCKET.init();

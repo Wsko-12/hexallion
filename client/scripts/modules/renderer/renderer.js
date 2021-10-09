@@ -55,7 +55,7 @@ function init() {
   RENDERER.camera.position.set(30, 30, 0);
   RENDERER.camera.lookAt(0, 0, 0);
   RENDERER.scene = new THREE.Scene();
-  RENDERER.controls = new OrbitControls(RENDERER.camera, RENDERER.renderer.domElement);
+  // RENDERER.controls = new OrbitControls(RENDERER.camera, RENDERER.renderer.domElement);
   RENDERER.stats = new Stats();
 
 
@@ -423,10 +423,17 @@ function render() {
   };
 
 
-  RENDERER.controls.update();
+  // RENDERER.controls.update();
   RENDERER.stats.update();
   // RENDERER.renderer.render(RENDERER.scene, RENDERER.camera);
   RENDERER.composer.render();
+
+  //события должны начать проверяться после того, как все будет готово
+  if(  MAIN.interface.startedCheckEvents){
+     MAIN.interface.checkEvents();
+  }
+
+
 
   requestAnimationFrame(render);
 };

@@ -17,6 +17,18 @@ body{
   width: 100vw;
   height: 100vh;
 }
+#mobileConsole{
+  width: 100vw;
+  max-height: 30vh;
+  font-size: 25px;
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1000;
+  bottom: 0px;
+  overflow-y:scroll;
+  padding-left: 25px;
+
+}
 #screen{
   position: fixed;
   left: 0;

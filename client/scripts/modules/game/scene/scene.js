@@ -101,7 +101,12 @@ function create() {
   TIME.init();
   RENDERER.render();
   MAIN.pages.loading.close();
-  MAIN.interface.initGameInterface();
+
+    //события должны начать проверяться после того, как все будет готово. сообщаем, что все готово
+  MAIN.interface.init();
+
+  MAIN.interface.startedCheckEvents = true;
+
 };
 
 const SCENE = {
