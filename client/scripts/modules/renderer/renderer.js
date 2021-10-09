@@ -412,6 +412,10 @@ function setSize() {
     RENDERER.postrocessors.FXAA.material.uniforms['resolution'].value.x = 1 / (windowWidth * Math.min(window.devicePixelRatio, 2));
     RENDERER.postrocessors.FXAA.material.uniforms['resolution'].value.y = 1 / (windowHeight * Math.min(window.devicePixelRatio, 2));
   };
+  //mobile bug fix
+  MAIN.interface.mouse.x = window.innerWidth/2;
+  MAIN.interface.mouse.y = window.innerHeight/2;
+
 };
 
 function render() {
@@ -431,6 +435,7 @@ function render() {
   //события должны начать проверяться после того, как все будет готово
   if(  MAIN.interface.startedCheckEvents){
      MAIN.interface.checkEvents();
+      MAIN.interface.camera.update();
   }
 
 
