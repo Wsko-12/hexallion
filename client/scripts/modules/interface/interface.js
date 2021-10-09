@@ -7,7 +7,7 @@ import {
 } from './camera/camera.js';
 import {
   MCONSOLE
-} from './mobileConsole/mobileConsole.js';
+} from './mobileconsole/mobileConsole.js';
 
 
 
