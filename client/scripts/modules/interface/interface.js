@@ -5,9 +5,9 @@ import {
 import {
   CAMERA
 } from './camera/camera.js';
-// import {
-//   MCONSOLE
-// } from './mobileConsole/mobileConsole.js';
+import {
+  MCONSOLE
+} from './mobileConsole/mobileConsole.js';
 
 
 
@@ -17,8 +17,8 @@ function init() {
   INTERFACE.camera = CAMERA;
   INTERFACE.camera.init();
 
-  // INTERFACE.console = MCONSOLE;
-  // INTERFACE.console.init();
+  INTERFACE.console = MCONSOLE;
+  INTERFACE.console.init();
   const target = MAIN.renderer.renderer.domElement;
   target.addEventListener('mousemove', function(event) {
     INTERFACE.mouse.x = event.clientX;
