@@ -32,6 +32,8 @@ function changeCameraAngleByValue(value) {
   if (CAMERA.configs.rail.yAngle.current < CAMERA.configs.rail.yAngle.min) {
     CAMERA.configs.rail.yAngle.current = CAMERA.configs.rail.yAngle.min;
   };
+  //postprocessors update
+  MAIN.renderer.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = CAMERA.configs.rail.yAngle.current/(CAMERA.configs.rail.yAngle.max-1);
 };
 
 function changeCameraAngle() {
@@ -42,6 +44,10 @@ function changeCameraAngle() {
   if (CAMERA.configs.rail.yAngle.current < CAMERA.configs.rail.yAngle.min) {
     CAMERA.configs.rail.yAngle.current = CAMERA.configs.rail.yAngle.min;
   };
+
+
+  //postprocessors update
+  MAIN.renderer.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = CAMERA.configs.rail.yAngle.current/(CAMERA.configs.rail.yAngle.max-1)
 };
 
 function changeTargetPosition(position) {
