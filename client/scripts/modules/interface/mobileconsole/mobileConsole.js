@@ -15,10 +15,6 @@ function log(message){
 };
 
 
-
-
-
-
 const MCONSOLE = {
   init,
   log,
