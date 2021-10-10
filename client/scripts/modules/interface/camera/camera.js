@@ -3,6 +3,26 @@ import {
   MAIN
 } from '../../../main.js';
 
+
+function moveCameraTo(position){
+  let smoothValue = 1;
+  function smoot(){
+    smoothValue -= 0.05;
+    if(smoothValue > 0){
+      const x = CAMERA.configs.target.point.x*(1-smoothValue);
+      const x_ = position.x*smoothValue;
+      const z = CAMERA.configs.target.point.z*smoothValue;
+      const z_ = position.z*(1-smoothValue);
+
+      CAMERA.configs.target.point.x =  x+x_;
+      CAMERA.configs.target.point.z =  z+z_;
+      requestAnimationFrame(smoot);
+    };
+  };
+  smoot();
+};
+
+
 function changeZoom(value) {
   CAMERA.configs.zoom.current += value;
   if (CAMERA.configs.zoom.current > CAMERA.configs.zoom.max) {
@@ -177,6 +197,7 @@ const CAMERA = {
   update,
   init,
   changeTargetPosition,
+  moveCameraTo,
 };
 
 export {

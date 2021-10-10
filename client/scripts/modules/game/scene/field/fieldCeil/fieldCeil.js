@@ -119,7 +119,7 @@ class FieldCeil {
     const sector = Math.floor(angle/60)
     return sector
   };
-  onDblClick(intersectCoords){
+  onClick(intersectCoords){
     this.addChosenTemporaryHex();
     const selectedSector = this.findSectorByClick(intersectCoords);
     this.addChosenSectorTemporaryMesh(selectedSector);

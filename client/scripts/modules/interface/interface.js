@@ -11,7 +11,19 @@ import {
 
 
 
-
+function pushRaycast(click){
+  const mouse = {x:0,y:0};
+  mouse.x = ( INTERFACE.mouse.x / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( INTERFACE.mouse.y / window.innerHeight ) * 2 + 1;
+  MAIN.renderer.raycaster.setFromCamera(mouse, MAIN.renderer.camera);
+  const intersects = MAIN.renderer.raycaster.intersectObjects( MAIN.game.scene.hitBoxGroup.children  );
+  if(intersects[0]){
+    if(click === 2){
+      INTERFACE.camera.moveCameraTo(  intersects[0].object.userData.position);
+      intersects[0].object.userData.onClick(intersects[0].point);
+    };
+  };
+};
 
 function init() {
   INTERFACE.camera = CAMERA;
@@ -39,6 +51,7 @@ function init() {
       INTERFACE.mouse.oncontextPosition.y = event.clientY;
       INTERFACE.mouse.context = true;
     };
+
   });
   target.addEventListener('mouseup', function(event) {
     if (event.button === 0) {
@@ -48,15 +61,19 @@ function init() {
       INTERFACE.mouse.context = false;
     };
   });
+  target.addEventListener('dblclick',function(){
+    pushRaycast(2);
+  });
 
 
-  //disable pinch zoom on touchpad
+
   target.addEventListener('wheel', function(event) {
     event.preventDefault();
     INTERFACE.camera.changeZoom(event.deltaY * 0.005);
     INTERFACE.camera.rotate(event.deltaX * 0.5);
   });
-  //disable pinch zoom on phones
+
+
   target.addEventListener('touchstart', function(event) {
     event.preventDefault();
     if (event.targetTouches.length === 2) {
@@ -70,12 +87,22 @@ function init() {
     };
     if (event.targetTouches.length === 1) {
       INTERFACE.touch.single = true;
-
+      INTERFACE.mouse.x = event.targetTouches[0].pageX;
+      INTERFACE.mouse.y = event.targetTouches[0].pageY;
       INTERFACE.touch.coords.x = event.targetTouches[0].pageX;
       INTERFACE.touch.coords.y = event.targetTouches[0].pageY;
 
+      if((Date.now() - INTERFACE.touch.lastTime) < 250){
+        target.dispatchEvent(new CustomEvent("touchDoubleClick", {
+        }));
+      };
+      INTERFACE.touch.lastTime = Date.now();
     };
   });
+  target.addEventListener('touchDoubleClick',function(event){
+    pushRaycast(2);
+  });
+
   target.addEventListener('touchmove', function(event) {
     if (event.targetTouches.length === 2) {
       const x1 = event.targetTouches[0].pageX;
@@ -92,12 +119,21 @@ function init() {
         const valueY = event.targetTouches[0].pageY - INTERFACE.touch.shift.y;
 
         //баг скачков
-        if (valueX > -50 && valueX < 50) {
-          INTERFACE.camera.rotate(-valueX * 0.5);
+        if (valueX > -100 && valueX < 100) {
+          if(valueX <-3 || valueX > 3){
+            INTERFACE.camera.rotate(-valueX * 0.5);
+          };
         };
-        if (valueY > -50 && valueY < 50) {
-          INTERFACE.camera.shifts.z = -valueY * 0.01;
-        };
+        if (valueY > -100 && valueY < 100) {
+          if(valueY <-3 || valueY > 3){
+            INTERFACE.camera.shifts.z = -valueY * 0.01;
+          }else{
+            //чтобы не поднималос когда 2 пальца не отпущены
+            INTERFACE.camera.shifts.z = 0;
+          }
+        }else{
+          INTERFACE.camera.shifts.z = 0;
+        }
 
         INTERFACE.touch.shift.x = event.targetTouches[0].pageX;
         INTERFACE.touch.shift.y = event.targetTouches[0].pageY;
@@ -116,8 +152,8 @@ function init() {
       };
     };
     if (event.targetTouches.length === 1) {
-      INTERFACE.camera.shifts.y = (INTERFACE.touch.coords.y - event.targetTouches[0].pageY) * (-0.025);
       INTERFACE.camera.shifts.x = (INTERFACE.touch.coords.x - event.targetTouches[0].pageX) * (0.025);
+      INTERFACE.camera.shifts.y = (INTERFACE.touch.coords.y - event.targetTouches[0].pageY) * (-0.025);
 
       INTERFACE.touch.coords.x = event.targetTouches[0].pageX;
       INTERFACE.touch.coords.y = event.targetTouches[0].pageY;
@@ -218,6 +254,7 @@ const INTERFACE = {
     double: false,
     length: 0,
     maxDivergence: 5,
+    lastTime:Date.now(),
     shift: {
       x: 0,
       y: 0,

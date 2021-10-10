@@ -365,7 +365,7 @@ function init() {
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 / Math.min(window.devicePixelRatio, 2);
   //blur
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uResolution = RENDERER.uResolution;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 8;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 3;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = 0.5;
 
   RENDERER.composer.addPass(RENDERER.postrocessors.postrocessorMerged);
