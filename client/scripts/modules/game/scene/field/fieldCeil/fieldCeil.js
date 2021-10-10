@@ -13,6 +13,7 @@ class FieldCeil {
     this.type = properties.type;
     this.position = properties.position;
     this.hitBox = properties.hitBox;
+    this.meshRotation = properties.meshRotation;
     this.indexes = properties.indexes;
 
     this.sectors = [null,null,null,null,null,null];
@@ -120,9 +121,26 @@ class FieldCeil {
     return sector
   };
   onClick(intersectCoords){
-    this.addChosenTemporaryHex();
-    const selectedSector = this.findSectorByClick(intersectCoords);
-    this.addChosenSectorTemporaryMesh(selectedSector);
+    if(!this.blockCeil){
+      this.addChosenTemporaryHex();
+      const selectedSector = this.findSectorByClick(intersectCoords);
+      this.addChosenSectorTemporaryMesh(selectedSector);
+    }else{
+      if(!this.cityCeil){
+        if(MAIN.game.scene.temporaryHexMesh){
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+          MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+          MAIN.game.scene.temporaryHexMesh.material.dispose();
+        };
+        if(MAIN.game.scene.temporarySectorMesh){
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+          MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+          MAIN.game.scene.temporarySectorMesh.material.dispose();
+        };
+        this.addChosenBlockTemporaryHex();
+      };
+
+    };
   };
   addChosenTemporaryHex(){
     if(MAIN.game.scene.temporaryHexMesh){
@@ -149,6 +167,41 @@ class FieldCeil {
     mesh.position.set(position.x,position.y,position.z);
     MAIN.renderer.scene.add(mesh);
   };
+
+  addChosenBlockTemporaryHex(){
+    if(MAIN.game.scene.temporaryHexMesh){
+      MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+      MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+      MAIN.game.scene.temporaryHexMesh.material.dispose();
+    };
+    const meshName = this.type.toLowerCase() + 'Ceil';
+    const geometry = MAIN.game.scene.assets.geometries[meshName].clone();
+    geometry.rotateY(this.meshRotation);
+    const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0xff0000,side:THREE.DoubleSide,transparent:true,opacity:0.5,}));
+    const position = this.position;
+    mesh.position.set(position.x,position.y+0.005,position.z);
+    MAIN.game.scene.temporaryHexMesh = mesh;
+    MAIN.renderer.scene.add(mesh);
+    let smoothValue = 0.5;
+    function smoothRemoveTemporaryMesh(){
+      smoothValue -= 0.01;
+      if(smoothValue > 0){
+        if(MAIN.game.scene.temporaryHexMesh === mesh){
+          mesh.material.opacity = smoothValue;
+          requestAnimationFrame(smoothRemoveTemporaryMesh);
+        };
+      }else{
+        if(MAIN.game.scene.temporaryHexMesh === mesh){
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+          MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+          MAIN.game.scene.temporaryHexMesh.material.dispose();
+        };
+      };
+
+    };
+    smoothRemoveTemporaryMesh();
+  };
+
 };
 
 export {

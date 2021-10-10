@@ -41,6 +41,7 @@ function init() {
     event.preventDefault();
   });
   target.addEventListener('mousedown', function(event) {
+    event.preventDefault();
     if (event.button === 0) {
       INTERFACE.mouse.onclickPosition.x = event.clientX;
       INTERFACE.mouse.onclickPosition.y = event.clientY;
@@ -54,6 +55,7 @@ function init() {
 
   });
   target.addEventListener('mouseup', function(event) {
+    event.preventDefault();
     if (event.button === 0) {
       INTERFACE.mouse.clicked = false;
     };
@@ -61,7 +63,8 @@ function init() {
       INTERFACE.mouse.context = false;
     };
   });
-  target.addEventListener('dblclick',function(){
+  target.addEventListener('dblclick',function(event){
+    event.preventDefault();
     pushRaycast(2);
   });
 
@@ -100,10 +103,12 @@ function init() {
     };
   });
   target.addEventListener('touchDoubleClick',function(event){
+    event.preventDefault();
     pushRaycast(2);
   });
 
   target.addEventListener('touchmove', function(event) {
+    // event.preventDefault();
     if (event.targetTouches.length === 2) {
       const x1 = event.targetTouches[0].pageX;
       const x2 = event.targetTouches[1].pageX;

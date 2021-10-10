@@ -164,11 +164,11 @@ FIELD.create = () => {
         };
 
 
-
-          geometry.rotateY(getRandomDeg());
+          const randomDeg = getRandomDeg();
+          geometry.rotateY(randomDeg);
           geometry.translate(position.x,0,position.z);
           geometriesArray.push(geometry);
-          const randomDeg = getRandomDeg();
+
           if(cityGeometry){
             cityGeometry.rotateY(randomDeg);
             cityGeometry.translate(position.x,0,position.z);
@@ -202,6 +202,7 @@ FIELD.create = () => {
           const ceilPSroperties = {
             position:position,
             indexes:{z,x},
+            meshRotation:randomDeg,
             type:map[z][x],
             hitBox: hitBoxMesh,
           };
