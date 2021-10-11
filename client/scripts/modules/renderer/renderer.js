@@ -435,7 +435,7 @@ function render() {
   //события должны начать проверяться после того, как все будет готово
   if(  MAIN.interface.startedCheckEvents){
      MAIN.interface.checkEvents();
-      MAIN.interface.camera.update();
+     MAIN.interface.game.camera.update();
   }
 
 

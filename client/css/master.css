@@ -17,6 +17,13 @@ body{
   width: 100vw;
   height: 100vh;
 }
+#gameInterface{
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  display: flex;
+  position: fixed;
+}
 #mobileConsole{
   width: 100vw;
   max-height: 30vh;

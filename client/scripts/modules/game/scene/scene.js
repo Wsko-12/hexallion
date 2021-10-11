@@ -106,6 +106,7 @@ function create() {
   MAIN.interface.init();
 
   MAIN.interface.startedCheckEvents = true;
+  MAIN.game.events.init();
 
 };
 

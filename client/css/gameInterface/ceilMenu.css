@@ -1,0 +1,50 @@
+#sectorMenu{
+  width: 200px;
+  height: 200px;
+  background-color: rgba(0,0,0,0.2);
+  pointer-events: auto;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 250px;
+  display: none;
+}
+
+.sectorMenuButton{
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: fixed;
+  border-radius: 50px;
+
+
+}
+
+
+@media only screen and (orientation : landscape) and  (max-device-width : 1024px) {
+  #sectorMenu{
+    width: 40vh;
+    height: 40vh;
+    border-radius: 40vh;
+  }
+  .sectorMenuButton{
+    width: 10vh;
+    height: 10vh;
+    border-radius: 10vh;
+  }
+}
+@media only screen and (orientation : portrait) and  (max-device-width : 1024px) {
+  #sectorMenu{
+    width: 40vw;
+    height: 40vw;
+    border-radius: 40vw;
+  }
+  .sectorMenuButton{
+    width: 10vw;
+    height: 10vw;
+    border-radius: 10vw;
+  }
+}

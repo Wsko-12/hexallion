@@ -1,7 +1,7 @@
 // модуль, отвечающий за перемещение камеры
 import {
   MAIN
-} from '../../../main.js';
+} from '../../../../main.js';
 
 
 function moveCameraTo(position){

@@ -124,24 +124,69 @@ class FieldCeil {
     if(!this.blockCeil){
       this.addChosenTemporaryHex();
       const selectedSector = this.findSectorByClick(intersectCoords);
-      this.addChosenSectorTemporaryMesh(selectedSector);
+      if(this.sectors[selectedSector] === null){
+        this.addChosenSectorTemporaryMesh(selectedSector);
+        this.showSectorMenu(selectedSector);
+      };
     }else{
+      if(MAIN.game.scene.temporaryHexMesh){
+        MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+        MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+        MAIN.game.scene.temporaryHexMesh.material.dispose();
+      };
+      if(MAIN.game.scene.temporarySectorMesh){
+        MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+        MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+        MAIN.game.scene.temporarySectorMesh.material.dispose();
+      };
       if(!this.cityCeil){
-        if(MAIN.game.scene.temporaryHexMesh){
-          MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
-          MAIN.game.scene.temporaryHexMesh.geometry.dispose();
-          MAIN.game.scene.temporaryHexMesh.material.dispose();
-        };
-        if(MAIN.game.scene.temporarySectorMesh){
-          MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
-          MAIN.game.scene.temporarySectorMesh.geometry.dispose();
-          MAIN.game.scene.temporarySectorMesh.material.dispose();
-        };
         this.addChosenBlockTemporaryHex();
       };
-
     };
   };
+
+
+
+
+
+
+  showSectorMenu(sector){
+    if(this.type === 'meadow'){
+      if(this.sectors[sector] === null){
+        const that = this;
+        function calculateSectorMenuButtons(){
+          //Ищем что можно построить на этом секторе;
+          const buttons = [];
+          const ceil = that.type;
+          let nearCeil = that.neighbours[sector];
+          if(nearCeil != null){
+            nearCeil = nearCeil.type
+          };
+
+          //check all builds
+          for(let building in MAIN.game.configs.buildings){
+            const thisBuilding = MAIN.game.configs.buildings[building];
+            //check can we build this building on this ceil
+            thisBuilding.ceil.forEach((buildCeil, i) => {
+              if(buildCeil === ceil){
+                //nearCeil for this building
+                thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
+                  if(buildNearCeil == nearCeil || buildNearCeil === 'all'){
+                    buttons.push(building);
+                  };
+                });
+              };
+            });
+          };
+
+          return buttons;
+        };
+        MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,calculateSectorMenuButtons());
+      };
+    };
+  };
+
+  //добавляет меш шестиугольника
   addChosenTemporaryHex(){
     if(MAIN.game.scene.temporaryHexMesh){
       MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
@@ -154,6 +199,7 @@ class FieldCeil {
     MAIN.game.scene.temporaryHexMesh = mesh;
     MAIN.renderer.scene.add(mesh);
   };
+  //добавляет меш треугольника(сектора)
   addChosenSectorTemporaryMesh(selectedSector){
     if(MAIN.game.scene.temporarySectorMesh){
       MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
@@ -168,6 +214,7 @@ class FieldCeil {
     MAIN.renderer.scene.add(mesh);
   };
 
+  //добавляет красный меш
   addChosenBlockTemporaryHex(){
     if(MAIN.game.scene.temporaryHexMesh){
       MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
@@ -177,12 +224,15 @@ class FieldCeil {
     const meshName = this.type.toLowerCase() + 'Ceil';
     const geometry = MAIN.game.scene.assets.geometries[meshName].clone();
     geometry.rotateY(this.meshRotation);
+    //z conflict
+    geometry.translate(0,0.01,0);
     const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0xff0000,side:THREE.DoubleSide,transparent:true,opacity:0.5,}));
     const position = this.position;
     mesh.position.set(position.x,position.y+0.005,position.z);
     MAIN.game.scene.temporaryHexMesh = mesh;
     MAIN.renderer.scene.add(mesh);
     let smoothValue = 0.5;
+    //постепенное удаление красного меша
     function smoothRemoveTemporaryMesh(){
       smoothValue -= 0.01;
       if(smoothValue > 0){
@@ -197,7 +247,6 @@ class FieldCeil {
           MAIN.game.scene.temporaryHexMesh.material.dispose();
         };
       };
-
     };
     smoothRemoveTemporaryMesh();
   };
