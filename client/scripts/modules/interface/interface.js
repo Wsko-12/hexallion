@@ -4,7 +4,7 @@ import {
 } from '../../main.js';
 import {
   MCONSOLE
-} from './mobileConsole/mobileConsole.js';
+} from './mobileconsole/mobileConsole.js';
 import {
   GAME_INTERFACE
 } from './game/gameInterface.js';
