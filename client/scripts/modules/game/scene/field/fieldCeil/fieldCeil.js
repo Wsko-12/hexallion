@@ -278,6 +278,19 @@ class FieldCeil {
         delete MAIN.renderer.scene.ceilsMesh.geometry;
         MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
         this.sectors[sector] = 'road';
+
+
+        const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+        const thisLightGeometry = MAIN.game.scene.assets.geometries.roadLight.clone()
+        thisLightGeometry.rotateY((sector*(-60) * Math.PI/180));
+        thisLightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        lightArray.push(thisLightGeometry);
+        const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+
+        MAIN.game.scene.lights.buildingLights.geometry.dispose();
+        delete MAIN.game.scene.lights.buildingLights.geometry;
+        MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+
       };
 
 

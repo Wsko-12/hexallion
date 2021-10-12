@@ -235,7 +235,7 @@ FIELD.create = () => {
 
 
   const mergedLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-  const mergedLightMaterial = new THREE.MeshBasicMaterial({map:MAIN.game.scene.assets.textures.lights,transparent:true,alphaTest:0.5,});
+  const mergedLightMaterial = new THREE.MeshBasicMaterial({map:MAIN.game.scene.assets.textures.lights,transparent:true,alphaTest:0.5,depthWrite:false});
   const lightMesh = new THREE.Mesh(mergedLightGeometry,mergedLightMaterial)
   MAIN.renderer.scene.add( lightMesh );
   MAIN.game.scene.lights.buildingLights = lightMesh;

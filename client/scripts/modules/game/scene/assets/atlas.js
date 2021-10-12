@@ -116,6 +116,10 @@ ATLAS.models = [
     file:'road.glb',
   },
 
+  { name:'roadLight',
+    folder:'buildings/',
+    file:'roadLight.glb',
+  },
 
 
 
