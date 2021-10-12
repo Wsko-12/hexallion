@@ -43,6 +43,27 @@ const CEIL_MENU = {
     buttons.push('cancel');
     const radius = menu.clientWidth/2;
 
+    let changeSectorButton = `<div id='changeSectorButton' class='changeSectorMenuButton' style="top:${radius/1.3}px;left:${radius/1.3}px;">
+      <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/changeSectorButton.png">
+    </div>`;
+    menu.insertAdjacentHTML('beforeEnd',changeSectorButton);
+    changeSectorButton = document.querySelector(`#changeSectorButton`);
+    function changeSector(){
+      let newSector = sector+1;
+      if(newSector > 5){
+        newSector = 0;
+      };
+      CEIL_MENU.hideSectorMenu();
+        if(MAIN.game.scene.temporarySectorMesh){
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+          MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+          MAIN.game.scene.temporarySectorMesh.material.dispose();
+        };
+      ceil.addChosenSectorTemporaryMesh(newSector);
+      ceil.showSectorMenu(newSector);
+    };
+    changeSectorButton.onclick = changeSector;
+    changeSectorButton.ontouch = changeSector;
 
     buttons.forEach((buttonName, i) => {
 
@@ -51,11 +72,11 @@ const CEIL_MENU = {
         x:radius*Math.sin((((360/(buttons.length))*i)-90) * Math.PI/180) + radius/1.25,
         y:radius*Math.cos((((360/(buttons.length))*i)-90) * Math.PI/180) + radius/1.25,
       };
-
       const id = generateId('button',4)
       const button = `<div id='${id}' class='sectorMenuButton' style="top:${position.x}px;left:${position.y}px;">
         <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/${buttonName}.png">
       </div>`;
+
 
       menu.insertAdjacentHTML('beforeEnd',button);
 
