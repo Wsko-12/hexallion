@@ -273,12 +273,6 @@ class FieldCeil {
         buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
         buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
         newGeometryArray.push(buildGeommetry);
-        console.log(newGeometryArray);
-
-
-
-
-
         const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
         MAIN.renderer.scene.ceilsMesh.geometry.dispose();
         delete MAIN.renderer.scene.ceilsMesh.geometry;
