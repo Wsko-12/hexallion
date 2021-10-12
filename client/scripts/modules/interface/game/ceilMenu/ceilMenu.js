@@ -63,7 +63,7 @@ const CEIL_MENU = {
       ceil.showSectorMenu(newSector);
     };
     changeSectorButton.onclick = changeSector;
-    changeSectorButton.ontouch = changeSector;
+    changeSectorButton.ontouchstart = changeSector;
 
     buttons.forEach((buttonName, i) => {
 
