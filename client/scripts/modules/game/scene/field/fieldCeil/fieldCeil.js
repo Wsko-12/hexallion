@@ -277,7 +277,9 @@ class FieldCeil {
         MAIN.renderer.scene.ceilsMesh.geometry.dispose();
         delete MAIN.renderer.scene.ceilsMesh.geometry;
         MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
+        this.sectors[sector] = 'road';
       };
+
 
       //  MAIN.game.scene.buildingsMesh.geometry.dispose();
       // delete  MAIN.game.scene.buildingsMesh.geometry;

@@ -48,10 +48,17 @@ const CEIL_MENU = {
     </div>`;
     menu.insertAdjacentHTML('beforeEnd',changeSectorButton);
     changeSectorButton = document.querySelector(`#changeSectorButton`);
-    function changeSector(){
-      let newSector = sector+1;
-      if(newSector > 5){
-        newSector = 0;
+     function changeSector(){
+      let newSector = sector;
+      let startedSector = sector;
+      for(let i = 0; i < 6;i++){
+        newSector++;
+        if(newSector > 5){
+          newSector = 0
+        };
+        if(ceil.sectors[newSector] === null || newSector === startedSector){
+          break;
+        };
       };
       CEIL_MENU.hideSectorMenu();
         if(MAIN.game.scene.temporarySectorMesh){
@@ -59,8 +66,11 @@ const CEIL_MENU = {
           MAIN.game.scene.temporarySectorMesh.geometry.dispose();
           MAIN.game.scene.temporarySectorMesh.material.dispose();
         };
-      ceil.addChosenSectorTemporaryMesh(newSector);
-      ceil.showSectorMenu(newSector);
+      //для безпошагового режима, если вдруг кто-то что-то построит пока этот игрок будет выбирать
+      if(ceil.sectors[newSector] === null){
+        ceil.addChosenSectorTemporaryMesh(newSector);
+        ceil.showSectorMenu(newSector);
+      };
     };
     changeSectorButton.onclick = changeSector;
     changeSectorButton.ontouchstart = changeSector;
