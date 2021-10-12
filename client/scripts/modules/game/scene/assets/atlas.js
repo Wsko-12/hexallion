@@ -107,7 +107,14 @@ ATLAS.models = [
     folder:'ceils/',
     file:'hexsectorTemporaryMesh.glb',
   },
-
+  { name:'roadCenter',
+    folder:'buildings/',
+    file:'roadCenter.glb',
+  },
+  { name:'road',
+    folder:'buildings/',
+    file:'road.glb',
+  },
 
 
 

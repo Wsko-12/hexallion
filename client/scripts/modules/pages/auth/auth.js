@@ -46,6 +46,9 @@ AUTH.showPage = () => {
     }
     MAIN.socket.emit('auth',data);
     MAIN.pages.loading.showPage({title:'Wait a bit, please...',comment:'Waiting for players'});
+    MAIN.userData = {
+      login:data.login,
+    };
   });
 
 };

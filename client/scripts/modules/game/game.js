@@ -17,6 +17,9 @@ import {
 import {
   GAME_EVENTS
 } from './events/gameEvents.js';
+import {
+  FUNCTIONS
+} from './functions/functions.js';
 
 
 const GAME = {};
@@ -24,6 +27,7 @@ GAME.configs = CONFIGS;
 GAME.generation = GENERATION;
 GAME.scene = SCENE;
 GAME.events = GAME_EVENTS;
+GAME.functions = FUNCTIONS;
 
 console.log(MAIN);
 export {

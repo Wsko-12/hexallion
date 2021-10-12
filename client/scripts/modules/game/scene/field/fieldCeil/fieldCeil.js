@@ -3,6 +3,7 @@ import {
 } from '../../../../../main.js';
 
 import * as THREE from '../../../../../libs/ThreeJsLib/build/three.module.js';
+import {BufferGeometryUtils} from '../../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 
 
 
@@ -17,6 +18,7 @@ class FieldCeil {
     this.indexes = properties.indexes;
 
     this.sectors = [null,null,null,null,null,null];
+    this.centralRoad = false;
 
     this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true:false;
     //means player can't build nothing on this ceil
@@ -251,6 +253,43 @@ class FieldCeil {
     smoothRemoveTemporaryMesh();
   };
 
+  buildOnSector(sector,building){
+    if(this.sectors[sector] === null){
+      const newGeometryArray = [MAIN.renderer.scene.ceilsMesh.geometry];
+      // const newGeometryArray = [ MAIN.game.scene.buildingsMesh.geometry];
+
+
+      if(!this.centralRoad){
+        this.centralRoad = true;
+        const centralRoadGeometry = MAIN.game.scene.assets.geometries.roadCenter.clone();
+        centralRoadGeometry.translate(this.position.x,this.position.y,this.position.z);
+        newGeometryArray.push(centralRoadGeometry);
+      };
+
+      let buildGeommetry;
+      //потом убрать заглушку
+      if(building === 'road'){
+        buildGeommetry =  MAIN.game.scene.assets.geometries[building].clone();
+        buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
+        buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+        newGeometryArray.push(buildGeommetry);
+        console.log(newGeometryArray);
+
+
+
+
+
+        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
+        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
+        delete MAIN.renderer.scene.ceilsMesh.geometry;
+        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
+      };
+
+      //  MAIN.game.scene.buildingsMesh.geometry.dispose();
+      // delete  MAIN.game.scene.buildingsMesh.geometry;
+      //  MAIN.game.scene.buildingsMesh.geometry = newGeometry;
+    };
+  };
 };
 
 export {

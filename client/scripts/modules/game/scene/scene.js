@@ -37,7 +37,8 @@ function create() {
   // mesh.position.set(0,1,0)
   // RENDERER.scene.add(mesh);
 
-
+  // MAIN.game.scene.buildingsMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.triangleEmpty.clone(),new THREE.MeshPhongMaterial({color:0x9f9f9f,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0}));
+  // RENDERER.scene.add(MAIN.game.scene.buildingsMesh);
   //Бокс, в котором все лежит
   MAIN.game.scene.lights = {};
     MAIN.game.scene.lights.buildingPointLights = [];

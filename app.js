@@ -34,7 +34,32 @@ const GAMES = {
 
 };
 
+class GAME {
+  constructor(properties){
+    this.id = properties.id;
+    this.roomID = properties.roomID;
+    this.turns = properties.turns;
+    this.mapArray = properties.mapArray;
+  };
+  sendToAll(message,data){
+    this.turns.forEach((member, i) => {
+      if(USERS[member]){
+        USERS[member].socket.emit(message,data);
+      };
+    });
+  };
 
+  playerBuilding(data){
+    //нужно сюда впихнуть историю происходящего в игре
+    // data = {
+    //     ceilIndex: ceil.indexes,
+    //     sector: sector,
+    //     building: building,
+    //   }
+
+    this.sendToAll('GAME_applyBuilding',data);
+  };
+};
 
 //
 // DB.connectToDB().then(function() {
@@ -69,12 +94,14 @@ io.on('connection', function(socket) {
     ROOMS.R_0000000000.owner = data.login;
     ROOMS.R_0000000000.members = [];
     ROOMS.R_0000000000.members.push(data.login);
+    /*ДЛЯ ОДНОГО ИГРОКА*/
 
     /*БОЛЬШЕ ОДНОГО ИГРОКА*/
     // if (ROOMS.R_0000000000.owner === null) {
     //   ROOMS.R_0000000000.owner = data.login;
     // };
     // ROOMS.R_0000000000.members.push(data.login);
+    /*БОЛЬШЕ ОДНОГО ИГРОКА*/
 
     if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
 
@@ -97,9 +124,6 @@ io.on('connection', function(socket) {
   });
 
 
-
-
-
   //происходит, когда сгенерирована карта, очередь и тд
   socket.on('GAME_generated', (gameData) => {
     /*
@@ -112,7 +136,8 @@ io.on('connection', function(socket) {
     */
     ROOMS[gameData.roomID].gameID = gameData.id;
     // ---!--- сюда надо вкинуть класс GAME, чтобы через нее реализовать SOCKET.broadcast;
-    GAMES[gameData.id] = gameData;
+    const game = new GAME(gameData);
+    GAMES[game.id] = game;
 
     // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
     ROOMS[gameData.roomID].members.forEach((member) => {
@@ -132,4 +157,19 @@ io.on('connection', function(socket) {
     delete SOCKETS[socket.id]
     console.log('disconnect');
   });
+
+  //происходит, когда игрок хочет что-то построить
+  socket.on('GAME_building',(data)=>{
+    /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
+    // if(GAMES[data.gameID]){
+    //   GAMES[data.gameID].playerBuilding(data.build);
+    // };
+      /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
+
+    /*ДЛЯ ОДНОГО ИГРОКА*/
+    socket.emit('GAME_applyBuilding',data.build);
+    /*ДЛЯ ОДНОГО ИГРОКА*/
+  });
+
+
 });

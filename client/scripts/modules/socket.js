@@ -27,7 +27,6 @@ function init() {
 
     MAIN.socket.on('GAME_data', function(gameData) {
       //Происходит, когда вся gameData сгенерирована
-
       MAIN.game.data = {};
       MAIN.game.commonData = gameData;
       MAIN.game.scene.assets.load().then((result) => {
@@ -35,9 +34,25 @@ function init() {
         MAIN.game.scene.create();
       });
     });
-  };
-};
 
-export {
-  SOCKET
-};
+    let req = 0;
+    MAIN.socket.on('GAME_applyBuilding', function(data) {
+        //Происходит, кто-то из игроков что-то строит
+        // ceilMenu.js CEIL_MENU.sendBuildRequest();
+        // data = {
+        //     player: MAIN.userData.login,
+        //     gameID: MAIN.game.commonData.id,
+        //     build: {
+        //     ceilIndex: ceil.indexes,
+        //     sector: sector,
+        //     building: building,
+        //   },
+          MAIN.game.functions.applyBuilding(data);
+        });
+
+    };
+  };
+
+  export {
+    SOCKET
+  };

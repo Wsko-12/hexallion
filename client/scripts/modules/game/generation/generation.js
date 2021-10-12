@@ -14,11 +14,11 @@ GENERATION.start = (room) => {
   const game = {};
   game.roomID = room.id;
 
-/*ДЛЯ ОДНОГО ИГРОКА*/
-  game.id = 'G_0000000000';
+// /*ДЛЯ ОДНОГО ИГРОКА*/
+//   game.id = 'G_0000000000';
 
 /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-// game.id = generateId('G', 9);
+game.id = generateId('G', 9);
 
 
   function turns(membersArray) {

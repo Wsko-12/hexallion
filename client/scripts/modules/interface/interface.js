@@ -53,6 +53,7 @@ function deleteTouches(elem){
 
 function init() {
   deleteTouches(document.querySelector('#sectorMenu'));
+  deleteTouches(document.querySelector('#buildingMenu'));
 
 
 
@@ -70,6 +71,16 @@ function init() {
   });
   target.addEventListener('mousedown', function(event) {
     INTERFACE.game.ceilMenu.hideSectorMenu();
+    if(MAIN.game.scene.temporaryHexMesh){
+      MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+      MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+      MAIN.game.scene.temporaryHexMesh.material.dispose();
+    };
+    if(MAIN.game.scene.temporarySectorMesh){
+      MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+      MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+      MAIN.game.scene.temporarySectorMesh.material.dispose();
+    };
     event.preventDefault();
     if (event.button === 0) {
       INTERFACE.mouse.onclickPosition.x = event.clientX;
@@ -110,6 +121,16 @@ function init() {
 
   target.addEventListener('touchstart', function(event) {
     INTERFACE.game.ceilMenu.hideSectorMenu();
+    if(MAIN.game.scene.temporaryHexMesh){
+      MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+      MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+      MAIN.game.scene.temporaryHexMesh.material.dispose();
+    };
+    if(MAIN.game.scene.temporarySectorMesh){
+      MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+      MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+      MAIN.game.scene.temporarySectorMesh.material.dispose();
+    };
     event.preventDefault();
     if (event.targetTouches.length === 2) {
       const x1 = event.targetTouches[0].pageX;
@@ -126,6 +147,8 @@ function init() {
       INTERFACE.mouse.y = event.targetTouches[0].pageY;
       INTERFACE.touch.coords.x = event.targetTouches[0].pageX;
       INTERFACE.touch.coords.y = event.targetTouches[0].pageY;
+      INTERFACE.touch.shift.x = event.targetTouches[0].pageX;
+      INTERFACE.touch.shift.y = event.targetTouches[0].pageY;
 
       if((Date.now() - INTERFACE.touch.lastTime) < 250){
         target.dispatchEvent(new CustomEvent("touchDoubleClick", {
@@ -152,32 +175,36 @@ function init() {
       INTERFACE.touch.length = length;
 
       if (deltaLength >= INTERFACE.touch.maxDivergence * (-1) && deltaLength <= INTERFACE.touch.maxDivergence) {
-        const valueX = event.targetTouches[0].pageX - INTERFACE.touch.shift.x;
-        const valueY = event.targetTouches[0].pageY - INTERFACE.touch.shift.y;
+        if(!INTERFACE.touch.zooming ){
 
-        //баг скачков
-        if (valueX > -100 && valueX < 100) {
-          if(valueX <-3 || valueX > 3){
-            INTERFACE.game.camera.rotate(-valueX * 0.5);
+
+          const valueX = event.targetTouches[0].pageX - INTERFACE.touch.shift.x;
+          const valueY = event.targetTouches[0].pageY - INTERFACE.touch.shift.y;
+
+          //баг скачков
+          if (valueX > -100 && valueX < 100) {
+            if(valueX <-3 || valueX > 3){
+              INTERFACE.game.camera.rotate(-valueX * 0.5);
+            };
           };
-        };
-        if (valueY > -100 && valueY < 100) {
-          if(valueY <-3 || valueY > 3){
-            INTERFACE.game.camera.shifts.z = -valueY * 0.01;
+          if (valueY > -100 && valueY < 100) {
+            if(valueY <-3 || valueY > 3){
+              INTERFACE.game.camera.shifts.z = -valueY * 0.01;
+            }else{
+              //чтобы не поднималос когда 2 пальца не отпущены
+              INTERFACE.game.camera.shifts.z = 0;
+            };
           }else{
-            //чтобы не поднималос когда 2 пальца не отпущены
             INTERFACE.game.camera.shifts.z = 0;
-          }
-        }else{
-          INTERFACE.game.camera.shifts.z = 0;
-        }
+          };
 
-        INTERFACE.touch.shift.x = event.targetTouches[0].pageX;
-        INTERFACE.touch.shift.y = event.targetTouches[0].pageY;
-
+          INTERFACE.touch.shift.x = event.targetTouches[0].pageX;
+          INTERFACE.touch.shift.y = event.targetTouches[0].pageY;
+        };
 
       } else if (deltaLength > INTERFACE.touch.maxDivergence) {
         //баг скачков
+        INTERFACE.touch.zooming = true;
         if (deltaLength > -100 && deltaLength < 100) {
           INTERFACE.game.camera.changeZoom(-deltaLength * 0.05)
         };
@@ -201,6 +228,7 @@ function init() {
     event.preventDefault();
     if (event.targetTouches.length != 2) {
       INTERFACE.touch.double = false;
+      INTERFACE.touch.zooming = false;
       INTERFACE.touch.doubbleTouchShiftValue.x = 0;
       INTERFACE.touch.doubbleTouchShiftValue.y = 0;
     };
@@ -282,8 +310,9 @@ const INTERFACE = {
   touch: {
     single: false,
     double: false,
+    zooming:false,
     length: 0,
-    maxDivergence: 10,
+    maxDivergence: 15,
     lastTime:Date.now(),
     shift: {
       x: 0,
