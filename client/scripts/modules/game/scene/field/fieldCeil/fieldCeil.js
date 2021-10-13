@@ -280,7 +280,7 @@ class FieldCeil {
             return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
         };
         //выбираем один из элементов декора
-        const decorRandom = getRandomIntInclusive(1,3);
+        const decorRandom = getRandomIntInclusive(1,4);
         //ставится он в 50%
         if(Math.random() > 0.5){
           const decorGeometry = MAIN.game.scene.assets.geometries['roadDecor' + decorRandom].clone();
