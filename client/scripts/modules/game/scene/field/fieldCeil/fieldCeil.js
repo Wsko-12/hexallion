@@ -273,11 +273,33 @@ class FieldCeil {
         buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
         buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
         newGeometryArray.push(buildGeommetry);
+
+        function getRandomIntInclusive(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
+        };
+        //выбираем один из элементов декора
+        const decorRandom = getRandomIntInclusive(1,3);
+        //ставится он в 50%
+        if(Math.random() > 0.5){
+          const decorGeometry = MAIN.game.scene.assets.geometries['roadDecor' + decorRandom].clone();
+          decorGeometry.rotateY((sector*(-60) * Math.PI/180));
+          decorGeometry.translate(this.position.x,this.position.y,this.position.z);
+          newGeometryArray.push(decorGeometry);
+        };
+
+
+
+
+
+
         const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
         MAIN.renderer.scene.ceilsMesh.geometry.dispose();
         delete MAIN.renderer.scene.ceilsMesh.geometry;
         MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
         this.sectors[sector] = 'road';
+
 
 
         const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];

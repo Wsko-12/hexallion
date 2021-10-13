@@ -107,6 +107,8 @@ ATLAS.models = [
     folder:'ceils/',
     file:'hexsectorTemporaryMesh.glb',
   },
+
+
   { name:'roadCenter',
     folder:'buildings/',
     file:'roadCenter.glb',
@@ -119,6 +121,23 @@ ATLAS.models = [
   { name:'roadLight',
     folder:'buildings/',
     file:'roadLight.glb',
+  },
+
+  { name:'roadDecor1',
+    folder:'buildings/',
+    file:'roadDecor1.glb',
+  },
+  { name:'roadDecor2',
+    folder:'buildings/',
+    file:'roadDecor2.glb',
+  },
+  { name:'roadDecor3',
+    folder:'buildings/',
+    file:'roadDecor3.glb',
+  },
+  { name:'roadDecor4',
+    folder:'buildings/',
+    file:'roadDecor4.glb',
   },
 
 
