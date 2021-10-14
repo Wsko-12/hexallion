@@ -242,7 +242,7 @@ FIELD.create = () => {
 
 
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
-  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:500,transparent:true,opacity:1,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
+  const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:500,transparent:true,opacity:0.8,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
   const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
   water.receiveShadow = true;
 

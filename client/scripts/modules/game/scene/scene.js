@@ -63,6 +63,7 @@ function create() {
   const lightMain = new THREE.DirectionalLight(0xff896f, 1);
   lightMain.castShadow = true;
   lightMain.shadow.camera.top = 10;
+  lightMain.shadow.bias = 0.0008;
   lightMain.shadow.camera.bottom = -10;
   lightMain.shadow.camera.left = -10;
   lightMain.shadow.camera.right = 10;

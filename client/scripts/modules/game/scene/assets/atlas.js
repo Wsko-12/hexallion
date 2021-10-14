@@ -140,7 +140,30 @@ ATLAS.models = [
     file:'roadDecor4.glb',
   },
 
-
+  { name:'bridge',
+    folder:'buildings/',
+    file:'bridge.glb',
+  },
+  { name:'bridgeCentral',
+    folder:'buildings/',
+    file:'bridgeCentral.glb',
+  },
+  { name:'bridgeBorder',
+    folder:'buildings/',
+    file:'bridgeBorder.glb',
+  },
+  { name:'bridgeStraight',
+    folder:'buildings/',
+    file:'bridgeStraight.glb',
+  },
+  { name:'bridgeStraightLight',
+    folder:'buildings/',
+    file:'bridgeStraightLight.glb',
+  },
+  { name:'bridgeLight',
+    folder:'buildings/',
+    file:'bridgeLight.glb',
+  },
 
 
 

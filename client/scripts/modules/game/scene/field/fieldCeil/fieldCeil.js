@@ -150,41 +150,87 @@ class FieldCeil {
 
 
 
+  calculateSectorMenuButtons(sector){
+    //Ищем что можно построить на этом секторе;
+    const buttons = [];
+    const ceil = this.type;
+    let nearCeil = this.neighbours[sector];
+    if(nearCeil != null){
+      nearCeil = nearCeil.type
+    };
 
+    //check all builds
+    for(let building in MAIN.game.configs.buildings){
+      const thisBuilding = MAIN.game.configs.buildings[building];
+      //check can we build this building on this ceil
+      thisBuilding.ceil.forEach((buildCeil, i) => {
+        if(buildCeil === ceil){
+          //nearCeil for this building
+          thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
+            if(buildNearCeil == nearCeil || buildNearCeil === 'all'){
+              buttons.push(building);
+            };
+          });
+        };
+      });
+    };
+
+    return buttons;
+  };
 
   showSectorMenu(sector){
     if(this.type === 'meadow'){
       if(this.sectors[sector] === null){
         const that = this;
-        function calculateSectorMenuButtons(){
-          //Ищем что можно построить на этом секторе;
-          const buttons = [];
-          const ceil = that.type;
-          let nearCeil = that.neighbours[sector];
-          if(nearCeil != null){
-            nearCeil = nearCeil.type
-          };
-
-          //check all builds
-          for(let building in MAIN.game.configs.buildings){
-            const thisBuilding = MAIN.game.configs.buildings[building];
-            //check can we build this building on this ceil
-            thisBuilding.ceil.forEach((buildCeil, i) => {
-              if(buildCeil === ceil){
-                //nearCeil for this building
-                thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
-                  if(buildNearCeil == nearCeil || buildNearCeil === 'all'){
-                    buttons.push(building);
-                  };
-                });
-              };
-            });
-          };
-
-          return buttons;
-        };
-        MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,calculateSectorMenuButtons());
+        MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,this.calculateSectorMenuButtons(sector));
       };
+    };
+    if(this.type === 'sea'){
+      if(this.sectors[sector] === null){
+        let nonEmptySectors = 0;
+        // чтобы нельзя было строить больше 2
+        this.sectors.forEach((thisSector, i) => {
+          if(thisSector != null){
+            nonEmptySectors++;
+          };
+        });
+        if(nonEmptySectors < 2){
+          const that = this;
+          MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,this.calculateSectorMenuButtons(sector));
+        };
+      };
+
+      // if(this.sectors[sector] === null){
+      //   const that = this;
+      //   function calculateSectorMenuButtons(){
+      //     //Ищем что можно построить на этом секторе;
+      //     const buttons = [];
+      //     const ceil = that.type;
+      //     let nearCeil = that.neighbours[sector];
+      //     if(nearCeil != null){
+      //       nearCeil = nearCeil.type
+      //     };
+      //
+      //     //check all builds
+      //     for(let building in MAIN.game.configs.buildings){
+      //       const thisBuilding = MAIN.game.configs.buildings[building];
+      //       //check can we build this building on this ceil
+      //       thisBuilding.ceil.forEach((buildCeil, i) => {
+      //         if(buildCeil === ceil){
+      //           //nearCeil for this building
+      //           thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
+      //             if(buildNearCeil == nearCeil || buildNearCeil === 'all'){
+      //               buttons.push(building);
+      //             };
+      //           });
+      //         };
+      //       });
+      //     };
+      //
+      //     return buttons;
+      //   };
+      //   MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,calculateSectorMenuButtons());
+      // };
     };
   };
 
@@ -260,8 +306,15 @@ class FieldCeil {
 
 
       if(!this.centralRoad){
+
         this.centralRoad = true;
-        const centralRoadGeometry = MAIN.game.scene.assets.geometries.roadCenter.clone();
+        let centralRoadGeometry
+        if(this.type === 'meadow'){
+          centralRoadGeometry = MAIN.game.scene.assets.geometries.roadCenter.clone();
+        };
+        if(this.type === 'sea'){
+          centralRoadGeometry = MAIN.game.scene.assets.geometries.bridgeCentral.clone();
+        };
         centralRoadGeometry.translate(this.position.x,this.position.y,this.position.z);
         newGeometryArray.push(centralRoadGeometry);
       };
@@ -312,6 +365,76 @@ class FieldCeil {
         MAIN.game.scene.lights.buildingLights.geometry.dispose();
         delete MAIN.game.scene.lights.buildingLights.geometry;
         MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+
+      };
+
+      if(building === 'bridge'){
+        let lightGeometry;
+        if(this.neighbours[sector].type === 'meadow' || this.neighbours[sector].cityCeil ){
+          buildGeommetry =  MAIN.game.scene.assets.geometries.bridge.clone();
+          buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
+          buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+          newGeometryArray.push(buildGeommetry);
+          this.sectors[sector] = 'bridge';
+
+          lightGeometry =  MAIN.game.scene.assets.geometries.bridgeLight.clone();
+        };
+        if(this.neighbours[sector].type === 'sea'){
+          buildGeommetry =  MAIN.game.scene.assets.geometries.bridgeStraight.clone();
+          buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
+          buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+          newGeometryArray.push(buildGeommetry);
+          this.sectors[sector] = 'bridgeStraight';
+
+
+          lightGeometry =  MAIN.game.scene.assets.geometries.bridgeStraightLight.clone();
+        };
+
+
+
+        // если два построено, то добавляем борты
+        let nonEmptySectors = 0;
+
+        this.sectors.forEach((thisSector, i) => {
+          if(thisSector != null){
+            nonEmptySectors++;
+          };
+        });
+        if(nonEmptySectors === 2){
+          this.sectors.forEach((thisSector, i) => {
+            if(thisSector === null){
+              const borderGeometry = MAIN.game.scene.assets.geometries.bridgeBorder.clone();
+              borderGeometry.rotateY((i*(-60) * Math.PI/180));
+              borderGeometry.translate(this.position.x,this.position.y,this.position.z);
+              newGeometryArray.push(borderGeometry);
+            };
+          });
+        };
+
+        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
+        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
+        delete MAIN.renderer.scene.ceilsMesh.geometry;
+        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
+
+        if(lightGeometry){
+          const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+          lightGeometry.rotateY((sector*(-60) * Math.PI/180));
+          lightGeometry.translate(this.position.x,this.position.y,this.position.z);
+          lightArray.push(lightGeometry);
+
+          const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+          MAIN.game.scene.lights.buildingLights.geometry.dispose();
+          delete MAIN.game.scene.lights.buildingLights.geometry;
+          MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+        };
+        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+        // const thisLightGeometry = MAIN.game.scene.assets.geometries.roadLight.clone()
+        // thisLightGeometry.rotateY((sector*(-60) * Math.PI/180));
+        // thisLightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        // lightArray.push(thisLightGeometry);
+        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+        //
+
 
       };
 

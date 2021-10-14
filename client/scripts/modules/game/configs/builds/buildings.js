@@ -11,7 +11,7 @@ const BUILDINGS = {
   road:{
     name:'Road',
     description:'Дорога для транспорта',
-    ceil:['meadow','sea'],
+    ceil:['meadow'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
   },
   sawmill:{
@@ -31,6 +31,12 @@ const BUILDINGS = {
     description:'Поле для выращивания сельскохозяйственных культур',
     ceil:['meadow'],
     nearCeil:['all'],
+  },
+  bridge:{
+    name:'Bridge',
+    description:'Мост для транспорта',
+    ceil:['sea'],
+    nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
   },
 };
 export {
