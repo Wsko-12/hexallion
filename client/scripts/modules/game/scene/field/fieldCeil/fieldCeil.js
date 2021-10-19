@@ -123,28 +123,35 @@ class FieldCeil {
     return sector
   };
   onClick(intersectCoords){
-    if(!this.blockCeil){
-      this.addChosenTemporaryHex();
-      const selectedSector = this.findSectorByClick(intersectCoords);
-      if(this.sectors[selectedSector] === null){
-        this.addChosenSectorTemporaryMesh(selectedSector);
-        this.showSectorMenu(selectedSector);
-      };
-    }else{
-      if(MAIN.game.scene.temporaryHexMesh){
-        MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
-        MAIN.game.scene.temporaryHexMesh.geometry.dispose();
-        MAIN.game.scene.temporaryHexMesh.material.dispose();
-      };
-      if(MAIN.game.scene.temporarySectorMesh){
-        MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
-        MAIN.game.scene.temporarySectorMesh.geometry.dispose();
-        MAIN.game.scene.temporarySectorMesh.material.dispose();
-      };
-      if(!this.cityCeil){
-        this.addChosenBlockTemporaryHex();
+    //для режима пошагового меню не показывается если не ход игрока
+    if(MAIN.game.commonData.turnBasedGame){
+      if(MAIN.game.commonData.queue != MAIN.game.playerData.login){
+        return
       };
     };
+      if(!this.blockCeil){
+        this.addChosenTemporaryHex();
+        const selectedSector = this.findSectorByClick(intersectCoords);
+        if(this.sectors[selectedSector] === null){
+          this.addChosenSectorTemporaryMesh(selectedSector);
+          this.showSectorMenu(selectedSector);
+        };
+      }else{
+        if(MAIN.game.scene.temporaryHexMesh){
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+          MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+          MAIN.game.scene.temporaryHexMesh.material.dispose();
+        };
+        if(MAIN.game.scene.temporarySectorMesh){
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+          MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+          MAIN.game.scene.temporarySectorMesh.material.dispose();
+        };
+        if(!this.cityCeil){
+          this.addChosenBlockTemporaryHex();
+        };
+      };
+
   };
 
 
@@ -427,21 +434,46 @@ class FieldCeil {
           delete MAIN.game.scene.lights.buildingLights.geometry;
           MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
         };
-        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        // const thisLightGeometry = MAIN.game.scene.assets.geometries.roadLight.clone()
-        // thisLightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        // thisLightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        // lightArray.push(thisLightGeometry);
-        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        //
-
-
       };
 
 
-      //  MAIN.game.scene.buildingsMesh.geometry.dispose();
-      // delete  MAIN.game.scene.buildingsMesh.geometry;
-      //  MAIN.game.scene.buildingsMesh.geometry = newGeometry;
+      if(building === 'sawmill'){
+        buildGeommetry =  MAIN.game.scene.assets.geometries.sawmill.clone();
+        buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
+        buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+        newGeometryArray.push(buildGeommetry);
+
+        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
+        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
+        delete MAIN.renderer.scene.ceilsMesh.geometry;
+        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
+
+
+        const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
+        const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+        lightGeometry.rotateY((sector*(-60) * Math.PI/180));
+        lightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        lightArray.push(lightGeometry);
+
+        const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+        MAIN.game.scene.lights.buildingLights.geometry.dispose();
+        delete MAIN.game.scene.lights.buildingLights.geometry;
+        MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+
+        this.sectors[sector] = 'sawmill';
+      };
+
+
+      // let vertCount = 0;
+      //
+      // MAIN.renderer.scene.traverse((children) => {
+      //       if(children.type === 'Mesh'){
+      //         vertCount += children.geometry.attributes.position.count;
+      //       }
+      // });
+      // console.log(vertCount)
+
+
     };
   };
 };

@@ -3,6 +3,7 @@ const app = express();
 const http = require('http').createServer(app);
 const PORT = process.env.PORT || 3000;
 const DB = require('./modules/db.js');
+const COASTS = require('./modules/coasts.js');
 
 
 
@@ -28,21 +29,72 @@ const ROOMS = {
     maxMembers: 1,
     members: [],
     started: false,
+    turnBasedGame:false,
+    turnTime:10000,
   },
 };
 const GAMES = {
 
 };
 
+
+class CREDIT {
+  constructor(properties){
+    this.player = properties.player;
+    this.amount = properties.amount;
+    this.pays = properties.pays;
+    this.deferment = properties.deferment;
+    this.procent = properties.procent;
+  };
+};
+
+class PLAYER {
+  constructor(properties){
+    this.login = properties.login;
+  };
+  applyCredit(credit){
+    credit.player = this;
+    this.balance = credit.amount;
+    this.credit = new CREDIT(credit);
+    if( USERS[this.login]){
+      const socket = USERS[this.login].socket;
+      const data = {
+        amount:credit.amount,
+        pays:credit.pays,
+        deferment:credit.deferment,
+        procent:credit.procent,
+      };
+      if(socket){
+        socket.emit('GAME_applyCredit',data);
+      };
+
+    };
+  };
+  changeBalance(value){
+    this.balance += value;
+    const socket = USERS[this.login].socket;
+    if(socket){
+      socket.emit('GAME_changeBalance',this.balance);
+    };
+  };
+};
+
+
+
 class GAME {
+  //Очередь пусть формируется из тех, кто первый выбрал кредит
   constructor(properties){
     this.id = properties.id;
     this.roomID = properties.roomID;
-    this.turns = properties.turns;
+    this.members = properties.members;
     this.mapArray = properties.mapArray;
+    this.players = properties.players;
+    this.turnBasedGame = properties.turnBasedGame;
+    this.queue = [];
+    this.queueNum = 0;
   };
   sendToAll(message,data){
-    this.turns.forEach((member, i) => {
+    this.members.forEach((member, i) => {
       if(USERS[member]){
         USERS[member].socket.emit(message,data);
       };
@@ -59,6 +111,13 @@ class GAME {
 
     this.sendToAll('GAME_applyBuilding',data);
   };
+
+  sendTurn(){
+    const currentTurn = this.queue[this.queueNum];
+    this.sendToAll('GAME_reciveTurn',currentTurn);
+  };
+
+
 };
 
 //
@@ -123,32 +182,6 @@ io.on('connection', function(socket) {
     };
   });
 
-
-  //происходит, когда сгенерирована карта, очередь и тд
-  socket.on('GAME_generated', (gameData) => {
-    /*
-      gameData = {
-      roomID:R_0000000000,
-      id:'G_0000000000',
-      turns:[member1,member2,member3,member4],
-      mapArray:[mapCeils],
-    }
-    */
-    ROOMS[gameData.roomID].gameID = gameData.id;
-    // ---!--- сюда надо вкинуть класс GAME, чтобы через нее реализовать SOCKET.broadcast;
-    const game = new GAME(gameData);
-    GAMES[game.id] = game;
-
-    // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
-    ROOMS[gameData.roomID].members.forEach((member) => {
-      if (USERS[member]) {
-        USERS[member].socket.emit('GAME_data', gameData);
-      };
-    });
-  });
-
-
-
   socket.on('disconnect', function() {
     const user = USERS[SOCKETS[socket.id].user];
     if (user) {
@@ -158,18 +191,127 @@ io.on('connection', function(socket) {
     console.log('disconnect');
   });
 
+
+  //происходит, когда сгенерирована карта, очередь и тд
+  socket.on('GAME_generated', (gameData) => {
+    //trigger game -> generation.js -> start()
+    /*
+      gameData = {
+      roomID:R_0000000000,
+      id:'G_0000000000',
+      turns:[member1,member2,member3,member4],
+      mapArray:[mapCeils],
+
+    }
+    */
+    ROOMS[gameData.roomID].gameID = gameData.id;
+
+
+    gameData.players = {};
+    gameData.members.forEach((member, i) => {
+      const properties = {
+        login:member,
+      };
+      const player = new PLAYER(properties);
+      gameData.players[player.login] = player;
+    });
+
+
+    // ---!--- сюда надо вкинуть класс GAME, чтобы через нее реализовать SOCKET.broadcast;
+    const game = new GAME(gameData);
+    GAMES[game.id] = game;
+    // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
+    ROOMS[gameData.roomID].members.forEach((member) => {
+      if (USERS[member]) {
+        USERS[member].socket.emit('GAME_data', gameData);
+      };
+    });
+  });
+
+
+  //происходит, когда игрок выбирает себе кредит
+  socket.on('GAME_choseCredit',(data)=>{
+    //trigger interface -> game -> credit.js -> accept();
+    /*
+      data = {
+        player:MAIN.userData.login,
+        gameID:MAIN.game.commonData.id,
+        credit:globalChoosenCredit,
+      };
+    */
+
+    /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
+    if(GAMES[data.gameID].queue.indexOf(data.player) === -1){
+      GAMES[data.gameID].players[data.player].applyCredit(data.credit);
+      GAMES[data.gameID].queue.push(data.player);
+      //если это первый игрок в очереди, то отсылаем ему ход
+      if(GAMES[data.gameID].turnBasedGame){
+          if(GAMES[data.gameID].queue.length === 1){
+            GAMES[data.gameID].sendTurn();
+          };
+      };
+
+    };
+
+    /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
+  });
+
+
   //происходит, когда игрок хочет что-то построить
   socket.on('GAME_building',(data)=>{
+    //trigger interface -> game -> ceilMenu.js -> sendBuildRequest();
+    /*
+      data = {
+        player:MAIN.userData.login,
+        gameID:MAIN.game.commonData.id,
+        build:{
+          ceilIndex:ceil.indexes,
+          sector:sector,
+          building:building,
+        },
+    */
+
     /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
-    // if(GAMES[data.gameID]){
-    //   GAMES[data.gameID].playerBuilding(data.build);
-    // };
+    const game = GAMES[data.gameID];
+    if(game){
+      //anticheat
+      if(game.players[data.player].balance >= COASTS.buildings[data.build.building]){
+        game.players[data.player].changeBalance(COASTS.buildings[data.build.building]*(-1))
+        //чтобы игрок не мог построить вне его хода
+        if(game.turnBasedGame){
+          if(game.queue[game.queueNum] === data.player){
+            GAMES[data.gameID].playerBuilding(data.build);
+          };
+        }else{
+          GAMES[data.gameID].playerBuilding(data.build);
+        };
+      };
+
+    };
       /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
-    socket.emit('GAME_applyBuilding',data.build);
+    // socket.emit('GAME_applyBuilding',data.build);
     /*ДЛЯ ОДНОГО ИГРОКА*/
   });
+
+  // происходит в конце хода
+  //trigger game -> functions
+  socket.on('GAME_endTurn',(data)=>{
+    /*const data = {
+      player:MAIN.userData.login,
+      gameID:MAIN.game.commonData.id,
+    };
+    */
+    const game = GAMES[data.gameID];
+    if(game){
+      game.queueNum += 1;
+      if(game.queueNum >= game.queue.length){
+        game.queueNum = 0;
+      };
+      game.sendTurn();
+    };
+  })
 
 
 });

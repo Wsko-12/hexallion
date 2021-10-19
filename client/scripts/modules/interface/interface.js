@@ -10,6 +10,7 @@ import {
 } from './game/gameInterface.js';
 
 
+
 function pushRaycast(click){
   const mouse = {x:0,y:0};
   mouse.x = ( INTERFACE.mouse.x / window.innerWidth ) * 2 - 1;
@@ -52,12 +53,8 @@ function deleteTouches(elem){
 
 
 function init() {
-  deleteTouches(document.querySelector('#sectorMenu'));
-  deleteTouches(document.querySelector('#buildingMenu'));
-
-
-
   INTERFACE.game = GAME_INTERFACE;
+  INTERFACE.game.init();
   INTERFACE.console = MCONSOLE;
   INTERFACE.console.init();
 
@@ -290,6 +287,7 @@ function checkEvents() {
 
 
 const INTERFACE = {
+  deleteTouches,
   init,
   checkEvents,
   mouse: {

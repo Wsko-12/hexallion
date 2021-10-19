@@ -13,31 +13,35 @@ const BUILDINGS = {
     description:'Дорога для транспорта',
     ceil:['meadow'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
+    coast:5000,
   },
-  sawmill:{
-    name:'Sawmill',
-    description:'Производство досок',
-    ceil:['meadow'],
-    nearCeil:['forest'],
-  },
-  waterStation:{
-    name:'Water station',
-    description:'Производство чистой воды',
-    ceil:['meadow'],
-    nearCeil:['sea'],
-  },
-  field:{
-    name:'Field',
-    description:'Поле для выращивания сельскохозяйственных культур',
-    ceil:['meadow'],
-    nearCeil:['all'],
-  },
+
   bridge:{
     name:'Bridge',
     description:'Мост для транспорта',
     ceil:['sea'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
+    coast:200,
   },
+  // sawmill:{
+  //   name:'Sawmill',
+  //   description:'Производство досок',
+  //   ceil:['meadow'],
+  //   nearCeil:['forest'],
+  //   coast:500,
+  // },
+  // waterStation:{
+  //   name:'Water station',
+  //   description:'Производство чистой воды',
+  //   ceil:['meadow'],
+  //   nearCeil:['sea'],
+  // },
+  // field:{
+  //   name:'Field',
+  //   description:'Поле для выращивания сельскохозяйственных культур',
+  //   ceil:['meadow'],
+  //   nearCeil:['all'],
+  // },
 };
 export {
   BUILDINGS

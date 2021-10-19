@@ -21,12 +21,13 @@ GENERATION.start = (room) => {
 game.id = generateId('G', 9);
 
 
-  function turns(membersArray) {
-    const turnsArray = [...membersArray];
-    turnsArray.sort(() => Math.random() - 0.5);
-    return turnsArray;
-  };
-  game.turns = turns(room.members)
+  // function turns(membersArray) {
+  //   const turnsArray = [...membersArray];
+  //   turnsArray.sort(() => Math.random() - 0.5);
+  //   return turnsArray;
+  // };
+  game.members = room.members;
+  // game.turns = turns(room.members);
 
   function map() {
     const mapArray = [];
@@ -39,14 +40,12 @@ game.id = generateId('G', 9);
         };
       };
     };
-
     mapArray.sort(() => Math.random() - 0.5);
-
     return mapArray;
   };
   game.mapArray = map();
-
-
+  game.turnBasedGame = room.turnBasedGame;
+  game.turnTime = room.turnTime;
 
   MAIN.socket.emit('GAME_generated', game);
 

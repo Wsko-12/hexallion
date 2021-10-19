@@ -10,6 +10,7 @@ import {
 
 
 const FUNCTIONS = {
+  //trigger at socket.js MAIN.socket.on('GAME_applyBuilding')
   applyBuilding(data){
     // data = {
     //     ceilIndex: ceil.indexes,
@@ -22,6 +23,14 @@ const FUNCTIONS = {
     };
   },
 
+
+  endTurn(){
+    const data = {
+      player:MAIN.userData.login,
+      gameID:MAIN.game.commonData.id,
+    };
+    MAIN.socket.emit('GAME_endTurn',data);
+  },
 
 
 

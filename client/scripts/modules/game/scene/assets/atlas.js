@@ -167,6 +167,14 @@ ATLAS.models = [
 
 
 
+  { name:'sawmill',
+    folder:'buildings/',
+    file:'sawmill.glb',
+  },
+  { name:'sawmillLight',
+    folder:'buildings/',
+    file:'sawmillLight.glb',
+  },
 
 
 

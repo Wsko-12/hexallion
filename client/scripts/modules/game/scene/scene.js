@@ -22,94 +22,96 @@ import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 // import { BufferGeometryUtils } from '../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 
 
-function create() {
-  MAIN.game.scene.hitBoxGroup = new THREE.Group();
-  RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
-  MAIN.game.scene.time = TIME;
-  MAIN.game.scene.sun = SUN;
-  MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
-  RENDERER.scene.background = MAIN.game.scene.assets.textures.sceneEnvMap;
-  const fieldBorder = new THREE.Mesh(MAIN.game.scene.assets.geometries.tableBorders.clone(), new THREE.MeshBasicMaterial());
-  fieldBorder.rotation.y = Math.PI / 2;
-  RENDERER.scene.add(fieldBorder);
+async function create() {
+  let sceneReadyPromise = new Promise((resolve, reject) => {
+    MAIN.game.scene.hitBoxGroup = new THREE.Group();
+    RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
+    MAIN.game.scene.time = TIME;
+    MAIN.game.scene.sun = SUN;
+    MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
+    RENDERER.scene.background = MAIN.game.scene.assets.textures.sceneEnvMap;
+    const fieldBorder = new THREE.Mesh(MAIN.game.scene.assets.geometries.tableBorders.clone(), new THREE.MeshBasicMaterial());
+    fieldBorder.rotation.y = Math.PI / 2;
+    RENDERER.scene.add(fieldBorder);
 
-  // const mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.5,0.5,0.5),new THREE.MeshBasicMaterial({color:0xffe325}));
-  // mesh.position.set(0,1,0)
-  // RENDERER.scene.add(mesh);
+    // const mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.5,0.5,0.5),new THREE.MeshBasicMaterial({color:0xffe325}));
+    // mesh.position.set(0,1,0)
+    // RENDERER.scene.add(mesh);
 
-  // MAIN.game.scene.buildingsMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.triangleEmpty.clone(),new THREE.MeshPhongMaterial({color:0x9f9f9f,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0}));
-  // RENDERER.scene.add(MAIN.game.scene.buildingsMesh);
-  //Бокс, в котором все лежит
-  MAIN.game.scene.lights = {};
-    MAIN.game.scene.lights.buildingPointLights = [];
-  const sky = new THREE.Mesh(new THREE.BoxBufferGeometry(100,100,100),new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:0.5,}));
-  RENDERER.scene.add(sky);
-  MAIN.game.scene.lights.sky = sky;
-
-
-  //Группы, чтобы перемещать орбиты солнца
-  const lightsGroup = new THREE.Group();
-  lightsGroup.rotation.z = Math.PI/8;
-
-    //Группа света противоположного солнцу, подсвечивает все сзади
-  const lightsAdditionalGroup = new THREE.Group();
-  lightsAdditionalGroup.rotation.z = -Math.PI/8;
-
-  RENDERER.scene.add(lightsGroup);
-  RENDERER.scene.add(lightsAdditionalGroup);
+    // MAIN.game.scene.buildingsMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.triangleEmpty.clone(),new THREE.MeshPhongMaterial({color:0x9f9f9f,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0}));
+    // RENDERER.scene.add(MAIN.game.scene.buildingsMesh);
+    //Бокс, в котором все лежит
+    MAIN.game.scene.lights = {};
+      MAIN.game.scene.lights.buildingPointLights = [];
+    const sky = new THREE.Mesh(new THREE.BoxBufferGeometry(100,100,100),new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:0.5,}));
+    RENDERER.scene.add(sky);
+    MAIN.game.scene.lights.sky = sky;
 
 
-    //Солнце
-  const lightMain = new THREE.DirectionalLight(0xff896f, 1);
-  lightMain.castShadow = true;
-  lightMain.shadow.camera.top = 10;
-  lightMain.shadow.bias = 0.0008;
-  lightMain.shadow.camera.bottom = -10;
-  lightMain.shadow.camera.left = -10;
-  lightMain.shadow.camera.right = 10;
-  lightMain.shadow.camera.far = 20;
-  lightMain.shadow.mapSize.x = 2048;
-  lightMain.shadow.mapSize.y = 2048;
+    //Группы, чтобы перемещать орбиты солнца
+    const lightsGroup = new THREE.Group();
+    lightsGroup.rotation.z = Math.PI/8;
+
+      //Группа света противоположного солнцу, подсвечивает все сзади
+    const lightsAdditionalGroup = new THREE.Group();
+    lightsAdditionalGroup.rotation.z = -Math.PI/8;
+
+    RENDERER.scene.add(lightsGroup);
+    RENDERER.scene.add(lightsAdditionalGroup);
 
 
-  // console.log(light);
-  // const helper = new THREE.CameraHelper( lightMain.shadow.camera );
-  // lightsGroup.add( helper );
-  lightsGroup.add(lightMain);
-  // const sunMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial());
-  // lightsGroup.add(sunMesh);
-  MAIN.game.scene.lights.lightMain = lightMain;
-
-  //Дополнительный свет который лежит напротив солнца
-  const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.2);
-  lightsAdditionalGroup.add(lightAdditional);
-  // const lightAdditionalMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xff0000}));
-  // lightsAdditionalGroup.add(lightAdditionalMesh);
-  MAIN.game.scene.lights.lightAdditional = lightAdditional;
+      //Солнце
+    const lightMain = new THREE.DirectionalLight(0xff896f, 1);
+    lightMain.castShadow = true;
+    lightMain.shadow.camera.top = 10;
+    lightMain.shadow.bias = -0.0012;
+    lightMain.shadow.camera.bottom = -10;
+    lightMain.shadow.camera.left = -10;
+    lightMain.shadow.camera.right = 10;
+    lightMain.shadow.camera.far = 20;
+    lightMain.shadow.mapSize.x = 2048;
+    lightMain.shadow.mapSize.y = 2048;
 
 
-  const ambientLight = new THREE.AmbientLight(0x343434, 1.4);
-  MAIN.game.scene.lights.ambientLight = ambientLight;
-  lightsGroup.add(ambientLight);
+    // console.log(light);
+    // const helper = new THREE.CameraHelper( lightMain.shadow.camera );
+    // lightsGroup.add( helper );
+    lightsGroup.add(lightMain);
+    // const sunMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial());
+    // lightsGroup.add(sunMesh);
+    MAIN.game.scene.lights.lightMain = lightMain;
 
-  const moonlight = new THREE.DirectionalLight(0xc4e6ff, 0.2);
-  // moonlight.castShadow = true;
-  moonlight.position.set(5,5,5)
-  MAIN.game.scene.lights.moonlight = moonlight;
-  RENDERER.scene.add(moonlight)
+    //Дополнительный свет который лежит напротив солнца
+    const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    lightsAdditionalGroup.add(lightAdditional);
+    // const lightAdditionalMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xff0000}));
+    // lightsAdditionalGroup.add(lightAdditionalMesh);
+    MAIN.game.scene.lights.lightAdditional = lightAdditional;
 
-  FIELD.create();
 
-  TIME.init();
-  RENDERER.render();
-  MAIN.pages.loading.close();
+    const ambientLight = new THREE.AmbientLight(0x343434, 1.4);
+    MAIN.game.scene.lights.ambientLight = ambientLight;
+    lightsGroup.add(ambientLight);
 
-    //события должны начать проверяться после того, как все будет готово. сообщаем, что все готово
-  MAIN.interface.init();
+    const moonlight = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    // moonlight.castShadow = true;
+    moonlight.position.set(5,5,5)
+    MAIN.game.scene.lights.moonlight = moonlight;
+    RENDERER.scene.add(moonlight)
 
-  MAIN.interface.startedCheckEvents = true;
-  MAIN.game.events.init();
+    FIELD.create();
 
+    TIME.init();
+    RENDERER.render();
+
+    resolve('sceneReady');
+
+  });
+
+  let sceneReady = await sceneReadyPromise;
+  if(sceneReady){
+    return sceneReady;
+  };
 };
 
 const SCENE = {
