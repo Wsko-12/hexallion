@@ -124,33 +124,33 @@ class FieldCeil {
   };
   onClick(intersectCoords){
     //для режима пошагового меню не показывается если не ход игрока
-    if(MAIN.game.commonData.turnBasedGame){
-      if(MAIN.game.commonData.queue != MAIN.game.playerData.login){
-        return
+    if (MAIN.game.commonData.turnBasedGame) {
+      if (MAIN.game.commonData.queue != MAIN.game.playerData.login || MAIN.game.commonData.turnsPaused) {
+        return;
       };
     };
-      if(!this.blockCeil){
-        this.addChosenTemporaryHex();
-        const selectedSector = this.findSectorByClick(intersectCoords);
-        if(this.sectors[selectedSector] === null){
-          this.addChosenSectorTemporaryMesh(selectedSector);
-          this.showSectorMenu(selectedSector);
-        };
-      }else{
-        if(MAIN.game.scene.temporaryHexMesh){
-          MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
-          MAIN.game.scene.temporaryHexMesh.geometry.dispose();
-          MAIN.game.scene.temporaryHexMesh.material.dispose();
-        };
-        if(MAIN.game.scene.temporarySectorMesh){
-          MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
-          MAIN.game.scene.temporarySectorMesh.geometry.dispose();
-          MAIN.game.scene.temporarySectorMesh.material.dispose();
-        };
-        if(!this.cityCeil){
-          this.addChosenBlockTemporaryHex();
-        };
+    if (!this.blockCeil) {
+      this.addChosenTemporaryHex();
+      const selectedSector = this.findSectorByClick(intersectCoords);
+      if (this.sectors[selectedSector] === null) {
+        this.addChosenSectorTemporaryMesh(selectedSector);
+        this.showSectorMenu(selectedSector);
       };
+    } else {
+      if (MAIN.game.scene.temporaryHexMesh) {
+        MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+        MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+        MAIN.game.scene.temporaryHexMesh.material.dispose();
+      };
+      if (MAIN.game.scene.temporarySectorMesh) {
+        MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+        MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+        MAIN.game.scene.temporarySectorMesh.material.dispose();
+      };
+      if (!this.cityCeil) {
+        this.addChosenBlockTemporaryHex();
+      };
+    };
 
   };
 

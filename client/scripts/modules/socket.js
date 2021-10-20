@@ -41,7 +41,10 @@ function init() {
           //события должны начать проверяться после того, как все будет готово. сообщаем, что все готово
           MAIN.interface.init();
           MAIN.interface.startedCheckEvents = true;
-          MAIN.game.events.init();
+          // MAIN.game.events.init();
+          if(gameData.turnBasedGame){
+              MAIN.interface.game.turn.init();
+          };
           MAIN.interface.game.credit.showChooseCreditMenu();
         });
       });
@@ -75,17 +78,34 @@ function init() {
       MAIN.interface.game.balance.init(MAIN.game.playerData.balance);
     });
 
+    MAIN.socket.on('GAME_creditChanges',function(data){
+      MAIN.game.playerData.credit.deferment = data.deferment;
+      MAIN.game.playerData.credit.pays = data.pays;
+      console.log(MAIN.game.playerData.credit);
+    })
+
     //происходит, когда меняется ход игрока
-    MAIN.socket.on('GAME_reciveTurn', function(login) {
+    MAIN.socket.on('GAME_reciveTurn', function(data) {
+      MAIN.game.commonData.turnsPaused = false;
       if(MAIN.game.commonData.turnBasedGame){
-        MAIN.game.commonData.queue = login;
-        if(login === MAIN.game.playerData.login){
-          setTimeout(()=>{
+        MAIN.game.commonData.queue = data.currentTurn;
+        if(data.currentTurn === MAIN.game.playerData.login){
+          if(  MAIN.game.playerData.balance > 0){
+            //пусть endTurn приходит с сервера
+            // setTimeout(()=>{
+            //   MAIN.game.functions.endTurn();
+            // },data.turnTime);
+          }else{
             MAIN.game.functions.endTurn();
-            console.log('endTurn')
-          },MAIN.game.commonData.turnTime);
+          };
         };
+        MAIN.interface.game.turn.makeTimer(data.turnTime/1000,data.currentTurn);
       };
+    });
+
+    MAIN.socket.on('GAME_pasedTurn',()=>{
+      MAIN.game.commonData.turnsPaused = true;
+      MAIN.interface.game.turn.makeNote('turns paused');
     });
 
   };

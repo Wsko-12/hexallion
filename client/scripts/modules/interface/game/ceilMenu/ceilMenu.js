@@ -175,7 +175,11 @@ const CEIL_MENU = {
           MAIN.game.scene.temporarySectorMesh.geometry.dispose();
           MAIN.game.scene.temporarySectorMesh.material.dispose();
         };
-      CEIL_MENU.sendBuildRequest(ceil,sector,building);
+        if(MAIN.game.playerData.balance >= MAIN.game.configs.buildings[building].coast){
+          CEIL_MENU.sendBuildRequest(ceil,sector,building);
+        }else{
+          MAIN.interface.game.balance.notEnoughMoney();
+        };
     };
     buildButton.ontouchstart = () =>{
       CEIL_MENU.hideSectorMenu();
@@ -190,14 +194,11 @@ const CEIL_MENU = {
           MAIN.game.scene.temporarySectorMesh.material.dispose();
         };
 
-
-
-
-      if(MAIN.game.playerData.balance >= MAIN.game.configs.buildings[building].coast){
-        CEIL_MENU.sendBuildRequest(ceil,sector,building);
-      }else{
-        MAIN.interface.game.balance.notEnoughMoney();
-      };
+        if(MAIN.game.playerData.balance >= MAIN.game.configs.buildings[building].coast){
+          CEIL_MENU.sendBuildRequest(ceil,sector,building);
+        }else{
+          MAIN.interface.game.balance.notEnoughMoney();
+        };
 
     };
 
@@ -216,9 +217,14 @@ const CEIL_MENU = {
     //чтобы не строил на уже построеном при игре безпошаговом режиме
     const chosenCeil = MAIN.game.data.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
     if(chosenCeil.sectors[data.build.sector] === null){
-      MAIN.socket.emit('GAME_building',data);
+      if(MAIN.game.commonData.turnBasedGame){
+        if(MAIN.game.commonData.queue === MAIN.game.playerData.login){
+          MAIN.socket.emit('GAME_building',data);
+        };
+      }else{
+        MAIN.socket.emit('GAME_building',data);
+      };
     };
-
   },
 };
 

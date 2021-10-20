@@ -10,13 +10,13 @@ import {
 const CREDITS = {
   basic:{
     //сколько дадут денег
-    amount:10000,
+    amount:100000,
     //какое кол-во платежей будет
-    pays:20,
+    pays:100,
     //какое кол-во шагов отсрочка
-    deferment:10,
+    deferment:0,
     //под какой процент кредит
-    procent:25,
+    procent:5,
 
   },
 };

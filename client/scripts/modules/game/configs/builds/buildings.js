@@ -13,7 +13,7 @@ const BUILDINGS = {
     description:'Дорога для транспорта',
     ceil:['meadow'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
-    coast:5000,
+    coast:500,
   },
 
   bridge:{

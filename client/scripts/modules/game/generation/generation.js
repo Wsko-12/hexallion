@@ -1,5 +1,5 @@
 /*
- * В этом модуле происсходит генерация данных игры(раскладка карты, очередь игроков)
+ * В этом модуле происсходит генерация данных игры(раскладка карты)
  */
 import {
   MAIN
@@ -46,6 +46,8 @@ game.id = generateId('G', 9);
   game.mapArray = map();
   game.turnBasedGame = room.turnBasedGame;
   game.turnTime = room.turnTime;
+  game.turnsPaused = false;
+  game.tickTime = room.tickTime;
 
   MAIN.socket.emit('GAME_generated', game);
 

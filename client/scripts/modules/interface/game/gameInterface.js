@@ -13,6 +13,9 @@ import {
 import {
   BALANCE
 } from './balance/balance.js';
+import {
+  TURN
+} from './turn/turn.js';
 
 function init(){
   const section = `
@@ -47,6 +50,7 @@ const GAME_INTERFACE = {
   ceilMenu:CEIL_MENU,
   credit:CREDIT,
   balance:BALANCE,
+  turn:TURN,
 };
 
 export {

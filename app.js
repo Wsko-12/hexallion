@@ -29,8 +29,9 @@ const ROOMS = {
     maxMembers: 1,
     members: [],
     started: false,
-    turnBasedGame:false,
-    turnTime:10000,
+    turnBasedGame: false,
+    turnTime: 10000,
+    tickTime:10000,
   },
 };
 const GAMES = {
@@ -39,42 +40,76 @@ const GAMES = {
 
 
 class CREDIT {
-  constructor(properties){
+  constructor(properties) {
     this.player = properties.player;
     this.amount = properties.amount;
+    this.paysParts = properties.pays;
     this.pays = properties.pays;
     this.deferment = properties.deferment;
     this.procent = properties.procent;
   };
+  turn() {
+    const that = this;
+
+    function send() {
+      const data = {
+        pays: that.pays,
+        deferment: that.deferment,
+      };
+      if (USERS[that.player.login]) {
+        USERS[that.player.login].socket.emit('GAME_creditChanges', data);
+      };
+    };
+    if (this.deferment > 0) {
+      this.deferment -= 1;
+      send();
+      return;
+    } else {
+      if (this.pays > 0) {
+        this.pays -= 1;
+        this.player.balance -= (this.amount / this.paysParts) + (this.amount / this.paysParts) * (this.procent / 100);
+        send();
+      };
+    };
+  };
 };
 
 class PLAYER {
-  constructor(properties){
+  constructor(properties) {
     this.login = properties.login;
+    this.balance = 0;
   };
-  applyCredit(credit){
+  applyCredit(credit) {
     credit.player = this;
     this.balance = credit.amount;
     this.credit = new CREDIT(credit);
-    if( USERS[this.login]){
+    if (USERS[this.login]) {
       const socket = USERS[this.login].socket;
       const data = {
-        amount:credit.amount,
-        pays:credit.pays,
-        deferment:credit.deferment,
-        procent:credit.procent,
+        amount: credit.amount,
+        pays: credit.pays,
+        deferment: credit.deferment,
+        procent: credit.procent,
       };
-      if(socket){
-        socket.emit('GAME_applyCredit',data);
+      if (socket) {
+        socket.emit('GAME_applyCredit', data);
       };
-
     };
   };
-  changeBalance(value){
+  changeBalance(value) {
     this.balance += value;
-    const socket = USERS[this.login].socket;
-    if(socket){
-      socket.emit('GAME_changeBalance',this.balance);
+    if (USERS[this.login]) {
+      const socket = USERS[this.login].socket;
+      socket.emit('GAME_changeBalance', this.balance);
+    };
+  };
+  turnAction() {
+    if (this.credit) {
+      this.credit.turn();
+      if (USERS[this.login]) {
+        const socket = USERS[this.login].socket;
+        socket.emit('GAME_changeBalance', this.balance);
+      };
     };
   };
 };
@@ -83,25 +118,31 @@ class PLAYER {
 
 class GAME {
   //Очередь пусть формируется из тех, кто первый выбрал кредит
-  constructor(properties){
+  constructor(properties) {
     this.id = properties.id;
     this.roomID = properties.roomID;
     this.members = properties.members;
     this.mapArray = properties.mapArray;
     this.players = properties.players;
     this.turnBasedGame = properties.turnBasedGame;
+    this.turnTime = properties.turnTime;
+    this.tickTime = properties.tickTime;
     this.queue = [];
-    this.queueNum = 0;
+    this.queueNum = -1;
+    this.startedQueque = 0;
+    this.turnsPaused = false;
+    this.tickPaused = false;
+
   };
-  sendToAll(message,data){
+  sendToAll(message, data) {
     this.members.forEach((member, i) => {
-      if(USERS[member]){
-        USERS[member].socket.emit(message,data);
+      if (USERS[member]) {
+        USERS[member].socket.emit(message, data);
       };
     });
   };
 
-  playerBuilding(data){
+  playerBuilding(data) {
     //нужно сюда впихнуть историю происходящего в игре
     // data = {
     //     ceilIndex: ceil.indexes,
@@ -109,15 +150,88 @@ class GAME {
     //     building: building,
     //   }
 
-    this.sendToAll('GAME_applyBuilding',data);
+    this.sendToAll('GAME_applyBuilding', data);
   };
 
-  sendTurn(){
-    const currentTurn = this.queue[this.queueNum];
-    this.sendToAll('GAME_reciveTurn',currentTurn);
+  nextTurn() {
+    //сохраняем значение, с которого запустили функцию
+    let startedTurnIndex = this.queueNum;
+    const that = this;
+    //понадобится для автоматического перехода хода и если игрок сам скипнет ход
+    let lastTurn;
+
+    //ищет следующего подходящего игрока
+    findTurn();
+
+    function findTurn() {
+      //просто убираем флаг
+      that.turnsPaused = false;
+
+      //меняем очередь
+      that.queueNum += 1;
+      if (that.queueNum >= that.queue.length) {
+        that.queueNum = 0;
+      };
+
+      const nextPlayer = that.players[that.queue[that.queueNum]];
+
+      //если функция зациклилась (снова вернулась на того, от кого пришла)
+      if (that.queueNum === startedTurnIndex) {
+        //если он банкрот или вышел из игры, то тормозим всю функцию
+        if (nextPlayer.balance <= 0 || !USERS[nextPlayer.login]) {
+          that.turnsPaused = true;
+        };
+      };
+      //сохраняем на ком был ход для setTimeout
+      lastTurn = that.queueNum;
+      //если у игрока все норм с балансом и он онлайн, то высылаем ход ему и ставим таймаут
+      if (nextPlayer.balance > 0 && USERS[nextPlayer.login]) {
+        const data = {
+          currentTurn: that.queue[that.queueNum],
+          turnTime: that.turnTime,
+        };
+        // отправляем ему все функции для хода(кредит, фермы и тд)
+        nextPlayer.turnAction();
+        //отправляем всем чей ход
+        that.sendToAll('GAME_reciveTurn', data);
+        setTimeout(function() {
+          //чтобы не сработало, если игрок переключит ход сам
+          //потому что если функция nextTurn вызовется еще раз, то изменится that.queueNum, а lastTurn нет
+          if (lastTurn === that.queueNum) {
+            that.nextTurn();
+          };
+        }, that.turnTime);
+      } else {
+        //если баланс 0 или меньше, и ходы не на паузе, то рекурсим функцию чтобы нашел следующего подходящего игрока
+        if (!that.turnsPaused) {
+          //сет таймаут нужен для ошибки стека
+          setTimeout(() => {
+            findTurn();
+          });
+        } else {
+          // если пауза, то всем кидаем что копец
+          that.sendToAll('GAME_pasedTurn');
+          //так же тут можно проверить, если все игроки банкроты, то закрывать игру
+        };
+      };
+    };
   };
-
-
+  tick() {
+    const that = this;
+    let allPlayersOff = true;
+    for(let player in this.players){
+      if(USERS[player]){
+        allPlayersOff = false;
+        const thisPlayer = this.players[player];
+        thisPlayer.turnAction();
+      };
+    };
+    if(!allPlayersOff){
+      setTimeout(function() {
+        that.tick();
+      }, that.tickTime);
+    };
+  };
 };
 
 //
@@ -185,15 +299,24 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     const user = USERS[SOCKETS[socket.id].user];
     if (user) {
-      delete USERS[SOCKETS[socket.id].user]
+      if (user.game) {
+        //если его очередь ходить
+        if (user.game.turnBasedGame) {
+          if (user.game.queue[user.game.queueNum] === SOCKETS[socket.id].user) {
+            user.game.nextTurn();
+          };
+        };
+      };
+      delete USERS[SOCKETS[socket.id].user];
     };
-    delete SOCKETS[socket.id]
+    delete SOCKETS[socket.id];
     console.log('disconnect');
   });
 
 
-  //происходит, когда сгенерирована карта, очередь и тд
+
   socket.on('GAME_generated', (gameData) => {
+    //происходит, когда сгенерирована карта
     //trigger game -> generation.js -> start()
     /*
       gameData = {
@@ -210,27 +333,27 @@ io.on('connection', function(socket) {
     gameData.players = {};
     gameData.members.forEach((member, i) => {
       const properties = {
-        login:member,
+        login: member,
       };
       const player = new PLAYER(properties);
       gameData.players[player.login] = player;
     });
 
-
-    // ---!--- сюда надо вкинуть класс GAME, чтобы через нее реализовать SOCKET.broadcast;
     const game = new GAME(gameData);
     GAMES[game.id] = game;
     // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
     ROOMS[gameData.roomID].members.forEach((member) => {
       if (USERS[member]) {
+        USERS[member].game = GAMES[game.id];
         USERS[member].socket.emit('GAME_data', gameData);
       };
     });
   });
 
 
-  //происходит, когда игрок выбирает себе кредит
-  socket.on('GAME_choseCredit',(data)=>{
+
+  socket.on('GAME_choseCredit', (data) => {
+      //происходит, когда игрок выбирает себе кредит
     //trigger interface -> game -> credit.js -> accept();
     /*
       data = {
@@ -241,24 +364,34 @@ io.on('connection', function(socket) {
     */
 
     /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
-    if(GAMES[data.gameID].queue.indexOf(data.player) === -1){
+    //просто баг фикс, чтобы он два раза не выбрал кредит
+    if (GAMES[data.gameID].queue.indexOf(data.player) === -1) {
+      //тут надо сделать античит по кредитам
       GAMES[data.gameID].players[data.player].applyCredit(data.credit);
       GAMES[data.gameID].queue.push(data.player);
-      //если это первый игрок в очереди, то отсылаем ему ход
-      if(GAMES[data.gameID].turnBasedGame){
-          if(GAMES[data.gameID].queue.length === 1){
-            GAMES[data.gameID].sendTurn();
-          };
+      //если пошаговая игра, то высылаем ходы
+      if (GAMES[data.gameID].turnBasedGame) {
+        //если это первый игрок в очереди, то отсылаем ему ход
+        if (GAMES[data.gameID].queue.length === 1) {
+          GAMES[data.gameID].nextTurn();
+        };
+        //если первый игрок уже проиграл или вышел и игра стала на паузу, а этот только выбрал кредит то чекаем следующий ход
+        if(GAMES[data.gameID].turnsPaused){
+          GAMES[data.gameID].nextTurn();
+        };
+      } else {
+        //если не пошаговая, то начинаем тики
+        GAMES[data.gameID].tick();
       };
-
     };
 
     /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
   });
 
 
-  //происходит, когда игрок хочет что-то построить
-  socket.on('GAME_building',(data)=>{
+
+  socket.on('GAME_building', (data) => {
+    //происходит, когда игрок хочет что-то построить
     //trigger interface -> game -> ceilMenu.js -> sendBuildRequest();
     /*
       data = {
@@ -273,43 +406,44 @@ io.on('connection', function(socket) {
 
     /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
     const game = GAMES[data.gameID];
-    if(game){
+    if (game) {
       //anticheat
-      if(game.players[data.player].balance >= COASTS.buildings[data.build.building]){
-        game.players[data.player].changeBalance(COASTS.buildings[data.build.building]*(-1))
-        //чтобы игрок не мог построить вне его хода
-        if(game.turnBasedGame){
-          if(game.queue[game.queueNum] === data.player){
-            GAMES[data.gameID].playerBuilding(data.build);
+      if (game.players[data.player].balance >= COASTS.buildings[data.build.building]) {
+        //если игра пошаговая, то нужно перепроверитьь его ли ход
+        if (game.turnBasedGame) {
+          //если ходы не на паузе
+          if(!game.turnsPaused){
+            //чтобы игрок не мог построить вне его хода
+            if (game.queue[game.queueNum] === data.player) {
+                game.players[data.player].changeBalance(COASTS.buildings[data.build.building] * (-1));
+                game.playerBuilding(data.build);
+            };
           };
-        }else{
-          GAMES[data.gameID].playerBuilding(data.build);
+        } else {
+          game.players[data.player].changeBalance(COASTS.buildings[data.build.building] * (-1));
+          game.playerBuilding(data.build);
         };
       };
-
     };
-      /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
+    /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
     // socket.emit('GAME_applyBuilding',data.build);
     /*ДЛЯ ОДНОГО ИГРОКА*/
   });
 
-  // происходит в конце хода
-  //trigger game -> functions
-  socket.on('GAME_endTurn',(data)=>{
+
+  socket.on('GAME_endTurn', (data) => {
+    // происходит в конце хода
+    //trigger game -> functions
     /*const data = {
       player:MAIN.userData.login,
       gameID:MAIN.game.commonData.id,
     };
     */
     const game = GAMES[data.gameID];
-    if(game){
-      game.queueNum += 1;
-      if(game.queueNum >= game.queue.length){
-        game.queueNum = 0;
-      };
-      game.sendTurn();
+    if (game) {
+      game.nextTurn();
     };
   })
 
