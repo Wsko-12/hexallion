@@ -24,7 +24,35 @@ function pushRaycast(click){
     };
   };
 };
+function returnTouches(elem){
+  elem.addEventListener('wheel',(event) => {
+    event.stopPropagation();
 
+  });
+
+  elem.addEventListener('mousedown',(event)=>{
+    event.stopPropagation();
+
+  });
+
+  elem.addEventListener('contextmenu',(event)=>{
+    event.stopPropagation();
+
+  });
+
+  elem.addEventListener('dblclick',(event)=>{
+    event.stopPropagation();
+
+  });
+  elem.addEventListener('touchstart',(event)=>{
+    event.stopPropagation();
+
+  });
+
+  elem.addEventListener('touchmove',(event)=>{
+    event.stopPropagation();
+  });
+};
 function deleteTouches(elem){
   elem.addEventListener('wheel',(event) => {
     event.preventDefault();
@@ -288,6 +316,7 @@ function checkEvents() {
 
 const INTERFACE = {
   deleteTouches,
+  returnTouches,
   init,
   checkEvents,
   mouse: {

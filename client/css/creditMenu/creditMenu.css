@@ -89,12 +89,14 @@
 
 @media only screen and (orientation : landscape) and  (max-device-width : 1024px) {
   #chooseCreditMenuContainer{
-    height: 50vh;
+    width: 90vw;
+    height: 60vh;
   }
 }
 
 @media only screen and (orientation : portrait) and  (max-device-width : 1024px) {
   #chooseCreditMenuContainer{
+    width: 80vw;
     height: 15vh;
   }
 }

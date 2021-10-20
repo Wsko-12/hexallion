@@ -3,16 +3,113 @@ import {
 } from '../../../../main.js';
 
 // trigger socket.js -> MAIN.socket.on('GAME_applyCredit')
+function updateCreditHistory(){
+  const credit = MAIN.game.playerData.credit
+  document.querySelector(`#creditHistory_paysLeft`).innerHTML = `Payments left: ${credit.pays}`;
+  document.querySelector(`#creditHistory_paysCoast`).innerHTML = `Cost of payment: $${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`;
+  document.querySelector(`#creditHistory_ProgressLine`).style.width = ((credit.allPays - credit.pays)/credit.allPays*100)+'%'
+};
+
+function addBalanceMessage(message,amount){
+  let color;
+  if(amount > 0){
+    color = '#62e27a';
+  }else{
+    color = 'red';
+  };
+  if(amount === 0){
+    color = 'white';
+  }
+  const minus = amount >= 0 ? false:true;
+  const sign = minus?'-$':'$'
+  const div = `
+    <div class="balanceList_child" style="color:${color}">
+      <div>${message}</div>
+      <div>${sign}${Math.abs(amount)}</div>
+    </div>
+  `
+  document.querySelector('#balanceList').insertAdjacentHTML('afterBegin',div);
+};
 function init(amount){
   const section = `
     <section id='balanceSection'>
-    <div id='balanceDiv'>
-      $${amount}
-    </div>
+      <div id='balanceDiv'>
+        $${amount}
+      </div>
 
     </section>
   `
-  document.querySelector('#gameInterface').insertAdjacentHTML('beforeEnd',section);
+  const interfaceSection = document.querySelector('#gameInterface')
+  interfaceSection.insertAdjacentHTML('beforeEnd',section);
+
+  const balanceHistorySection = `
+    <div id="balanceHistoryClicker">
+    <div>
+    <div id='balanceHistory'>
+      <div class='balanceHistory_title'>Credit</div>
+      <div id='creditHistory'>
+          <div id='creditHistory_paysLeft' class="creditHistory_text"></div>
+          <div id='creditHistory_paysCoast' class="creditHistory_text"></div>
+          <div class='creditHistory_CreditProgress'>
+            <div id='creditHistory_ProgressLine'></div>
+          </div>
+
+      </div>
+      <div class='balanceHistory_title'>Balance</div>
+      <div id='balanceList'></div>
+    </div>
+  `;
+  interfaceSection.insertAdjacentHTML('beforeEnd',balanceHistorySection);
+
+
+  // for(let i =0;i<100;i++){
+  //   addBalanceMessage('test',(50-i));
+  // }
+
+
+  const balanceDiv = document.querySelector('#balanceDiv');
+  // MAIN.interface.deleteTouches(balanceDiv);
+
+  const balanceHistoryClicker = document.querySelector('#balanceHistoryClicker');
+  MAIN.interface.deleteTouches(balanceHistoryClicker);
+  MAIN.interface.returnTouches(document.querySelector('#balanceList'));
+
+
+
+  const balanceHistory = document.querySelector('#balanceHistory');
+
+  let balanceHistoryOpened = false;
+
+
+
+
+
+
+  function showBalanceHistory(event){
+    if(event.target === balanceDiv || event.target === balanceHistoryClicker){
+      if(balanceHistoryOpened){
+        balanceHistoryOpened = false;
+        balanceHistoryClicker.style.display = 'none';
+        balanceHistory.style.display = 'none';
+        console.log('hide')
+      }else{
+        balanceHistoryClicker.style.display = 'block';
+        balanceHistory.style.display = 'block';
+        balanceHistoryOpened = true;
+        updateCreditHistory();
+        console.log('show')
+      };
+    };
+
+  };
+
+  balanceDiv.onclick = showBalanceHistory;
+  balanceDiv.ontouchstart = showBalanceHistory;
+
+  balanceHistoryClicker.onclick = showBalanceHistory;
+  balanceHistoryClicker.ontouchstart = showBalanceHistory;
+
+
 };
 
 function notEnoughMoney(){
@@ -72,5 +169,7 @@ const BALANCE = {
   init,
   notEnoughMoney,
   change,
+  updateCreditHistory,
+  addBalanceMessage,
 };
 export {BALANCE};

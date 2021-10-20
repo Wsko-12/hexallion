@@ -67,7 +67,9 @@ class CREDIT {
     } else {
       if (this.pays > 0) {
         this.pays -= 1;
-        this.player.balance -= (this.amount / this.paysParts) + (this.amount / this.paysParts) * (this.procent / 100);
+        const pay = (this.amount / this.paysParts) + (this.amount / this.paysParts) * (this.procent / 100);
+        this.player.balance -= pay;
+        this.player.sendBalanceMessage('Credit payment',(-pay));
         send();
       };
     };
@@ -78,6 +80,16 @@ class PLAYER {
   constructor(properties) {
     this.login = properties.login;
     this.balance = 0;
+    this.balanceHistory = [];
+  };
+  sendBalanceMessage(message,amount){
+    this.balanceHistory.push({message,amount});
+    if(USERS[this.login]){
+      USERS[this.login].socket.emit('GAME_BalanceMessage', {
+        message,
+        amount,
+      });
+    };
   };
   applyCredit(credit) {
     credit.player = this;
@@ -415,12 +427,16 @@ io.on('connection', function(socket) {
           if(!game.turnsPaused){
             //чтобы игрок не мог построить вне его хода
             if (game.queue[game.queueNum] === data.player) {
-                game.players[data.player].changeBalance(COASTS.buildings[data.build.building] * (-1));
+                const cost = COASTS.buildings[data.build.building] * (-1);
+                game.players[data.player].changeBalance(cost);
+                game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
                 game.playerBuilding(data.build);
             };
           };
         } else {
-          game.players[data.player].changeBalance(COASTS.buildings[data.build.building] * (-1));
+          const cost = COASTS.buildings[data.build.building] * (-1);
+          game.players[data.player].changeBalance(cost);
+          game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
           game.playerBuilding(data.build);
         };
       };

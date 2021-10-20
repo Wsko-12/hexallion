@@ -8,11 +8,99 @@
 }
 
 #balanceDiv{
+    pointer-events: auto;
   color: white;
   text-shadow: 0px 0px 1px black;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
   text-align: center;
   font-size: 1.5em;
-  padding-top: 1vh;
+  position: fixed;
+  top:10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#balanceHistoryClicker{
+  pointer-events: auto;
+  display: none;
+  position: fixed;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+#balanceHistory{
+  pointer-events: auto;
+  background-color: rgba(0,0,0,0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  font-family: 'Roboto', sans-serif;
+  width: 300px;
+  height: 400px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  overflow: hidden;
+}
+.balanceHistory_title{
+  width: 100%;
+  margin: 1%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-shadow: 0px 0px 1px black;
+  color:white;
+}
+
+#creditHistory{
+  width: 90%;
+  height: 20%;
+  /* background-color: red; */
+  margin: auto;
+}
+#balanceList{
+  width: 90%;
+  height: 60%;
+  /* background-color: red; */
+  margin: auto;
+  overflow-y: scroll;
+}
+.creditHistory_text{
+  font-size: 1em;
+  text-shadow: 0px 0px 1px black;
+  color:white;
+
+}
+.creditHistory_CreditProgress{
+  width: 100%;
+  height: 10%;
+  margin: auto;
+  margin-top: 5%;
+  background-color: rgba(0,0,0,0.4);
+}
+#creditHistory_ProgressLine{
+  height: 100%;
+  background-color: white;
+}
+.balanceList_child{
+  width: 100%;
+  font-size: 0.8em;
+  text-shadow: 0px 0px 1px black;
+  color:white;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted;
+}
+@media only screen and (orientation : landscape) and  (max-device-width : 1024px) {
+  #balanceHistory{
+    width: 40vw;
+    height:80vh;
+  }
+}
+@media only screen and (orientation : portrait) and  (max-device-width : 1024px) {
+  #balanceHistory{
+    width:70vw;
+    height:50vh;
+  }
 }

@@ -73,7 +73,7 @@ function init() {
 
       MAIN.game.playerData.balance = credit.amount;
       MAIN.game.playerData.credit = credit;
-
+      MAIN.game.playerData.credit.allPays = credit.pays;
       document.querySelector('#chooseCreditMenuSection').remove();
       MAIN.interface.game.balance.init(MAIN.game.playerData.balance);
     });
@@ -81,7 +81,7 @@ function init() {
     MAIN.socket.on('GAME_creditChanges',function(data){
       MAIN.game.playerData.credit.deferment = data.deferment;
       MAIN.game.playerData.credit.pays = data.pays;
-      console.log(MAIN.game.playerData.credit);
+      MAIN.interface.game.balance.updateCreditHistory();
     })
 
     //происходит, когда меняется ход игрока
@@ -106,6 +106,10 @@ function init() {
     MAIN.socket.on('GAME_pasedTurn',()=>{
       MAIN.game.commonData.turnsPaused = true;
       MAIN.interface.game.turn.makeNote('turns paused');
+    });
+
+    MAIN.socket.on('GAME_BalanceMessage',(data)=>{
+      MAIN.interface.game.balance.addBalanceMessage(data.message,data.amount);
     });
 
   };
