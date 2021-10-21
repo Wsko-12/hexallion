@@ -24,6 +24,13 @@ import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 
 async function create() {
   let sceneReadyPromise = new Promise((resolve, reject) => {
+
+    // const testMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2,0.2,0.2),new THREE.MeshBasicMaterial({color:0xFF0000}));
+    // MAIN.game.scene.testMesh = testMesh;
+    // RENDERER.scene.add(testMesh);
+
+    MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:false});
+
     MAIN.game.scene.hitBoxGroup = new THREE.Group();
     RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
     MAIN.game.scene.time = TIME;

@@ -4,7 +4,7 @@ const http = require('http').createServer(app);
 const PORT = process.env.PORT || 3000;
 const DB = require('./modules/db.js');
 const COASTS = require('./modules/coasts.js');
-
+const FACTORIES = require('./modules/factory.js');
 
 
 http.listen(PORT, '0.0.0.0', () => {
@@ -17,6 +17,35 @@ app.get('/', (req, res) => {
 
 // app.use(express.static(__dirname + '/client'));
 app.use('/', express.static(__dirname + '/client'));
+
+function  generateId(type,x){
+    if(type === undefined){
+      type = 'u'
+    }
+    if(x === undefined){
+      x = 5;
+    }
+    let letters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnPpQqRrSsTtUuVvWwXxYyZz';
+
+    let numbers = '0123456789';
+    let lettersMix,numbersMix;
+    for(let i=0; i<10;i++){
+      lettersMix += letters;
+      numbersMix += numbers;
+    }
+
+    let mainArr = lettersMix.split('').concat(numbersMix.split(''));
+    let shuffledArr = mainArr.sort(function(){
+                        return Math.random() - 0.5;
+                    });
+    let id = type +'_';
+    for(let i=0; i<=x;i++){
+        id += shuffledArr[i];
+    };
+    return id;
+};
+
+
 
 const SOCKETS = {};
 const USERS = {};
@@ -36,6 +65,120 @@ const ROOMS = {
 };
 const GAMES = {
 
+};
+class FACTORY_LIST {
+  constructor(player){
+    this.list = {};
+    this.player = player;
+  };
+
+  add(factory){
+    this.list[factory.id] = factory;
+  };
+
+};
+
+
+
+class FACTORY {
+  constructor(properties) {
+      this.player = properties.player;
+      this.id = properties.id;
+      this.name = properties.building;
+      //завод добывает ресурсы или перерабатывает
+      this.mining = FACTORIES[properties.building].mining;
+      this.resource = FACTORIES[properties.building].resource;
+
+      this.ceilIndex = properties.ceilIndex;
+      this.sector = properties.sector;
+
+      this.warehouse = FACTORIES[properties.building].warehouse;
+      this.speed = FACTORIES[properties.building].speed;
+      this.quality = 0;
+      //этот параметр сработает, когда придет апдейт на фабрику, нужно будет установить настройки фабрики
+      //ее параметры скорость, стоймость, качество
+      this.settingsSetted = false;
+  };
+
+  setSettings(settings){
+    //происходит, когда игрок меняет настройки
+
+
+    //проверяем на читы хотя вроде все внутри функции и область видимости не пробьешь
+    //anticheat
+    const points = 4;
+    let pointsCounter = 0;
+    for(let property in settings){
+      if(property != 'cardUsed'){
+          pointsCounter += settings[property];
+      };
+    };
+    
+    if(pointsCounter > points){
+      if(settings.cardUsed === null){
+        return;
+      };
+    };
+
+
+    this.settingsSetted = true;
+
+    this.productLine = [];
+    //сначала забиваем стандартом
+    for(let i = 0;i<FACTORIES[this.name].speed;i++){
+      this.productLine.push(0);
+    };
+    //потом отризаем скорости
+    for(let i=0;i<settings.speed;i++){
+      this.productLine.pop();
+    };
+
+
+    //полная цена за все производство
+    const prise = FACTORIES[this.name].price
+
+    //каждый salary point сбивает цену производства на 15%
+    //сразу добавляем +15% к стоймости, если у игрока зарплаты на 0 прокачаны;
+    const newPrise = prise + (prise*(0.15));
+    this.price = Math.round(newPrise - (newPrise*(0.15*settings.salary)));
+    this.stepPrice = Math.round(this.price/this.productLine.length);
+
+    this.warehouse = [];
+    for(let i = 0;i<FACTORIES[this.name].warehouse + settings.warehouse;i++){
+      this.warehouse.push(0);
+    };
+
+
+
+    this.sendNewSettings();
+  };
+
+  sendNewSettings(){
+    const data = {
+      id: this.id,
+      name: this.name,
+      mining: this.mining,
+      resource: this.resource,
+      warehouse: this.warehouse,
+      speed: this.speed,
+      quality: this.quality,
+      productLine: this.productLine,
+      price: this.price,
+      stepPrice: this.stepPrice,
+    };
+    this.player.emit('GAME_factory_newSettings',data);
+  };
+
+
+
+  update(){
+    if(this.settingsSetted){
+
+    }else{
+      //выслать уведомление по настройке фабрики
+    }
+
+  };
 };
 
 
@@ -81,6 +224,7 @@ class PLAYER {
     this.login = properties.login;
     this.balance = 0;
     this.balanceHistory = [];
+    this.factoryList = new FACTORY_LIST(this);
   };
   sendBalanceMessage(message,amount){
     this.balanceHistory.push({message,amount});
@@ -124,6 +268,11 @@ class PLAYER {
       };
     };
   };
+  emit(message,data){
+    if(USERS[this.login]){
+      USERS[this.login].socket.emit(message,data);
+    };
+  };
 };
 
 
@@ -134,8 +283,15 @@ class GAME {
     this.id = properties.id;
     this.roomID = properties.roomID;
     this.members = properties.members;
+    this.players = {};
+    properties.members.forEach((member, i) => {
+      const properties = {
+        login: member,
+      };
+      const player = new PLAYER(properties);
+      this.players[player.login] = player;
+    });
     this.mapArray = properties.mapArray;
-    this.players = properties.players;
     this.turnBasedGame = properties.turnBasedGame;
     this.turnTime = properties.turnTime;
     this.tickTime = properties.tickTime;
@@ -144,6 +300,10 @@ class GAME {
     this.startedQueque = 0;
     this.turnsPaused = false;
     this.tickPaused = false;
+
+
+    //в массив сохраняется вся история построек в игре
+    this.buildHistory = [];
 
   };
   sendToAll(message, data) {
@@ -154,13 +314,51 @@ class GAME {
     });
   };
 
+
   playerBuilding(data) {
-    //нужно сюда впихнуть историю происходящего в игре
-    // data = {
-    //     ceilIndex: ceil.indexes,
-    //     sector: sector,
-    //     building: building,
-    //   }
+      //происходит, когда игрок что-то строит, вызывается и проверяется в сокете ('GAME_building')
+    /*data = {
+      player:MAIN.userData.login,
+      gameID:MAIN.game.commonData.id,
+      build:{
+        ceilIndex:ceil.indexes,
+        sector:sector,
+        building:building,
+      }
+    */
+
+    data.build.id = generateId(data.build.building, 5);
+
+
+    const historyArray = {
+      owner:data.player,
+      build:data.build,
+    };
+
+    this.buildHistory.push(historyArray);
+
+    if(data.build.building != 'road' && data.build.building != 'bridge'){
+
+      const properties = {
+        player:this.players[data.player],
+        id:data.build.id,
+        building:data.build.building,
+        ceilIndex:data.build.ceilIndex,
+        sector:data.build.sector,
+      }
+
+      const factory = new FACTORY(properties);
+      this.players[data.player].factoryList.add(factory);
+
+      //дополняем инфу для постройки для хозяина фабрики
+      const factoryClientData = {
+        id:factory.id,
+        building:data.build.building,
+        ceilIndex:data.build.ceilIndex,
+        sector:data.build.sector,
+      };
+      this.players[data.player].emit('GAME_buildFactory',factoryClientData);
+    };
 
     this.sendToAll('GAME_applyBuilding', data);
   };
@@ -340,17 +538,6 @@ io.on('connection', function(socket) {
     }
     */
     ROOMS[gameData.roomID].gameID = gameData.id;
-
-
-    gameData.players = {};
-    gameData.members.forEach((member, i) => {
-      const properties = {
-        login: member,
-      };
-      const player = new PLAYER(properties);
-      gameData.players[player.login] = player;
-    });
-
     const game = new GAME(gameData);
     GAMES[game.id] = game;
     // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
@@ -430,14 +617,14 @@ io.on('connection', function(socket) {
                 const cost = COASTS.buildings[data.build.building] * (-1);
                 game.players[data.player].changeBalance(cost);
                 game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
-                game.playerBuilding(data.build);
+                game.playerBuilding(data);
             };
           };
         } else {
           const cost = COASTS.buildings[data.build.building] * (-1);
           game.players[data.player].changeBalance(cost);
           game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
-          game.playerBuilding(data.build);
+          game.playerBuilding(data);
         };
       };
     };
@@ -448,7 +635,32 @@ io.on('connection', function(socket) {
     /*ДЛЯ ОДНОГО ИГРОКА*/
   });
 
+  socket.on('GAME_factory_applySettings',(data)=>{
+    //происходит, когда игрок настраивает фабрику
+    //trigger game - interface - factory.js applySettings();
+    /*const data = {
+      player:MAIN.game.playerData.login,
+      gameID:MAIN.game.commonData.id,
+      factory:factory.id,
+      settings:{
+        points:3,
+        speed:0,
+        salary:0,
+        quality:0,
+      };
+    };*/
 
+    if(GAMES[data.gameID]){
+      if(GAMES[data.gameID].players[data.player]){
+        if(GAMES[data.gameID].players[data.player].factoryList.list[data.factory]){
+          if(GAMES[data.gameID].players[data.player].factoryList.list[data.factory].settingsSetted === false){
+              GAMES[data.gameID].players[data.player].factoryList.list[data.factory].setSettings(data.settings);
+          };
+        };
+      };
+    };
+
+  });
   socket.on('GAME_endTurn', (data) => {
     // происходит в конце хода
     //trigger game -> functions

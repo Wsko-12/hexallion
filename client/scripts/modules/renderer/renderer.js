@@ -438,6 +438,12 @@ function render() {
      MAIN.interface.game.camera.update();
   }
 
+  if(MAIN.game.playerData){
+    for(let factory in MAIN.game.playerData.factories){
+      const thisFactory = MAIN.game.playerData.factories[factory]
+      thisFactory.updateNotificationPosition();
+    };
+  };
 
 
   requestAnimationFrame(render);

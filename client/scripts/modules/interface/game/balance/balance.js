@@ -91,13 +91,11 @@ function init(amount){
         balanceHistoryOpened = false;
         balanceHistoryClicker.style.display = 'none';
         balanceHistory.style.display = 'none';
-        console.log('hide')
       }else{
         balanceHistoryClicker.style.display = 'block';
         balanceHistory.style.display = 'block';
         balanceHistoryOpened = true;
         updateCreditHistory();
-        console.log('show')
       };
     };
 

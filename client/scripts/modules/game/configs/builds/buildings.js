@@ -5,7 +5,7 @@ import {
   MAIN
 } from '../../../../main.js';
 
-
+//в этом конфиге вся инфа ТОЛЬКО по постройке, на каких клетках мможно строить, сколько стоит постройка и тд;
 
 const BUILDINGS = {
   road:{
@@ -23,13 +23,13 @@ const BUILDINGS = {
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
     coast:200,
   },
-  // sawmill:{
-  //   name:'Sawmill',
-  //   description:'Производство досок',
-  //   ceil:['meadow'],
-  //   nearCeil:['forest'],
-  //   coast:500,
-  // },
+  sawmill:{
+    name:'Sawmill',
+    description:'Производство досок',
+    ceil:['meadow'],
+    nearCeil:['forest'],
+    coast:500,
+  },
   // waterStation:{
   //   name:'Water station',
   //   description:'Производство чистой воды',

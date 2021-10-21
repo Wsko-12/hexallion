@@ -1,9 +1,9 @@
 import {
   MAIN
-} from '../../../../../main.js';
+} from '../../../../main.js';
 
-import * as THREE from '../../../../../libs/ThreeJsLib/build/three.module.js';
-import {BufferGeometryUtils} from '../../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
+import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
+import {BufferGeometryUtils} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 
 
 
@@ -18,6 +18,8 @@ class FieldCeil {
     this.indexes = properties.indexes;
 
     this.sectors = [null,null,null,null,null,null];
+    //тут лежат объекты сектора более подробно
+    this.sectorsData = [null,null,null,null,null,null];
     this.centralRoad = false;
 
     this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true:false;
@@ -135,7 +137,11 @@ class FieldCeil {
       if (this.sectors[selectedSector] === null) {
         this.addChosenSectorTemporaryMesh(selectedSector);
         this.showSectorMenu(selectedSector);
-      };
+      }else{
+        if(this.sectorsData[selectedSector]){
+          this.sectorsData[selectedSector].onClick();
+        };
+      }
     } else {
       if (MAIN.game.scene.temporaryHexMesh) {
         MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
@@ -206,38 +212,6 @@ class FieldCeil {
           MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,this.calculateSectorMenuButtons(sector));
         };
       };
-
-      // if(this.sectors[sector] === null){
-      //   const that = this;
-      //   function calculateSectorMenuButtons(){
-      //     //Ищем что можно построить на этом секторе;
-      //     const buttons = [];
-      //     const ceil = that.type;
-      //     let nearCeil = that.neighbours[sector];
-      //     if(nearCeil != null){
-      //       nearCeil = nearCeil.type
-      //     };
-      //
-      //     //check all builds
-      //     for(let building in MAIN.game.configs.buildings){
-      //       const thisBuilding = MAIN.game.configs.buildings[building];
-      //       //check can we build this building on this ceil
-      //       thisBuilding.ceil.forEach((buildCeil, i) => {
-      //         if(buildCeil === ceil){
-      //           //nearCeil for this building
-      //           thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
-      //             if(buildNearCeil == nearCeil || buildNearCeil === 'all'){
-      //               buttons.push(building);
-      //             };
-      //           });
-      //         };
-      //       });
-      //     };
-      //
-      //     return buttons;
-      //   };
-      //   MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,calculateSectorMenuButtons());
-      // };
     };
   };
 
@@ -267,6 +241,7 @@ class FieldCeil {
     const position = this.position;
     mesh.position.set(position.x,position.y,position.z);
     MAIN.renderer.scene.add(mesh);
+    this.getSectorPosition(selectedSector)
   };
 
   //добавляет красный меш
@@ -475,6 +450,24 @@ class FieldCeil {
 
 
     };
+  };
+
+  getSectorPosition(sector){
+    const zeroPoint = this.position;
+    const radius = (Math.sqrt(3)/2)/1.5;
+    const angle = (sector*(-60)+150) * Math.PI/180;
+
+    const position = {
+      x:Math.sin(angle)*radius,
+      y:0,
+      z:Math.cos(angle)*radius,
+    };
+    position.x += this.position.x;
+    position.z += this.position.z;
+
+
+    return position;
+    // MAIN.game.scene.testMesh.position.set(position.x,position.y,position.z);
   };
 };
 

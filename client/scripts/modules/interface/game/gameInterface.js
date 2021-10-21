@@ -16,6 +16,9 @@ import {
 import {
   TURN
 } from './turn/turn.js';
+import {
+  FACTORY
+} from './factory/factory.js';
 
 function init(){
   const section = `
@@ -42,6 +45,9 @@ function init(){
   document.body.insertAdjacentHTML('beforeEnd',section);
   MAIN.interface.deleteTouches(document.querySelector('#sectorMenu'));
   MAIN.interface.deleteTouches(document.querySelector('#buildingMenu'));
+
+
+  FACTORY.init();
 };
 
 const GAME_INTERFACE = {
@@ -51,6 +57,7 @@ const GAME_INTERFACE = {
   credit:CREDIT,
   balance:BALANCE,
   turn:TURN,
+  factory:FACTORY,
 };
 
 export {

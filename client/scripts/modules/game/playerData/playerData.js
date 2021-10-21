@@ -12,5 +12,7 @@ const PLAYER_DATA = {
   //socket.js -> MAIN.socket.on('GAME_applyCredit')
   credit:null,
 
+  //socket.js -> MAIN.socket.on('GAME_buildFactory')
+  factories:{},
 };
 export {PLAYER_DATA};

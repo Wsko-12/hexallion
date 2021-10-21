@@ -11,7 +11,7 @@ import {
   SCENE
 } from '../scene.js';
 import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
-import {FieldCeil} from './fieldCeil/fieldCeil.js';
+import {FieldCeil} from '../../gameObjects/fieldCeil/fieldCeil.js';
 import {BufferGeometryUtils} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 // import { Reflector } from '../../../../libs/ThreeJsLib/examples/jsm/objects/Reflector.js';
 
@@ -91,9 +91,7 @@ FIELD.create = () => {
   const geometriesArray = [];
   const waterArray = [];
   const lightArray = [];
-  const hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff0000,wireframe:true,visible:false});
-
-
+  const hitBoxMaterial = MAIN.game.scene.hitBoxMaterial;
 
 
 

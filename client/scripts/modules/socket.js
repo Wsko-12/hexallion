@@ -36,14 +36,14 @@ function init() {
 
       MAIN.game.scene.assets.load().then((result) => {
         MAIN.renderer.init();
-        MAIN.game.scene.create().then((result)=>{
+        MAIN.game.scene.create().then((result) => {
           MAIN.pages.loading.close();
           //события должны начать проверяться после того, как все будет готово. сообщаем, что все готово
           MAIN.interface.init();
           MAIN.interface.startedCheckEvents = true;
           // MAIN.game.events.init();
-          if(gameData.turnBasedGame){
-              MAIN.interface.game.turn.init();
+          if (gameData.turnBasedGame) {
+            MAIN.interface.game.turn.init();
           };
           MAIN.interface.game.credit.showChooseCreditMenu();
         });
@@ -55,17 +55,23 @@ function init() {
     });
 
     MAIN.socket.on('GAME_applyBuilding', function(data) {
-        //Происходит, кто-то из игроков что-то строит
-        // ceilMenu.js CEIL_MENU.sendBuildRequest();
-        // data = {
-        //     player: MAIN.userData.login,
-        //     gameID: MAIN.game.commonData.id,
-        //     build: {
-        //     ceilIndex: ceil.indexes,
-        //     sector: sector,
-        //     building: building,
-        //   },
-          MAIN.game.functions.applyBuilding(data);
+      //Происходит, кто-то из игроков что-то строит
+      // ceilMenu.js CEIL_MENU.sendBuildRequest();
+      /*data = {
+        player:MAIN.userData.login,
+        gameID:MAIN.game.commonData.id,
+        build:{
+          ceilIndex:ceil.indexes,
+          sector:sector,
+          building:building,
+        }
+      */
+      if (data.build.building != 'road' && data.build.building != 'bridge') {
+        if (data.player === MAIN.game.playerData.login) {
+
+        };
+      };
+      MAIN.game.functions.applyBuilding(data.build);
     });
 
     //происходит когда игрок выбрал себе кредит
@@ -78,7 +84,7 @@ function init() {
       MAIN.interface.game.balance.init(MAIN.game.playerData.balance);
     });
 
-    MAIN.socket.on('GAME_creditChanges',function(data){
+    MAIN.socket.on('GAME_creditChanges', function(data) {
       MAIN.game.playerData.credit.deferment = data.deferment;
       MAIN.game.playerData.credit.pays = data.pays;
       MAIN.interface.game.balance.updateCreditHistory();
@@ -87,34 +93,47 @@ function init() {
     //происходит, когда меняется ход игрока
     MAIN.socket.on('GAME_reciveTurn', function(data) {
       MAIN.game.commonData.turnsPaused = false;
-      if(MAIN.game.commonData.turnBasedGame){
+      if (MAIN.game.commonData.turnBasedGame) {
         MAIN.game.commonData.queue = data.currentTurn;
-        if(data.currentTurn === MAIN.game.playerData.login){
-          if(  MAIN.game.playerData.balance > 0){
+        if (data.currentTurn === MAIN.game.playerData.login) {
+          if (MAIN.game.playerData.balance > 0) {
             //пусть endTurn приходит с сервера
             // setTimeout(()=>{
             //   MAIN.game.functions.endTurn();
             // },data.turnTime);
-          }else{
+          } else {
             MAIN.game.functions.endTurn();
           };
         };
-        MAIN.interface.game.turn.makeTimer(data.turnTime/1000,data.currentTurn);
+        MAIN.interface.game.turn.makeTimer(data.turnTime / 1000, data.currentTurn);
       };
     });
 
-    MAIN.socket.on('GAME_pasedTurn',()=>{
+    MAIN.socket.on('GAME_pasedTurn', () => {
       MAIN.game.commonData.turnsPaused = true;
       MAIN.interface.game.turn.makeNote('turns paused');
     });
 
-    MAIN.socket.on('GAME_BalanceMessage',(data)=>{
-      MAIN.interface.game.balance.addBalanceMessage(data.message,data.amount);
+    MAIN.socket.on('GAME_BalanceMessage', (data) => {
+      MAIN.interface.game.balance.addBalanceMessage(data.message, data.amount);
     });
 
+
+    //происходит, когда игрок строит фабрику
+    // эта функция по сути создает только класс фабрики
+    MAIN.socket.on('GAME_buildFactory', (data) => {
+      MAIN.game.functions.buildFactory(data);
+    });
+
+    MAIN.socket.on('GAME_factory_newSettings', (data) => {
+      //происходит, когда с сервера приходят настройки на фабрику
+      if(MAIN.game.playerData.factories[data.id]){
+        MAIN.game.playerData.factories[data.id].applySettings(data);
+      };
+    });
   };
 };
 
-  export {
-    SOCKET
-  };
+export {
+  SOCKET
+};
