@@ -52,7 +52,10 @@ class Factory {
 
   onClick(){
     //происходит при клике на сектор этой фабрики
+    //на хитбокс фабрики
+    //и на всплывающее уведомление
     MAIN.interface.game.factory.showMenu(this);
+    MAIN.interface.game.camera.moveCameraTo(this.hitBoxMesh.position);
   };
   clearNotification(){
     if(this.notification){
