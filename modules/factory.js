@@ -4,7 +4,7 @@ const factoriesConfig = {
     mining:true,
     //минимум 4 из-за прокачки
     speed:4,
-    warehouse:3,
+    storage:2,
     //полная цена производства
     price:1000,
     salary:1000,

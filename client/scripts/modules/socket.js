@@ -131,6 +131,17 @@ function init() {
         MAIN.game.playerData.factories[data.id].applySettings(data);
       };
     });
+
+
+    MAIN.socket.on('GAME_factory_updates',(data) => {
+      for(let factory in data){
+        MAIN.game.playerData.factories[factory].applyUpdates(data[factory]);
+      };
+      MAIN.interface.game.factory.updateFactoryMenu();
+    });
+
+
+
   };
 };
 

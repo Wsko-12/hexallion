@@ -76,6 +76,29 @@ class FACTORY_LIST {
     this.list[factory.id] = factory;
   };
 
+  turn(){
+    for(let factory in this.list){
+      const thisFactory = this.list[factory];
+      thisFactory.turn();
+    };
+  };
+
+  sendUpdates(){
+    const data = {};
+    for(let factory in this.list){
+      const thisFactory = this.list[factory];
+      if(thisFactory.settingsSetted){
+        const factoryData = {
+          id:thisFactory.id,
+          storage:thisFactory.storage,
+          productLine:thisFactory.productLine,
+        };
+        data[thisFactory.id] = factoryData;
+      };
+    };
+    this.player.emit('GAME_factory_updates',data);
+  };
+
 };
 
 
@@ -92,8 +115,8 @@ class FACTORY {
       this.ceilIndex = properties.ceilIndex;
       this.sector = properties.sector;
 
-      this.warehouse = FACTORIES[properties.building].warehouse;
-      this.speed = FACTORIES[properties.building].speed;
+      this.storage = FACTORIES[properties.building].storage;
+      this.stockSpeed = FACTORIES[properties.building].speed;
       this.quality = 0;
       //этот параметр сработает, когда придет апдейт на фабрику, нужно будет установить настройки фабрики
       //ее параметры скорость, стоймость, качество
@@ -113,13 +136,13 @@ class FACTORY {
           pointsCounter += settings[property];
       };
     };
-    
+
     if(pointsCounter > points){
       if(settings.cardUsed === null){
         return;
       };
     };
-
+    this.quality = settings.quality;
 
     this.settingsSetted = true;
 
@@ -143,9 +166,10 @@ class FACTORY {
     this.price = Math.round(newPrise - (newPrise*(0.15*settings.salary)));
     this.stepPrice = Math.round(this.price/this.productLine.length);
 
-    this.warehouse = [];
-    for(let i = 0;i<FACTORIES[this.name].warehouse + settings.warehouse;i++){
-      this.warehouse.push(0);
+    this.stockStorage = FACTORIES[this.name].storage;
+    this.storage = [];
+    for(let i = 0;i<FACTORIES[this.name].storage + settings.storage;i++){
+      this.storage.push(0);
     };
 
 
@@ -159,8 +183,10 @@ class FACTORY {
       name: this.name,
       mining: this.mining,
       resource: this.resource,
-      warehouse: this.warehouse,
-      speed: this.speed,
+      storage: this.storage,
+      //надо, чтобы забить на карточке клетки
+      stockStorage:this.stockStorage,
+      stockSpeed: this.stockSpeed,
       quality: this.quality,
       productLine: this.productLine,
       price: this.price,
@@ -171,13 +197,40 @@ class FACTORY {
 
 
 
-  update(){
+  turn(){
     if(this.settingsSetted){
-
+      this.player.balance -= this.stepPrice;
+      this.player.sendBalanceMessage(`${this.name.charAt(0).toUpperCase() + this.name.slice(1)} production`, - this.stepPrice);
+      //если в storage есть место
+      if(this.storage.includes(0)){
+        if(!this.productLine.includes(1)){
+          //если вообще не начато производство
+          this.productLine[0] = 1;
+        }else{
+          //если производтсво кончилось
+          if(this.productLine[this.productLine.length-1] === 1){
+            this.storage.unshift(this.storage.pop());
+            this.storage[0] = 1;
+            if(this.storage.includes(0)){
+              this.productLine.unshift(this.productLine.pop());
+            }else{
+              this.productLine.forEach((item, i) => {
+                  this.productLine[i] = 0;
+              });
+            };
+          }else{
+            this.productLine.unshift(this.productLine.pop());
+          };
+        };
+      }else{
+        //в хранилище нет места
+        this.productLine.forEach((item, i) => {
+            this.productLine[i] = 0;
+        });
+      };
     }else{
       //выслать уведомление по настройке фабрики
-    }
-
+    };
   };
 };
 
@@ -262,10 +315,11 @@ class PLAYER {
   turnAction() {
     if (this.credit) {
       this.credit.turn();
-      if (USERS[this.login]) {
-        const socket = USERS[this.login].socket;
-        socket.emit('GAME_changeBalance', this.balance);
-      };
+
+      this.factoryList.turn();
+      this.factoryList.sendUpdates();
+
+      this.emit('GAME_changeBalance', this.balance);
     };
   };
   emit(message,data){

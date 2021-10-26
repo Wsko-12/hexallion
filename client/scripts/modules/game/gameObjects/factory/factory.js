@@ -57,6 +57,7 @@ class Factory {
   clearNotification(){
     if(this.notification){
       this.notification.remove();
+      this.notification = null;
     };
   };
 
@@ -106,7 +107,15 @@ class Factory {
     this.settings = settings;
   };
 
-
+  applyUpdates(updates){
+    this.settings.productLine = updates.productLine;
+    this.settings.storage = updates.storage;
+    if(!this.settings.storage.includes(0)){
+      if(this.notification === null){
+        this.createNotification();
+      };
+    };
+  };
 };
 
 export {
