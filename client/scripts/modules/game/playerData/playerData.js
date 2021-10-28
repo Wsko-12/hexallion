@@ -14,5 +14,8 @@ const PLAYER_DATA = {
 
   //socket.js -> MAIN.socket.on('GAME_buildFactory')
   factories:{},
+
+  //
+  trucks:{},
 };
 export {PLAYER_DATA};

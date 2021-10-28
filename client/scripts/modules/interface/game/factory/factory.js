@@ -62,7 +62,7 @@ function showSettingsSetMenu(factory) {
   name = name.charAt(0).toUpperCase() + name.slice(1);
   const section = `
     <div id='factoryMenu_Container' class="factoryMenu_cardBackground_${factory.type}" >
-      <div id="factoryMenu_title" >${name}</div>
+      <div id="factoryMenu_title">${name}</div>
       <div id='factoryMenu_settings_points'>3</div>
       <div class="factoryMenu_settingsLine">
         <div class="factoryMenu_settings_title">speed</div>
@@ -234,6 +234,15 @@ function showFactoryMenu(factory){
     storageLine += line;
   };
 
+  let actionButtonLine = null;
+
+  if(factory.settings.storage.includes(1)){
+    actionButtonLine = `
+    <div id='factoryMenu_ActionButton'>
+      <span style="margin:auto">Send truck</span>
+    </div>
+    `;
+  };
 
   const section = `
         <div id="factoryMenu_Section">
@@ -260,21 +269,27 @@ function showFactoryMenu(factory){
                         ${storageLine}
                     </div>
                 </div>
+                <div id="factoryMenu_Card_TEST"></div>
             </div>
-
+            ${actionButtonLine ? actionButtonLine : ''}
         </div>
 
 
   `;
   menu.insertAdjacentHTML('beforeEnd', section);
-  console.log(factory);
 
 
+  if(actionButtonLine){
+    const button = document.querySelector('#factoryMenu_ActionButton');
+    button.onclick = openTruckMenu();
+    button.ontouchstart = openTruckMenu();
 
-  // if(factory.settings.storage.includes(1)){
-  //   const sendTruckButton = `<div id='factoryMenu_Button'></div>`;
-  //   menu.insertAdjacentHTML('beforeEnd', sendTruckButton);
-  // };
+    function openTruckMenu(){
+
+    };
+  };
+
+
 };
 //это только меняет значения
 function updateFactoryMenu(factory){

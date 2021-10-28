@@ -278,6 +278,7 @@ class PLAYER {
     this.balance = 0;
     this.balanceHistory = [];
     this.factoryList = new FACTORY_LIST(this);
+    this.trucks = {};
   };
   sendBalanceMessage(message,amount){
     this.balanceHistory.push({message,amount});
@@ -358,6 +359,15 @@ class GAME {
 
     //в массив сохраняется вся история построек в игре
     this.buildHistory = [];
+
+    this.trucks = {
+      count:COASTS.trucks.count,
+      coast:COASTS.trucks.coast,
+      all:{
+
+      },
+    };
+
 
   };
   sendToAll(message, data) {
@@ -594,6 +604,10 @@ io.on('connection', function(socket) {
     ROOMS[gameData.roomID].gameID = gameData.id;
     const game = new GAME(gameData);
     GAMES[game.id] = game;
+    gameData.trucks = {
+      count:game.trucks.count,
+      coast:game.trucks.coast
+    };
     // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
     ROOMS[gameData.roomID].members.forEach((member) => {
       if (USERS[member]) {
@@ -602,9 +616,6 @@ io.on('connection', function(socket) {
       };
     });
   });
-
-
-
   socket.on('GAME_choseCredit', (data) => {
       //происходит, когда игрок выбирает себе кредит
     //trigger interface -> game -> credit.js -> accept();
@@ -640,9 +651,6 @@ io.on('connection', function(socket) {
 
     /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
   });
-
-
-
   socket.on('GAME_building', (data) => {
     //происходит, когда игрок хочет что-то построить
     //trigger interface -> game -> ceilMenu.js -> sendBuildRequest();
@@ -688,7 +696,6 @@ io.on('connection', function(socket) {
     // socket.emit('GAME_applyBuilding',data.build);
     /*ДЛЯ ОДНОГО ИГРОКА*/
   });
-
   socket.on('GAME_factory_applySettings',(data)=>{
     //происходит, когда игрок настраивает фабрику
     //trigger game - interface - factory.js applySettings();

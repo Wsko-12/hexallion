@@ -68,7 +68,7 @@ function init() {
       */
       if (data.build.building != 'road' && data.build.building != 'bridge') {
         if (data.player === MAIN.game.playerData.login) {
-
+          
         };
       };
       MAIN.game.functions.applyBuilding(data.build);
