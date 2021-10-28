@@ -438,9 +438,9 @@ function render() {
      MAIN.interface.game.camera.update();
   }
 
-  if(MAIN.game.playerData){
-    for(let factory in MAIN.game.playerData.factories){
-      const thisFactory = MAIN.game.playerData.factories[factory]
+  if(MAIN.game.data.playerData){
+    for(let factory in MAIN.game.data.playerData.factories){
+      const thisFactory = MAIN.game.data.playerData.factories[factory]
       thisFactory.updateNotificationPosition();
     };
   };

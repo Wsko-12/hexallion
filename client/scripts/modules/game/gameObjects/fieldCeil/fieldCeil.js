@@ -126,8 +126,8 @@ class FieldCeil {
   };
   onClick(intersectCoords){
     //для режима пошагового меню не показывается если не ход игрока
-    if (MAIN.game.commonData.turnBasedGame) {
-      if (MAIN.game.commonData.queue != MAIN.game.playerData.login || MAIN.game.commonData.turnsPaused) {
+    if (MAIN.game.data.commonData.turnBasedGame) {
+      if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
         return;
       };
     };

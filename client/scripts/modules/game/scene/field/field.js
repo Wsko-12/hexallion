@@ -78,7 +78,7 @@ FIELD.create = () => {
   let map_index = 0;
   for (let z = 0; z < map.length; z++) {
     for (let x = 0; x < map[z].length; x++) {
-      map[z][x] = MAIN.game.commonData.mapArray[map_index];
+      map[z][x] = MAIN.game.data.commonData.mapArray[map_index];
       map_index++;
     };
   };

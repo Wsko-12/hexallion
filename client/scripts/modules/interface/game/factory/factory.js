@@ -172,8 +172,8 @@ function showSettingsSetMenu(factory) {
   function applySettings() {
     closeMenu();
     const data = {
-      player: MAIN.game.playerData.login,
-      gameID: MAIN.game.commonData.id,
+      player: MAIN.game.data.playerData.login,
+      gameID: MAIN.game.data.commonData.id,
       factory: factory.id,
       settings: settings,
     };

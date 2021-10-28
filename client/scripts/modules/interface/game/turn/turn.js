@@ -21,14 +21,14 @@ function makeTimer(value,player){
   function animate(){
     timer--;
     if(timer > 0){
-      if(player === MAIN.game.playerData.login){
-        if(MAIN.game.commonData.queue === MAIN.game.playerData.login && !MAIN.game.commonData.turnsPaused){
+      if(player === MAIN.game.data.playerData.login){
+        if(MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login && !MAIN.game.data.commonData.turnsPaused){
           document.querySelector('#turnInfo').innerHTML = `${timer}sec`;
           document.querySelector('#turnInfo').style.color = `#a7ff78`;
           setTimeout(animate,1000);
         };
       }else{
-        if(player === MAIN.game.commonData.queue && !MAIN.game.commonData.turnsPaused ){
+        if(player === MAIN.game.data.commonData.queue && !MAIN.game.data.commonData.turnsPaused ){
           document.querySelector('#turnInfo').style.color = 'white'
           document.querySelector('#turnInfo').innerHTML = `turn: ${player}  ${timer}sec`;
           setTimeout(animate,1000);

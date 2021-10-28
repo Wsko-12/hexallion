@@ -175,7 +175,7 @@ const CEIL_MENU = {
           MAIN.game.scene.temporarySectorMesh.geometry.dispose();
           MAIN.game.scene.temporarySectorMesh.material.dispose();
         };
-        if(MAIN.game.playerData.balance >= MAIN.game.configs.buildings[building].coast){
+        if(MAIN.game.data.playerData.balance >= MAIN.game.configs.buildings[building].coast){
           CEIL_MENU.sendBuildRequest(ceil,sector,building);
         }else{
           MAIN.interface.game.balance.notEnoughMoney();
@@ -194,7 +194,7 @@ const CEIL_MENU = {
           MAIN.game.scene.temporarySectorMesh.material.dispose();
         };
 
-        if(MAIN.game.playerData.balance >= MAIN.game.configs.buildings[building].coast){
+        if(MAIN.game.data.playerData.balance >= MAIN.game.configs.buildings[building].coast){
           CEIL_MENU.sendBuildRequest(ceil,sector,building);
         }else{
           MAIN.interface.game.balance.notEnoughMoney();
@@ -207,7 +207,7 @@ const CEIL_MENU = {
   sendBuildRequest(ceil,sector,building){
     const data = {
       player:MAIN.userData.login,
-      gameID:MAIN.game.commonData.id,
+      gameID:MAIN.game.data.commonData.id,
       build:{
         ceilIndex:ceil.indexes,
         sector:sector,
@@ -217,8 +217,8 @@ const CEIL_MENU = {
     //чтобы не строил на уже построеном при игре безпошаговом режиме
     const chosenCeil = MAIN.game.data.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
     if(chosenCeil.sectors[data.build.sector] === null){
-      if(MAIN.game.commonData.turnBasedGame){
-        if(MAIN.game.commonData.queue === MAIN.game.playerData.login){
+      if(MAIN.game.data.commonData.turnBasedGame){
+        if(MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login){
           MAIN.socket.emit('GAME_building',data);
         };
       }else{

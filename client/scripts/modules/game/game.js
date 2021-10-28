@@ -4,9 +4,9 @@
 import {
   MAIN
 } from '../../main.js';
-import {
-  GENERATION
-} from './generation/generation.js';
+// import {
+//   GENERATION
+// } from './generation/generation.js';
 import {
   SCENE
 } from './scene/scene.js';
@@ -20,18 +20,15 @@ import {
 import {
   FUNCTIONS
 } from './functions/functions.js';
-import {
-  PLAYER_DATA
-} from './playerData/playerData.js';
+
 
 
 const GAME = {};
+// GAME.generation = GENERATION;
 GAME.configs = CONFIGS;
-GAME.generation = GENERATION;
 GAME.scene = SCENE;
 GAME.events = GAME_EVENTS;
 GAME.functions = FUNCTIONS;
-GAME.playerData = PLAYER_DATA;
 
 console.log(MAIN);
 export {

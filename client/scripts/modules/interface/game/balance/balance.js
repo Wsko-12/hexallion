@@ -4,7 +4,7 @@ import {
 
 // trigger socket.js -> MAIN.socket.on('GAME_applyCredit')
 function updateCreditHistory(){
-  const credit = MAIN.game.playerData.credit
+  const credit = MAIN.game.data.playerData.credit
   document.querySelector(`#creditHistory_paysLeft`).innerHTML = `Payments left: ${credit.pays}`;
   document.querySelector(`#creditHistory_paysCoast`).innerHTML = `Cost of payment: $${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`;
   document.querySelector(`#creditHistory_ProgressLine`).style.width = ((credit.allPays - credit.pays)/credit.allPays*100)+'%'
@@ -134,8 +134,8 @@ function notEnoughMoney(){
 };
 function change(newBalance){
   const div = document.querySelector('#balanceDiv');
-  let startedBalance = MAIN.game.playerData.balance;
-  MAIN.game.playerData.balance = newBalance;
+  let startedBalance = MAIN.game.data.playerData.balance;
+  MAIN.game.data.playerData.balance = newBalance;
   let curentAnimate = 0;
   const maxAnimate = 10;
   function interpolate(f,s,value){
