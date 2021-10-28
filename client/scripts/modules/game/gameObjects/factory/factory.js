@@ -42,7 +42,6 @@ class Factory {
     if(!this.settingsSetted){
       this.createNotification();
     };
-
   };
 
   setSettings(){

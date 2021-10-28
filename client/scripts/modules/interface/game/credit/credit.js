@@ -32,7 +32,7 @@ const CREDIT = {
       if(globalChoosenCredit != null){
           const data = {
             player:MAIN.userData.login,
-            gameID:MAIN.game.commonData.id,
+            gameID:MAIN.game.data.commonData.id,
             credit:globalChoosenCredit,
           };
           MAIN.socket.emit('GAME_choseCredit',data);

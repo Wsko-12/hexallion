@@ -5,6 +5,9 @@
 import {
   MAIN
 } from '../main.js';
+import {
+  PLAYER_DATA
+} from './game/playerData/playerData.js';
 
 const SOCKET = {
   init,
@@ -18,21 +21,20 @@ function init() {
       MAIN.pages.loading.changeComment('Waiting for game generation');
     });
 
-    MAIN.socket.on('GAME_generate', function(roomData) {
-      //Происходит когда пользователь хозяин комнаты и нужное кол-во игроков собрано
-      MAIN.pages.loading.changeTitle('Room is ready');
-      MAIN.pages.loading.changeComment('Game generation');
-      MAIN.game.generation.start(roomData);
-    });
+
+    //поменял на генерацию на сервере
+    // MAIN.socket.on('GAME_generate', function(roomData) {
+    //   //Происходит когда пользователь хозяин комнаты и нужное кол-во игроков собрано
+    //   MAIN.pages.loading.changeTitle('Room is ready');
+    //   MAIN.pages.loading.changeComment('Game generation');
+    //   MAIN.game.generation.start(roomData);
+    // });
 
     MAIN.socket.on('GAME_data', function(gameData) {
       //Происходит, когда вся gameData сгенерирована
 
-      MAIN.game.data = {};
-      MAIN.game.commonData = gameData;
-      MAIN.game.commonData.queue = null;
-      MAIN.game.playerData.login = MAIN.userData.login;
-
+      MAIN.game.data = gameData;
+      MAIN.game.data.playerData = new PLAYER_DATA(MAIN.userData.login);
 
       MAIN.game.scene.assets.load().then((result) => {
         MAIN.renderer.init();
@@ -42,7 +44,7 @@ function init() {
           MAIN.interface.init();
           MAIN.interface.startedCheckEvents = true;
           // MAIN.game.events.init();
-          if (gameData.turnBasedGame) {
+          if (gameData.commonData.turnBasedGame) {
             MAIN.interface.game.turn.init();
           };
           MAIN.interface.game.credit.showChooseCreditMenu();
@@ -66,37 +68,33 @@ function init() {
           building:building,
         }
       */
-      if (data.build.building != 'road' && data.build.building != 'bridge') {
-        if (data.player === MAIN.game.playerData.login) {
-          
-        };
-      };
+
       MAIN.game.functions.applyBuilding(data.build);
     });
 
     //происходит когда игрок выбрал себе кредит
     MAIN.socket.on('GAME_applyCredit', function(credit) {
 
-      MAIN.game.playerData.balance = credit.amount;
-      MAIN.game.playerData.credit = credit;
-      MAIN.game.playerData.credit.allPays = credit.pays;
+      MAIN.game.data.playerData.balance = credit.amount;
+      MAIN.game.data.playerData.credit = credit;
+      MAIN.game.data.playerData.credit.allPays = credit.pays;
       document.querySelector('#chooseCreditMenuSection').remove();
-      MAIN.interface.game.balance.init(MAIN.game.playerData.balance);
+      MAIN.interface.game.balance.init(MAIN.game.data.playerData.balance);
     });
 
     MAIN.socket.on('GAME_creditChanges', function(data) {
-      MAIN.game.playerData.credit.deferment = data.deferment;
-      MAIN.game.playerData.credit.pays = data.pays;
+      MAIN.game.data.playerData.credit.deferment = data.deferment;
+      MAIN.game.data.playerData.credit.pays = data.pays;
       MAIN.interface.game.balance.updateCreditHistory();
     })
 
     //происходит, когда меняется ход игрока
     MAIN.socket.on('GAME_reciveTurn', function(data) {
-      MAIN.game.commonData.turnsPaused = false;
-      if (MAIN.game.commonData.turnBasedGame) {
-        MAIN.game.commonData.queue = data.currentTurn;
-        if (data.currentTurn === MAIN.game.playerData.login) {
-          if (MAIN.game.playerData.balance > 0) {
+      MAIN.game.data.commonData.turnsPaused = false;
+      if (MAIN.game.data.commonData.turnBasedGame) {
+        MAIN.game.data.commonData.queue = data.currentTurn;
+        if (data.currentTurn === MAIN.game.data.playerData.login) {
+          if (MAIN.game.data.playerData.balance > 0) {
             //пусть endTurn приходит с сервера
             // setTimeout(()=>{
             //   MAIN.game.functions.endTurn();
@@ -110,7 +108,7 @@ function init() {
     });
 
     MAIN.socket.on('GAME_pasedTurn', () => {
-      MAIN.game.commonData.turnsPaused = true;
+      MAIN.game.data.commonData.turnsPaused = true;
       MAIN.interface.game.turn.makeNote('turns paused');
     });
 
@@ -127,15 +125,15 @@ function init() {
 
     MAIN.socket.on('GAME_factory_newSettings', (data) => {
       //происходит, когда с сервера приходят настройки на фабрику
-      if(MAIN.game.playerData.factories[data.id]){
-        MAIN.game.playerData.factories[data.id].applySettings(data);
+      if(MAIN.game.data.playerData.factories[data.id]){
+        MAIN.game.data.playerData.factories[data.id].applySettings(data);
       };
     });
 
 
     MAIN.socket.on('GAME_factory_updates',(data) => {
       for(let factory in data){
-        MAIN.game.playerData.factories[factory].applyUpdates(data[factory]);
+        MAIN.game.data.playerData.factories[factory].applyUpdates(data[factory]);
       };
       MAIN.interface.game.factory.updateFactoryMenu();
     });

@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 const DB = require('./modules/db.js');
 const COASTS = require('./modules/coasts.js');
 const FACTORIES = require('./modules/factory.js');
+const MAP_CONFIGS = require('./modules/mapConfigs.js');
 
 
 http.listen(PORT, '0.0.0.0', () => {
@@ -66,6 +67,226 @@ const ROOMS = {
 const GAMES = {
 
 };
+class GAME {
+  //Очередь пусть формируется из тех, кто первый выбрал кредит
+  constructor(properties) {
+    this.id = generateId('Game',5);
+    this.roomID = properties.id;
+    this.members = properties.members;
+    this.players = {};
+    properties.members.forEach((member, i) => {
+      const properties = {
+        login: member,
+      };
+      const player = new PLAYER(properties);
+      this.players[player.login] = player;
+    });
+
+
+    this.turnBasedGame = properties.turnBasedGame;
+    this.turnTime = properties.turnTime;
+    this.tickTime = properties.tickTime;
+    this.turnsPaused = false;
+
+
+    this.queue = [];
+    this.queueNum = -1;
+    this.startedQueque = 0;
+    this.turnsPaused = false;
+    this.tickPaused = false;
+
+
+    //в массив сохраняется вся история построек в игре
+    this.buildHistory = [];
+
+    this.trucks = {
+      count:COASTS.trucks.count,
+      coast:COASTS.trucks.coast,
+      all:{
+
+      },
+    };
+
+
+
+  };
+
+  generateMap(){
+    const map = [];
+    for (let ceilType in MAP_CONFIGS.ceils) {
+      for (let count = 0; count < MAP_CONFIGS.ceils[ceilType]; count++) {
+        if (ceilType == 'city') {
+          map.push(MAP_CONFIGS.cities[count])
+        } else {
+          map.push(ceilType);
+        };
+      };
+    };
+    map.sort(() => Math.random() - 0.5);
+    this.map = map;
+  };
+
+    //game data for user
+  getData(){
+    //game data for user
+    const data = {
+      commonData:{
+        id:this.id,
+        mapArray:this.map,
+        queue:'',
+        turnsPaused:false,
+        turnBasedGame:this.turnBasedGame,
+      },
+    };
+    return data;
+  };
+
+
+
+  sendToAll(message, data) {
+    this.members.forEach((member, i) => {
+      if (USERS[member]) {
+        USERS[member].socket.emit(message, data);
+      };
+    });
+  };
+
+
+  playerBuilding(data) {
+      //происходит, когда игрок что-то строит, вызывается и проверяется в сокете ('GAME_building')
+    /*data = {
+      player:MAIN.userData.login,
+      gameID:MAIN.game.commonData.id,
+      build:{
+        ceilIndex:ceil.indexes,
+        sector:sector,
+        building:building,
+      }
+    */
+
+    data.build.id = generateId(data.build.building, 5);
+
+
+    const historyArray = {
+      owner:data.player,
+      build:data.build,
+    };
+
+    this.buildHistory.push(historyArray);
+
+    if(data.build.building != 'road' && data.build.building != 'bridge'){
+
+      const properties = {
+        player:this.players[data.player],
+        id:data.build.id,
+        building:data.build.building,
+        ceilIndex:data.build.ceilIndex,
+        sector:data.build.sector,
+      }
+
+      const factory = new FACTORY(properties);
+      this.players[data.player].factoryList.add(factory);
+
+      //дополняем инфу для постройки для хозяина фабрики
+      const factoryClientData = {
+        id:factory.id,
+        building:data.build.building,
+        ceilIndex:data.build.ceilIndex,
+        sector:data.build.sector,
+      };
+      this.players[data.player].emit('GAME_buildFactory',factoryClientData);
+    };
+
+    this.sendToAll('GAME_applyBuilding', data);
+  };
+
+  nextTurn() {
+    //сохраняем значение, с которого запустили функцию
+    let startedTurnIndex = this.queueNum;
+    const that = this;
+    //понадобится для автоматического перехода хода и если игрок сам скипнет ход
+    let lastTurn;
+
+    //ищет следующего подходящего игрока
+    findTurn();
+
+    function findTurn() {
+      //просто убираем флаг
+      that.turnsPaused = false;
+
+      //меняем очередь
+      that.queueNum += 1;
+      if (that.queueNum >= that.queue.length) {
+        that.queueNum = 0;
+      };
+
+      const nextPlayer = that.players[that.queue[that.queueNum]];
+
+      //если функция зациклилась (снова вернулась на того, от кого пришла)
+      if (that.queueNum === startedTurnIndex) {
+        //если он банкрот или вышел из игры, то тормозим всю функцию
+        if (nextPlayer.balance <= 0 || !USERS[nextPlayer.login]) {
+          that.turnsPaused = true;
+        };
+      };
+      //сохраняем на ком был ход для setTimeout
+      lastTurn = that.queueNum;
+      //если у игрока все норм с балансом и он онлайн, то высылаем ход ему и ставим таймаут
+      if (nextPlayer.balance > 0 && USERS[nextPlayer.login]) {
+        const data = {
+          currentTurn: that.queue[that.queueNum],
+          turnTime: that.turnTime,
+        };
+        // отправляем ему все функции для хода(кредит, фермы и тд)
+        nextPlayer.turnAction();
+        //отправляем всем чей ход
+        that.sendToAll('GAME_reciveTurn', data);
+        setTimeout(function() {
+          //чтобы не сработало, если игрок переключит ход сам
+          //потому что если функция nextTurn вызовется еще раз, то изменится that.queueNum, а lastTurn нет
+          if (lastTurn === that.queueNum) {
+            that.nextTurn();
+          };
+        }, that.turnTime);
+      } else {
+        //если баланс 0 или меньше, и ходы не на паузе, то рекурсим функцию чтобы нашел следующего подходящего игрока
+        if (!that.turnsPaused) {
+          //сет таймаут нужен для ошибки стека
+          setTimeout(() => {
+            findTurn();
+          });
+        } else {
+          // если пауза, то всем кидаем что копец
+          that.sendToAll('GAME_pasedTurn');
+          //так же тут можно проверить, если все игроки банкроты, то закрывать игру
+        };
+      };
+    };
+  };
+  tick() {
+    const that = this;
+    let allPlayersOff = true;
+    for(let player in this.players){
+      if(USERS[player]){
+        allPlayersOff = false;
+        const thisPlayer = this.players[player];
+        thisPlayer.turnAction();
+      };
+    };
+    if(!allPlayersOff){
+      setTimeout(function() {
+        that.tick();
+      }, that.tickTime);
+    };
+  };
+};
+
+
+
+
+
+
+
 class FACTORY_LIST {
   constructor(player){
     this.list = {};
@@ -332,181 +553,7 @@ class PLAYER {
 
 
 
-class GAME {
-  //Очередь пусть формируется из тех, кто первый выбрал кредит
-  constructor(properties) {
-    this.id = properties.id;
-    this.roomID = properties.roomID;
-    this.members = properties.members;
-    this.players = {};
-    properties.members.forEach((member, i) => {
-      const properties = {
-        login: member,
-      };
-      const player = new PLAYER(properties);
-      this.players[player.login] = player;
-    });
-    this.mapArray = properties.mapArray;
-    this.turnBasedGame = properties.turnBasedGame;
-    this.turnTime = properties.turnTime;
-    this.tickTime = properties.tickTime;
-    this.queue = [];
-    this.queueNum = -1;
-    this.startedQueque = 0;
-    this.turnsPaused = false;
-    this.tickPaused = false;
 
-
-    //в массив сохраняется вся история построек в игре
-    this.buildHistory = [];
-
-    this.trucks = {
-      count:COASTS.trucks.count,
-      coast:COASTS.trucks.coast,
-      all:{
-
-      },
-    };
-
-
-  };
-  sendToAll(message, data) {
-    this.members.forEach((member, i) => {
-      if (USERS[member]) {
-        USERS[member].socket.emit(message, data);
-      };
-    });
-  };
-
-
-  playerBuilding(data) {
-      //происходит, когда игрок что-то строит, вызывается и проверяется в сокете ('GAME_building')
-    /*data = {
-      player:MAIN.userData.login,
-      gameID:MAIN.game.commonData.id,
-      build:{
-        ceilIndex:ceil.indexes,
-        sector:sector,
-        building:building,
-      }
-    */
-
-    data.build.id = generateId(data.build.building, 5);
-
-
-    const historyArray = {
-      owner:data.player,
-      build:data.build,
-    };
-
-    this.buildHistory.push(historyArray);
-
-    if(data.build.building != 'road' && data.build.building != 'bridge'){
-
-      const properties = {
-        player:this.players[data.player],
-        id:data.build.id,
-        building:data.build.building,
-        ceilIndex:data.build.ceilIndex,
-        sector:data.build.sector,
-      }
-
-      const factory = new FACTORY(properties);
-      this.players[data.player].factoryList.add(factory);
-
-      //дополняем инфу для постройки для хозяина фабрики
-      const factoryClientData = {
-        id:factory.id,
-        building:data.build.building,
-        ceilIndex:data.build.ceilIndex,
-        sector:data.build.sector,
-      };
-      this.players[data.player].emit('GAME_buildFactory',factoryClientData);
-    };
-
-    this.sendToAll('GAME_applyBuilding', data);
-  };
-
-  nextTurn() {
-    //сохраняем значение, с которого запустили функцию
-    let startedTurnIndex = this.queueNum;
-    const that = this;
-    //понадобится для автоматического перехода хода и если игрок сам скипнет ход
-    let lastTurn;
-
-    //ищет следующего подходящего игрока
-    findTurn();
-
-    function findTurn() {
-      //просто убираем флаг
-      that.turnsPaused = false;
-
-      //меняем очередь
-      that.queueNum += 1;
-      if (that.queueNum >= that.queue.length) {
-        that.queueNum = 0;
-      };
-
-      const nextPlayer = that.players[that.queue[that.queueNum]];
-
-      //если функция зациклилась (снова вернулась на того, от кого пришла)
-      if (that.queueNum === startedTurnIndex) {
-        //если он банкрот или вышел из игры, то тормозим всю функцию
-        if (nextPlayer.balance <= 0 || !USERS[nextPlayer.login]) {
-          that.turnsPaused = true;
-        };
-      };
-      //сохраняем на ком был ход для setTimeout
-      lastTurn = that.queueNum;
-      //если у игрока все норм с балансом и он онлайн, то высылаем ход ему и ставим таймаут
-      if (nextPlayer.balance > 0 && USERS[nextPlayer.login]) {
-        const data = {
-          currentTurn: that.queue[that.queueNum],
-          turnTime: that.turnTime,
-        };
-        // отправляем ему все функции для хода(кредит, фермы и тд)
-        nextPlayer.turnAction();
-        //отправляем всем чей ход
-        that.sendToAll('GAME_reciveTurn', data);
-        setTimeout(function() {
-          //чтобы не сработало, если игрок переключит ход сам
-          //потому что если функция nextTurn вызовется еще раз, то изменится that.queueNum, а lastTurn нет
-          if (lastTurn === that.queueNum) {
-            that.nextTurn();
-          };
-        }, that.turnTime);
-      } else {
-        //если баланс 0 или меньше, и ходы не на паузе, то рекурсим функцию чтобы нашел следующего подходящего игрока
-        if (!that.turnsPaused) {
-          //сет таймаут нужен для ошибки стека
-          setTimeout(() => {
-            findTurn();
-          });
-        } else {
-          // если пауза, то всем кидаем что копец
-          that.sendToAll('GAME_pasedTurn');
-          //так же тут можно проверить, если все игроки банкроты, то закрывать игру
-        };
-      };
-    };
-  };
-  tick() {
-    const that = this;
-    let allPlayersOff = true;
-    for(let player in this.players){
-      if(USERS[player]){
-        allPlayersOff = false;
-        const thisPlayer = this.players[player];
-        thisPlayer.turnAction();
-      };
-    };
-    if(!allPlayersOff){
-      setTimeout(function() {
-        that.tick();
-      }, that.tickTime);
-    };
-  };
-};
 
 //
 // DB.connectToDB().then(function() {
@@ -553,10 +600,16 @@ io.on('connection', function(socket) {
     if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
 
       const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
-      if (ownerSocket) {
-        //Вызов у хозяина комнаты старта начала генерации игры
-        ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
-      };
+
+      /* ГЕНЕРАЦИЯ на стороне клиента*/
+      // if (ownerSocket) {
+      //   //Вызов у хозяина комнаты старта начала генерации игры
+      //   ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
+      // };
+
+
+
+      //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
 
       ROOMS.R_0000000000.members.forEach((member, i) => {
         if (member != ROOMS.R_0000000000.owner) {
@@ -565,6 +618,18 @@ io.on('connection', function(socket) {
             //Участникам комнаты уведомление, что комната готова и идет генерация игры
             memberSocket.emit('ROOM_ready');
           };
+        };
+      });
+
+      /* ГЕНЕРАЦИЯ на стороне сервера*/
+      const game = new GAME(ROOMS.R_0000000000);
+      GAMES[game.id] = game;
+      game.generateMap();
+      const gameData = game.getData();
+      ROOMS.R_0000000000.members.forEach((member) => {
+        if (USERS[member]) {
+          USERS[member].game = GAMES[game.id];
+          USERS[member].socket.emit('GAME_data', gameData);
         };
       });
     };
@@ -588,34 +653,37 @@ io.on('connection', function(socket) {
   });
 
 
+//поменял на генерацию со стороны сервера
+  // socket.on('GAME_generated', (gameData) => {
+  //   //происходит, когда сгенерирована карта
+  //   //trigger game -> generation.js -> start()
+  //   /*
+  //     gameData = {
+  //     roomID:R_0000000000,
+  //     id:'G_0000000000',
+  //     turns:[member1,member2,member3,member4],
+  //     mapArray:[mapCeils],
+  //
+  //   }
+  //   */
+  //   // ROOMS[gameData.roomID].gameID = gameData.id;
+  //   // const game = new GAME(gameData);
+  //   // GAMES[game.id] = game;
+  //   // gameData.trucks = {
+  //   //   count:game.trucks.count,
+  //   //   coast:game.trucks.coast
+  //   // };
+  //   // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
+  //   // ROOMS[gameData.roomID].members.forEach((member) => {
+  //   //   if (USERS[member]) {
+  //   //     USERS[member].game = GAMES[game.id];
+  //   //     USERS[member].socket.emit('GAME_data', gameData);
+  //   //   };
+  //   // });
+  // });
 
-  socket.on('GAME_generated', (gameData) => {
-    //происходит, когда сгенерирована карта
-    //trigger game -> generation.js -> start()
-    /*
-      gameData = {
-      roomID:R_0000000000,
-      id:'G_0000000000',
-      turns:[member1,member2,member3,member4],
-      mapArray:[mapCeils],
 
-    }
-    */
-    ROOMS[gameData.roomID].gameID = gameData.id;
-    const game = new GAME(gameData);
-    GAMES[game.id] = game;
-    gameData.trucks = {
-      count:game.trucks.count,
-      coast:game.trucks.coast
-    };
-    // ---!--- сюда надо вкинуть класс ROOM, чтобы через нее реализовать SOCKET.broadcast;
-    ROOMS[gameData.roomID].members.forEach((member) => {
-      if (USERS[member]) {
-        USERS[member].game = GAMES[game.id];
-        USERS[member].socket.emit('GAME_data', gameData);
-      };
-    });
-  });
+
   socket.on('GAME_choseCredit', (data) => {
       //происходит, когда игрок выбирает себе кредит
     //trigger interface -> game -> credit.js -> accept();

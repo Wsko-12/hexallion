@@ -106,8 +106,12 @@ async function create() {
     MAIN.game.scene.lights.moonlight = moonlight;
     RENDERER.scene.add(moonlight)
 
-    FIELD.create();
 
+
+
+
+
+    FIELD.create();
     TIME.init();
     RENDERER.render();
 

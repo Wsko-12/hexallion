@@ -30,7 +30,7 @@ const FUNCTIONS = {
   endTurn(){
     const data = {
       player:MAIN.userData.login,
-      gameID:MAIN.game.commonData.id,
+      gameID:MAIN.game.data.commonData.id,
     };
     MAIN.socket.emit('GAME_endTurn',data);
   },
@@ -48,7 +48,7 @@ const FUNCTIONS = {
     */
 
     const factory = new Factory(configs);
-    MAIN.game.playerData.factories[factory.id] = factory;
+    MAIN.game.data.playerData.factories[factory.id] = factory;
   },
 
 
