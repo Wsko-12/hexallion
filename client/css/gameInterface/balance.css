@@ -5,6 +5,7 @@
   height: 100vh;
   pointer-events: none;
   position: fixed;
+  z-index: 2;
 }
 
 #balanceDiv{
@@ -27,6 +28,7 @@
   overflow: hidden;
   width: 100vw;
   height: 100vh;
+    z-index: 3;
 }
 #balanceHistory{
   pointer-events: auto;
@@ -42,6 +44,7 @@
   left: 50%;
   transform: translate(-50%,-50%);
   overflow: hidden;
+
 }
 .balanceHistory_title{
   width: 100%;

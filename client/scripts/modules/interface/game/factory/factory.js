@@ -238,10 +238,16 @@ function showFactoryMenu(factory){
 
   if(factory.settings.storage.includes(1)){
     actionButtonLine = `
-    <div id='factoryMenu_ActionButton'>
-      <span style="margin:auto">Send truck</span>
-    </div>
+      <div id='factoryMenu_ActionButton'>
+        <span style="margin:auto">Send truck</span>
+      </div>
     `;
+    if(MAIN.game.data.commonData.turnBasedGame){
+      if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+        actionButtonLine = null;
+      };
+    };
+
   };
 
   const section = `
@@ -281,11 +287,12 @@ function showFactoryMenu(factory){
 
   if(actionButtonLine){
     const button = document.querySelector('#factoryMenu_ActionButton');
-    button.onclick = openTruckMenu();
-    button.ontouchstart = openTruckMenu();
+    button.onclick = openTruckMenu;
+    button.ontouchstart = openTruckMenu;
 
     function openTruckMenu(){
-
+      closeMenu();
+      MAIN.interface.game.trucks.openMenu(factory);
     };
   };
 

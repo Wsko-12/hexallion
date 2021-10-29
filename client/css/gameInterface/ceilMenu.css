@@ -9,6 +9,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 250px;
+  z-index: 2;
 }
 #onCeilDoubleClick{
   width: 100vw;
