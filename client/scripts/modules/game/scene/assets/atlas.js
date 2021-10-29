@@ -176,8 +176,15 @@ ATLAS.models = [
     file:'sawmillLight.glb',
   },
 
+  { name:'truck',
+    folder:'truck/',
+    file:'truck.glb',
+  },
 
-
+  { name:'truckHitBox',
+    folder:'truck/',
+    file:'truckHitBox.glb',
+  },
 
 ];
 ATLAS.textures = [

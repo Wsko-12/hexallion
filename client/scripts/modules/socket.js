@@ -130,10 +130,17 @@ function init() {
     });
 
 
-    MAIN.socket.on('GAME_factory_updates',(data) => {
+    //обновление всех фабрик
+    MAIN.socket.on('GAME_factoryList_updates',(data) => {
       for(let factory in data){
         MAIN.game.data.playerData.factories[factory].applyUpdates(data[factory]);
       };
+      MAIN.interface.game.factory.updateFactoryMenu();
+    });
+
+    //обновление только одной
+    MAIN.socket.on('GAME_factory_update',(data)=>{
+      MAIN.game.data.playerData.factories[data.factoryID].applyUpdates(data.updates);
       MAIN.interface.game.factory.updateFactoryMenu();
     });
 
@@ -144,6 +151,51 @@ function init() {
       MAIN.interface.game.trucks.changeTrucksCount();
       MAIN.game.functions.applyTruckPurchase(data);
     });
+
+
+
+
+    MAIN.socket.on('GAME_truck_loaded',(data) => {
+        //происходит, когда кто-то загружает грузовик
+        /*
+          data = {
+            player:this.player.login,
+            truckID:this.id,
+            resoure:{
+              name:this.resource.name,
+              quality:this.resoure.quality,
+            },
+          };
+        */
+
+        if(MAIN.game.data.commonData.trucks.all[data.truckID]){
+          MAIN.game.data.commonData.trucks.all[data.truckID].resource = data.resoure;
+        };
+
+    });
+
+    MAIN.socket.on('GAME_truck_ceilFull',(cords)=>{
+      //происходит, когда игрок загружает грузовик, а клетка уже занята
+      console.log('ceil empty',cords);
+    });
+
+    MAIN.socket.on('GAME_truck_place',(data)=>{
+      //происходит, когда игрок загружает грузовик, и он размещается на карте
+      /*
+      const data = {
+        player:this.player.login,
+        truckID:this.id,
+        place:factory.ceilIndex,
+      };
+      */
+
+      if(MAIN.game.data.commonData.trucks.all[data.truckID]){
+        const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
+        thisTruck.placeOnMap(data.place);
+      };
+    });
+
+
 
   };
 };

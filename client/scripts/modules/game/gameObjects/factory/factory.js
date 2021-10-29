@@ -32,11 +32,15 @@ class Factory {
     this.notification = null;
 
     this.hitBoxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.4,0.4,0.4),MAIN.game.scene.hitBoxMaterial);
-    this.hitBoxMesh.position.set(  this.position.x,  0.2,  this.position.z)
+    this.hitBoxMesh.position.set(  this.position.x,  0.2,  this.position.z);
+
+    /// !!!!!!!!!!!!!!!!
+    this.hitBoxMesh.geometry.rotateY((this.sector*(-90) * Math.PI/180));
+    /// !!!!!!!!!!!!!!!!
     this.hitBoxMesh.userData.position = this.position;
     this.hitBoxMesh.userData.onClick = function(){
       fieldCeil.sectorsData[properties.sector].onClick();
-    }
+    };
     MAIN.game.scene.hitBoxGroup.add(this.hitBoxMesh);
 
     if(!this.settingsSetted){

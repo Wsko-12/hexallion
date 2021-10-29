@@ -89,6 +89,40 @@ const FUNCTIONS = {
   },
 
 
+
+
+  getScenePositionByCeilIndex(indexes){
+    const RADIUS = 1;
+    const ROUNDS = 5;
+    const position = {
+      x:0,
+      y:0,
+      z:0,
+    }
+      //строим по оси z
+    if(indexes.z% 2){
+      //для нечетных по z
+      position.z = (RADIUS + RADIUS/2) * indexes.z;
+    }else{
+      //для четных  по z
+      position.z = (RADIUS + RADIUS/2) * indexes.z;
+    }
+    //строим левый край всей карты
+    position.x += 0.86602540378 * RADIUS * Math.abs(indexes.z-ROUNDS);
+
+    //выстраиваем их по x
+    position.x += 0.86602540378 * RADIUS*2 * indexes.x;
+
+    //центрируем всю карту по x
+    position.x -= 0.86602540378 * RADIUS*2*ROUNDS;
+
+    //центрируем всю карту по z
+    position.z -= (RADIUS + RADIUS/2)*ROUNDS;
+
+    return position;
+  },
+
+
 };
 
 export {FUNCTIONS};

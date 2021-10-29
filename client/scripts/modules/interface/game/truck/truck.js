@@ -91,7 +91,7 @@ function openMenu(factory){
           </div>
 
           <div class="truckMenu_card_button">
-            <span style="margin:auto" id="truckMenu_card_button_${thisTruck.id}">${resource?'show':'send'}</span>
+            <span style="margin:auto" id="truckMenu_card_button_${thisTruck.id}">${resource?'show':'load'}</span>
           </div>
         </div>
       </div>
@@ -117,14 +117,20 @@ function openMenu(factory){
 
 
       if(thisTruck.resource === null){
-        thisButton.onclick = send;
-        thisButton.ontouchstart = send;
+        thisButton.onclick = load;
+        thisButton.ontouchstart = load;
+      }else{
+        thisButton.onclick = show;
+        thisButton.ontouchstart = show;
+      }
+
+      function show(){
+        closeMenu();
       };
 
-
-
-      function send(){
-        sendTruck(thisTruck);
+      function load(){
+        closeMenu();
+        loadTruck(thisTruck);
       };
     };
 
@@ -142,16 +148,27 @@ function openMenu(factory){
       };
     };
 
-    function sendTruck(truck){
+    function loadTruck(truck){
+      if(MAIN.game.data.commonData.turnBasedGame){
+        if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+          return;
+        };
+      };
       if(factory){
-        console.log('Send from: ',factory,"Truck: ",truck);
+        const data = {
+          player:MAIN.game.data.playerData.login,
+          gameID:MAIN.game.data.commonData.id,
+          factoryID:factory.id,
+          truckID:truck.id,
+        };
+        MAIN.socket.emit('GAME_truck_load',data);
       };
     };
 
 };
 function closeMenu(event){
   const clicker =  document.querySelector('#trucksMenuSection');
-  if(event.target === undefined ||event.target ===  clicker){
+  if(event === undefined ||event.target ===  clicker){
     nowShowedFactory = null;
     document.querySelector('#trucksMenuContainer').style.display = 'none';
     clicker.style.pointerEvents = 'none';

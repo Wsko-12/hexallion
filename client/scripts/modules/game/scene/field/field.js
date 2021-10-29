@@ -214,7 +214,7 @@ FIELD.create = () => {
   };
   const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometriesArray);
   // const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.7,map:MAIN.game.scene.assets.textures.ceils_color,shininess:10});
-  const ceilsMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.lights,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0});
+  const ceilsMaterial = MAIN.game.scene.mainMaterial;
 
   const ceilsMaterialGUI = MAIN.GUI.addFolder(' ceilsMaterial');
   const ceilsMaterialConfig = {
@@ -229,7 +229,6 @@ FIELD.create = () => {
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
   ceilsMesh.castShadow = true;
   ceilsMesh.receiveShadow = true;
-
 
 
   const mergedLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);

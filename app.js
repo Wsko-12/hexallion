@@ -96,6 +96,20 @@ class GAME {
     this.tickPaused = false;
 
 
+    //нужно для отправки транспорта, только на стороне сервера
+    this.transportMap = [
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+        ];
     //в массив сохраняется вся история построек в игре
     this.buildHistory = [];
 
@@ -320,7 +334,7 @@ class FACTORY_LIST {
         data[thisFactory.id] = factoryData;
       };
     };
-    this.player.emit('GAME_factory_updates',data);
+    this.player.emit('GAME_factoryList_updates',data);
   };
 
 };
@@ -419,7 +433,17 @@ class FACTORY {
     this.player.emit('GAME_factory_newSettings',data);
   };
 
+  sendUpdates(){
+    const updates = {
+      factoryID:this.id,
+      updates:{
+        productLine:this.productLine,
+        storage:this.storage,
+      },
+    };
 
+    this.player.emit('GAME_factory_update',updates);
+  };
 
   turn(){
     if(this.settingsSetted){
@@ -455,6 +479,50 @@ class FACTORY {
     }else{
       //выслать уведомление по настройке фабрики
     };
+  };
+
+
+
+  loadResourceToTruck(data){
+    /*
+
+    const data = {
+                 game,
+                 player,
+                 factory,
+                 truck,
+               };
+   */
+
+
+   if(data.truck.resource === null){
+     if(this.storage[0] === 1){
+       //забираем единицу вначале
+       this.storage.shift();
+       //вкидываем ноль в конец
+       this.storage.push(0);
+
+       //отправляем игроку update фабрики
+       this.sendUpdates();
+
+       const resourceProperties = {
+         name:this.resource,
+         quality:this.quality,
+         game:data.game,
+         player:data.player,
+         factory:data.factory,
+         truck:data.truck,
+       };
+
+       const resource = new RESOURCE(resourceProperties);
+       data.truck.loadResource(resource);
+
+       data.truck.placeTruck(this);
+     };
+   };
+
+
+
   };
 };
 
@@ -562,10 +630,50 @@ class TRUCK {
     this.resource = null;
     this.positionIndexes = {};
   };
+
+
+  loadResource(resource){
+    this.resource = resource;
+
+    const data = {
+      player:this.player.login,
+      truckID:this.id,
+      resoure:{
+        name:this.resource.name,
+        quality:this.resource.quality,
+      },
+    };
+
+    this.game.sendToAll('GAME_truck_loaded',data);
+  };
+
+
+  //размешает грузовик на карте
+  placeTruck(factory){
+    this.game.transportMap[factory.ceilIndex.z][factory.ceilIndex.x] = 1;
+    const data = {
+      player:this.player.login,
+      truckID:this.id,
+      place:factory.ceilIndex,
+    };
+    this.game.sendToAll('GAME_truck_place',data);
+
+
+  };
 };
 
 
-
+class RESOURCE {
+  constructor(properties){
+    this.name = properties.name;
+    this.quality =  properties.quality;
+    this.game = properties.game;
+    this.player = properties.player;
+    this.factory = properties.factory;
+    this.truck = properties.truck;
+    this.id = generateId(`Resource_${this.name}`,5);
+  };
+};
 //
 // DB.connectToDB().then(function() {
 //   console.log('DB connected');
@@ -749,23 +857,47 @@ io.on('connection', function(socket) {
     if (game) {
       //anticheat
       if (game.players[data.player].balance >= COASTS.buildings[data.build.building]) {
+
         //если игра пошаговая, то нужно перепроверитьь его ли ход
-        if (game.turnBasedGame) {
-          //если ходы не на паузе
-          if(!game.turnsPaused){
-            //чтобы игрок не мог построить вне его хода
-            if (game.queue[game.queueNum] === data.player) {
-                const cost = COASTS.buildings[data.build.building] * (-1);
-                game.players[data.player].changeBalance(cost);
-                game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
-                game.playerBuilding(data);
+        // if (game.turnBasedGame) {
+        //   //если ходы не на паузе
+        //   if(!game.turnsPaused){
+        //     //чтобы игрок не мог построить вне его хода
+        //     if (game.queue[game.queueNum] === data.player) {
+        //         const cost = COASTS.buildings[data.build.building] * (-1);
+        //         game.players[data.player].changeBalance(cost);
+        //         game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
+        //         game.playerBuilding(data);
+        //     };
+        //   };
+        // } else {
+        //   const cost = COASTS.buildings[data.build.building] * (-1);
+        //   game.players[data.player].changeBalance(cost);
+        //   game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
+        //   game.playerBuilding(data);
+        // };
+
+        if(GAMES[data.gameID]){
+          const game = GAMES[data.gameID];
+          //если игра пошаговая, то нужно перепроверитьь его ли ход
+          if (game.turnBasedGame) {
+            //если ходы на паузе
+            if(game.turnsPaused){
+              return;
+            };
+            if (game.queue[game.queueNum] != data.player) {
+              return;
             };
           };
-        } else {
-          const cost = COASTS.buildings[data.build.building] * (-1);
-          game.players[data.player].changeBalance(cost);
-          game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
-          game.playerBuilding(data);
+
+          if(game.players[data.player]){
+            const player = game.players[data.player];
+            const cost = COASTS.buildings[data.build.building] * (-1);
+            player.changeBalance(cost);
+            player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
+            game.playerBuilding(data);
+          };
+
         };
       };
     };
@@ -809,8 +941,20 @@ io.on('connection', function(socket) {
     //trigger game => interface => truck => buyTruck
 
     if(GAMES[data.gameID]){
+      const game = GAMES[data.gameID];
+      //если игра пошаговая, то нужно перепроверитьь его ли ход
+      if (game.turnBasedGame) {
+        //если ходы на паузе
+        if(game.turnsPaused){
+          return;
+        };
+        if (game.queue[game.queueNum] != data.player) {
+          return;
+        };
+      };
+
+
       if(GAMES[data.gameID].players[data.player]){
-        const game = GAMES[data.gameID];
         const player = GAMES[data.gameID].players[data.player];
 
         if(player.balance >= COASTS.trucks.coast){
@@ -826,7 +970,7 @@ io.on('connection', function(socket) {
 
             const truck = new TRUCK(properties);
             game.trucks.all[truck.id] = truck;
-
+            player.trucks[truck.id] = truck;
 
             const sendData = {
               player:data.player,
@@ -834,6 +978,61 @@ io.on('connection', function(socket) {
               trucksCount:game.trucks.count,
             };
             game.sendToAll('GAME_truck_playerBoughtTruck',sendData);
+          };
+        };
+      };
+    };
+
+  });
+
+  socket.on('GAME_truck_load',(data) => {
+    //происходит, когда игрок высылает грузовик
+    //trigger interface -> game -> truck -> sendTruck();
+    /*
+      const data = {
+        player:MAIN.game.data.playerData.login,
+        gameID:MAIN.game.data.commonData.id,
+        factoryID:factory.id,
+        truckID:truck.id,
+      };
+    */
+
+    if(GAMES[data.gameID]){
+      const game = GAMES[data.gameID];
+      //если игра пошаговая, то нужно перепроверитьь его ли ход
+      if (game.turnBasedGame) {
+        //если ходы на паузе
+        if(game.turnsPaused){
+          return;
+        };
+        if (game.queue[game.queueNum] != data.player) {
+          return;
+        };
+      };
+
+      if(game.players[data.player]){
+        const player = game.players[data.player];
+        if(player.factoryList.list[data.factoryID]){
+          const factory = player.factoryList.list[data.factoryID];
+          if(player.trucks[data.truckID]){
+            const truck = player.trucks[data.truckID];
+            //проверяем, не занята ли клетка
+            if(game.transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0){
+              const nData = {
+                game,
+                player,
+                factory,
+                truck,
+              };
+              factory.loadResourceToTruck(nData);
+            }else{
+              //если клетка на карте занята другим транспортом
+              const cords = {
+                z:factory.ceilIndex.z,
+                x:factory.ceilIndex.x,
+              };
+              player.emit('GAME_truck_ceilFull',cords);
+            };
           };
         };
       };

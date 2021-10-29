@@ -29,10 +29,18 @@ async function create() {
     // MAIN.game.scene.testMesh = testMesh;
     // RENDERER.scene.add(testMesh);
 
-    MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:false});
+    MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:true});
+    MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.lights,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0});
 
     MAIN.game.scene.hitBoxGroup = new THREE.Group();
     RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
+
+    MAIN.game.scene.trucksGroup = new THREE.Group();
+    RENDERER.scene.add(MAIN.game.scene.trucksGroup);
+
+
+
+
     MAIN.game.scene.time = TIME;
     MAIN.game.scene.sun = SUN;
     MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
