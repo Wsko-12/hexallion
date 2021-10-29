@@ -613,6 +613,7 @@ class PLAYER {
       this.factoryList.sendUpdates();
 
       this.emit('GAME_changeBalance', this.balance);
+      this.emit('GAME_turn_action');
     };
   };
   emit(message,data){

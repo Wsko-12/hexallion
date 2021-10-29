@@ -44,7 +44,14 @@ body{
   height: 100vh;
   pointer-events: none;
 }
+#gameSceneNotification{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  pointer-events: none;
 
+}
 #renderer{
   outline: none;
   position: fixed;
@@ -84,6 +91,8 @@ body{
   outline: none;
   position: fixed;
 }
-
+.buttonSpan{
+  margin: auto;
+}
 
 /* REGISTRATION */

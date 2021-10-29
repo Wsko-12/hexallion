@@ -443,6 +443,10 @@ function render() {
       const thisFactory = MAIN.game.data.playerData.factories[factory]
       thisFactory.updateNotificationPosition();
     };
+    for(let truck in MAIN.game.data.playerData.trucks){
+      const thisTruck= MAIN.game.data.playerData.trucks[truck]
+      thisTruck.updateNotificationPosition();
+    };
   };
 
 

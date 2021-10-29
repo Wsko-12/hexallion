@@ -30,13 +30,9 @@ class Factory {
 
 
     this.notification = null;
-
     this.hitBoxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.4,0.4,0.4),MAIN.game.scene.hitBoxMaterial);
     this.hitBoxMesh.position.set(  this.position.x,  0.2,  this.position.z);
-
-    /// !!!!!!!!!!!!!!!!
-    this.hitBoxMesh.geometry.rotateY((this.sector*(-90) * Math.PI/180));
-    /// !!!!!!!!!!!!!!!!
+    this.hitBoxMesh.rotation.y = ((this.sector*(-60) - 30) * Math.PI/180);
     this.hitBoxMesh.userData.position = this.position;
     this.hitBoxMesh.userData.onClick = function(){
       fieldCeil.sectorsData[properties.sector].onClick();
@@ -67,7 +63,7 @@ class Factory {
     };
   };
 
-  createNotification(type){
+  createNotification(){
     //можно поменять их на спрайты
     if(this.notification){
       this.notification.remove();
@@ -75,7 +71,7 @@ class Factory {
     const id = generateId('notification',6);
     const notification = `<div class="gameSceneNotification" id="${id}">!</div>`
 
-    document.querySelector('#factoryNotifications').insertAdjacentHTML('beforeEnd',notification);
+    document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd',notification);
     this.notification = document.querySelector(`#${id}`);
     const onclickFunction = this.hitBoxMesh.userData.onClick;
     this.notification.onclick = onclickFunction;

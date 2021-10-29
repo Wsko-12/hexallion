@@ -13,6 +13,15 @@ class PLAYER_DATA{
     this.factories = {};
     this.trucks = {};
   };
+
+  turnAction(){
+    for(let truck in this.trucks){
+      const thisTruck =  this.trucks[truck];
+      if(thisTruck.ready){
+        thisTruck.createNotification();
+      };
+    };
+  };
 };
 
 // {

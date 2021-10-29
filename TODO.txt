@@ -1,4 +1,4 @@
-FACTORY HIT BOX ROTATION in  factory class
+
 если дорого около города, вставляем меш склада города, так же кинуть на него хитбокс города
 
 anticheat Credit

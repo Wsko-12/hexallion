@@ -4,6 +4,8 @@
   position: fixed;
   overflow: hidden;
   z-index: 3;
+  perspective: 1000px;
+  -webkit-perspective:1000px;
 }
 #trucksMenuContainer{
   display: none;
@@ -104,4 +106,35 @@
   margin-top:10px;
   color:white;
   background-color: rgba(0,0,0,0.5);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#truckCard{
+  width: 140px;
+  height: 210px;
+  position: absolute;
+  background-color: #5c5c77;
+  left: 50%;
+  top:50%;
+  transform: translate(-50%,-50%) translateX(80%)rotateY(-20deg);
+  display: none;
+
+  border-radius: 10px;
+}
+
+#truckCard_button{
+  width: 80%;
+  height: 20%;
+  background-color: #525d4c;
+  display: flex;
 }

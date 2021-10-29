@@ -52,12 +52,20 @@ function init() {
       });
     });
 
+    MAIN.socket.on('GAME_turn_action', function(balance) {
+      //происходит на каждом тике или ходе
+      MAIN.game.data.playerData.turnAction();
+    });
+
+
+
     MAIN.socket.on('GAME_changeBalance', function(balance) {
       MAIN.interface.game.balance.change(balance);
     });
 
     MAIN.socket.on('GAME_applyBuilding', function(data) {
       //Происходит, кто-то из игроков что-то строит
+      //просто размещает объект на сцене
       // ceilMenu.js CEIL_MENU.sendBuildRequest();
       /*data = {
         player:MAIN.userData.login,
@@ -94,10 +102,6 @@ function init() {
         MAIN.game.data.commonData.queue = data.currentTurn;
         if (data.currentTurn === MAIN.game.data.playerData.login) {
           if (MAIN.game.data.playerData.balance > 0) {
-            //пусть endTurn приходит с сервера
-            // setTimeout(()=>{
-            //   MAIN.game.functions.endTurn();
-            // },data.turnTime);
           } else {
             MAIN.game.functions.endTurn();
           };

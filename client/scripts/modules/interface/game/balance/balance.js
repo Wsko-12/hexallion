@@ -31,16 +31,11 @@ function addBalanceMessage(message,amount){
   document.querySelector('#balanceList').insertAdjacentHTML('afterBegin',div);
 };
 function init(amount){
-  const section = `
-    <section id='balanceSection'>
-      <div id='balanceDiv'>
-        $${amount}
-      </div>
-
-    </section>
-  `
   const interfaceSection = document.querySelector('#gameInterface')
-  interfaceSection.insertAdjacentHTML('beforeEnd',section);
+  // interfaceSection.insertAdjacentHTML('beforeEnd',section);
+  const balanceSection = document.querySelector('#balanceSection');
+  const balanceDiv = document.querySelector('#balanceDiv');
+  balanceDiv.innerHTML = amount;
 
   const balanceHistorySection = `
     <div id="balanceHistoryClicker">
@@ -59,7 +54,7 @@ function init(amount){
       <div id='balanceList'></div>
     </div>
   `;
-  interfaceSection.insertAdjacentHTML('beforeEnd',balanceHistorySection);
+  balanceSection.insertAdjacentHTML('beforeEnd',balanceHistorySection);
 
 
   // for(let i =0;i<100;i++){
@@ -67,7 +62,6 @@ function init(amount){
   // }
 
 
-  const balanceDiv = document.querySelector('#balanceDiv');
   // MAIN.interface.deleteTouches(balanceDiv);
 
   const balanceHistoryClicker = document.querySelector('#balanceHistoryClicker');

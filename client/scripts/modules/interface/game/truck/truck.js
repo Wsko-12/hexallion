@@ -12,6 +12,8 @@ function init(){
       <div id="trucksMenuList">
       </div>
     </div>
+    <div id="truckNotifications"></div>
+    <div id="truckCard"></div>
   </section>
   `
 
@@ -171,6 +173,7 @@ function closeMenu(event){
   if(event === undefined ||event.target ===  clicker){
     nowShowedFactory = null;
     document.querySelector('#trucksMenuContainer').style.display = 'none';
+    document.querySelector('#truckCard').style.display = 'none';
     clicker.style.pointerEvents = 'none';
   };
 };
@@ -182,16 +185,54 @@ function changeTrucksCount(){
 
 };
 
+function openCard(truck){
+  truck.clearNotification();
+  const cardContent = `
+    <div id="truckCard_resourse">
+      <div>${truck.resource.name}</div>
+      <div>quality:${truck.resource.quality}</div>
+    </div>
+  `
+  const clicker =  document.querySelector('#trucksMenuSection');
+  clicker.style.pointerEvents = 'auto';
 
-function updateTruckMenu(){
+
+  const truckCard = document.querySelector('#truckCard');
+  truckCard.innerHTML = '';
+  truckCard.insertAdjacentHTML('beforeEnd',cardContent);
+  truckCard.style.display = 'block';
+
+
+  if(truck.ready){
+    const button = `
+      <div id='truckCard_button'>
+        <span class='buttonSpan'>send</span>
+      </div>
+    `
+    truckCard.insertAdjacentHTML('beforeEnd',button);
+
+
+    document.querySelector('#truckCard_button').onclick = send;
+    document.querySelector('#truckCard_button').ontouchstart = send;
+
+    function send(){
+      console.log('send',truck);
+    };
+  };
+
+
+
 
 };
+
+
+
 const TRUCK = {
   init,
   openMenu,
   closeMenu,
   changeTrucksCount,
-  updateTruckMenu,
+  openCard,
 
 
 

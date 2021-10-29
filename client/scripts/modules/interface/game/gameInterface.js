@@ -25,6 +25,7 @@ import {
 
 function init(){
   const section = `
+  <section id='sceneNotifications'></section>
   <section id="gameInterface">
     <section id="onCeilDoubleClick">
       <div id="sectorMenu">
@@ -41,6 +42,10 @@ function init(){
             <img class="sectorMenuButton_image" src="./scripts/modules/interface/game/ceilMenu/icons/build.png">
           </div>
         </div>
+      </div>
+    </section>
+    <section id='balanceSection'>
+      <div id='balanceDiv'>
       </div>
     </section>
   </section>
