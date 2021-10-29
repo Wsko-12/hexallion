@@ -74,7 +74,6 @@ function init() {
 
     //происходит когда игрок выбрал себе кредит
     MAIN.socket.on('GAME_applyCredit', function(credit) {
-
       MAIN.game.data.playerData.balance = credit.amount;
       MAIN.game.data.playerData.credit = credit;
       MAIN.game.data.playerData.credit.allPays = credit.pays;
@@ -139,6 +138,12 @@ function init() {
     });
 
 
+    MAIN.socket.on('GAME_truck_playerBoughtTruck',(data)=>{
+      //происходит, когда кто-то покупает грузовик
+      MAIN.game.data.commonData.trucks.count = data.trucksCount;
+      MAIN.interface.game.trucks.changeTrucksCount();
+      MAIN.game.functions.applyTruckPurchase(data);
+    });
 
   };
 };

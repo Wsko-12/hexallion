@@ -11,6 +11,11 @@ import {
   Factory
 } from '../gameObjects/factory/factory.js';
 
+import {
+  Truck
+} from '../gameObjects/truck/truck.js';
+
+
 
 const FUNCTIONS = {
   //trigger at socket.js MAIN.socket.on('GAME_applyBuilding')
@@ -49,6 +54,38 @@ const FUNCTIONS = {
 
     const factory = new Factory(configs);
     MAIN.game.data.playerData.factories[factory.id] = factory;
+  },
+
+  applyTruckPurchase(data){
+    //происходит, когда любой игрок покупает грузовик
+    // trigger socket.js   MAIN.socket.on('GAME_truck_playerBoughtTruck')
+
+    /*
+    data = {
+      player:data.player,
+      truckID:truck.id,
+      trucksCount:game.trucks.count,
+    };
+    */
+
+    const properties = {
+      player:data.player,
+      id:data.truckID,
+    };
+
+
+    const truck = new Truck(properties);
+
+    MAIN.game.data.commonData.trucks.all[truck.id] = truck;
+
+    if(data.player === MAIN.game.data.playerData.login){
+      MAIN.game.data.playerData.trucks[truck.id] = truck;
+
+
+      //подразумевается, что он все еще в меню, поэтому делаем реопен
+      MAIN.interface.game.trucks.openMenu();
+    };
+
   },
 
 

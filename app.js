@@ -61,7 +61,7 @@ const ROOMS = {
     started: false,
     turnBasedGame: false,
     turnTime: 10000,
-    tickTime:10000,
+    tickTime:5000,
   },
 };
 const GAMES = {
@@ -126,7 +126,6 @@ class GAME {
     this.map = map;
   };
 
-    //game data for user
   getData(){
     //game data for user
     const data = {
@@ -136,6 +135,7 @@ class GAME {
         queue:'',
         turnsPaused:false,
         turnBasedGame:this.turnBasedGame,
+        trucks:this.trucks,
       },
     };
     return data;
@@ -237,10 +237,13 @@ class GAME {
           currentTurn: that.queue[that.queueNum],
           turnTime: that.turnTime,
         };
-        // отправляем ему все функции для хода(кредит, фермы и тд)
-        nextPlayer.turnAction();
+
+
         //отправляем всем чей ход
         that.sendToAll('GAME_reciveTurn', data);
+
+        // отправляем ему все функции для хода(кредит, фермы и тд)
+        nextPlayer.turnAction();
         setTimeout(function() {
           //чтобы не сработало, если игрок переключит ход сам
           //потому что если функция nextTurn вызовется еще раз, то изменится that.queueNum, а lastTurn нет
@@ -551,7 +554,15 @@ class PLAYER {
   };
 };
 
-
+class TRUCK {
+  constructor(properties){
+    this.id = generateId('Truck',5);
+    this.player = properties.player;
+    this.game = properties.game;
+    this.resource = null;
+    this.positionIndexes = {};
+  };
+};
 
 
 
@@ -790,6 +801,55 @@ io.on('connection', function(socket) {
     };
 
   });
+
+
+
+  socket.on('GAME_truck_buy',(data)=>{
+    //происходит, когда игрок покупает грузовик
+    //trigger game => interface => truck => buyTruck
+
+    if(GAMES[data.gameID]){
+      if(GAMES[data.gameID].players[data.player]){
+        const game = GAMES[data.gameID];
+        const player = GAMES[data.gameID].players[data.player];
+
+        if(player.balance >= COASTS.trucks.coast){
+          if(game.trucks.count > 0){
+            game.trucks.count -= 1;
+            player.changeBalance(-COASTS.trucks.coast);
+
+
+            const properties = {
+              game,
+              player,
+            };
+
+            const truck = new TRUCK(properties);
+            game.trucks.all[truck.id] = truck;
+
+
+            const sendData = {
+              player:data.player,
+              truckID:truck.id,
+              trucksCount:game.trucks.count,
+            };
+            game.sendToAll('GAME_truck_playerBoughtTruck',sendData);
+          };
+        };
+      };
+    };
+
+  });
+
+
+
+
+
+
+
+
+
+
   socket.on('GAME_endTurn', (data) => {
     // происходит в конце хода
     //trigger game -> functions

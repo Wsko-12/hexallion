@@ -10,7 +10,7 @@
   -webkit-backdrop-filter: blur(10px);
   font-family: 'Roboto', sans-serif;
     overflow: hidden;
-
+  z-index: 100;
 }
 
 #chooseCreditMenuContainer{

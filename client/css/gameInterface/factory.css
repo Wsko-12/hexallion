@@ -5,7 +5,7 @@
   height: 100vh;
   pointer-events: none;
   position: fixed;
-    z-index: 100;
+    z-index: 1;
 }
 .factoryMenu_cardBackground_sawmill{
   background-image: url(../img/factoryCards/sawmill.jpg);

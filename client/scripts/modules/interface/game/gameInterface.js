@@ -19,6 +19,9 @@ import {
 import {
   FACTORY
 } from './factory/factory.js';
+import {
+  TRUCK
+} from './truck/truck.js';
 
 function init(){
   const section = `
@@ -48,6 +51,7 @@ function init(){
 
 
   FACTORY.init();
+  TRUCK.init();
 };
 
 const GAME_INTERFACE = {
@@ -58,6 +62,7 @@ const GAME_INTERFACE = {
   balance:BALANCE,
   turn:TURN,
   factory:FACTORY,
+  trucks:TRUCK,
 };
 
 export {
