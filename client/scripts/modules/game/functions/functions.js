@@ -425,7 +425,7 @@ const FUNCTIONS = {
         if(path.finished){
           if(path.path.length < shortest.steps){
             shortest.path = path.path;
-            shortest.steps = path.path.path.length ;
+            shortest.steps = path.path.length ;
           };
         };
       });
