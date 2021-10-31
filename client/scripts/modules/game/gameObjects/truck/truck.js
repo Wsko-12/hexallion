@@ -27,7 +27,7 @@ class Truck {
 
     this.object3D.position.set(position.x,position.y,position.z);
     MAIN.game.scene.trucksGroup.add(this.object3D);
-
+    MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = true;
     this.object3D.castShadow = true;
     this.object3D.receiveShadow = true;
 

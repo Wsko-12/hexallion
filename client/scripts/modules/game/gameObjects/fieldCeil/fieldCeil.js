@@ -16,6 +16,7 @@ class FieldCeil {
     this.hitBox = properties.hitBox;
     this.meshRotation = properties.meshRotation;
     this.indexes = properties.indexes;
+    this.roadEmpty = false;
 
     this.sectors = [null,null,null,null,null,null];
     //тут лежат объекты сектора более подробно
