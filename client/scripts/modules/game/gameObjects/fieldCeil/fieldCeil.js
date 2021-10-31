@@ -469,6 +469,15 @@ class FieldCeil {
     return position;
     // MAIN.game.scene.testMesh.position.set(position.x,position.y,position.z);
   };
+
+
+
+
+  getDistanceToCeil(ceil){
+    const thisVector = new THREE.Vector3(this.position.x,this.position.y,this.position.z);
+    const ceilVector = new THREE.Vector3(ceil.position.x,ceil.position.y,ceil.position.z);
+    return thisVector.distanceTo(ceilVector);
+  };
 };
 
 export {

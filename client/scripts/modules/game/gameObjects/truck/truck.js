@@ -15,6 +15,7 @@ class Truck {
     this.ready = false;
     this.object3D = null;
     this.hitBoxMesh = null;
+    this.cardOpened = false;
   };
 
   placeOnMap(indexes){
@@ -95,6 +96,53 @@ class Truck {
       this.notification.remove();
       this.notification = null;
     };
+  };
+
+
+
+
+  turn(){
+    this.ready = false;
+    this.cardOpened = true;
+    MAIN.interface.game.trucks.closeMenu();
+    const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
+    const that = this;
+    function diceAnimate(){
+      document.querySelector('#truckDice').style.display = 'block';
+      const diceDiv = document.querySelector('#truckDiceInner');
+      diceDiv.style.transitionDuration = '0s';
+      diceDiv.style.opacity = 1;
+
+      let animateCount = 0;
+      function animate(){
+        that.clearNotification();
+        animateCount++;
+        diceDiv.style.top = -Math.round(Math.random()*5) * 100 + '%';
+        if(animateCount < 10){
+          setTimeout(animate,100);
+        }else{
+          //continue function
+          that.clearNotification();
+          diceDiv.style.top = -(value-1) * 100 + '%';
+          setTimeout(function(){
+            diceDiv.style.transitionDuration = '2s';
+            diceDiv.style.opacity = 0.3;
+          },100);
+          // setTimeout(function(){
+          //   document.querySelector('#truckDice').style.display = 'none';
+          // },2000);
+
+
+          //STOPED HERE
+          MAIN.interface.dobleClickFunction.standard = false;
+          MAIN.interface.dobleClickFunction.function = function(object3D){
+            MAIN.game.functions.findPath(value,that,object3D.userData);
+          };
+        };
+      };
+      animate();
+    };
+    diceAnimate();
   };
 
 };

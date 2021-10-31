@@ -10,6 +10,12 @@ import {
 } from './game/gameInterface.js';
 
 
+//плавающая функция, которая можно включать и она будет вызываться при даблклике на экране
+//передается в нее объект который попал под raycaster
+const dobleClickFunction = {
+  standard:true,
+  function:null,
+}
 
 function pushRaycast(click){
   const mouse = {x:0,y:0};
@@ -18,10 +24,12 @@ function pushRaycast(click){
   MAIN.renderer.raycaster.setFromCamera(mouse, MAIN.renderer.camera);
   const intersects = MAIN.renderer.raycaster.intersectObjects( MAIN.game.scene.hitBoxGroup.children  );
   if(intersects[0]){
-    if(click === 2){
-      INTERFACE.game.camera.moveCameraTo(  intersects[0].object.userData.position);
-      intersects[0].object.userData.onClick(intersects[0].point);
-    };
+      if(dobleClickFunction.standard){
+        INTERFACE.game.camera.moveCameraTo(  intersects[0].object.userData.position);
+        intersects[0].object.userData.onClick(intersects[0].point);
+      }else{
+        dobleClickFunction.function(intersects[0].object)
+      };
   };
 };
 function returnTouches(elem){
@@ -131,7 +139,7 @@ function init() {
   target.addEventListener('dblclick',function(event){
     INTERFACE.game.ceilMenu.hideSectorMenu();
     event.preventDefault();
-    pushRaycast(2);
+    pushRaycast();
   });
 
 
@@ -184,7 +192,7 @@ function init() {
   });
   target.addEventListener('touchDoubleClick',function(event){
     event.preventDefault();
-    pushRaycast(2);
+    pushRaycast();
   });
 
   target.addEventListener('touchmove', function(event) {
@@ -362,6 +370,9 @@ const INTERFACE = {
   //события будут проверяться в рендере  после того, как все будет готово.
   //смена флага происходит в scene.js
   startedCheckEvents: false,
+
+
+  dobleClickFunction,
 };
 
 export {

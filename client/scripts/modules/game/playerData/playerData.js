@@ -18,7 +18,11 @@ class PLAYER_DATA{
     for(let truck in this.trucks){
       const thisTruck =  this.trucks[truck];
       if(thisTruck.ready){
-        thisTruck.createNotification();
+        if(!thisTruck.cardOpened){
+          thisTruck.createNotification();
+        }else{
+          thisTruck.hitBoxMesh.userData.onClick();
+        };
       };
     };
   };

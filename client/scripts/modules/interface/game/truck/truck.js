@@ -14,6 +14,11 @@ function init(){
     </div>
     <div id="truckNotifications"></div>
     <div id="truckCard"></div>
+    <div id="truckDice">
+      <div id="truckDiceInner">
+
+      </div>
+    </div>
   </section>
   `
 
@@ -171,6 +176,9 @@ function openMenu(factory){
 function closeMenu(event){
   const clicker =  document.querySelector('#trucksMenuSection');
   if(event === undefined ||event.target ===  clicker){
+    for(let truck in MAIN.game.data.playerData.trucks){
+      MAIN.game.data.playerData.trucks[truck].cardOpened = false;
+    }
     nowShowedFactory = null;
     document.querySelector('#trucksMenuContainer').style.display = 'none';
     document.querySelector('#truckCard').style.display = 'none';
@@ -186,6 +194,7 @@ function changeTrucksCount(){
 };
 
 function openCard(truck){
+  truck.cardOpened = true;
   truck.clearNotification();
   const cardContent = `
     <div id="truckCard_resourse">
@@ -212,17 +221,13 @@ function openCard(truck){
     truckCard.insertAdjacentHTML('beforeEnd',button);
 
 
-    document.querySelector('#truckCard_button').onclick = send;
-    document.querySelector('#truckCard_button').ontouchstart = send;
+    document.querySelector('#truckCard_button').onclick = turn;
+    document.querySelector('#truckCard_button').ontouchstart = turn;
 
-    function send(){
-      console.log('send',truck);
+    function turn(){
+      truck.turn();
     };
   };
-
-
-
-
 };
 
 
@@ -233,9 +238,6 @@ const TRUCK = {
   closeMenu,
   changeTrucksCount,
   openCard,
-
-
-
 };
 
 export {TRUCK}

@@ -25,11 +25,13 @@ import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 async function create() {
   let sceneReadyPromise = new Promise((resolve, reject) => {
 
-    // const testMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2,0.2,0.2),new THREE.MeshBasicMaterial({color:0xFF0000}));
-    // MAIN.game.scene.testMesh = testMesh;
-    // RENDERER.scene.add(testMesh);
+    const testMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2,0.2,0.2),new THREE.MeshBasicMaterial({color:0xFF0000}));
+    MAIN.game.scene.testMesh = testMesh;
+    RENDERER.scene.add(testMesh);
 
-    MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:true});
+
+
+    MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:false});
     MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.lights,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0});
 
     MAIN.game.scene.hitBoxGroup = new THREE.Group();
@@ -57,7 +59,7 @@ async function create() {
     // RENDERER.scene.add(MAIN.game.scene.buildingsMesh);
     //Бокс, в котором все лежит
     MAIN.game.scene.lights = {};
-      MAIN.game.scene.lights.buildingPointLights = [];
+    MAIN.game.scene.lights.buildingPointLights = [];
     const sky = new THREE.Mesh(new THREE.BoxBufferGeometry(100,100,100),new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:0.5,}));
     RENDERER.scene.add(sky);
     MAIN.game.scene.lights.sky = sky;
