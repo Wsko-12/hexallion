@@ -128,22 +128,22 @@ const FUNCTIONS = {
   findPath(value, truck, fieldCeil) {
 
 
-  const start = MAIN.game.data.map[truck.place.z][truck.place.x];
-  const finish = fieldCeil;
+    const start = MAIN.game.data.map[truck.place.z][truck.place.x];
+    const finish = fieldCeil;
 
-  //массив всех путей
-  const paths = [];
-  //если найдет дорогу, по которой еще можно поехать
-  let anotherWayIsPossible = false;
-  if (finish.centralRoad || finish.cityCeil) {
-    if(finish != start){
-      findPath();
-    }else{
-      MAIN.interface.game.path.closeAll();
-    }
-  }else {
-    MAIN.interface.game.path.showNotification(fieldCeil.position);
-  };
+    //массив всех путей
+    const paths = [];
+    //если найдет дорогу, по которой еще можно поехать
+    let anotherWayIsPossible = false;
+    if (finish.centralRoad || finish.cityCeil) {
+      if (finish != start) {
+        findPath();
+      } else {
+        MAIN.interface.game.path.closeAll();
+      }
+    } else {
+      MAIN.interface.game.path.showNotification(fieldCeil.position);
+    };
 
 
 
@@ -170,21 +170,21 @@ const FUNCTIONS = {
               if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                 if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                   //если она не занята грузовиком
-                  if(!neighbour.roadEmpty){
-                  if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
-                    //если к соседу проложена дорога
-                    const index = neighbour.neighbours.indexOf(ceil);
-                    if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
-                      //если от соседа проложена дорога
-                      const distance = neighbour.getDistanceToCeil(finish);
-                      //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
-                      if (distance < minDistanceToFinish.distance) {
+                  if (!neighbour.roadEmpty) {
+                    if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
+                      //если к соседу проложена дорога
+                      const index = neighbour.neighbours.indexOf(ceil);
+                      if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
+                        //если от соседа проложена дорога
+                        const distance = neighbour.getDistanceToCeil(finish);
+                        //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
+                        if (distance < minDistanceToFinish.distance) {
                           minDistanceToFinish.neighbour = neighbour;
                           minDistanceToFinish.distance = distance;
+                        };
                       };
                     };
                   };
-                };
                 };
               };
             };
@@ -204,41 +204,41 @@ const FUNCTIONS = {
           checked.push(ceil);
 
           //если в path есть еще клетки,
-          if(path.length > 0){
+          if (path.length > 0) {
             //перепроверяем опять с предыдущей клетки
-            setTimeout(()=>{
-              if(path[path.length - 1] === ceil){
+            setTimeout(() => {
+              if (path[path.length - 1] === ceil) {
                 path.pop();
               };
-              if(path.length > 0){
+              if (path.length > 0) {
                 find(path[path.length - 1]);
-              }else{
+              } else {
                 MAIN.interface.game.path.showNotification(fieldCeil.position);
               };
             });
-          }else{
+          } else {
             MAIN.interface.game.path.showNotification(fieldCeil.position);
           };
-        }else{
+        } else {
           //если все же нашли следующую подходящую клетку
-          if(minDistanceToFinish.distance === 0){
-            setTimeout(()=>{
+          if (minDistanceToFinish.distance === 0) {
+            setTimeout(() => {
               path.push(minDistanceToFinish.neighbour);
               // MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
               paths.push({
                 finished: true,
                 path: [...path],
               });
-              setTimeout(()=>{
+              setTimeout(() => {
                 //надо проверить, есть ли еще пути
                 findMorePath();
               });
             });
-          }else{
+          } else {
             //кидаем в алгоритм следующую клетку
-             setTimeout(()=>{
-               find(minDistanceToFinish.neighbour);
-             });
+            setTimeout(() => {
+              find(minDistanceToFinish.neighbour);
+            });
           };
         };
       };
@@ -250,7 +250,7 @@ const FUNCTIONS = {
     let lastOtherRoadLength = 0;
     //поиск дополнительных путей
     function findMorePath() {
-//       return
+      //       return
 
       const path = [];
       const checked = [];
@@ -276,31 +276,31 @@ const FUNCTIONS = {
               if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                 if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                   //если она не занята грузовиком
-                  if(!neighbour.roadEmpty){
-                  if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
-                    //если к соседу проложена дорога
-                    const index = neighbour.neighbours.indexOf(ceil);
-                    if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
-                      //если от соседа проложена дорога
-                      paths.forEach((pathObj, i) => {
-                        // проверяем у этой клетки индекс в этих путях
-                        const currentCeilIndex = pathObj.path.indexOf(ceil);
+                  if (!neighbour.roadEmpty) {
+                    if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
+                      //если к соседу проложена дорога
+                      const index = neighbour.neighbours.indexOf(ceil);
+                      if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
+                        //если от соседа проложена дорога
+                        paths.forEach((pathObj, i) => {
+                          // проверяем у этой клетки индекс в этих путях
+                          const currentCeilIndex = pathObj.path.indexOf(ceil);
 
-                        //смотрим следующую клекту в путях
-                        if(currentCeilIndex != -1){
-                          if(pathObj.path[currentCeilIndex+1]){
-                            //если клетка не та, что уже проверена, то скидываем в возможные дороги
-                            if(pathObj.path[currentCeilIndex+1] != neighbour){
-                              if(otherRoads.indexOf(neighbour) === -1){
+                          //смотрим следующую клекту в путях
+                          if (currentCeilIndex != -1) {
+                            if (pathObj.path[currentCeilIndex + 1]) {
+                              //если клетка не та, что уже проверена, то скидываем в возможные дороги
+                              if (pathObj.path[currentCeilIndex + 1] != neighbour) {
+                                if (otherRoads.indexOf(neighbour) === -1) {
                                   otherRoads.push(neighbour);
-                               };
+                                };
+                              };
                             };
                           };
-                        };
-                      });
+                        });
+                      };
                     };
                   };
-                };
                 };
               };
             };
@@ -308,18 +308,18 @@ const FUNCTIONS = {
         });
 
         //если другие дороги найдены
-        if(otherRoads.length !=lastOtherRoadLength){
+        if (otherRoads.length != lastOtherRoadLength) {
           anotherWayIsPossible = true;
           lastOtherRoadLength = otherRoads.length;
           otherRoads.forEach((neighbour, i) => {
             const distance = neighbour.getDistanceToCeil(finish);
             //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
             if (distance < minDistanceToFinish.distance) {
-                minDistanceToFinish.neighbour = neighbour;
-                minDistanceToFinish.distance = distance;
+              minDistanceToFinish.neighbour = neighbour;
+              minDistanceToFinish.distance = distance;
             };
           });
-        }else{
+        } else {
           anotherWayIsPossible = false;
           //если других дорог нет, то берем такие как уже было
           ceil.neighbours.forEach((neighbour, i) => {
@@ -329,21 +329,21 @@ const FUNCTIONS = {
                 if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                   if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                     //если она не занята грузовиком
-                    if(!neighbour.roadEmpty){
-                    if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
-                      //если к соседу проложена дорога
-                      const index = neighbour.neighbours.indexOf(ceil);
-                      if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
-                        //если от соседа проложена дорога
-                        const distance = neighbour.getDistanceToCeil(finish);
-                        //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
-                        if (distance < minDistanceToFinish.distance) {
-                          minDistanceToFinish.neighbour = neighbour;
-                          minDistanceToFinish.distance = distance;
+                    if (!neighbour.roadEmpty) {
+                      if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
+                        //если к соседу проложена дорога
+                        const index = neighbour.neighbours.indexOf(ceil);
+                        if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
+                          //если от соседа проложена дорога
+                          const distance = neighbour.getDistanceToCeil(finish);
+                          //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
+                          if (distance < minDistanceToFinish.distance) {
+                            minDistanceToFinish.neighbour = neighbour;
+                            minDistanceToFinish.distance = distance;
+                          };
                         };
                       };
                     };
-                  };
                   };
                 };
               };
@@ -357,7 +357,10 @@ const FUNCTIONS = {
           //если ничего не нашли, значит путь прерван и нужно возвращаться назад
 
           //вкидываем в возможные пути
-          paths.push({finished:false,path:[...path]});
+          paths.push({
+            finished: false,
+            path: [...path]
+          });
 
           //удаляем ее из массива
           path.pop();
@@ -366,25 +369,25 @@ const FUNCTIONS = {
           checked.push(ceil);
 
           //если в path есть еще клетки,
-          if(path.length > 0){
+          if (path.length > 0) {
             //перепроверяем опять с предыдущей клетки
-            setTimeout(()=>{
-              if(path[path.length - 1] === ceil){
+            setTimeout(() => {
+              if (path[path.length - 1] === ceil) {
                 path.pop();
               };
-              if(path.length > 0){
+              if (path.length > 0) {
                 find(path[path.length - 1]);
-              }else{
+              } else {
                 MAIN.interface.game.path.showNotification(fieldCeil.position);
               };
             });
-          }else{
+          } else {
             MAIN.interface.game.path.showNotification(fieldCeil.position);
           };
-        }else{
+        } else {
           //если все же нашли следующую подходящую клетку
-          if(minDistanceToFinish.distance === 0){
-            setTimeout(()=>{
+          if (minDistanceToFinish.distance === 0) {
+            setTimeout(() => {
               path.push(minDistanceToFinish.neighbour);
               // MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
               paths.push({
@@ -392,12 +395,12 @@ const FUNCTIONS = {
                 path: [...path],
               });
               //если есть еще дороги, то чекаем еще раз
-              if(anotherWayIsPossible){
-                setTimeout(()=>{
+              if (anotherWayIsPossible) {
+                setTimeout(() => {
                   findMorePath();
                 });
 
-              }else{
+              } else {
                 //Нашли все возможные пути
 
 
@@ -410,11 +413,11 @@ const FUNCTIONS = {
 
               };
             });
-          }else{
+          } else {
             //кидаем в алгоритм следующую клетку
-             setTimeout(()=>{
-               find(minDistanceToFinish.neighbour);
-             });
+            setTimeout(() => {
+              find(minDistanceToFinish.neighbour);
+            });
           };
         };
       };
@@ -423,26 +426,54 @@ const FUNCTIONS = {
     };
 
 
-    function choseShortestPath(){
+    function choseShortestPath() {
       let shortest = {
-        path:null,
-        steps:1000,
+        path: null,
+        steps: 1000,
       };
+      //bugFix
+      //надо почистить в массиве повтор точек
+      //он берется если пути стоят как равносторонний треугольник из 6 точек и truck стоит в основании его посередине
+      //    c
+      //  .
+      // .  t  p
+      // с - конечная точка
+      // t - truck
+      // p - название точки
+      // алгоритм сначала идет в p
+      //возвращается в t и дублирует ее (хз почему)
+
       paths.forEach((path, i) => {
-        if(path.finished){
-          if(path.path.length < shortest.steps){
+        if (path.finished) {
+          path.path.forEach((point, i) => {
+            if (path.path[i + 1]) {
+              if (path.path[i] === path.path[i + 1]) {
+                path.path.splice(i, 1);
+              };
+            };
+          });
+        };
+      });
+
+
+
+
+
+      paths.forEach((path, i) => {
+        if (path.finished) {
+          if (path.path.length < shortest.steps) {
             shortest.path = path.path;
-            shortest.steps = path.path.length ;
+            shortest.steps = path.path.length;
           };
         };
       });
-      if(shortest.path.length > value+1){
-        shortest.path.length = value+1;
+      if (shortest.path.length > value + 1) {
+        shortest.path.length = value + 1;
       };
 
       const sendData = {
-        truck:truck,
-        path:shortest.path,
+        truck: truck,
+        path: shortest.path,
       };
 
       MAIN.game.scene.path.show(shortest.path);
@@ -452,7 +483,7 @@ const FUNCTIONS = {
 
 
 
-},
+  },
 
 
 };

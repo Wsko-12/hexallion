@@ -180,21 +180,89 @@ class Truck {
       let pathIndex = 0;
       //индех, на каком прогрессе находится грузовик В КЛЕТКЕ
       let moveIndex = 0;
+      let maxRadius = Math.sqrt(3);
 
       function move() {
         moveIndex += 1;
-        console.log(moveIndex);
-        if (moveIndex === 10) {
-          moveIndex = 0;
-          pathIndex++;
-        };
         if (pathIndex < data.path.length) {
           const centerCeilIndexes = data.path[pathIndex];
-          const feildCeil = MAIN.game.data.map[centerCeilIndexes.z][centerCeilIndexes.x];
+          const fieldCeil = MAIN.game.data.map[centerCeilIndexes.z][centerCeilIndexes.x];
 
-          that.object3D.position.set(feildCeil.position.x, feildCeil.position.y, feildCeil.position.z);
-          that.hitBoxMesh.position.set(feildCeil.position.x, feildCeil.position.y, feildCeil.position.z);
+        const position = {x:fieldCeil.position.x,y:fieldCeil.position.y,z:fieldCeil.position.z};
+       //первая точка
+       let angleBySector_Y = 0;
+       if(pathIndex === 0){
+         if(moveIndex > 5){
+           const radius =(moveIndex-5) * (maxRadius/10) ;
+           const nextCenterCeilIndexes = data.path[pathIndex+1];
+           const nextCeil =  MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+           const angle = angleIndex*60 - 60;
+           angleBySector_Y = angle * (Math.PI/180);
+           position.x += Math.cos(angle * (Math.PI/180))*radius;
+           position.z += Math.sin(angle * (Math.PI/180))*radius;
+         };
+       }else if(pathIndex === data.path.length - 1){
+         if(moveIndex < 5){
+           const radius = (5-moveIndex) * (maxRadius/10);
+           const previousCenterCeilIndexes = data.path[pathIndex-1];
+           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+           const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
+           const angle = angleIndex*60 - 60;
+           angleBySector_Y = angle * (Math.PI/180);
+           position.x += Math.cos(angle * (Math.PI/180))*radius;
+           position.z += Math.sin(angle * (Math.PI/180))*radius;
+         };
+       }else{
+         if(moveIndex < 5){
+           const radius = (5-moveIndex) * (maxRadius/10);
+           const previousCenterCeilIndexes = data.path[pathIndex-1];
+           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+           const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
+           const angle = angleIndex*60 - 60;
+           angleBySector_Y = angle * (Math.PI/180);
+           position.x += Math.cos(angle * (Math.PI/180))*radius;
+           position.z += Math.sin(angle * (Math.PI/180))*radius;
+         };
+         if(moveIndex === 5){
+           const nextCenterCeilIndexes = data.path[pathIndex+1];
+           const nextCeil =  MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+           const angle = angleIndex*60 - 60;
+           angleBySector_Y = angle * (Math.PI/180);
 
+
+           position.x = fieldCeil.position.x;
+           position.z = fieldCeil.position.z;
+         };
+
+         if(moveIndex > 5){
+           const radius =(moveIndex-5) * (maxRadius/10) ;
+           const nextCenterCeilIndexes = data.path[pathIndex+1];
+           const nextCeil =  MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+           const angle = angleIndex*60 - 60;
+           angleBySector_Y = angle * (Math.PI/180);
+           position.x += Math.cos(angle * (Math.PI/180))*radius;
+           position.z += Math.sin(angle * (Math.PI/180))*radius;
+         };
+
+
+
+
+        };
+
+
+
+          that.object3D.position.set(position.x, position.y, position.z);
+          that.hitBoxMesh.position.set(position.x, position.y, position.z);
+
+          that.object3D.rotation.y = angleBySector_Y;
+
+          if (moveIndex === 10) {
+            moveIndex = 0;
+            pathIndex++;
+          };
           setTimeout(() => {
             move();
           }, 50)
