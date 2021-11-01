@@ -20,7 +20,6 @@ function showSendButton(data){
     MAIN.interface.dobleClickFunction.function = null;
     document.querySelector('#truckDice').style.display = 'none';
     MAIN.game.scene.path.clear();
-    console.log(data);
 
     const pathServerData = [];
     data.path.forEach((ceil, i) => {
@@ -29,11 +28,11 @@ function showSendButton(data){
 
     const serverData = {
       gameID:MAIN.game.data.commonData.id,
-      truck:data.truck.id,
+      truckID:data.truck.id,
       path:pathServerData,
     };
 
-    console.log(serverData);
+    MAIN.socket.emit('GAME_truck_send',serverData);
   };
 
 };

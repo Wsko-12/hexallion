@@ -113,6 +113,20 @@ class GAME {
     //в массив сохраняется вся история построек в игре
     this.buildHistory = [];
 
+    this.cityMapNames = [
+          [0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0],
+        ];
+
     this.trucks = {
       count:COASTS.trucks.count,
       coast:COASTS.trucks.coast,
@@ -123,6 +137,18 @@ class GAME {
 
 
 
+  };
+
+  generateCityMap(){
+    let map_index = 0;
+    for (let z = 0; z < this.cityMapNames.length; z++) {
+      for (let x = 0; x < this.cityMapNames[z].length; x++) {
+        if(this.map[map_index] === 'Westown' || this.map[map_index] === 'Northfield' || this.map[map_index] === 'Southcity'){
+          this.cityMapNames[z][x] = this.map[map_index];
+        };
+        map_index++;
+      };
+    };
   };
 
   generateMap(){
@@ -138,6 +164,7 @@ class GAME {
     };
     map.sort(() => Math.random() - 0.5);
     this.map = map;
+    this.generateCityMap();
   };
 
   getData(){
@@ -516,7 +543,6 @@ class FACTORY {
 
        const resource = new RESOURCE(resourceProperties);
        data.truck.loadResource(resource);
-
        data.truck.placeTruck(this);
      };
    };
@@ -652,13 +678,45 @@ class TRUCK {
   //размешает грузовик на карте
   placeTruck(factory){
     this.game.transportMap[factory.ceilIndex.z][factory.ceilIndex.x] = 1;
+    this.positionIndexes.x = factory.ceilIndex.x;
+    this.positionIndexes.z = factory.ceilIndex.z;
     const data = {
       player:this.player.login,
       truckID:this.id,
       place:factory.ceilIndex,
     };
     this.game.sendToAll('GAME_truck_place',data);
+  };
 
+  send(path){
+    //если последний пункт это город
+    const lastPoin = path[path.length - 1];
+    let city = null
+    if(this.game.cityMapNames[lastPoin.z][lastPoin.x] != 0){
+      city = this.game.cityMapNames[lastPoin.z][lastPoin.x];
+    };
+
+    //здесь можно делать проверку на фабрику
+    const data = {
+      truckID:this.id,
+      city:city,
+      path,
+    };
+
+    //если вдруг игрок занял
+    if(this.game.transportMap[lastPoin.z][lastPoin.x] === 1){
+      return;
+    };
+
+
+    this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+    this.positionIndexes.x = lastPoin.x;
+    this.positionIndexes.z = lastPoin.z;
+    //если едет в город, то не обновляем позиции
+    if(city === null){
+      this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+    };
+    this.game.sendToAll('GAME_truck_sending',data);
 
   };
 };
@@ -987,7 +1045,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('GAME_truck_load',(data) => {
-    //происходит, когда игрок высылает грузовик
+    //происходит, когда игрок загружает грузовик
     //trigger interface -> game -> truck -> sendTruck();
     /*
       const data = {
@@ -1028,11 +1086,11 @@ io.on('connection', function(socket) {
               factory.loadResourceToTruck(nData);
             }else{
               //если клетка на карте занята другим транспортом
-              const cords = {
+              const indexes = {
                 z:factory.ceilIndex.z,
                 x:factory.ceilIndex.x,
               };
-              player.emit('GAME_truck_ceilFull',cords);
+              player.emit('GAME_truck_ceilFull',indexes);
             };
           };
         };
@@ -1043,7 +1101,41 @@ io.on('connection', function(socket) {
 
 
 
+  socket.on('GAME_truck_send',(data)=>{
+    //происходит, когда игрок высылает грузовик
+    //trigger interface -> game -> path.js -> showSendButton() -> send();
 
+    /*
+    const data = {
+      gameID:MAIN.game.data.commonData.id,
+      truckID:data.truck.id,
+      path:pathServerData,
+    };
+    */
+
+
+    if(GAMES[data.gameID]){
+      const game = GAMES[data.gameID];
+      if(game.trucks.all[data.truckID]){
+        const truck = game.trucks.all[data.truckID];
+
+        //если игра пошаговая, то нужно перепроверитьь его ли ход
+        if (game.turnBasedGame) {
+          //если ходы на паузе
+          if(game.turnsPaused){
+            return;
+          };
+          if (game.queue[game.queueNum] != truck.player.login) {
+            return;
+          };
+        };
+
+        truck.send(data.path);
+      };
+
+    };
+
+  });
 
 
 

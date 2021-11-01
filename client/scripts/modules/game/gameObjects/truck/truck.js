@@ -6,11 +6,14 @@ import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
 
 
 class Truck {
-  constructor(properties){
+  constructor(properties) {
     this.id = properties.id;
     this.player = properties.player;
     this.resource = null;
-    this.place = {z:0,x:0};
+    this.place = {
+      z: 0,
+      x: 0
+    };
     //сообщает, что можно ходить этим грузовиком
     this.ready = true;
     this.object3D = null;
@@ -19,28 +22,28 @@ class Truck {
     this.onMap = false;
   };
 
-  placeOnMap(indexes){
+  placeOnMap(indexes) {
     this.onMap = true;
     this.place = indexes;
     const position = MAIN.game.functions.getScenePositionByCeilIndex(indexes);
 
 
-    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries.truck.clone(),MAIN.game.scene.mainMaterial);
+    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries.truck.clone(), MAIN.game.scene.mainMaterial);
 
-    this.object3D.position.set(position.x,position.y,position.z);
+    this.object3D.position.set(position.x, position.y, position.z);
     MAIN.game.scene.trucksGroup.add(this.object3D);
     MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = true;
     this.object3D.castShadow = true;
     this.object3D.receiveShadow = true;
 
     this.ready = true;
-    if(this.player === MAIN.game.data.playerData.login){
-      this.hitBoxMesh =  new THREE.Mesh(MAIN.game.scene.assets.geometries.truckHitBox.clone(),MAIN.game.scene.hitBoxMaterial);
-      this.hitBoxMesh.position.set(position.x,position.y,position.z);
+    if (this.player === MAIN.game.data.playerData.login) {
+      this.hitBoxMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.truckHitBox.clone(), MAIN.game.scene.hitBoxMaterial);
+      this.hitBoxMesh.position.set(position.x, position.y, position.z);
       MAIN.game.scene.hitBoxGroup.add(this.hitBoxMesh);
       this.hitBoxMesh.userData.position = this.hitBoxMesh.position;
       const that = this;
-      this.hitBoxMesh.userData.onClick = function(){
+      this.hitBoxMesh.userData.onClick = function() {
         that.showCard();
       };
       this.createNotification();
@@ -48,33 +51,33 @@ class Truck {
 
   };
 
-  showCard(){
+  showCard() {
     MAIN.interface.game.trucks.openCard(this);
     MAIN.interface.game.camera.moveCameraTo(this.hitBoxMesh.position);
   };
 
-  createNotification(){
+  createNotification() {
     //можно поменять их на спрайты
-    if(this.notification){
+    if (this.notification) {
       this.notification.remove();
     }
-    const id = generateId('notification',6);
+    const id = generateId('notification', 6);
     const notification = `<div class="truckNotification" id="${id}">!</div>`
 
-    document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd',notification);
+    document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd', notification);
     this.notification = document.querySelector(`#${id}`);
     const that = this;
-    const onclickFunction = function(){
-       that.showCard();
+    const onclickFunction = function() {
+      that.showCard();
     };
     this.notification.onclick = onclickFunction;
     this.notification.ontouchstart = onclickFunction;
     //высылка уведомлений
   };
 
-  updateNotificationPosition(){
-    if(this.notification){
-      const tempV = new THREE.Vector3(this.hitBoxMesh.position.x,0.2,this.hitBoxMesh.position.z);
+  updateNotificationPosition() {
+    if (this.notification) {
+      const tempV = new THREE.Vector3(this.hitBoxMesh.position.x, 0.2, this.hitBoxMesh.position.z);
 
       // this.hitBoxMesh.updateWorldMatrix(true, false);
       // this.hitBoxMesh.getWorldPosition(tempV);
@@ -85,7 +88,7 @@ class Truck {
       tempV.project(MAIN.renderer.camera);
 
       // convert the normalized position to CSS coordinates
-      const x = (tempV.x *  .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
+      const x = (tempV.x * .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
       const y = (tempV.y * -.5 + .5) * MAIN.renderer.renderer.domElement.clientHeight;
 
       // move the elem to that position
@@ -93,8 +96,8 @@ class Truck {
     };
   };
 
-  clearNotification(){
-    if(this.notification){
+  clearNotification() {
+    if (this.notification) {
       this.notification.remove();
       this.notification = null;
     };
@@ -103,46 +106,48 @@ class Truck {
 
 
 
-  turn(){
+  turn() {
     this.ready = false;
     this.cardOpened = true;
     MAIN.interface.game.trucks.closeMenu();
     const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
     const that = this;
-    function diceAnimate(){
+
+    function diceAnimate() {
       document.querySelector('#truckDice').style.display = 'block';
       const diceDiv = document.querySelector('#truckDiceInner');
       diceDiv.style.transitionDuration = '0s';
       diceDiv.style.opacity = 1;
 
       let animateCount = 0;
-      function animate(){
+
+      function animate() {
         that.clearNotification();
         animateCount++;
-        diceDiv.style.top = -Math.round(Math.random()*5) * 100 + '%';
-        if(animateCount < 10){
-          setTimeout(animate,100);
-        }else{
+        diceDiv.style.top = -Math.round(Math.random() * 5) * 100 + '%';
+        if (animateCount < 10) {
+          setTimeout(animate, 100);
+        } else {
           //continue function
           that.clearNotification();
-          diceDiv.style.top = -(value-1) * 100 + '%';
-          setTimeout(function(){
+          diceDiv.style.top = -(value - 1) * 100 + '%';
+          setTimeout(function() {
             diceDiv.style.transitionDuration = '2s';
             diceDiv.style.opacity = 0.3;
-          },100);
+          }, 100);
           // setTimeout(function(){
           //   document.querySelector('#truckDice').style.display = 'none';
           // },2000);
 
-          if(value < 6){
+          if (value < 6) {
             MAIN.interface.dobleClickFunction.standard = false;
-            MAIN.interface.dobleClickFunction.function = function(object3D){
-              MAIN.game.functions.findPath(value,that,object3D.userData);
+            MAIN.interface.dobleClickFunction.function = function(object3D) {
+              MAIN.game.functions.findPath(value, that, object3D.userData);
             };
-          }else{
-            setTimeout(function(){
+          } else {
+            setTimeout(function() {
               document.querySelector('#truckDice').style.display = 'none';
-            },1500);
+            }, 1500);
           };
 
         };
@@ -152,7 +157,56 @@ class Truck {
     diceAnimate();
   };
 
+
+
+
+  moveAlongWay(data) {
+    //указываем, что грузовик уехал
+    MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
+    //если прибывает не в город, то занимаем ту клетку
+    if (!data.city) {
+      const lastPoint = data.path[data.path.length - 1];
+      MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
+      this.place = {
+        z: lastPoint.z,
+        x: lastPoint.x
+      };
+    };
+
+    const that = this;
+
+    function animate() {
+      //индех, на какой из точек находится грузовик
+      let pathIndex = 0;
+      //индех, на каком прогрессе находится грузовик В КЛЕТКЕ
+      let moveIndex = 0;
+
+      function move() {
+        moveIndex += 1;
+        console.log(moveIndex);
+        if (moveIndex === 10) {
+          moveIndex = 0;
+          pathIndex++;
+        };
+        if (pathIndex < data.path.length) {
+          const centerCeilIndexes = data.path[pathIndex];
+          const feildCeil = MAIN.game.data.map[centerCeilIndexes.z][centerCeilIndexes.x];
+
+          that.object3D.position.set(feildCeil.position.x, feildCeil.position.y, feildCeil.position.z);
+          that.hitBoxMesh.position.set(feildCeil.position.x, feildCeil.position.y, feildCeil.position.z);
+
+          setTimeout(() => {
+            move();
+          }, 50)
+        };
+
+      };
+      move();
+    };
+    animate();
+
+  };
 };
-export{
+export {
   Truck
 };

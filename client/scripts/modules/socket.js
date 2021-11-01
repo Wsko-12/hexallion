@@ -200,6 +200,14 @@ function init() {
     });
 
 
+    //происходит, когда кто-то высылает грузовик
+    MAIN.socket.on('GAME_truck_sending',(data)=>{
+      if(MAIN.game.data.commonData.trucks.all[data.truckID]){
+        const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
+        console.log(thisTruck)
+        thisTruck.moveAlongWay(data);
+      };
+    });
 
   };
 };
