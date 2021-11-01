@@ -246,9 +246,11 @@ const FUNCTIONS = {
       find(start);
     };
 
-
+    const otherRoads = [];
+    let lastOtherRoadLength = 0;
     //поиск дополнительных путей
     function findMorePath() {
+//       return
 
       const path = [];
       const checked = [];
@@ -266,7 +268,7 @@ const FUNCTIONS = {
 
         //нужно проверить, если еще дороги, по которым не ездили
 
-        const otherRoads = [];
+
         ceil.neighbours.forEach((neighbour, i) => {
           if (neighbour) { //если не  null
             //смотрим, не проверяли ли мы ее уже (надо для возврата)
@@ -289,7 +291,9 @@ const FUNCTIONS = {
                           if(pathObj.path[currentCeilIndex+1]){
                             //если клетка не та, что уже проверена, то скидываем в возможные дороги
                             if(pathObj.path[currentCeilIndex+1] != neighbour){
-                              otherRoads.push(neighbour);
+                              if(otherRoads.indexOf(neighbour) === -1){
+                                  otherRoads.push(neighbour);
+                               };
                             };
                           };
                         };
@@ -304,8 +308,9 @@ const FUNCTIONS = {
         });
 
         //если другие дороги найдены
-        if(otherRoads.length){
+        if(otherRoads.length !=lastOtherRoadLength){
           anotherWayIsPossible = true;
+          lastOtherRoadLength = otherRoads.length;
           otherRoads.forEach((neighbour, i) => {
             const distance = neighbour.getDistanceToCeil(finish);
             //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
@@ -345,8 +350,6 @@ const FUNCTIONS = {
             };
           });
         };
-
-
 
         //идем дальше, смотрим какую клетку мы нашли
 

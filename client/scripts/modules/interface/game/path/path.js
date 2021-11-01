@@ -15,13 +15,25 @@ function showSendButton(data){
   button.style.display = 'flex';
 
   function send(){
-
+    button.style.display = 'none';
     MAIN.interface.dobleClickFunction.standard = true;
     MAIN.interface.dobleClickFunction.function = null;
-    document.querySelector('#truckDice').display = 'none';
     document.querySelector('#truckDice').style.display = 'none';
     MAIN.game.scene.path.clear();
     console.log(data);
+
+    const pathServerData = [];
+    data.path.forEach((ceil, i) => {
+      pathServerData.push(ceil.indexes);
+    });
+
+    const serverData = {
+      gameID:MAIN.game.data.commonData.id,
+      truck:data.truck.id,
+      path:pathServerData,
+    };
+
+    console.log(serverData);
   };
 
 };
