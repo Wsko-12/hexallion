@@ -69,7 +69,7 @@ class Factory {
       this.notification.remove();
     }
     const id = generateId('notification',6);
-    const notification = `<div class="gameSceneNotification" id="${id}">!</div>`
+    const notification = `<div class="factoryNotification" id="${id}">!</div>`
 
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd',notification);
     this.notification = document.querySelector(`#${id}`);

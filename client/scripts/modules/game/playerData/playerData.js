@@ -15,15 +15,20 @@ class PLAYER_DATA{
   };
 
   turnAction(){
+    //восстановление грузовиков
     for(let truck in this.trucks){
       const thisTruck =  this.trucks[truck];
-      if(thisTruck.ready){
+      thisTruck.ready = true;
+
+      if(thisTruck.onMap){
         if(!thisTruck.cardOpened){
           thisTruck.createNotification();
         }else{
           thisTruck.hitBoxMesh.userData.onClick();
         };
       };
+
+
     };
   };
 };

@@ -16,6 +16,9 @@ import {
 import {
   TIME
 } from './weather/time/time.js';
+import {
+  PATH
+} from './path/path.js';
 import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 
 // import * as DAT from '../../../libs/gui/dat.gui.module.js';
@@ -25,10 +28,16 @@ import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 async function create() {
   let sceneReadyPromise = new Promise((resolve, reject) => {
 
-    const testMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2,0.2,0.2),new THREE.MeshBasicMaterial({color:0xFF0000}));
-    MAIN.game.scene.testMesh = testMesh;
-    RENDERER.scene.add(testMesh);
+    // const testMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2,0.2,0.2),new THREE.MeshBasicMaterial({color:0xFF0000}));
+    // MAIN.game.scene.testMesh = testMesh;
+    // RENDERER.scene.add(testMesh);
 
+
+
+    MAIN.game.scene.path = PATH;
+    MAIN.game.scene.pathGroup = new THREE.Group();
+    MAIN.game.scene.pathMaterial = new THREE.MeshBasicMaterial({color:0x66d28e});
+    RENDERER.scene.add(MAIN.game.scene.pathGroup );
 
 
     MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:false});

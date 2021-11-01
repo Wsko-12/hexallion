@@ -138,7 +138,11 @@ const FUNCTIONS = {
   if (finish.centralRoad || finish.cityCeil) {
     if(finish != start){
       findPath();
-    };
+    }else{
+      MAIN.interface.game.path.closeAll();
+    }
+  }else {
+    MAIN.interface.game.path.showNotification(fieldCeil.position);
   };
 
 
@@ -156,7 +160,7 @@ const FUNCTIONS = {
         };
         path.push(ceil);
         checked.push(ceil);
-        MAIN.game.scene.testMesh.position.set(ceil.position.x,ceil.position.y,ceil.position.z);
+        // MAIN.game.scene.testMesh.position.set(ceil.position.x,ceil.position.y,ceil.position.z);
 
         const nextPathCeils = [];
         ceil.neighbours.forEach((neighbour, i) => {
@@ -209,18 +213,18 @@ const FUNCTIONS = {
               if(path.length > 0){
                 find(path[path.length - 1]);
               }else{
-                console.log('no path 1');
+                MAIN.interface.game.path.showNotification(fieldCeil.position);
               };
-            },500);
+            });
           }else{
-            console.log('no path 2');
+            MAIN.interface.game.path.showNotification(fieldCeil.position);
           };
         }else{
           //если все же нашли следующую подходящую клетку
           if(minDistanceToFinish.distance === 0){
             setTimeout(()=>{
               path.push(minDistanceToFinish.neighbour);
-              MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
+              // MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
               paths.push({
                 finished: true,
                 path: [...path],
@@ -229,12 +233,12 @@ const FUNCTIONS = {
                 //надо проверить, есть ли еще пути
                 findMorePath();
               });
-            },500);
+            });
           }else{
             //кидаем в алгоритм следующую клетку
              setTimeout(()=>{
                find(minDistanceToFinish.neighbour);
-             },500);
+             });
           };
         };
       };
@@ -256,7 +260,7 @@ const FUNCTIONS = {
         };
         path.push(ceil);
         checked.push(ceil);
-        MAIN.game.scene.testMesh.position.set(ceil.position.x,ceil.position.y,ceil.position.z);
+        // MAIN.game.scene.testMesh.position.set(ceil.position.x,ceil.position.y,ceil.position.z);
 
         const nextPathCeils = [];
 
@@ -368,18 +372,18 @@ const FUNCTIONS = {
               if(path.length > 0){
                 find(path[path.length - 1]);
               }else{
-                console.log('no path 1');
+                MAIN.interface.game.path.showNotification(fieldCeil.position);
               };
-            },500);
+            });
           }else{
-            console.log('no path 2');
+            MAIN.interface.game.path.showNotification(fieldCeil.position);
           };
         }else{
           //если все же нашли следующую подходящую клетку
           if(minDistanceToFinish.distance === 0){
             setTimeout(()=>{
               path.push(minDistanceToFinish.neighbour);
-              MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
+              // MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
               paths.push({
                 finished: true,
                 path: [...path],
@@ -402,12 +406,12 @@ const FUNCTIONS = {
                 choseShortestPath();
 
               };
-            },500);
+            });
           }else{
             //кидаем в алгоритм следующую клетку
              setTimeout(()=>{
                find(minDistanceToFinish.neighbour);
-             },500);
+             });
           };
         };
       };
@@ -429,10 +433,20 @@ const FUNCTIONS = {
           };
         };
       });
+      if(shortest.path.length > value+1){
+        shortest.path.length = value+1;
+      };
 
-      console.log(shortest.path);
+      const sendData = {
+        truck:truck,
+        path:shortest.path,
+      };
 
+      MAIN.game.scene.path.show(shortest.path);
+      MAIN.interface.game.path.showSendButton(sendData);
     };
+
+
 
 
 },

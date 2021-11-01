@@ -22,9 +22,14 @@ import {
 import {
   TRUCK
 } from './truck/truck.js';
+import {
+  PATH
+} from './path/path.js';
+
 
 function init(){
   const section = `
+
   <section id='sceneNotifications'></section>
   <section id="gameInterface">
     <section id="onCeilDoubleClick">
@@ -48,6 +53,10 @@ function init(){
       <div id='balanceDiv'>
       </div>
     </section>
+    <section id='pathSection'>
+      <div id="pathSection_sendButton"><span style="margin:auto">Send</span></div>
+      <div id="pathSection_notification">you can't drive here</div>
+    </section>
   </section>
   `
   document.body.insertAdjacentHTML('beforeEnd',section);
@@ -68,6 +77,7 @@ const GAME_INTERFACE = {
   turn:TURN,
   factory:FACTORY,
   trucks:TRUCK,
+  path:PATH,
 };
 
 export {

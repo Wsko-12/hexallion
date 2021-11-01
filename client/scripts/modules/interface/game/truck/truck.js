@@ -232,6 +232,8 @@ function openCard(truck){
 
 
 
+
+
 const TRUCK = {
   init,
   openMenu,

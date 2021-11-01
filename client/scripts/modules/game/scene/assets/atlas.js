@@ -186,6 +186,20 @@ ATLAS.models = [
     file:'truckHitBox.glb',
   },
 
+
+  { name:'pathMarker_road',
+    folder:'path/',
+    file:'pathMarker_road.glb',
+  },
+  { name:'pathMarker_bridge',
+    folder:'path/',
+    file:'pathMarker_bridge.glb',
+  },
+  { name:'pathMarker_bridgeStraight',
+    folder:'path/',
+    file:'pathMarker_bridgeStraight.glb',
+  },
+
 ];
 ATLAS.textures = [
   { name:'sceneEnvMap',

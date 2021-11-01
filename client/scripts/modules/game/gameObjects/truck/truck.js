@@ -12,13 +12,15 @@ class Truck {
     this.resource = null;
     this.place = {z:0,x:0};
     //сообщает, что можно ходить этим грузовиком
-    this.ready = false;
+    this.ready = true;
     this.object3D = null;
     this.hitBoxMesh = null;
     this.cardOpened = false;
+    this.onMap = false;
   };
 
   placeOnMap(indexes){
+    this.onMap = true;
     this.place = indexes;
     const position = MAIN.game.functions.getScenePositionByCeilIndex(indexes);
 
@@ -57,7 +59,7 @@ class Truck {
       this.notification.remove();
     }
     const id = generateId('notification',6);
-    const notification = `<div class="gameSceneNotification" id="${id}">!</div>`
+    const notification = `<div class="truckNotification" id="${id}">!</div>`
 
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd',notification);
     this.notification = document.querySelector(`#${id}`);
@@ -132,12 +134,17 @@ class Truck {
           //   document.querySelector('#truckDice').style.display = 'none';
           // },2000);
 
-
-          //STOPED HERE
-          MAIN.interface.dobleClickFunction.standard = false;
-          MAIN.interface.dobleClickFunction.function = function(object3D){
-            MAIN.game.functions.findPath(value,that,object3D.userData);
+          if(value < 6){
+            MAIN.interface.dobleClickFunction.standard = false;
+            MAIN.interface.dobleClickFunction.function = function(object3D){
+              MAIN.game.functions.findPath(value,that,object3D.userData);
+            };
+          }else{
+            setTimeout(function(){
+              document.querySelector('#truckDice').style.display = 'none';
+            },1500);
           };
+
         };
       };
       animate();
