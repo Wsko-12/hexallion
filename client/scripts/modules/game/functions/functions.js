@@ -351,6 +351,12 @@ const FUNCTIONS = {
           });
         };
 
+
+        //bugfix
+        if(ceil.neighbours.indexOf(minDistanceToFinish.neighbour) === -1){
+          minDistanceToFinish.neighbour = null;
+        };
+
         //идем дальше, смотрим какую клетку мы нашли
 
         if (minDistanceToFinish.neighbour === null) {
@@ -378,11 +384,21 @@ const FUNCTIONS = {
               if (path.length > 0) {
                 find(path[path.length - 1]);
               } else {
-                MAIN.interface.game.path.showNotification(fieldCeil.position);
+                // MAIN.interface.game.path.showNotification(fieldCeil.position);
+                //bugFix
+                //если мы ищем дополнительный, то точно уже есть основной финишный
+                setTimeout(() => {
+                  findMorePath();
+                });
               };
             });
           } else {
-            MAIN.interface.game.path.showNotification(fieldCeil.position);
+            // MAIN.interface.game.path.showNotification(fieldCeil.position);
+            //bugFix
+            //если мы ищем дополнительный, то точно уже есть основной финишный
+            setTimeout(() => {
+              findMorePath();
+            });
           };
         } else {
           //если все же нашли следующую подходящую клетку
@@ -399,18 +415,9 @@ const FUNCTIONS = {
                 setTimeout(() => {
                   findMorePath();
                 });
-
               } else {
                 //Нашли все возможные пути
-
-
-                // MAIN.interface.dobleClickFunction.standard = true;
-                // MAIN.interface.dobleClickFunction.function = null;
-                // console.log('all paths',paths)
-
-
                 choseShortestPath();
-
               };
             });
           } else {
