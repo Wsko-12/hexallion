@@ -163,16 +163,33 @@ class Truck {
 
 
   moveAlongWay(data) {
+    //указывает, что последняя точка является городом, в который надо продать ресурс
+    let lastPointIsNeededCity = false;
     //указываем, что грузовик уехал
     MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
-    //если прибывает не в город, то занимаем ту клетку
-    if (!data.city) {
-      const lastPoint = data.path[data.path.length - 1];
-      MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
-      this.place = {
-        z: lastPoint.z,
-        x: lastPoint.x
+    //занимаем финальную точку
+    const lastPoint = data.path[data.path.length - 1];
+    MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
+
+
+    //если финальная точка город
+    if( MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil){
+      //освобождаем ее
+      MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = false;
+
+      //если этот город тотт, что нужен был игроку
+      if(data.playerMoveToCity){
+        if(MAIN.game.data.map[lastPoint.z][lastPoint.x].type === data.playerMoveToCity){
+          lastPointIsNeededCity = true;
+        };
       };
+
+    };
+
+
+    this.place = {
+      z: lastPoint.z,
+      x: lastPoint.x
     };
 
     const that = this;
@@ -357,8 +374,11 @@ class Truck {
           setTimeout(() => {
             move();
           }, 25)
+        }else{
+          if(lastPointIsNeededCity){
+            console.log('finish, sell product');
+          };
         };
-
       };
       move();
     };

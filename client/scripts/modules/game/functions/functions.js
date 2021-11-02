@@ -474,6 +474,14 @@ const FUNCTIONS = {
           };
         };
       });
+
+
+
+      let playerMoveToCity = false;
+      if(shortest.path[shortest.path.length - 1].cityCeil){
+        playerMoveToCity = shortest.path[shortest.path.length - 1].type;
+      };
+
       if (shortest.path.length > value + 1) {
         shortest.path.length = value + 1;
       };
@@ -481,6 +489,7 @@ const FUNCTIONS = {
       const sendData = {
         truck: truck,
         path: shortest.path,
+        playerMoveToCity:playerMoveToCity,
       };
 
       MAIN.game.scene.path.show(shortest.path);

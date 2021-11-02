@@ -688,19 +688,19 @@ class TRUCK {
     this.game.sendToAll('GAME_truck_place',data);
   };
 
-  send(path){
-    //если последний пункт это город
-    const lastPoin = path[path.length - 1];
+  send(data){
+    //если игрок направляется в город
+    const lastPoin = data.path[data.path.length - 1];
     let city = null
     if(this.game.cityMapNames[lastPoin.z][lastPoin.x] != 0){
       city = this.game.cityMapNames[lastPoin.z][lastPoin.x];
     };
 
     //здесь можно делать проверку на фабрику
-    const data = {
+    const sendData = {
       truckID:this.id,
-      city:city,
-      path,
+      playerMoveToCity:data.playerMoveToCity,
+      path:data.path,
     };
 
     //если вдруг игрок занял
@@ -712,12 +712,11 @@ class TRUCK {
     this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
     this.positionIndexes.x = lastPoin.x;
     this.positionIndexes.z = lastPoin.z;
-    //если едет в город, то не обновляем позиции
+    //если едет не в город, то обновляем позиции
     if(city === null){
       this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
     };
-    this.game.sendToAll('GAME_truck_sending',data);
-
+    this.game.sendToAll('GAME_truck_sending',sendData);
   };
 };
 
@@ -1118,7 +1117,6 @@ io.on('connection', function(socket) {
       const game = GAMES[data.gameID];
       if(game.trucks.all[data.truckID]){
         const truck = game.trucks.all[data.truckID];
-
         //если игра пошаговая, то нужно перепроверитьь его ли ход
         if (game.turnBasedGame) {
           //если ходы на паузе
@@ -1130,7 +1128,7 @@ io.on('connection', function(socket) {
           };
         };
 
-        truck.send(data.path);
+        truck.send(data);
       };
 
     };

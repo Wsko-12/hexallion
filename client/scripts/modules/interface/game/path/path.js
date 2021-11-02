@@ -30,6 +30,7 @@ function showSendButton(data){
       gameID:MAIN.game.data.commonData.id,
       truckID:data.truck.id,
       path:pathServerData,
+      playerMoveToCity:data.playerMoveToCity,
     };
 
     MAIN.socket.emit('GAME_truck_send',serverData);
