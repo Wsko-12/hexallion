@@ -67,9 +67,11 @@ class Truck {
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd', notification);
     this.notification = document.querySelector(`#${id}`);
     const that = this;
-    const onclickFunction = function() {
+    const onclickFunction = function(){
       that.showCard();
     };
+    MAIN.interface.deleteTouches(this.notification);
+
     this.notification.onclick = onclickFunction;
     this.notification.ontouchstart = onclickFunction;
     //высылка уведомлений
@@ -188,76 +190,165 @@ class Truck {
           const centerCeilIndexes = data.path[pathIndex];
           const fieldCeil = MAIN.game.data.map[centerCeilIndexes.z][centerCeilIndexes.x];
 
-        const position = {x:fieldCeil.position.x,y:fieldCeil.position.y,z:fieldCeil.position.z};
-       //первая точка
-       let angleBySector_Y = 0;
-       if(pathIndex === 0){
-         if(moveIndex > 5){
-           const radius =(moveIndex-5) * (maxRadius/10) ;
-           const nextCenterCeilIndexes = data.path[pathIndex+1];
-           const nextCeil =  MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
-           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
-           const angle = angleIndex*60 - 60;
-           angleBySector_Y = angle * (Math.PI/180);
-           position.x += Math.cos(angle * (Math.PI/180))*radius;
-           position.z += Math.sin(angle * (Math.PI/180))*radius;
-         };
-       }else if(pathIndex === data.path.length - 1){
-         if(moveIndex < 5){
-           const radius = (5-moveIndex) * (maxRadius/10);
-           const previousCenterCeilIndexes = data.path[pathIndex-1];
-           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
-           const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
-           const angle = angleIndex*60 - 60;
-           angleBySector_Y = angle * (Math.PI/180);
-           position.x += Math.cos(angle * (Math.PI/180))*radius;
-           position.z += Math.sin(angle * (Math.PI/180))*radius;
-         };
-       }else{
-         if(moveIndex < 5){
-           const radius = (5-moveIndex) * (maxRadius/10);
-           const previousCenterCeilIndexes = data.path[pathIndex-1];
-           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
-           const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
-           const angle = angleIndex*60 - 60;
-           angleBySector_Y = angle * (Math.PI/180);
-           position.x += Math.cos(angle * (Math.PI/180))*radius;
-           position.z += Math.sin(angle * (Math.PI/180))*radius;
-         };
-         if(moveIndex === 5){
-           const nextCenterCeilIndexes = data.path[pathIndex+1];
-           const nextCeil =  MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
-           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
-           const angle = angleIndex*60 - 60;
-           angleBySector_Y = angle * (Math.PI/180);
+          const position = {
+            x: fieldCeil.position.x,
+            y: fieldCeil.position.y,
+            z: fieldCeil.position.z
+          };
+          //передвижение грузовика
+          if (pathIndex === 0) {
+            if (moveIndex > 5) {
+              const radius = (moveIndex - 5) * (maxRadius / 10);
+              const nextCenterCeilIndexes = data.path[pathIndex + 1];
+              const nextCeil = MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+              const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+              const angle = angleIndex * 60 - 60;
+              position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+              position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+            };
+          } else if (pathIndex === data.path.length - 1) {
+            if (moveIndex < 5) {
+              const radius = (5 - moveIndex) * (maxRadius / 10);
+              const previousCenterCeilIndexes = data.path[pathIndex - 1];
+              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
+              const angle = angleIndex * 60 - 60;
+              position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+              position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+            };
+          } else {
+            if (moveIndex < 5) {
+              const radius = (5 - moveIndex) * (maxRadius / 10);
+              const previousCenterCeilIndexes = data.path[pathIndex - 1];
+              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
+              const angle = angleIndex * 60 - 60;
+              position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+              position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+            };
+            if (moveIndex === 5) {
+              position.x = fieldCeil.position.x;
+              position.z = fieldCeil.position.z;
+            };
 
+            if (moveIndex > 5) {
+              const radius = (moveIndex - 5) * (maxRadius / 10);
+              const nextCenterCeilIndexes = data.path[pathIndex + 1];
+              const nextCeil = MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+              const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+              const angle = angleIndex * 60 - 60;
+              position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+              position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+            };
+          };
 
-           position.x = fieldCeil.position.x;
-           position.z = fieldCeil.position.z;
-         };
+          // вращение грузовика по Y
+          //сдесь походу можно только задавать этот "вектор" когда трак в середине клетки
+          if (pathIndex === 0) {
+            if (moveIndex > 5) {
+              const nextCeilIndex = data.path[pathIndex + 1];
+              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+              const angle = angleIndex * -60;
+              that.object3D.rotation.y = angle * (Math.PI / 180);
+              if(that.hitBoxMesh){
+                that.hitBoxMesh.rotation.y = angle * (Math.PI / 180);
+              };
+            }
+          } else if (pathIndex === data.path.length - 1) {
 
-         if(moveIndex > 5){
-           const radius =(moveIndex-5) * (maxRadius/10) ;
-           const nextCenterCeilIndexes = data.path[pathIndex+1];
-           const nextCeil =  MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
-           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
-           const angle = angleIndex*60 - 60;
-           angleBySector_Y = angle * (Math.PI/180);
-           position.x += Math.cos(angle * (Math.PI/180))*radius;
-           position.z += Math.sin(angle * (Math.PI/180))*radius;
-         };
+          } else {
+            if (moveIndex > 5) {
+              const nextCeilIndex = data.path[pathIndex + 1];
+              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+              const angle = angleIndex * -60;
+              that.object3D.rotation.y = angle * (Math.PI / 180);
+              if(that.hitBoxMesh){
+                that.hitBoxMesh.rotation.y = angle * (Math.PI / 180);
+              };
 
+            }
+          };
 
+          //позиция по Y
+          let sectorName = null;
+          if (pathIndex === 0) {
+            if (moveIndex > 5) {
+              const nextCeilIndex = data.path[pathIndex + 1];
+              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const sectorIndex = fieldCeil.neighbours.indexOf(nextCeil);
 
+              sectorName = fieldCeil.sectors[sectorIndex];
 
-        };
+            } else {
+              if (fieldCeil.type === 'sea') {
+                sectorName = 'bridgeStraight';
+              } else {
+                sectorName = 'road';
+              };
+            };
+          } else if (pathIndex === data.path.length - 1) {
+
+            if (moveIndex < 5) {
+              const previousCenterCeilIndexes = data.path[pathIndex - 1];
+              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const sectorIndex = fieldCeil.neighbours.indexOf(previousCeil);
+              sectorName = fieldCeil.sectors[sectorIndex];
+            } else {
+              if (fieldCeil.type === 'sea') {
+                sectorName = 'bridgeStraight';
+              } else {
+                sectorName = 'road';
+              };
+            };
+
+          } else {
+            if (moveIndex < 5) {
+              const previousCenterCeilIndexes = data.path[pathIndex - 1];
+              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const sectorIndex = fieldCeil.neighbours.indexOf(previousCeil);
+              sectorName = fieldCeil.sectors[sectorIndex];
+            };
+            if (moveIndex === 5) {
+              if (fieldCeil.type === 'sea') {
+                sectorName = 'bridgeStraight';
+              } else {
+                sectorName = 'road';
+              };
+            };
+            if (moveIndex > 5) {
+              const nextCeilIndex = data.path[pathIndex + 1];
+              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const sectorIndex = fieldCeil.neighbours.indexOf(nextCeil);
+              sectorName = fieldCeil.sectors[sectorIndex];
+            };
+          };
+
+          if (sectorName === 'road') {
+            position.y = 0;
+          } else if (sectorName === 'bridgeStraight') {
+            position.y = 0.2;
+          } else {
+            let shift = 0;
+            if (moveIndex < 5) {
+              shift = moveIndex / 5;
+            } else {
+              shift = Math.abs(10 - moveIndex) / 5
+            };
+            position.y = shift * 0.2;
+          };
+
+          //в принципе, наклон когда движется под горку можно не писать, так как его все равно не видно
 
 
 
           that.object3D.position.set(position.x, position.y, position.z);
-          that.hitBoxMesh.position.set(position.x, position.y, position.z);
+          if(that.hitBoxMesh){
+            that.hitBoxMesh.position.set(position.x, position.y, position.z);
+          };
 
-          that.object3D.rotation.y = angleBySector_Y;
+
 
           if (moveIndex === 10) {
             moveIndex = 0;
@@ -265,7 +356,7 @@ class Truck {
           };
           setTimeout(() => {
             move();
-          }, 50)
+          }, 25)
         };
 
       };
