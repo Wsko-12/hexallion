@@ -85,8 +85,6 @@ FIELD.create = () => {
   MAIN.game.data.map = map;
 
 
-
-
   //раскидываем все поле
   const geometriesArray = [];
   const waterArray = [];

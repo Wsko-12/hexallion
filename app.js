@@ -94,6 +94,11 @@ class GAME {
     this.startedQueque = 0;
     this.turnsPaused = false;
     this.tickPaused = false;
+    this.cities = {};
+    for(let cityName of MAP_CONFIGS.cities){
+      const city = new CITY(cityName);
+      this.cities[cityName] = city;
+    };
 
 
     //нужно для отправки транспорта, только на стороне сервера
@@ -130,9 +135,7 @@ class GAME {
     this.trucks = {
       count:COASTS.trucks.count,
       coast:COASTS.trucks.coast,
-      all:{
-
-      },
+      all:{},
     };
 
 
@@ -285,6 +288,9 @@ class GAME {
 
         // отправляем ему все функции для хода(кредит, фермы и тд)
         nextPlayer.turnAction();
+        //обновляем города
+        that.updateCities();
+
         setTimeout(function() {
           //чтобы не сработало, если игрок переключит ход сам
           //потому что если функция nextTurn вызовется еще раз, то изменится that.queueNum, а lastTurn нет
@@ -317,11 +323,29 @@ class GAME {
         thisPlayer.turnAction();
       };
     };
+
+      this.updateCities();
     if(!allPlayersOff){
       setTimeout(function() {
         that.tick();
       }, that.tickTime);
     };
+  };
+
+
+  updateCities(){
+    const data = {};
+    for(let city in this.cities){
+      const thisCity = this.cities[city];
+      thisCity.update();
+
+      data[city] = {};
+
+      for(let res in thisCity.storage){
+        data[city][res] = thisCity.storage[res].line
+      };
+    };
+    this.sendToAll('GAME_city_update',data);
   };
 };
 
@@ -329,7 +353,84 @@ class GAME {
 
 
 
+class CITY {
+  constructor(name){
+    this.name = name;
 
+
+    this.storage = this.createStorage();
+  };
+  createStorage(){
+    const storage = {};
+    const resouresBase = COASTS.resources;
+    for(let resource in resouresBase){
+      const thisResource = resouresBase[resource];
+
+      //касается только данного реесурса
+      const resStore = {};
+
+      //его линия прогресса
+      resStore.line = [];
+      for(let i = 0;i<thisResource.sailSpeed;i++){
+        resStore.line.push(0);
+      };
+
+      //максимальная цена ресурса
+      resStore.maxPrice = thisResource.price;
+
+
+
+      //массив цен на данный этап ресурса
+      resStore.prices = [];
+      resStore.line.forEach((item, i) => {
+        const procent = 15 * ((resStore.line.length) - (i+1));
+        const price = resStore.maxPrice -   resStore.maxPrice*(procent/100);
+        if(price < 0){
+          price = 0
+        };
+        resStore.prices[i] = price;
+      });
+      storage[resource] = resStore;
+    };
+    return storage;
+  };
+
+
+
+  sellResource(resoure){
+    let price = 0;
+    const firstFullCeilIndex = this.storage[resoure.name].line.indexOf(1);
+    if(firstFullCeilIndex === -1){
+      price = this.storage[resoure.name].maxPrice;
+    }else if(firstFullCeilIndex === 0){
+      price = 0;
+    }else{
+      price = this.storage[resoure.name].prices[firstFullCeilIndex - 1];
+    };
+
+    this.storage[resoure.name].line[0] = 1;
+
+    const newPrice = Math.round(price + price*((resoure.quality*15)*0.01));
+    resoure.player.changeBalance(newPrice);
+    resoure.player.sendBalanceMessage(`sale of ${resoure.name}`,newPrice);
+
+
+
+
+
+    resoure.truck.clear();
+  };
+
+
+
+  update(){
+    for(let resourceStore in this.storage){
+      const thisResourceStore = this.storage[resourceStore];
+      thisResourceStore.line.pop();
+      thisResourceStore.line.unshift(0);
+    };
+  };
+};
 
 class FACTORY_LIST {
   constructor(player){
@@ -717,6 +818,15 @@ class TRUCK {
       this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
     };
     this.game.sendToAll('GAME_truck_sending',sendData);
+  };
+
+  clear(){
+    this.resource = null;
+    this.positionIndexes = {};
+
+
+    this.game.sendToAll('GAME_truck_clear',this.id);
+
   };
 };
 
@@ -1137,7 +1247,28 @@ io.on('connection', function(socket) {
 
 
 
+  socket.on('GAME_resource_sell',(data)=>{
+    if(GAMES[data.gameID]){
+      const game = GAMES[data.gameID];
 
+      if(game.players[data.player]){
+        const player = game.players[data.player];
+
+        if(game.trucks.all[data.truckID]){
+          const truck = game.trucks.all[data.truckID];
+
+          if(game.cities[data.city]){
+            const city = game.cities[data.city];
+            if(truck.resource){
+              city.sellResource(truck.resource);
+            };
+          };
+        };
+      };
+    };
+
+
+  });
 
 
   socket.on('GAME_endTurn', (data) => {

@@ -6,7 +6,9 @@ import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
 import {BufferGeometryUtils} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 
 
-
+import {
+  City
+} from '../city/city.js';
 
 class FieldCeil {
   constructor(properties) {
@@ -26,6 +28,12 @@ class FieldCeil {
     this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true:false;
     //means player can't build nothing on this ceil
     this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' ? false:true;
+
+
+    if(this.cityCeil){
+      const city = new City({name:this.type});
+      MAIN.game.data.cities[this.type] = city;
+    };
   };
 
   findNeighbours(){

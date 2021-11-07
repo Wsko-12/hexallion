@@ -34,6 +34,7 @@ function init() {
       //Происходит, когда вся gameData сгенерирована
 
       MAIN.game.data = gameData;
+      MAIN.game.data.cities = {};
       MAIN.game.data.playerData = new PLAYER_DATA(MAIN.userData.login);
 
       MAIN.game.scene.assets.load().then((result) => {
@@ -199,6 +200,34 @@ function init() {
       };
     });
 
+    MAIN.socket.on('GAME_truck_clear',(truckID)=>{
+      //происходит, когда игрок загружает грузовик, и он размещается на карте
+      /*
+      const data = {
+        player:this.player.login,
+        truckID:this.id,
+        place:factory.ceilIndex,
+      };
+      */
+
+      if(MAIN.game.data.commonData.trucks.all[truckID]){
+        const thisTruck = MAIN.game.data.commonData.trucks.all[truckID];
+        thisTruck.clear();
+      };
+    });
+
+
+
+    //происходит, когда на сервере обновляется город
+    MAIN.socket.on('GAME_city_update',(data)=>{
+      for(let city in MAIN.game.data.cities){
+        const thisCity = MAIN.game.data.cities[city];
+        for(let res in thisCity.storage){
+          thisCity.storage[res].line = data[city][res];
+        };
+      };
+    });
+
 
     //происходит, когда кто-то высылает грузовик
     MAIN.socket.on('GAME_truck_sending',(data)=>{
@@ -207,6 +236,10 @@ function init() {
         thisTruck.moveAlongWay(data);
       };
     });
+
+
+
+
 
   };
 };

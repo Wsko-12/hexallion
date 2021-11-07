@@ -27,8 +27,6 @@ class PLAYER_DATA{
           thisTruck.hitBoxMesh.userData.onClick();
         };
       };
-
-
     };
   };
 };

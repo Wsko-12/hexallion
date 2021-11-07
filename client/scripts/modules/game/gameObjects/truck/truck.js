@@ -16,6 +16,7 @@ class Truck {
     };
     //сообщает, что можно ходить этим грузовиком
     this.ready = true;
+
     this.object3D = null;
     this.hitBoxMesh = null;
     this.cardOpened = false;
@@ -105,7 +106,27 @@ class Truck {
     };
   };
 
+  clear(){
+    this.clearNotification();
+    this.onMap = false;
+    this.resource = null;
+    this.place = {
+      z: 0,
+      x: 0
+    };
+    //сообщает, что можно ходить этим грузовиком
+    this.ready = true;
 
+    this.object3D.removeFromParent();
+    this.hitBoxMesh.removeFromParent();
+
+    this.object3D.geometry.dispose();
+    this.hitBoxMesh.geometry.dispose();
+
+
+    this.object3D = null;
+    this.hitBoxMesh = null;
+  };
 
 
   turn() {
@@ -165,6 +186,7 @@ class Truck {
   moveAlongWay(data) {
     //указывает, что последняя точка является городом, в который надо продать ресурс
     let lastPointIsNeededCity = false;
+    let city = null;
     //указываем, что грузовик уехал
     MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
     //занимаем финальную точку
@@ -376,7 +398,16 @@ class Truck {
           }, 25)
         }else{
           if(lastPointIsNeededCity){
-            console.log('finish, sell product');
+
+            if(that.player === MAIN.game.data.playerData.login){
+              const sendData = {
+                gameID:MAIN.game.data.commonData.id,
+                player:that.player,
+                truckID:that.id,
+                city:data.playerMoveToCity,
+              };
+              MAIN.socket.emit('GAME_resource_sell',sendData)
+            };
           };
         };
       };

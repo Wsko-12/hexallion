@@ -1,4 +1,7 @@
 
+const COASTS = require('./coasts.js');
+
+
 const factoriesConfig = {
   sawmill: {
     mining:true,
@@ -6,8 +9,7 @@ const factoriesConfig = {
     speed:4,
     storage:2,
     //полная цена производства
-    price:1000,
-    salary:1000,
+    price:COASTS.resources.wood.productionPrice,
     resource:'wood',
   },
 };

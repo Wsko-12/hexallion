@@ -11,5 +11,19 @@ const coasts = {
     count: 20,
     coast: 200,
   },
+
+
+
+
+
+  resources:{
+    wood:{
+      price:1000,
+      sailSpeed:5,
+      productionPrice:500,
+    },
+
+
+  },
 };
 module.exports = coasts;
