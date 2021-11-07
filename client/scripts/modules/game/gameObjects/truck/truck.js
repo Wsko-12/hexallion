@@ -9,6 +9,7 @@ class Truck {
   constructor(properties) {
     this.id = properties.id;
     this.player = properties.player;
+    this.truckNumber = properties.truckNumber;
     this.resource = null;
     this.place = {
       z: 0,

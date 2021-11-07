@@ -14,20 +14,20 @@
   /* Firefox */
   * {
     scrollbar-width: auto;
-    scrollbar-color: #303030 rgba(255,255,255,0.2);
+    scrollbar-color: #303030 rgba(255,255,255,0.1);
   }
 
   /* Chrome, Edge, and Safari */
   *::-webkit-scrollbar {
-    width: 4px;
+    width: 2px;
   }
 
   *::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #303030;
+    background-color: rgba(0,0,0,0.2);
     border-radius: 0px;
     border: 0px none #000000;
   }

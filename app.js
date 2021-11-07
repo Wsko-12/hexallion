@@ -413,7 +413,7 @@ class CITY {
 
     const newPrice = Math.round(price + price*((resoure.quality*15)*0.01));
     resoure.player.changeBalance(newPrice);
-    resoure.player.sendBalanceMessage(`sale of ${resoure.name}`,newPrice);
+    resoure.player.sendBalanceMessage(`Sale of ${resoure.name}`,newPrice);
 
 
 
@@ -767,6 +767,7 @@ class TRUCK {
     this.id = generateId('Truck',5);
     this.player = properties.player;
     this.game = properties.game;
+    this.truckNumber = properties.truckNumber;
     this.resource = null;
     this.positionIndexes = {};
   };
@@ -1141,11 +1142,12 @@ io.on('connection', function(socket) {
           if(game.trucks.count > 0){
             game.trucks.count -= 1;
             player.changeBalance(-COASTS.trucks.coast);
-
+            player.sendBalanceMessage('Buying a truck',-COASTS.trucks.coast);
 
             const properties = {
               game,
               player,
+              truckNumber:game.trucks.count+1,
             };
 
             const truck = new TRUCK(properties);
@@ -1156,6 +1158,7 @@ io.on('connection', function(socket) {
               player:data.player,
               truckID:truck.id,
               trucksCount:game.trucks.count,
+              truckNumber:game.trucks.count+1,
             };
             game.sendToAll('GAME_truck_playerBoughtTruck',sendData);
           };

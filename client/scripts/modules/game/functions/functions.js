@@ -72,6 +72,7 @@ const FUNCTIONS = {
     const properties = {
       player: data.player,
       id: data.truckID,
+      truckNumber:data.truckNumber,
     };
 
 

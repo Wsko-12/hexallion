@@ -10,104 +10,66 @@
 #trucksMenuContainer{
   display: none;
   position: fixed;
-  width: 450px;
-  height: 300px;
-  background-color: #696969;
-
+  width: 400px;
+  height: 120px;
   left: 50%;
   top:50%;
   transform: translate(-50%,-50%);
   overflow: hidden;
-  border-radius: 20px;
-      font-family: sans-serif;
+  font-family: sans-serif;
+
+  transform: translate(-50%,50%) rotateX(15deg);
+
 }
 
-#trucksMenuContainer_title{
-  width: 100%;
-  height: 30px;
-  text-align: center;
-  color: white;
-}
+
 #trucksMenuList{
-  width: 90%;
-  height: 270px;
-  margin: auto;
-  padding: 10px;
-  display: flex;
-  overflow-x: scroll;
-}
-.truckMenu_card{
-  width: 136px;
-  height: 200px;
-  border-radius: 10px;
-  background-color: white;
-  padding:5px;
-  margin: 10px;
-    flex: 0 0 auto;
-}
-.truckMenu_card_inner{
   width: 100%;
   height: 100%;
-    border-radius: 5px;
-  background: rgba(127, 125, 149, 1);
-  padding:5px;
+  overflow-x: scroll;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-    align-content: space-between;
-    align-items: center;
-}
-#truckMenu_card_count{
-  font-family: sans-serif;
-    color: white;
-    font-size: 0.8em
-}
-#truckMenu_card_buyButton{
-  width: 75px;
-  height: 75px;
-  border-radius: 75px;
-  margin-top: 10px;
-  display: flex;
-  background-color: rgba(0,0,0,0.5);
-  color: white;
-    font-family: sans-serif;
-      font-weight: bold;
+
 }
 
-#truckMenu_card_price{
-  margin-top: 10px;
-  font-family: sans-serif;
-  color: white;
+
+.trucksMenu-card{
+  width: 80px;
+  height: 88px;
+  flex:0 0 auto;
+    margin-right: 20px;
+}
+
+
+.trucksMenu-card-price{
   font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
 }
 
-.truckMenu_card_image{
+
+.trucksMenu-card-button{
   width: 100%;
-  height: 50%;
-  background-color: white;
-}
-.truckMenu_card_status{
-  color:white;
-}
-
-.truckMenu_card_resource{
-  width: 40px;
-  height: 20px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-.truckMenu_card_resource_hole{
-  box-shadow: inset 1px 1px 4px rgba(0,0,0,0.5)
-}
-.truckMenu_card_button{
-  width: 50px;
-  height: 25px;
+  height: 26px;
+  background-color: #303030;
+  color: #EAEAEA;
+  font-weight: bold;
   display: flex;
-  margin-top:10px;
-  color:white;
-  background-color: rgba(0,0,0,0.5);
+  align-items: center;
+  font-size: 12px;
+  text-transform: uppercase;
+
 }
 
+.trucksMenu-card-button-span{
+  margin-left: 8px;
+}
+
+
+
+.trucksMenu-card-resource{
+
+  margin-bottom: 5px;
+}
 
 
 
@@ -140,25 +102,10 @@
 
 
 
-
-
-
 #truckCard{
-  width: 140px;
-  height: 210px;
   position: absolute;
-  background-color: #5c5c77;
   left: 50%;
   top:50%;
-  transform: translate(-50%,-50%) translateX(80%)rotateY(-20deg);
+  transform: translate(-50%,-50%) translateX(80%)rotateY(-25deg);
   display: none;
-
-  border-radius: 10px;
-}
-
-#truckCard_button{
-  width: 80%;
-  height: 20%;
-  background-color: #525d4c;
-  display: flex;
 }
