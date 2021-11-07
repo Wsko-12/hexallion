@@ -96,7 +96,7 @@ class GAME {
     this.tickPaused = false;
     this.cities = {};
     for(let cityName of MAP_CONFIGS.cities){
-      const city = new CITY(cityName);
+      const city = new CITY({name:cityName,game:this});
       this.cities[cityName] = city;
     };
 
@@ -354,11 +354,12 @@ class GAME {
 
 
 class CITY {
-  constructor(name){
-    this.name = name;
-
+  constructor(properties){
+    this.name = properties.name;
+    this.game = properties.game;
 
     this.storage = this.createStorage();
+
   };
   createStorage(){
     const storage = {};
@@ -416,8 +417,7 @@ class CITY {
 
 
 
-
-
+    this.sendUpdate();
     resoure.truck.clear();
   };
 
@@ -429,6 +429,18 @@ class CITY {
       thisResourceStore.line.pop();
       thisResourceStore.line.unshift(0);
     };
+  };
+
+  sendUpdate(){
+    const data = {
+      name:this.name,
+      storage:{},
+    }
+
+    for(let res in this.storage){
+      data.storage[res] = this.storage[res].line;
+    };
+    this.game.sendToAll('GAME_city_updateOne',data)
   };
 };
 

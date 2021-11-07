@@ -226,6 +226,21 @@ function init() {
           thisCity.storage[res].line = data[city][res];
         };
       };
+
+      if(MAIN.interface.game.city.cardOpened){
+        MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
+      };
+    });
+
+    //происходит, когда кто-то продает ресурс в город
+    MAIN.socket.on('GAME_city_updateOne',(data)=>{
+      for(let res in data.storage){
+        MAIN.game.data.cities[data.name].storage[res].line = data.storage[res];
+      };
+
+      if(MAIN.interface.game.city.cardOpened){
+        MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
+      };
     });
 
 
@@ -236,6 +251,9 @@ function init() {
         thisTruck.moveAlongWay(data);
       };
     });
+
+
+
 
 
 

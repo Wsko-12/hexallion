@@ -141,17 +141,17 @@ FIELD.create = () => {
             hitboxGeometry = BufferGeometryUtils.mergeBufferGeometries([hitboxGeometry,mountainHitBox]);
           break;
           case 'Westown':
-            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            // geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
             cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone();
             lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
           break;
           case 'Northfield':
-            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            // geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
             cityGeometry = MAIN.game.scene.assets.geometries.northfieildCeil.clone();
             lightGeometry = MAIN.game.scene.assets.geometries.northfieildLight.clone();
           break;
           case 'Southcity':
-            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            // geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
             cityGeometry = MAIN.game.scene.assets.geometries.southcityCeil.clone();
             lightGeometry = MAIN.game.scene.assets.geometries.southcityLight.clone();
           break;
@@ -161,9 +161,12 @@ FIELD.create = () => {
 
 
           const randomDeg = getRandomDeg();
-          geometry.rotateY(randomDeg);
-          geometry.translate(position.x,0,position.z);
-          geometriesArray.push(geometry);
+          if(geometry){
+            geometry.rotateY(randomDeg);
+            geometry.translate(position.x,0,position.z);
+            geometriesArray.push(geometry);
+          };
+
 
           if(cityGeometry){
             cityGeometry.rotateY(randomDeg);

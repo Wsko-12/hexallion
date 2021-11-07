@@ -25,6 +25,10 @@ import {
 import {
   PATH
 } from './path/path.js';
+import {
+  CITY
+} from './city/city.js';
+
 
 
 function init(){
@@ -66,6 +70,7 @@ function init(){
 
   FACTORY.init();
   TRUCK.init();
+  CITY.init();
 };
 
 const GAME_INTERFACE = {
@@ -78,6 +83,7 @@ const GAME_INTERFACE = {
   factory:FACTORY,
   trucks:TRUCK,
   path:PATH,
+  city:CITY,
 };
 
 export {

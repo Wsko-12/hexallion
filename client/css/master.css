@@ -9,6 +9,33 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #303030 rgba(255,255,255,0.2);
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.2);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #303030;
+    border-radius: 0px;
+    border: 0px none #000000;
+  }
+
+
+
+
+
 body{
   margin: 0;
   padding: 0;

@@ -135,6 +135,12 @@ class FieldCeil {
   };
   onClick(intersectCoords){
     //для режима пошагового меню не показывается если не ход игрока
+
+    if(this.cityCeil){
+      MAIN.interface.game.city.openMenu(MAIN.game.data.cities[this.type]);
+    };
+
+
     if (MAIN.game.data.commonData.turnBasedGame) {
       if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
         return;
