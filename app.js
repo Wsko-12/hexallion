@@ -384,8 +384,8 @@ class CITY {
       //массив цен на данный этап ресурса
       resStore.prices = [];
       resStore.line.forEach((item, i) => {
-        const procent = 15 * ((resStore.line.length) - (i+1));
-        const price = resStore.maxPrice -   resStore.maxPrice*(procent/100);
+        const discount = 1 - (i+1)/resStore.line.length;
+        const price =Math.round(resStore.maxPrice - resStore.maxPrice*discount);
         if(price < 0){
           price = 0
         };

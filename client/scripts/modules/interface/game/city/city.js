@@ -44,7 +44,6 @@ function openMenu(city){
     'Southcity',
   ];
 
-
   let resourceList = '';
   for(let resource in city.storage){
     const thisRes = city.storage[resource];
