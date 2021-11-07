@@ -81,7 +81,7 @@ function openMenu(city){
           </div>
         </div>
         <div class="cityCard-resource-info">
-          <div class="cityCard-resource-info-price ">$20000</div>
+          <div class="cityCard-resource-info-price ">$${city.getCurrentResourcePrice(resource)}</div>
           <div class="cityCard-resource-info-holes">
             ${holes}
           </div>
