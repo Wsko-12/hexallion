@@ -8,9 +8,9 @@ function updateCreditHistory(){
   document.querySelector(`#creditHistory_paysLeft`).innerHTML = `Осталось платежей: ${credit.pays}`;
   document.querySelector(`#creditHistory_deferral`).innerHTML = `Отсрочка: ${credit.deferment}`; //`Payments defferal: ${credit.deferment}`;
   document.querySelector(`#creditHistory_paysCoast`).innerHTML = `Цена платежа: $${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`; //Cost of payment
-  document.querySelector(`#creditHistory_allCount`).innerHTML = `Осталось оплатить: $${((credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100))*credit.pays}`; 
+  document.querySelector(`#creditHistory_allCount`).innerHTML = `Осталось оплатить: $${((credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100))*credit.pays}`;
 
-  document.querySelector(`#creditHistory_ProgressLine`).style.width = ((credit.allPays - credit.pays)/credit.allPays*100)+'%'
+  document.querySelector(`#creditHistory_ProgressLine`).style.width = ((credit.allPays - credit.pays)/credit.allPays*100)+'%';
 };
 
 function addBalanceMessage(message,amount){
@@ -32,6 +32,16 @@ function addBalanceMessage(message,amount){
     </div>
   `
   document.querySelector('#balanceList').insertAdjacentHTML('afterBegin',div);
+
+
+
+
+
+
+
+
+  updatePayPerStep();
+
 };
 function init(amount){
   const interfaceSection = document.querySelector('#gameInterface')
@@ -56,6 +66,7 @@ function init(amount){
 
       </div>
       <div class='balanceHistory_title'>Balance</div>
+      <div class="creditHistory_text" style="margin-left:15px">Плата за ход $<span id='balanceHistory_payPerStep'>0<span></div>
       <div id='balanceList'></div>
     </div>
   `;
@@ -97,7 +108,7 @@ function init(amount){
         updateCreditHistory();
       };
     };
-
+    updatePayPerStep();
   };
 
   balanceDiv.onclick = showBalanceHistory;
@@ -106,7 +117,28 @@ function init(amount){
   balanceHistoryClicker.onclick = showBalanceHistory;
   balanceHistoryClicker.ontouchstart = showBalanceHistory;
 
+};
 
+
+
+function updatePayPerStep(){
+  const div = document.querySelector('#balanceHistory_payPerStep');
+
+  let pay = 0;
+
+  for(let factory in MAIN.game.data.playerData.factories){
+    const thisFactory = MAIN.game.data.playerData.factories[factory];
+    if(thisFactory.settingsSetted){
+      pay += thisFactory.settings.stepPrice;
+    };
+  };
+
+  if(MAIN.game.data.playerData.credit.pays > 0 && MAIN.game.data.playerData.credit.defferal === 0){
+    const credit = MAIN.game.data.playerData.credit;
+    pay += (credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)
+  };
+
+  div.innerHTML = pay;
 };
 
 function notEnoughMoney(){
