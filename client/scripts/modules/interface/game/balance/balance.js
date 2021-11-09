@@ -133,7 +133,7 @@ function updatePayPerStep(){
     };
   };
 
-  if(MAIN.game.data.playerData.credit.pays > 0 && MAIN.game.data.playerData.credit.defferal === 0){
+  if(MAIN.game.data.playerData.credit.pays > 0 && MAIN.game.data.playerData.credit.deferment === 0){
     const credit = MAIN.game.data.playerData.credit;
     pay += (credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)
   };
