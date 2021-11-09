@@ -164,6 +164,11 @@ class Truck {
           // },2000);
 
           if (value < 6) {
+
+            MAIN.interface.game.city.showCityPrices(that.resource);
+
+
+
             MAIN.interface.dobleClickFunction.standard = false;
             MAIN.interface.dobleClickFunction.function = function(object3D) {
               MAIN.game.functions.findPath(value, that, object3D.userData);

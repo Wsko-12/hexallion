@@ -15,6 +15,7 @@ function showSendButton(data){
   button.style.display = 'flex';
 
   function send(){
+    MAIN.interface.game.city.hideCityPrices();
     button.style.display = 'none';
     MAIN.interface.dobleClickFunction.standard = true;
     MAIN.interface.dobleClickFunction.function = null;
@@ -67,6 +68,7 @@ function showNotification(coords3D){
 };
 function closeAll(){
   console.log("closeAll")
+  MAIN.interface.game.city.hideCityPrices();
   const button = document.querySelector('#pathSection_sendButton');
   MAIN.interface.dobleClickFunction.standard = true;
   MAIN.interface.dobleClickFunction.function = null;

@@ -91,3 +91,25 @@
   text-align: right;
   color:#707070
 }
+
+
+
+
+#cityPriceSection{
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.cityPriceNotification{
+  position: absolute;
+  color: #74ff6c;
+  text-align: center;
+  font-size: 1em;
+  font-family: 'Roboto',sans-serif;
+  text-shadow: 0px 0px 1px black;
+}

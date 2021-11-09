@@ -230,6 +230,12 @@ function init() {
       if(MAIN.interface.game.city.cardOpened){
         MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
       };
+
+      //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
+      if(MAIN.interface.game.city.priceShow){
+        console.log('here',MAIN.interface.game.city.priceShow)
+        MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
+      };
     });
 
     //происходит, когда кто-то продает ресурс в город
@@ -240,6 +246,12 @@ function init() {
 
       if(MAIN.interface.game.city.cardOpened){
         MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
+      };
+
+      //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
+      if(MAIN.interface.game.city.priceShow){
+        console.log('here',MAIN.interface.game.city.priceShow)
+        MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
       };
     });
 

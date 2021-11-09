@@ -12,6 +12,13 @@ function init(){
     <div class="card" id="cityCard">
 
     </div>
+
+    <div id="cityPriceSection">
+      <div class="cityPriceNotification" id="Westown_priceNotification"></div>
+      <div class="cityPriceNotification" id="Northfield_priceNotification"></div>
+      <div class="cityPriceNotification" id="Southcity_priceNotification"></div>
+    </div>
+
   </section>
   `
 
@@ -128,8 +135,27 @@ function closeMenu(event){
 };
 
 
+function showCityPrices(resoure){
+  CITY.priceShow = resoure;
+  document.querySelector('#cityPriceSection').style.display = 'block';
+  for(let city in MAIN.game.data.cities){
+    const thisCity = MAIN.game.data.cities[city];
+    thisCity.showPrice(resoure);
+  };
+};
 
 
+function updatePricePosition(){
+  for(let city in MAIN.game.data.cities){
+    const thisCity = MAIN.game.data.cities[city];
+    thisCity.updatePricePosition();
+  };
+};
+
+function hideCityPrices(){
+  document.querySelector('#cityPriceSection').style.display = 'none';
+  CITY.priceShow = false;
+};
 
 
 const CITY = {
@@ -137,6 +163,10 @@ const CITY = {
   closeMenu,
   openMenu,
   cardOpened:false,
+  priceShow:false,
+  showCityPrices,
+  updatePricePosition,
+  hideCityPrices,
 };
 
 export {CITY};

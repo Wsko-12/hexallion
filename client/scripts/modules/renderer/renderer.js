@@ -436,6 +436,10 @@ function render() {
   if(  MAIN.interface.startedCheckEvents){
      MAIN.interface.checkEvents();
      MAIN.interface.game.camera.update();
+
+     if(MAIN.interface.game.city.priceShow){
+       MAIN.interface.game.city.updatePricePosition();
+     };
   }
 
   if(MAIN.game.data.playerData){
@@ -448,6 +452,7 @@ function render() {
       thisTruck.updateNotificationPosition();
     };
   };
+
 
 
   requestAnimationFrame(render);
