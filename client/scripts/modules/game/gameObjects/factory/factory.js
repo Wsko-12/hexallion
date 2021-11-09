@@ -63,18 +63,30 @@ class Factory {
     };
   };
 
-  createNotification(){
+  createNotification(type){
     //можно поменять их на спрайты
     if(this.notification){
       this.notification.remove();
-    }
+    };
+
     const id = generateId('notification',6);
-    const notification = `<div class="factoryNotification" id="${id}">!</div>`
+    let notification = `<div class="factoryNotification" id="${id}">!</div>`;
+
+    if(type === 'resourceReady'){
+      notification = `<div class="factoryNotification" id="${id}">✓</div>`
+    };
+
+    if(type === 'storrageFull'){
+      notification = `<div class="factoryNotification redNotification" id="${id}">!</div>`;
+    };
+
+
 
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd',notification);
     this.notification = document.querySelector(`#${id}`);
     const onclickFunction = this.hitBoxMesh.userData.onClick;
     MAIN.interface.deleteTouches(this.notification);
+
 
     this.notification.onclick = onclickFunction;
     this.notification.ontouchstart = onclickFunction;
@@ -113,11 +125,19 @@ class Factory {
   applyUpdates(updates){
     this.settings.productLine = updates.productLine;
     this.settings.storage = updates.storage;
+
     if(!this.settings.storage.includes(0)){
+        this.createNotification('storrageFull');
+        return;
+    };
+
+
+    if(this.settings.storage.includes(1)){
       if(this.notification === null){
-        this.createNotification();
+        this.createNotification('resourceReady');
       };
     };
+
   };
 };
 
