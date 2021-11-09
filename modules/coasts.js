@@ -1,15 +1,15 @@
 //antiCheat
 const coasts = {
   buildings: {
-    road:500,
-    sawmill:500,
-    bridge:200,
+    road:5000,
+    sawmill:19500,
+    bridge:7500,
   },
 
   trucks : {
     //сколько грузовиков всего в игре
     count: 20,
-    coast: 200,
+    coast: 10000,
   },
 
 
@@ -18,9 +18,9 @@ const coasts = {
 
   resources:{
     wood:{
-      price:1000,
+      price:24000,
       sailSpeed:5,
-      productionPrice:500,
+      productionPrice:11000,
     },
 
 

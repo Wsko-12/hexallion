@@ -5,8 +5,11 @@ import {
 // trigger socket.js -> MAIN.socket.on('GAME_applyCredit')
 function updateCreditHistory(){
   const credit = MAIN.game.data.playerData.credit
-  document.querySelector(`#creditHistory_paysLeft`).innerHTML = `Payments left: ${credit.pays}`;
-  document.querySelector(`#creditHistory_paysCoast`).innerHTML = `Cost of payment: $${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`;
+  document.querySelector(`#creditHistory_paysLeft`).innerHTML = `Осталось платежей: ${credit.pays}`;
+  document.querySelector(`#creditHistory_deferral`).innerHTML = `Отсрочка: ${credit.deferment}`; //`Payments defferal: ${credit.deferment}`;
+  document.querySelector(`#creditHistory_paysCoast`).innerHTML = `Цена платежа: $${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`; //Cost of payment
+  document.querySelector(`#creditHistory_allCount`).innerHTML = `Осталось оплатить: $${((credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100))*credit.pays}`; 
+
   document.querySelector(`#creditHistory_ProgressLine`).style.width = ((credit.allPays - credit.pays)/credit.allPays*100)+'%'
 };
 
@@ -44,6 +47,8 @@ function init(amount){
       <div class='balanceHistory_title'>Credit</div>
       <div id='creditHistory'>
           <div id='creditHistory_paysLeft' class="creditHistory_text"></div>
+          <div id='creditHistory_deferral' class="creditHistory_text"></div>
+          <div id='creditHistory_allCount' class="creditHistory_text"></div>
           <div id='creditHistory_paysCoast' class="creditHistory_text"></div>
           <div class='creditHistory_CreditProgress'>
             <div id='creditHistory_ProgressLine'></div>

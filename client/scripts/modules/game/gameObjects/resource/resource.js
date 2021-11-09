@@ -6,7 +6,7 @@ import {
 
 const resouresBase = {
   wood:{
-    price:1000,
+    price:24000,
     sailSpeed:5,
 
   },

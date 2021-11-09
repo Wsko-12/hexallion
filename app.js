@@ -61,7 +61,7 @@ const ROOMS = {
     started: false,
     turnBasedGame: false,
     turnTime: 10000,
-    tickTime:5000,
+    tickTime:15000,
   },
 };
 const GAMES = {
@@ -540,7 +540,10 @@ class FACTORY {
 
     //каждый salary point сбивает цену производства на 15%
     //сразу добавляем +15% к стоймости, если у игрока зарплаты на 0 прокачаны;
-    const newPrise = prise + (prise*(0.15));
+
+    // const newPrise = prise + (prise*(0.15));
+    const newPrise = prise;
+
     this.price = Math.round(newPrise - (newPrise*(0.15*settings.salary)));
     this.stepPrice = Math.round(this.price/this.productLine.length);
 

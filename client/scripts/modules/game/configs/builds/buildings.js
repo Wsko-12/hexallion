@@ -13,7 +13,7 @@ const BUILDINGS = {
     description:'Дорога для транспорта',
     ceil:['meadow'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
-    coast:500,
+    coast:5000,
   },
 
   bridge:{
@@ -21,14 +21,14 @@ const BUILDINGS = {
     description:'Мост для транспорта',
     ceil:['sea'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
-    coast:200,
+    coast:7500,
   },
   sawmill:{
     name:'Sawmill',
     description:'Производство досок',
     ceil:['meadow'],
     nearCeil:['forest'],
-    coast:500,
+    coast:19500,
   },
   // waterStation:{
   //   name:'Water station',
