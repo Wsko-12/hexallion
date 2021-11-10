@@ -453,16 +453,36 @@ class FieldCeil {
         this.sectors[sector] = 'sawmill';
       };
 
+      if(building === 'waterStation'){
+        buildGeommetry =  MAIN.game.scene.assets.geometries.waterStation.clone();
+        buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
+        buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+        newGeometryArray.push(buildGeommetry);
 
-      // let vertCount = 0;
-      //
-      // MAIN.renderer.scene.traverse((children) => {
-      //       if(children.type === 'Mesh'){
-      //         vertCount += children.geometry.attributes.position.count;
-      //       }
-      // });
-      // console.log(vertCount)
+        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
+        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
+        delete MAIN.renderer.scene.ceilsMesh.geometry;
+        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
 
+
+        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
+        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
+        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        // lightArray.push(lightGeometry);
+
+        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
+        // delete MAIN.game.scene.lights.buildingLights.geometry;
+        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+
+        this.sectors[sector] = 'waterStation';
+
+
+        //также у соседнего сектора закрываем доступ к стройке тут
+        const indexInNeighbour = this.neighbours[sector].neighbours.indexOf(this);
+        this.neighbours[sector].sectors[indexInNeighbour] = 'full';
+      };
 
     };
   };

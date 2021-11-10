@@ -1060,7 +1060,7 @@ io.on('connection', function(socket) {
         //   game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
         //   game.playerBuilding(data);
         // };
-
+        console.log(data)
         if(GAMES[data.gameID]){
           const game = GAMES[data.gameID];
           //если игра пошаговая, то нужно перепроверитьь его ли ход

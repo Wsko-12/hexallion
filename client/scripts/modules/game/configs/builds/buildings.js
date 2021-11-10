@@ -29,13 +29,18 @@ const BUILDINGS = {
     ceil:['meadow'],
     nearCeil:['forest'],
     coast:19500,
+    product:'wood',
   },
-  // waterStation:{
-  //   name:'Water station',
-  //   description:'Производство чистой воды',
-  //   ceil:['meadow'],
-  //   nearCeil:['sea'],
-  // },
+
+
+  waterStation:{
+    name:'Water station',
+    description:'Производство чистой воды',
+    ceil:['meadow'],
+    nearCeil:['sea'],
+    coast:12000,
+    product:'water',
+  },
   // field:{
   //   name:'Field',
   //   description:'Поле для выращивания сельскохозяйственных культур',

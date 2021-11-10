@@ -7,9 +7,16 @@ import {
 const resouresBase = {
   wood:{
     price:24000,
-    sailSpeed:5,
+    sailSpeed:7,
 
   },
+
+  water:{
+    price:15000,
+    sailSpeed:6,
+
+  },
+
 
 
 

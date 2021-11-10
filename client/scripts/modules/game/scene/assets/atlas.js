@@ -187,6 +187,12 @@ ATLAS.models = [
   },
 
 
+  { name:'waterStation',
+    folder:'buildings/',
+    file:'waterStation.glb',
+  },
+
+
   { name:'pathMarker_road',
     folder:'path/',
     file:'pathMarker_road.glb',

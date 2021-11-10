@@ -92,6 +92,7 @@ function openMenu(city){
             ${holes}
           </div>
         </div>
+      </div>
     `
 
     resourceList += resListItem;
