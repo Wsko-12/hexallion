@@ -38,8 +38,11 @@ class City{
       //массив цен на данный этап ресурса
       resStore.prices = [];
       resStore.line.forEach((item, i) => {
+        //harder city price
+        // const discount =(1 - ((i+1)/resStore.line.length)) + (0.10 - 0.10 * (i+1)/resStore.line.length);
         const discount = 1 - (i+1)/resStore.line.length;
-        const price = Math.round(resStore.maxPrice - resStore.maxPrice*discount);
+
+        let price = Math.round(resStore.maxPrice - resStore.maxPrice*discount);
         if(price < 0){
           price = 0
         };
@@ -54,7 +57,7 @@ class City{
   getCurrentResourcePrice(resoure){
     const firstFullCeilIndex = this.storage[resoure].line.indexOf(1);
     if(firstFullCeilIndex === -1){
-      return this.storage[resoure].maxPrice;
+      return this.storage[resoure].prices[this.storage[resoure].prices.length - 1];
     }else if(firstFullCeilIndex === 0){
       return 0;
     }else{
