@@ -218,7 +218,7 @@ class FieldCeil {
         let nonEmptySectors = 0;
         // чтобы нельзя было строить больше 2
         this.sectors.forEach((thisSector, i) => {
-          if(thisSector != null){
+          if(thisSector === 'bridge' || thisSector === 'bridgeStraight'){
             nonEmptySectors++;
           };
         });
@@ -393,13 +393,13 @@ class FieldCeil {
         let nonEmptySectors = 0;
 
         this.sectors.forEach((thisSector, i) => {
-          if(thisSector != null){
+          if(thisSector === 'bridge' || thisSector === 'bridgeStraight'){
             nonEmptySectors++;
           };
         });
         if(nonEmptySectors === 2){
           this.sectors.forEach((thisSector, i) => {
-            if(thisSector === null){
+            if(thisSector === null || thisSector === 'full' ){
               const borderGeometry = MAIN.game.scene.assets.geometries.bridgeBorder.clone();
               borderGeometry.rotateY((i*(-60) * Math.PI/180));
               borderGeometry.translate(this.position.x,this.position.y,this.position.z);
