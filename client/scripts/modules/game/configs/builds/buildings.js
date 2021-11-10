@@ -11,8 +11,8 @@ const BUILDINGS = {
   road:{
     name:'Road',
     description:'Дорога для транспорта',
-    ceil:['meadow'],
-    nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
+    ceil:['meadow','sand'],
+    nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand'],
     coast:5000,
   },
 
@@ -20,13 +20,13 @@ const BUILDINGS = {
     name:'Bridge',
     description:'Мост для транспорта',
     ceil:['sea'],
-    nearCeil:['meadow','sea','Westown','Southcity','Northfield'],
+    nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand'],
     coast:7500,
   },
   sawmill:{
     name:'Sawmill',
     description:'Производство досок',
-    ceil:['meadow'],
+    ceil:['meadow','sand'],
     nearCeil:['forest'],
     coast:19500,
     product:'wood',
@@ -36,10 +36,19 @@ const BUILDINGS = {
   waterStation:{
     name:'Water station',
     description:'Производство чистой воды',
-    ceil:['meadow'],
+    ceil:['meadow','sand'],
     nearCeil:['sea'],
     coast:12000,
     product:'water',
+  },
+
+  sandMine:{
+    name:'Sand mine',
+    description:'Добыча песка',
+    ceil:['sand'],
+    nearCeil:['all'],
+    coast:7500,
+    product:'sand',
   },
   // field:{
   //   name:'Field',

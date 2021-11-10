@@ -22,5 +22,15 @@ const factoriesConfig = {
     price:COASTS.resources.water.productionPrice,
     resource:'water',
   },
+
+  sandMine: {
+    mining:true,
+    //минимум 4 из-за прокачки
+    speed:4,
+    storage:2,
+    //полная цена производства
+    price:COASTS.resources.sand.productionPrice,
+    resource:'sand',
+  },
 };
 module.exports = factoriesConfig;

@@ -14,7 +14,9 @@ const CONFIGS = {
     mining: true,
   },
   waterStation:{
-    //значит, что добывает ресурс (есть еще перерабатывающие ресурсы)
+    mining: true,
+  },
+  sandMine:{
     mining: true,
   },
 };

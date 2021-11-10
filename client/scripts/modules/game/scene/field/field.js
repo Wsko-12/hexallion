@@ -128,9 +128,9 @@ FIELD.create = () => {
             const forestHitBox = MAIN.game.scene.assets.geometries.forestHitBox.clone();
             hitboxGeometry = BufferGeometryUtils.mergeBufferGeometries([hitboxGeometry,forestHitBox]);
             break;
-          // case 'sand':
-          //   geometry = MAIN.game.scene.assets.geometries.sandCeil.clone();
-          //   break;
+          case 'sand':
+            geometry = MAIN.game.scene.assets.geometries.sandCeil.clone();
+            break;
           case 'sea':
             waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
             geometry = MAIN.game.scene.assets.geometries.waterBottom.clone();

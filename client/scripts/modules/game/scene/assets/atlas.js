@@ -192,6 +192,11 @@ ATLAS.models = [
     file:'waterStation.glb',
   },
 
+  { name:'sandMine',
+    folder:'buildings/',
+    file:'sandMine.glb',
+  },
+
 
   { name:'pathMarker_road',
     folder:'path/',

@@ -17,6 +17,11 @@ const resouresBase = {
 
   },
 
+  sand:{
+    price:8000,
+    sailSpeed:5,
+  },
+
 
 
 

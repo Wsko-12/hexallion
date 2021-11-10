@@ -3,7 +3,8 @@
 const mapConfigs = {};
 
 mapConfigs.ceils = {
-  meadow:53,
+  meadow:43,
+  sand:10,
   // meadow: 79,
    forest: 15,
   // forest: 5,

@@ -5,7 +5,8 @@ const coasts = {
     bridge:7500,
 
     sawmill:19500,
-    waterStation:15000,
+    waterStation:12000,
+    sandMine:7500,
   },
 
   trucks : {
@@ -28,6 +29,11 @@ const coasts = {
       price:15000,
       sailSpeed:6,
       productionPrice:7000,
+    },
+    sand:{
+      price:8000,
+      sailSpeed:5,
+      productionPrice:3000,
     },
 
 
