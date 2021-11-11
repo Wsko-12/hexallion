@@ -109,3 +109,19 @@
   transform: translate(-50%,-50%) translateX(80%)rotateY(-25deg);
   display: none;
 }
+
+
+#truckCancelButton{
+    position: fixed;
+    border-radius: 20px;
+    display: none;
+    transform: translate(-50%, -50%);
+    top: 40%;
+    left: 50%;
+    width: 80px;
+    height: 40px;
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+    text-align: center;
+    pointer-events: auto;
+}

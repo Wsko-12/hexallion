@@ -19,6 +19,7 @@ class PLAYER_DATA{
     for(let truck in this.trucks){
       const thisTruck =  this.trucks[truck];
       thisTruck.ready = true;
+      thisTruck.sended = false;
 
       if(thisTruck.onMap){
         if(!thisTruck.cardOpened){

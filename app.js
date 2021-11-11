@@ -827,15 +827,17 @@ class TRUCK {
       return;
     };
 
-
-    this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
-    this.positionIndexes.x = lastPoin.x;
-    this.positionIndexes.z = lastPoin.z;
-    //если едет не в город, то обновляем позиции
-    if(city === null){
-      this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+    //bug fix не знаю, как он вылетел, но было что когда оттправил грузовик, не отключилось path меню у игрока
+    if(this.positionIndexes.z != undefined && this.positionIndexes.x != undefined){
+      this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+      this.positionIndexes.x = lastPoin.x;
+      this.positionIndexes.z = lastPoin.z;
+      //если едет не в город, то обновляем позиции
+      if(city === null){
+        this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+      };
+      this.game.sendToAll('GAME_truck_sending',sendData);
     };
-    this.game.sendToAll('GAME_truck_sending',sendData);
   };
 
   clear(){
@@ -1264,7 +1266,6 @@ io.on('connection', function(socket) {
     };
 
   });
-
 
 
   socket.on('GAME_resource_sell',(data)=>{

@@ -142,8 +142,14 @@ const FUNCTIONS = {
       if (finish != start) {
         findPath();
       } else {
-        MAIN.interface.game.path.closeAll();
-      }
+        if(finish.cityCeil){
+          const sendData = {
+              truck: truck,
+              city: finish.type,
+          };
+          MAIN.interface.game.path.showSellResourceButton(sendData);
+        };
+      };
     } else {
       MAIN.interface.game.path.showNotification(fieldCeil.position);
     };

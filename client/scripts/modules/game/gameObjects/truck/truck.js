@@ -11,12 +11,15 @@ class Truck {
     this.player = properties.player;
     this.truckNumber = properties.truckNumber;
     this.resource = null;
+
     this.place = {
       z: 0,
       x: 0
     };
     //сообщает, что можно ходить этим грузовиком
     this.ready = true;
+    //bug fix с двойной отправкой
+    this.sended = false;
 
     this.object3D = null;
     this.hitBoxMesh = null;
@@ -26,6 +29,7 @@ class Truck {
 
   placeOnMap(indexes) {
     this.onMap = true;
+    this.sended = false;
     this.place = indexes;
     const position = MAIN.game.functions.getScenePositionByCeilIndex(indexes);
 
@@ -70,6 +74,7 @@ class Truck {
     this.notification = document.querySelector(`#${id}`);
     const that = this;
     const onclickFunction = function(){
+      MAIN.interface.game.path.closeAll();
       that.showCard();
     };
     MAIN.interface.deleteTouches(this.notification);
@@ -112,11 +117,12 @@ class Truck {
     this.onMap = false;
     this.resource = null;
     this.place = {
-      z: 0,
-      x: 0
+      z: null,
+      x: null
     };
     //сообщает, что можно ходить этим грузовиком
     this.ready = true;
+    this.sended = false;
 
     this.object3D.removeFromParent();
     this.hitBoxMesh.removeFromParent();
@@ -166,7 +172,7 @@ class Truck {
           if (value < 6) {
 
             MAIN.interface.game.city.showCityPrices(that.resource);
-
+            document.querySelector('#truckCancelButton').style.display = 'flex';
 
 
             MAIN.interface.dobleClickFunction.standard = false;

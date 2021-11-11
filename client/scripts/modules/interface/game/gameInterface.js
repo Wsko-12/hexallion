@@ -58,7 +58,7 @@ function init(){
       </div>
     </section>
     <section id='pathSection'>
-      <div id="pathSection_sendButton"><span style="margin:auto">Send</span></div>
+      <div id="pathSection_sendButton"><span id ="pathSection_sendButton_title" style="margin:auto">Send</span></div>
       <div id="pathSection_notification">you can't drive here</div>
     </section>
   </section>

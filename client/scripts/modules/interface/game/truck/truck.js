@@ -13,6 +13,7 @@ function init(){
 
     <div id="truckNotifications"></div>
     <div id="truckCard" class="card trucksMenu-card"></div>
+    <div id="truckCancelButton" > <span style="margin:auto">cancel</span> </div>
     <div id="truckDice">
       <div id="truckDiceInner">
       </div>
@@ -27,6 +28,12 @@ function init(){
   clicker.style.pointerEvents = 'none';
   clicker.onclick = closeMenu;
   clicker.ontouchstart = closeMenu;
+
+
+  const cancelButton = document.querySelector('#truckCancelButton');
+  MAIN.interface.deleteTouches(cancelButton);
+  cancelButton.onclick = MAIN.interface.game.path.closeAll;
+  cancelButton.ontouchstart = MAIN.interface.game.path.closeAll;
 };
 
 let nowShowedFactory = null;

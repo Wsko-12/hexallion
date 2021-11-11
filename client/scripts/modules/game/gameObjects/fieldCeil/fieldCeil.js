@@ -367,7 +367,7 @@ class FieldCeil {
 
       if(building === 'bridge'){
         let lightGeometry;
-        if(this.neighbours[sector].type === 'meadow' || this.neighbours[sector].cityCeil ){
+        if(this.neighbours[sector].type === 'meadow' || this.neighbours[sector].type === 'sand' || this.neighbours[sector].cityCeil ){
           buildGeommetry =  MAIN.game.scene.assets.geometries.bridge.clone();
           buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
           buildGeommetry.translate(this.position.x,this.position.y,this.position.z);

@@ -3,6 +3,8 @@
 
 -- bag fixes:
     -building brige when water station close
+    - brige bug fix with near ceil sand
+    - ?? bug with double send truck
 
 -- water station
 -- sand mine
