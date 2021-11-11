@@ -19,6 +19,9 @@ const CONFIGS = {
   sandMine:{
     mining: true,
   },
+  steelMill:{
+    mining: true,
+  },
 };
 export {
   CONFIGS

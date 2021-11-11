@@ -47,6 +47,10 @@ ATLAS.models = [
     folder:'ceils/',
     file:'meadowCeil.glb',
   },
+  { name:'steelMineCeil',
+    folder:'ceils/',
+    file:'steelMineCeil.glb',
+  },
   { name:'sandCeil',
     folder:'ceils/',
     file:'sandCeil.glb',
@@ -173,6 +177,8 @@ ATLAS.models = [
 
 
 
+
+
   { name:'sawmill',
     folder:'buildings/',
     file:'sawmill.glb',
@@ -201,6 +207,10 @@ ATLAS.models = [
   { name:'sandMine',
     folder:'buildings/',
     file:'sandMine.glb',
+  },
+  { name:'steelMill',
+    folder:'buildings/',
+    file:'steelMill.glb',
   },
 
 

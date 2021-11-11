@@ -22,6 +22,10 @@ const resouresBase = {
     sailSpeed:5,
   },
 
+  steel:{
+    price:43000,
+    sailSpeed:8,
+  },
 
 
 
