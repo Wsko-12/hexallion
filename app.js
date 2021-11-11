@@ -180,6 +180,7 @@ class GAME {
         turnsPaused:false,
         turnBasedGame:this.turnBasedGame,
         trucks:this.trucks,
+        tickTime:this.tickTime,
       },
     };
     return data;

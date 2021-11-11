@@ -165,6 +165,12 @@ ATLAS.models = [
     file:'bridgeLight.glb',
   },
 
+  { name:'cityStorage',
+    folder:'buildings/',
+    file:'cityStorage.glb',
+  },
+
+
 
 
   { name:'sawmill',
