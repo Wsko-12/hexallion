@@ -61,7 +61,7 @@ const ROOMS = {
     started: false,
     turnBasedGame: false,
     turnTime: 10000,
-    tickTime:15000,
+    tickTime:20000,
   },
 };
 const GAMES = {
@@ -843,6 +843,12 @@ class TRUCK {
 
   clear(){
     this.resource = null;
+    //if player destroy truck
+    if(this.game.transportMap[this.positionIndexes.z]){
+      if(this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x]){
+        this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+      };
+    };
     this.positionIndexes = {};
 
 
@@ -1267,6 +1273,31 @@ io.on('connection', function(socket) {
     };
 
   });
+
+  socket.on('GAME_truck_destroy',(data)=>{
+    //происходит, когда игрок выкидывает товар из грузовика
+    //trigger interface -> game -> gameObjects.js -> truck.js -> destroyRequest;
+
+    /*
+    const data = {
+      gameID:MAIN.game.data.commonData.id,
+      truckID:data.truck.id,
+      path:pathServerData,
+    };
+    */
+
+
+    if(GAMES[data.gameID]){
+      const game = GAMES[data.gameID];
+      if(game.trucks.all[data.truckID]){
+        const truck = game.trucks.all[data.truckID];
+        truck.clear();
+      };
+    };
+
+  });
+
+
 
 
   socket.on('GAME_resource_sell',(data)=>{

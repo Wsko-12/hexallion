@@ -249,7 +249,6 @@ function init() {
 
       //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
       if(MAIN.interface.game.city.priceShow){
-        console.log('here',MAIN.interface.game.city.priceShow)
         MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
       };
     });

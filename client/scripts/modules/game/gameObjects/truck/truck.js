@@ -22,6 +22,7 @@ class Truck {
     this.sended = false;
 
     this.object3D = null;
+
     this.hitBoxMesh = null;
     this.cardOpened = false;
     this.onMap = false;
@@ -116,6 +117,16 @@ class Truck {
     this.clearNotification();
     this.onMap = false;
     this.resource = null;
+
+    //clear map for  destroy truck button
+    if(MAIN.game.data.map[this.place.z]){
+      if(MAIN.game.data.map[this.place.z][this.place.x]){
+        MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = false;
+      };
+    };
+
+
+
     this.place = {
       z: null,
       x: null
@@ -124,17 +135,31 @@ class Truck {
     this.ready = true;
     this.sended = false;
 
-    this.object3D.removeFromParent();
-    this.hitBoxMesh.removeFromParent();
 
-    this.object3D.geometry.dispose();
-    this.hitBoxMesh.geometry.dispose();
 
+    //bug fix
+    if(this.object3D){
+      this.object3D.removeFromParent();
+      this.object3D.geometry.dispose();
+    };
+
+    if(this.hitBoxMesh){
+      this.hitBoxMesh.removeFromParent();
+      this.hitBoxMesh.geometry.dispose();
+    };
 
     this.object3D = null;
     this.hitBoxMesh = null;
   };
 
+  destroyRequest(){
+    const data = {
+      gameID:MAIN.game.data.commonData.id,
+      player:this.player,
+      truckID:this.id,
+    };
+    MAIN.socket.emit('GAME_truck_destroy',data);
+  };
 
   turn() {
     this.ready = false;

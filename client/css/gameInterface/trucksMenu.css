@@ -18,7 +18,7 @@
   overflow: hidden;
   font-family: sans-serif;
 
-  transform: translate(-50%,50%) rotateX(15deg);
+  transform: translate(-50%,50%) rotateX(15deg) scale(130%);
 
 }
 
@@ -36,7 +36,7 @@
   width: 80px;
   height: 88px;
   flex:0 0 auto;
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 
@@ -106,7 +106,7 @@
   position: absolute;
   left: 50%;
   top:50%;
-  transform: translate(-50%,-50%) translateX(80%)rotateY(-25deg);
+  transform: translate(-50%,-50%) translateX(80%)rotateY(-25deg) scale(150%);
   display: none;
 }
 
@@ -124,4 +124,18 @@
     color: white;
     text-align: center;
     pointer-events: auto;
+}
+
+
+.trucksMenu-card-destroyButton{
+  width: 24px;
+  height: 24px;
+  background-color: #f62a2a;
+  flex:0 0 auto;
+  margin-left: 12px;
+  color: white;
+  text-align: center;
+  pointer-events: auto;
+  border-radius: 12px;
+  padding-top: 2px;
 }

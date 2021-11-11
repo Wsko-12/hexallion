@@ -47,10 +47,8 @@ function showSendButton(data) {
         };
       };
     } else {
-      console.log(data.truck)
       closeAll();
     };
-
   };
 
 };

@@ -82,20 +82,6 @@ function openMenu(factory){
       </div>
 
       `
-      // <div class="truckMenu_card">
-      //   <div class="truckMenu_card_inner">
-      //     <div id="truckMenu_card_count">
-      //       <span style="margin:auto">trucks left:${MAIN.game.data.commonData.trucks.count}</span>
-      //     </div>
-      //     <div id="truckMenu_card_buyButton">
-      //       <span style="margin:auto">Buy</span>
-      //     </div>
-      //     <div id="truckMenu_card_price">
-      //       $${MAIN.game.data.commonData.trucks.coast}
-      //     </div>
-      //   </div>
-      // </div>
-
 
       list += buyTruckCard;
     };
@@ -106,7 +92,9 @@ function openMenu(factory){
       let resource = '';
 
       if(!thisTruck.resource){
-        resource = `<div class="trucksMenu-card-resource resource-hole"></div>`;
+        resource = `
+          <div class="trucksMenu-card-resource resource-hole"></div>
+        `;
       };
 
 
@@ -120,6 +108,7 @@ function openMenu(factory){
               Q${thisTruck.resource.quality}
             </div>
           </div>
+          <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${thisTruck.id}">×</div>
         `
       };
       const truckCard = `
@@ -127,7 +116,10 @@ function openMenu(factory){
           <div class="card-header">
             TRUCK <span class="card-header-span"> | 0${thisTruck.truckNumber}</span>
           </div>
+          <div style="display:flex">
             ${resource}
+          </div>
+
           <div class="trucksMenu-card-button" id="truckMenu_card_button_${thisTruck.id}">
             <span class="trucksMenu-card-button-span">${thisTruck.resource?'show':'load'}<span>
           </div>
@@ -145,12 +137,25 @@ function openMenu(factory){
     const buyButton = document.querySelector('#truckMenu_card_buyButton');
     if(buyButton){
       buyButton.onclick = buyTruck;
-      buyButton.onntouchstart = buyTruck;
+      buyButton.ontouchstart = buyTruck;
     };
 
     for(let truck in MAIN.game.data.playerData.trucks){
       const thisTruck = MAIN.game.data.playerData.trucks[truck];
       const thisButton = document.querySelector(`#truckMenu_card_button_${thisTruck.id}`);
+
+
+      const destroyButton = document.querySelector(`#truckMenu_card_destroyButton_${thisTruck.id}`);
+      if(destroyButton){
+        destroyButton.onclick = destroy;
+        destroyButton.ontouchstart = destroy;
+
+        function destroy(){
+          closeMenu();
+          thisTruck.destroyRequest();
+        };
+      };
+
 
       if(thisTruck.resource === null){
         thisButton.onclick = load;
@@ -170,6 +175,10 @@ function openMenu(factory){
         closeMenu();
         loadTruck(thisTruck);
       };
+
+
+
+
     };
 
 
@@ -202,6 +211,11 @@ function openMenu(factory){
         MAIN.socket.emit('GAME_truck_load',data);
       };
     };
+
+
+
+
+
 
 };
 function closeMenu(event){
@@ -239,15 +253,18 @@ function openCard(truck){
         Q${truck.resource.quality}
       </div>
     </div>
+    <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
   `
 
   const cardContent = `
       <div class="card-header">
         TRUCK <span class="card-header-span"> | 0${truck.truckNumber}</span>
       </div>
-      ${resource}
-
+      <div style="display:flex">
+        ${resource}
+      </div>
   `
+
 
 
 
@@ -255,6 +272,17 @@ function openCard(truck){
   truckCard.innerHTML = '';
   truckCard.insertAdjacentHTML('beforeEnd',cardContent);
   truckCard.style.display = 'block';
+
+  const destroyButton = document.querySelector(`#truckMenu_card_destroyButton_${truck.id}`);
+  if(destroyButton){
+    destroyButton.onclick = destroy;
+    destroyButton.ontouchstart = destroy;
+
+    function destroy(){
+      closeMenu();
+      truck.destroyRequest();
+    };
+  };
 
 
   if(truck.ready){
