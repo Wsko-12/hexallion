@@ -21,20 +21,20 @@ const coasts = {
 
 
   resources:{
-    wood:{
-      price:24000,
-      sailSpeed:7,
-      productionPrice:11000,
+    sand:{
+      price:8000,
+      sailSpeed:5,
+      productionPrice:3000,
     },
     water:{
       price:15000,
       sailSpeed:6,
       productionPrice:7000,
     },
-    sand:{
-      price:8000,
-      sailSpeed:5,
-      productionPrice:3000,
+    wood:{
+      price:24000,
+      sailSpeed:7,
+      productionPrice:11000,
     },
     steel:{
       price:43000,

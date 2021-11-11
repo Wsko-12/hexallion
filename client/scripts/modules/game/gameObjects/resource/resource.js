@@ -5,10 +5,9 @@ import {
 
 
 const resouresBase = {
-  wood:{
-    price:24000,
-    sailSpeed:7,
-
+  sand:{
+    price:8000,
+    sailSpeed:5,
   },
 
   water:{
@@ -17,9 +16,10 @@ const resouresBase = {
 
   },
 
-  sand:{
-    price:8000,
-    sailSpeed:5,
+  wood:{
+    price:24000,
+    sailSpeed:7,
+
   },
 
   steel:{

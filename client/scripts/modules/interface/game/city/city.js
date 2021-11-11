@@ -108,7 +108,7 @@ function openMenu(city){
     </div>
 
 
-    <div class="cityCard-list">
+    <div class="cityCard-list" id="cityCard_list">
       ${resourceList}
     </div>
 
@@ -117,7 +117,7 @@ function openMenu(city){
 
 
   document.querySelector('#cityCard').insertAdjacentHTML('beforeEnd', card);
-
+  MAIN.interface.returnTouches(document.querySelector('#cityCard_list'))
 
 
 
