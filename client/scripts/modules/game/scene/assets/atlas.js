@@ -212,6 +212,10 @@ ATLAS.models = [
     folder:'buildings/',
     file:'steelMill.glb',
   },
+  { name:'goldMill',
+    folder:'buildings/',
+    file:'goldMill.glb',
+  },
 
 
   { name:'pathMarker_road',

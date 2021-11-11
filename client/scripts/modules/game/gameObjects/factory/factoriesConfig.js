@@ -22,6 +22,9 @@ const CONFIGS = {
   steelMill:{
     mining: true,
   },
+  goldMill:{
+    mining: true,
+  },
 };
 export {
   CONFIGS

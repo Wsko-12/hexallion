@@ -13,6 +13,7 @@
   height: 24px;
   padding: 2px;
   color:white;
+  flex: 0 0 auto;
   font-weight: normal;
   margin-left: 4px;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25);
@@ -69,4 +70,13 @@
 
 .resource-color-steel{
   color: #AEACAA;
+}
+
+
+.resource-bg-color-gold{
+  background-color: #F9D761;
+}
+
+.resource-color-gold{
+  color: #F9D761;
 }

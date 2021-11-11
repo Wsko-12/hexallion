@@ -134,6 +134,9 @@ FIELD.create = () => {
           case 'steelMine':
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
             break;
+          case 'goldMine':
+            geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
+            break;
           case 'sea':
             waterGeometry = MAIN.game.scene.assets.geometries.waterCeil.clone();
             geometry = MAIN.game.scene.assets.geometries.waterBottom.clone();

@@ -42,5 +42,15 @@ const factoriesConfig = {
     price:COASTS.resources.steel.productionPrice,
     resource:'steel',
   },
+
+  goldMill: {
+    mining:true,
+    //минимум 4 из-за прокачки
+    speed:8,
+    storage:2,
+    //полная цена производства
+    price:COASTS.resources.gold.productionPrice,
+    resource:'gold',
+  },
 };
 module.exports = factoriesConfig;

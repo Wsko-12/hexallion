@@ -27,6 +27,11 @@ const resouresBase = {
     sailSpeed:8,
   },
 
+  gold:{
+    price:89000,
+    sailSpeed:9,
+  },
+
 
 
 

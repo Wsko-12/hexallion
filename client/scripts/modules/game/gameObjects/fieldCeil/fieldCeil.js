@@ -29,7 +29,7 @@ class FieldCeil {
 
     this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true : false;
     //means player can't build nothing on this ceil
-    this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' || properties.type === 'sand' || properties.type === 'steelMine' ? false : true;
+    this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' || properties.type === 'sand' || properties.type === 'steelMine' || properties.type === 'goldMine'? false : true;
 
 
     if (this.cityCeil) {
@@ -212,7 +212,7 @@ class FieldCeil {
   };
 
   showSectorMenu(sector) {
-    if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine') {
+    if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' || this.type === 'goldMine') {
       if (this.sectors[sector] === null) {
         const that = this;
         MAIN.interface.game.ceilMenu.showSectorMenu(that, sector, this.calculateSectorMenuButtons(sector));
@@ -326,7 +326,7 @@ class FieldCeil {
 
         this.centralRoad = true;
         let centralRoadGeometry
-        if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' ) {
+        if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' || this.type === 'goldMine' ) {
           centralRoadGeometry = MAIN.game.scene.assets.geometries.roadCenter.clone();
         };
         if (this.type === 'sea') {
@@ -400,7 +400,7 @@ class FieldCeil {
 
       if (building === 'bridge') {
         let lightGeometry;
-        if (this.neighbours[sector].type === 'meadow' || this.neighbours[sector].type === 'sand' || this.neighbours[sector].type === 'steelMine' || this.neighbours[sector].cityCeil) {
+        if (this.neighbours[sector].type === 'meadow' || this.neighbours[sector].type === 'sand' || this.neighbours[sector].type === 'steelMine' || this.neighbours[sector].type === 'goldMine' || this.neighbours[sector].cityCeil) {
           buildGeommetry = MAIN.game.scene.assets.geometries.bridge.clone();
           buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
           buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
@@ -567,6 +567,32 @@ class FieldCeil {
         // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
 
         this.sectors[sector] = 'steelMill';
+      };
+
+      if (building === 'goldMill') {
+        buildGeommetry = MAIN.game.scene.assets.geometries.goldMill.clone();
+        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
+        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
+        newGeometryArray.push(buildGeommetry);
+
+        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
+        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
+        delete MAIN.renderer.scene.ceilsMesh.geometry;
+        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
+
+
+        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
+        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
+        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        // lightArray.push(lightGeometry);
+
+        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
+        // delete MAIN.game.scene.lights.buildingLights.geometry;
+        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+
+        this.sectors[sector] = 'goldMill';
       };
 
     };
