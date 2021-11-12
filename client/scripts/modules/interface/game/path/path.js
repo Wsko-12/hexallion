@@ -42,7 +42,7 @@ function showSendButton(data) {
     if (!data.truck.sended) {
       data.truck.sended = true;
       if (data.truck.resource) {
-        if (data.truck.place.x && data.truck.place.z) {
+        if (data.truck.place.x != null && data.truck.place.z != null) {
           MAIN.socket.emit('GAME_truck_send', serverData);
         };
       };
