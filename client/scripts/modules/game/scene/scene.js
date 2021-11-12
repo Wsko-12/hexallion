@@ -19,6 +19,9 @@ import {
 import {
   PATH
 } from './path/path.js';
+import {
+  CLOUDS
+} from './clouds/clouds.js';
 import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 
 // import * as DAT from '../../../libs/gui/dat.gui.module.js';
@@ -32,6 +35,12 @@ async function create() {
     // MAIN.game.scene.testMesh = testMesh;
     // RENDERER.scene.add(testMesh);
 
+
+    MAIN.game.scene.clouds = CLOUDS;
+    MAIN.game.scene.cloudsGroup = new THREE.Group();
+    MAIN.game.scene.cloudsGroup.name = 'cloudsGroup';
+    MAIN.game.scene.cloudsMaterial = new THREE.MeshPhongMaterial({color:0xffffff,transparent:true,opacity:0.8});
+    RENDERER.scene.add(MAIN.game.scene.cloudsGroup );
 
 
     MAIN.game.scene.path = PATH;
@@ -116,7 +125,7 @@ async function create() {
     MAIN.game.scene.lights.lightMain = lightMain;
 
     //Дополнительный свет который лежит напротив солнца
-    const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.3);
     lightAdditional.name = 'lightAdditional';
     lightsAdditionalGroup.add(lightAdditional);
     // const lightAdditionalMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xff0000}));
@@ -143,6 +152,7 @@ async function create() {
 
     FIELD.create();
     TIME.init();
+    CLOUDS.init();
     RENDERER.render();
 
     resolve('sceneReady');

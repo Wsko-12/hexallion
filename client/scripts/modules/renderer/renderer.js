@@ -420,10 +420,12 @@ function setSize() {
 
 function render() {
   RENDERER.time = clock.getElapsedTime();
+
   if (MAIN.game.scene) {
     if (MAIN.game.scene.uTime) {
       MAIN.game.scene.uTime.value = clock.getElapsedTime()
     };
+    MAIN.game.scene.clouds.animate();
   };
 
 
