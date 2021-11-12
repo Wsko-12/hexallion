@@ -36,6 +36,7 @@ class Truck {
 
 
     this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries.truck.clone(), MAIN.game.scene.mainMaterial);
+    this.object3D.name = this.id;
 
     this.object3D.position.set(position.x, position.y, position.z);
     MAIN.game.scene.trucksGroup.add(this.object3D);
@@ -46,6 +47,7 @@ class Truck {
     this.ready = true;
     if (this.player === MAIN.game.data.playerData.login) {
       this.hitBoxMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.truckHitBox.clone(), MAIN.game.scene.hitBoxMaterial);
+      this.hitBoxMesh.name = this.id+'_hitBox';
       this.hitBoxMesh.position.set(position.x, position.y, position.z);
       MAIN.game.scene.hitBoxGroup.add(this.hitBoxMesh);
       this.hitBoxMesh.userData.position = this.hitBoxMesh.position;

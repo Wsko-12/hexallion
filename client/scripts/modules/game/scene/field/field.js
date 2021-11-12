@@ -187,6 +187,7 @@ FIELD.create = () => {
             lightGeometry.translate(position.x,0,position.z);
             lightArray.push(lightGeometry);
             const light = new THREE.PointLight( 0xffa900, 0.5, 2 );
+            light.name = 'cityPointLight';
             light.position.set(position.x,0.5,position.z);
               MAIN.renderer.scene.add( light );
               MAIN.game.scene.lights.buildingPointLights.push(light);
@@ -199,6 +200,7 @@ FIELD.create = () => {
 
 
           const hitBoxMesh = new THREE.Mesh(hitboxGeometry, hitBoxMaterial);
+          hitBoxMesh.name = 'fieldHitBox';
           hitBoxMesh.position.set(position.x,0.01,position.z);
           MAIN.game.scene.hitBoxGroup.add(hitBoxMesh);
 
@@ -234,13 +236,15 @@ FIELD.create = () => {
   ceilsMaterialGUI.add(ceilsMaterial, 'shininess',0,500).step(5).name('shininess');
 
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
+  ceilsMesh.name = 'ceilsMesh';
   ceilsMesh.castShadow = true;
   ceilsMesh.receiveShadow = true;
 
 
   const mergedLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
   const mergedLightMaterial = new THREE.MeshBasicMaterial({map:MAIN.game.scene.assets.textures.lights,transparent:true,alphaTest:0.05,depthWrite:false});
-  const lightMesh = new THREE.Mesh(mergedLightGeometry,mergedLightMaterial)
+  const lightMesh = new THREE.Mesh(mergedLightGeometry,mergedLightMaterial);
+  lightMesh.name = 'lightMesh';
   MAIN.renderer.scene.add( lightMesh );
   MAIN.game.scene.lights.buildingLights = lightMesh;
 
@@ -248,6 +252,7 @@ FIELD.create = () => {
   const mergedWaterGeometry = BufferGeometryUtils.mergeBufferGeometries(waterArray);
   const waterMaterial = new THREE.MeshPhongMaterial({color:0xffffff,shininess:500,transparent:true,opacity:0.8,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:1});
   const water = new THREE.Mesh(mergedWaterGeometry,waterMaterial);
+  water.name = 'waterMesh';
   water.receiveShadow = true;
 
   MAIN.game.scene.lights.buildingLights.visible = false;

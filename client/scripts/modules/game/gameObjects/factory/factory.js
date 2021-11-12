@@ -31,6 +31,7 @@ class Factory {
 
     this.notification = null;
     this.hitBoxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.4,0.4,0.4),MAIN.game.scene.hitBoxMaterial);
+    this.hitBoxMesh.name = this.id + '_hitBox';
     this.hitBoxMesh.position.set(  this.position.x,  0.2,  this.position.z);
     this.hitBoxMesh.rotation.y = ((this.sector*(-60) - 30) * Math.PI/180);
     this.hitBoxMesh.userData.position = this.position;

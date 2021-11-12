@@ -36,6 +36,7 @@ async function create() {
 
     MAIN.game.scene.path = PATH;
     MAIN.game.scene.pathGroup = new THREE.Group();
+    MAIN.game.scene.pathGroup.name = 'pathGroup';
     MAIN.game.scene.pathMaterial = new THREE.MeshBasicMaterial({color:0x66d28e});
     RENDERER.scene.add(MAIN.game.scene.pathGroup );
 
@@ -44,9 +45,11 @@ async function create() {
     MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.lights,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.3,shininess:0});
 
     MAIN.game.scene.hitBoxGroup = new THREE.Group();
+    MAIN.game.scene.hitBoxGroup.name = 'hitBoxGroup';
     RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
 
     MAIN.game.scene.trucksGroup = new THREE.Group();
+    MAIN.game.scene.trucksGroup.name = 'trucksGroup';
     RENDERER.scene.add(MAIN.game.scene.trucksGroup);
 
 
@@ -57,6 +60,7 @@ async function create() {
     MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
     RENDERER.scene.background = MAIN.game.scene.assets.textures.sceneEnvMap;
     const fieldBorder = new THREE.Mesh(MAIN.game.scene.assets.geometries.tableBorders.clone(), new THREE.MeshBasicMaterial());
+    fieldBorder.name = 'fieldBorder';
     fieldBorder.rotation.y = Math.PI / 2;
     RENDERER.scene.add(fieldBorder);
 
@@ -70,16 +74,19 @@ async function create() {
     MAIN.game.scene.lights = {};
     MAIN.game.scene.lights.buildingPointLights = [];
     const sky = new THREE.Mesh(new THREE.BoxBufferGeometry(100,100,100),new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:0.5,}));
+    sky.name = 'sky';
     RENDERER.scene.add(sky);
     MAIN.game.scene.lights.sky = sky;
 
 
     //Группы, чтобы перемещать орбиты солнца
     const lightsGroup = new THREE.Group();
+    lightsGroup.name = 'lightsGroup';
     lightsGroup.rotation.z = Math.PI/8;
 
       //Группа света противоположного солнцу, подсвечивает все сзади
     const lightsAdditionalGroup = new THREE.Group();
+    lightsAdditionalGroup.name = 'lightsAdditionalGroup';
     lightsAdditionalGroup.rotation.z = -Math.PI/8;
 
     RENDERER.scene.add(lightsGroup);
@@ -88,6 +95,7 @@ async function create() {
 
       //Солнце
     const lightMain = new THREE.DirectionalLight(0xff896f, 1);
+    lightMain.name = 'lightMain';
     lightMain.castShadow = true;
     lightMain.shadow.camera.top = 10;
     lightMain.shadow.bias = -0.0012;
@@ -109,6 +117,7 @@ async function create() {
 
     //Дополнительный свет который лежит напротив солнца
     const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    lightAdditional.name = 'lightAdditional';
     lightsAdditionalGroup.add(lightAdditional);
     // const lightAdditionalMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xff0000}));
     // lightsAdditionalGroup.add(lightAdditionalMesh);
@@ -116,10 +125,12 @@ async function create() {
 
 
     const ambientLight = new THREE.AmbientLight(0x343434, 1.4);
+    ambientLight.name = 'ambientLight';
     MAIN.game.scene.lights.ambientLight = ambientLight;
     lightsGroup.add(ambientLight);
 
     const moonlight = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    moonlight.name = 'moonlight';
     // moonlight.castShadow = true;
     moonlight.position.set(5,5,5)
     MAIN.game.scene.lights.moonlight = moonlight;

@@ -29,7 +29,7 @@ class FieldCeil {
 
     this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true : false;
     //means player can't build nothing on this ceil
-    this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' || properties.type === 'sand' || properties.type === 'steelMine' || properties.type === 'goldMine'? false : true;
+    this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' || properties.type === 'sand' || properties.type === 'steelMine' || properties.type === 'goldMine' ? false : true;
 
 
     if (this.cityCeil) {
@@ -248,6 +248,7 @@ class FieldCeil {
       transparent: true,
       opacity: 0.5,
     }));
+    mesh.name = 'ChosenTemporaryHex';
     const position = this.position;
     mesh.position.set(position.x, position.y + 0.005, position.z);
     MAIN.game.scene.temporaryHexMesh = mesh;
@@ -266,6 +267,7 @@ class FieldCeil {
       transparent: true,
       opacity: 0.5
     }));
+    mesh.name = 'ChosenSectorTemporaryMesh';
     mesh.rotation.set(0, (selectedSector * (-60) * Math.PI / 180), 0)
     MAIN.game.scene.temporarySectorMesh = mesh;
     const position = this.position;
@@ -292,6 +294,7 @@ class FieldCeil {
       transparent: true,
       opacity: 0.5,
     }));
+    mesh.name = 'ChosenBlockTemporaryHex';
     const position = this.position;
     mesh.position.set(position.x, position.y + 0.005, position.z);
     MAIN.game.scene.temporaryHexMesh = mesh;
@@ -326,7 +329,7 @@ class FieldCeil {
 
         this.centralRoad = true;
         let centralRoadGeometry
-        if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' || this.type === 'goldMine' ) {
+        if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' || this.type === 'goldMine') {
           centralRoadGeometry = MAIN.game.scene.assets.geometries.roadCenter.clone();
         };
         if (this.type === 'sea') {
@@ -624,6 +627,56 @@ class FieldCeil {
     const ceilVector = new THREE.Vector3(ceil.position.x, ceil.position.y, ceil.position.z);
     return thisVector.distanceTo(ceilVector);
   };
+
+
+  showCeilEmptyByTruck() {
+    const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.roadCenter.clone(), new THREE.MeshBasicMaterial({
+      color: 0xfe0019,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.9,
+    }));
+    mesh.name = 'CeilEmptyByTruck';
+    mesh.scale.set(1.05,1.05,1.05);
+    mesh.position.set(this.position.x,0.01,this.position.z);
+    MAIN.renderer.scene.add(mesh);
+
+    let animationFrame = 0;
+
+    function animate() {
+      animationFrame++;
+      if (animationFrame % 2 === 0) {
+        mesh.material.visible = false;
+      } else {
+        mesh.material.visible = true;
+      }
+
+      if (animationFrame < 8) {
+        setTimeout(() => {
+          animate();
+        }, 50);
+
+      } else {
+        mesh.removeFromParent();
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+      };
+
+    };
+    animate();
+
+
+
+  };
+
+
+
+
+
+
+
+
+
 };
 
 export {
