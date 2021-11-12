@@ -16,8 +16,11 @@
 
 
 
-
+-- truck cancel turn button
 -- truck destoy button
 -- truck menu scale
 -- truck turn immediately after loading
 -- user can't open notification while truck turning
+
+
+-- show ceil full by truck on fieldCeil

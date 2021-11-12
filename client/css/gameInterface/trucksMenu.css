@@ -115,9 +115,9 @@
     position: fixed;
     border-radius: 20px;
     display: none;
-    transform: translate(-50%, -50%);
+    transform: translate(50%, -50%);
     top: 30%;
-    left: 65%;
+    left: 50%;
     width: 80px;
     height: 40px;
     background-color: rgba(0,0,0,0.3);

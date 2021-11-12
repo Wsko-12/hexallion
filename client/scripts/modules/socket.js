@@ -181,7 +181,7 @@ function init() {
 
     MAIN.socket.on('GAME_truck_ceilFull',(cords)=>{
       //происходит, когда игрок загружает грузовик, а клетка уже занята
-      MAIN.game.data.map[cords.z][cords.x].showCeilEmptyByTruck();
+      MAIN.game.data.map[cords.z][cords.x].showCeilFullByTruck();
     });
 
     MAIN.socket.on('GAME_truck_place',(data)=>{

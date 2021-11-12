@@ -629,7 +629,7 @@ class FieldCeil {
   };
 
 
-  showCeilEmptyByTruck() {
+  showCeilFullByTruck() {
     const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.roadCenter.clone(), new THREE.MeshBasicMaterial({
       color: 0xfe0019,
       side: THREE.DoubleSide,
