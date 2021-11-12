@@ -84,7 +84,14 @@ class Factory {
 
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd',notification);
     this.notification = document.querySelector(`#${id}`);
-    const onclickFunction = this.hitBoxMesh.userData.onClick;
+    const that = this;
+    const onclickFunction = function(){
+      if(!MAIN.interface.game.trucks.turningInterfase){
+        that.hitBoxMesh.userData.onClick();
+      };
+    };
+
+
     MAIN.interface.deleteTouches(this.notification);
 
 

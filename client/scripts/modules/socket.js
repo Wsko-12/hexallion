@@ -197,6 +197,11 @@ function init() {
       if(MAIN.game.data.commonData.trucks.all[data.truckID]){
         const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
         thisTruck.placeOnMap(data.place);
+
+        //ход грузовика сразу после загрузки
+        if(thisTruck.player === MAIN.game.data.playerData.login){
+          thisTruck.turn();
+        };
       };
     });
 

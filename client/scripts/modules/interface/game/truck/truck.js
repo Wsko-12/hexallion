@@ -279,6 +279,7 @@ function openCard(truck){
     destroyButton.ontouchstart = destroy;
 
     function destroy(){
+      TRUCK.turningInterfase = false;
       closeMenu();
       truck.destroyRequest();
     };
@@ -313,6 +314,7 @@ const TRUCK = {
   closeMenu,
   changeTrucksCount,
   openCard,
+  turningInterfase: false,
 };
 
 export {TRUCK}

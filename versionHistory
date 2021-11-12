@@ -5,6 +5,7 @@
     -building brige when water station close
     - brige bug fix with near ceil sand
     - bug with double send truck
+    - bug with truck place.x == 0 and place.z == 0
 
 -- water station
 -- sand mine
@@ -17,4 +18,5 @@
 
 
 -- truck destoy button
--- track menu scale
+-- truck menu scale
+-- truck turn immediately after loading

@@ -75,8 +75,9 @@ class Truck {
     this.notification = document.querySelector(`#${id}`);
     const that = this;
     const onclickFunction = function(){
-      MAIN.interface.game.path.closeAll();
-      that.showCard();
+      if(!MAIN.interface.game.trucks.turningInterfase){
+        that.showCard();
+      };
     };
     MAIN.interface.deleteTouches(this.notification);
 
@@ -162,6 +163,7 @@ class Truck {
   };
 
   turn() {
+    MAIN.interface.game.trucks.turningInterfase = true;
     this.ready = false;
     this.cardOpened = true;
     MAIN.interface.game.trucks.closeMenu();
@@ -205,6 +207,7 @@ class Truck {
               MAIN.game.functions.findPath(value, that, object3D.userData);
             };
           } else {
+            MAIN.interface.game.trucks.turningInterfase = false;
             setTimeout(function() {
               document.querySelector('#truckDice').style.display = 'none';
             }, 1500);

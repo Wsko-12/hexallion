@@ -18,6 +18,7 @@ function showSendButton(data) {
   button.style.display = 'flex';
 
   function send() {
+    MAIN.interface.game.trucks.turningInterfase = false;
     MAIN.interface.game.city.hideCityPrices();
     button.style.display = 'none';
     MAIN.interface.dobleClickFunction.standard = true;
@@ -84,6 +85,7 @@ function showNotification(coords3D) {
 
 function closeAll() {
   // console.log("closeAll")
+  MAIN.interface.game.trucks.turningInterfase = false;
   MAIN.interface.game.city.hideCityPrices();
   const button = document.querySelector('#pathSection_sendButton');
   MAIN.interface.dobleClickFunction.standard = true;
@@ -110,6 +112,7 @@ function showSellResourceButton(data) {
   button.style.display = 'flex';
 
   function sell() {
+    MAIN.interface.game.trucks.turningInterfase = false;
     MAIN.interface.game.city.hideCityPrices();
     button.style.display = 'none';
     MAIN.interface.dobleClickFunction.standard = true;
