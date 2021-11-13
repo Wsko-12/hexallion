@@ -15,6 +15,37 @@ const SOCKET = {
 
 function init() {
   if (MAIN.socket) {
+    MAIN.socket.on('LOBBY_authTrue', () => {
+      MAIN.pages.rooms.showPage();
+    });
+
+
+    MAIN.socket.on('LOBBY_sendRoomsData', (data) => {
+      MAIN.pages.rooms.updatePage(data);
+    });
+
+
+    MAIN.socket.on('LOBBY_updateRoom', (roomData) => {
+      MAIN.pages.rooms.updateRoom(roomData);
+    });
+
+
+    MAIN.socket.on('LOBBY_joinedToRoom', (roomId) => {
+      MAIN.userData.inRoom = roomId;
+    });
+
+    MAIN.socket.on('LOBBY_leaveRoom', () => {
+      MAIN.userData.inRoom = false;
+    });
+
+    MAIN.socket.on('LOBBY_deleteRoom', (roomId) => {
+      MAIN.pages.rooms.deleteRoom(roomId);
+    });
+
+
+
+
+
     MAIN.socket.on('ROOM_ready', function(ROOM) {
       //Происходит, когда нужное кол-во игроков собрано
       MAIN.pages.loading.changeTitle('Room is ready');

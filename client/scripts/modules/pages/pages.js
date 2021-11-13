@@ -11,12 +11,16 @@ import {
 import {
   AUTH
 } from './auth/auth.js';
+import {
+  ROOMS
+} from './rooms/rooms.js';
 
 
 const PAGES = {};
 PAGES.screen = document.querySelector('#screen');
 // Инициализация вложений
 PAGES.auth = AUTH;
+PAGES.rooms = ROOMS;
 PAGES.loading = LOADING;
 
 
