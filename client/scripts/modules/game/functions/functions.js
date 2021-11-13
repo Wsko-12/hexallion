@@ -21,14 +21,18 @@ import {
 const FUNCTIONS = {
   //trigger at socket.js MAIN.socket.on('GAME_applyBuilding')
   applyBuilding(data) {
-    // data = {
-    //     ceilIndex: ceil.indexes,
-    //     sector: sector,
-    //     building: building,
-    //   }
-    const ceil = MAIN.game.data.map[data.ceilIndex.z][data.ceilIndex.x];
-    if (ceil.sectors[data.sector] === null) {
-      ceil.buildOnSector(data.sector, data.building);
+    /*data = {
+      player:MAIN.userData.login,
+      gameID:MAIN.game.commonData.id,
+      build:{
+        ceilIndex:ceil.indexes,
+        sector:sector,
+        building:building,
+      }
+    */
+    const ceil = MAIN.game.data.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
+    if (ceil.sectors[data.build.sector] === null) {
+      ceil.buildOnSector(data.build.sector, data.build.building,data.player);
     };
   },
 

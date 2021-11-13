@@ -56,12 +56,12 @@ const ROOMS = {
     id: 'R_0000000000',
     gameID: null,
     owner: null,
-    maxMembers: 1,
+    maxMembers: 4,
     members: [],
     started: false,
-    turnBasedGame: false,
-    turnTime: 10000,
-    tickTime:20000,
+    turnBasedGame: true,
+    turnTime: 60000,
+    tickTime:25000,
   },
 };
 const GAMES = {
@@ -93,6 +93,7 @@ class GAME {
     this.queueNum = -1;
     this.startedQueque = 0;
     this.turnsPaused = false;
+    this.turnId = null;
     this.tickPaused = false;
     this.cities = {};
     for(let cityName of MAP_CONFIGS.cities){
@@ -181,6 +182,8 @@ class GAME {
         turnBasedGame:this.turnBasedGame,
         trucks:this.trucks,
         tickTime:this.tickTime,
+        members:this.members,
+        playerColors:['#fc4a4a','#5d59ff','#4dd14a','#fff961','#f366ff'],
       },
     };
     return data;
@@ -248,6 +251,8 @@ class GAME {
   nextTurn() {
     //сохраняем значение, с которого запустили функцию
     let startedTurnIndex = this.queueNum;
+    const random = generateId('Turn_',4);
+    this.turnId = random;
     const that = this;
     //понадобится для автоматического перехода хода и если игрок сам скипнет ход
     let lastTurn;
@@ -296,7 +301,9 @@ class GAME {
           //чтобы не сработало, если игрок переключит ход сам
           //потому что если функция nextTurn вызовется еще раз, то изменится that.queueNum, а lastTurn нет
           if (lastTurn === that.queueNum) {
-            that.nextTurn();
+            if(that.turnId === random){
+              that.nextTurn();
+            };
           };
         }, that.turnTime);
       } else {
@@ -899,16 +906,16 @@ io.on('connection', function(socket) {
     USERS[data.login].socket = socket;
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
-    ROOMS.R_0000000000.owner = data.login;
-    ROOMS.R_0000000000.members = [];
-    ROOMS.R_0000000000.members.push(data.login);
+    // ROOMS.R_0000000000.owner = data.login;
+    // ROOMS.R_0000000000.members = [];
+    // ROOMS.R_0000000000.members.push(data.login);
     /*ДЛЯ ОДНОГО ИГРОКА*/
 
     /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-    // if (ROOMS.R_0000000000.owner === null) {
-    //   ROOMS.R_0000000000.owner = data.login;
-    // };
-    // ROOMS.R_0000000000.members.push(data.login);
+    if (ROOMS.R_0000000000.owner === null) {
+      ROOMS.R_0000000000.owner = data.login;
+    };
+    ROOMS.R_0000000000.members.push(data.login);
     /*БОЛЬШЕ ОДНОГО ИГРОКА*/
 
     if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {

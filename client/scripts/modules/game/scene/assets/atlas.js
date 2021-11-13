@@ -177,7 +177,10 @@ ATLAS.models = [
 
 
 
-
+  { name:'factoryBottom',
+    folder:'buildings/',
+    file:'factoryBottom.glb',
+  },
 
   { name:'sawmill',
     folder:'buildings/',
@@ -230,6 +233,12 @@ ATLAS.models = [
     folder:'path/',
     file:'pathMarker_bridgeStraight.glb',
   },
+
+  { name:'emptyGeometry',
+    folder:'',
+    file:'emptyGeometry.glb',
+  },
+
 
 ];
 ATLAS.textures = [

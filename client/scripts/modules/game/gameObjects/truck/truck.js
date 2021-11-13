@@ -423,8 +423,9 @@ class Truck {
           //в принципе, наклон когда движется под горку можно не писать, так как его все равно не видно
 
 
-
-          that.object3D.position.set(position.x, position.y, position.z);
+          if(that.object3D){
+            that.object3D.position.set(position.x, position.y, position.z);
+          };
           if(that.hitBoxMesh){
             that.hitBoxMesh.position.set(position.x, position.y, position.z);
           };

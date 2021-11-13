@@ -78,7 +78,7 @@ function init() {
         }
       */
 
-      MAIN.game.functions.applyBuilding(data.build);
+      MAIN.game.functions.applyBuilding(data);
     });
 
     //происходит когда игрок выбрал себе кредит
@@ -95,6 +95,7 @@ function init() {
       MAIN.game.data.playerData.credit.pays = data.pays;
       MAIN.interface.game.balance.updateCreditHistory();
     })
+
 
     //происходит, когда меняется ход игрока
     MAIN.socket.on('GAME_reciveTurn', function(data) {

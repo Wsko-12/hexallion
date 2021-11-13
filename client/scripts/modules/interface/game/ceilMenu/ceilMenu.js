@@ -104,7 +104,27 @@ const CEIL_MENU = {
             MAIN.game.scene.temporarySectorMesh.material.dispose();
           };
         } else {
-          CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
+          if (MAIN.game.data.commonData.turnBasedGame) {
+            if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+
+              // исследование карты 
+              CEIL_MENU.hideSectorMenu();
+              if (MAIN.game.scene.temporaryHexMesh) {
+                MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+                MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+                MAIN.game.scene.temporaryHexMesh.material.dispose();
+              };
+              if (MAIN.game.scene.temporarySectorMesh) {
+                MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+                MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+                MAIN.game.scene.temporarySectorMesh.material.dispose();
+              };
+            }else{
+              CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
+
+            };
+          };
+
         };
       };
       document.querySelector(`#${id}`).onclick = null;

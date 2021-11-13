@@ -146,11 +146,11 @@ class FieldCeil {
     };
 
 
-    if (MAIN.game.data.commonData.turnBasedGame) {
-      if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
-        return;
-      };
-    };
+    // if (MAIN.game.data.commonData.turnBasedGame) {
+    //   if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+    //     return;
+    //   };
+    // };
     if (!this.blockCeil) {
       this.addChosenTemporaryHex();
       const selectedSector = this.findSectorByClick(intersectCoords);
@@ -319,7 +319,7 @@ class FieldCeil {
     smoothRemoveTemporaryMesh();
   };
 
-  buildOnSector(sector, building) {
+  buildOnSector(sector, building, player) {
     if (this.sectors[sector] === null) {
       const newGeometryArray = [MAIN.renderer.scene.ceilsMesh.geometry];
       // const newGeometryArray = [ MAIN.game.scene.buildingsMesh.geometry];
@@ -462,7 +462,7 @@ class FieldCeil {
         };
       };
 
-
+      if(building === 'sawmill' || building === 'waterStation' || building === 'sandMine' || building === 'steelMill' || building === 'goldMill'){
       if (building === 'sawmill') {
         buildGeommetry = MAIN.game.scene.assets.geometries.sawmill.clone();
         buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
@@ -597,6 +597,24 @@ class FieldCeil {
 
         this.sectors[sector] = 'goldMill';
       };
+
+
+
+      // подложка цвета игрока
+
+        const factoryBottomGeometry =  MAIN.game.scene.assets.geometries.factoryBottom.clone();
+        factoryBottomGeometry.rotateY((sector * (-60) * Math.PI / 180));
+        factoryBottomGeometry.translate(this.position.x, this.position.y, this.position.z);
+
+
+        const playerIndex = MAIN.game.data.commonData.members.indexOf(player)
+        const newFactoryBottomGeometry = BufferGeometryUtils.mergeBufferGeometries([factoryBottomGeometry,MAIN.game.scene.colorsGeommetry[playerIndex].geometry]);
+        MAIN.game.scene.colorsGeommetry[playerIndex].geometry.dispose();
+        delete MAIN.game.scene.colorsGeommetry[playerIndex].geometry;
+        MAIN.game.scene.colorsGeommetry[playerIndex].geometry = newFactoryBottomGeometry;
+
+
+    };
 
     };
   };
