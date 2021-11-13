@@ -437,7 +437,9 @@ class Truck {
             pathIndex++;
           };
           setTimeout(() => {
-            move();
+            if(that.hitBoxMesh && that.object3D){
+              move();
+            };
           }, 25)
         }else{
           if(lastPointIsNeededCity){
