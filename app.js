@@ -48,25 +48,231 @@ function  generateId(type,x){
 
 
 
+
+
 const SOCKETS = {};
 const USERS = {};
 //Это данные комнаты, которую пользователь будет создавать в лобби
 const ROOMS = {
-  R_0000000000: {
-    id: 'R_0000000000',
-    gameID: null,
-    owner: null,
-    maxMembers: 4,
-    members: [],
-    started: false,
-    turnBasedGame: true,
-    turnTime: 60000,
-    tickTime:25000,
-  },
+  // R_0000000000: {
+  //   id: 'R_0000000000',
+  //   gameID: null,
+  //   owner: null,
+  //   maxMembers: 2,
+  //   members: [],
+  //   started: false,
+  //   turnBasedGame: true,
+  //   turnTime: 60000,
+  //   tickTime:25000,
+  // },
 };
 const GAMES = {
 
 };
+
+
+class ROOM{
+  constructor(properties){
+    this.id = generateId('ROOM',5);
+    this.owner = properties.owner;
+
+    this.maxMembers = properties.maxMembers;
+    this.turnBasedGame = properties.turnBasedGame;
+    this.turnTime = properties.turnTime;
+    this.tickTime = properties.tickTime;
+
+    this.members = [];
+    this.gameStarted = false;
+    this.gameID = null;
+    this.ready = false;
+
+  };
+
+
+  getData(){
+    const roomData = {
+      id:this.id,
+      maxMembers:this.maxMembers,
+      members:this.members,
+      turnBasedGame:this.turnBasedGame,
+      tickTime:this.tickTime/1000,
+      turnTime:this.turnTime/1000,
+      ready:this.ready,
+      started:false,
+    };
+    return roomData;
+  };
+
+  sendUpdate(){
+    const data = this.getData();
+
+    for(let user in USERS){
+      const thisUser = USERS[user];
+      thisUser.sendRoomUpdate(data);
+    };
+
+  };
+
+  addPlayer(login){
+    if(this.members.indexOf(login) === -1){
+      this.members.push(login)
+    };
+    if(USERS[login]){
+      USERS[login].joinRoom(this);
+    };
+
+    if(this.members.length === this.maxMembers){
+      this.ready = true;
+    };
+    this.sendUpdate();
+    if(this.members.length === this.maxMembers){
+      this.startGame();
+    };
+  };
+  removePlayer(login){
+    if(this.ready){
+      return;
+    };
+    if(this.members.indexOf(login) != -1){
+      this.members.splice(this.members.indexOf(login),1);
+      if(this.members.length === 0){
+        this.delete();
+      };
+    };
+    if(USERS[login]){
+      USERS[login].leaveRoom();
+    };
+    this.sendUpdate();
+    this.ready = false;
+  };
+
+  delete(){
+    for(let user in USERS){
+      const thisUser = USERS[user];
+      thisUser.deleteRoom(this.id);
+    };
+    delete ROOMS[this.id];
+  };
+
+
+  startGame(){
+    const game = new GAME(this);
+    GAMES[game.id] = game;
+    game.generateMap();
+    const gameData = game.getData();
+    this.members.forEach((member) => {
+      if (USERS[member]) {
+        USERS[member].game = GAMES[game.id];
+        USERS[member].inGame = GAMES[game.id];
+        USERS[member].emit('GAME_data', gameData);
+      };
+    });
+
+
+
+    this.delete();
+  };
+};
+
+
+
+
+
+
+
+function sendToAllRoomsData(){
+  const rooms = [];
+
+  for(let room in ROOMS){
+    const thisRoom = ROOMS[room];
+    rooms.push(thisRoom.getData());
+  };
+
+
+  for(let user in USERS){
+    const thisUser = USERS[user];
+    thisUser.sendAllRoomsData(rooms);
+  };
+
+};
+
+
+
+
+class USER{
+  constructor(properties){
+    this.inGame = false;
+    this.socket = properties.socket;
+    this.login = properties.login;
+    this.inRoom = false;
+  };
+
+  emit(message,data){
+    this.socket.emit(message,data)
+  };
+
+  joinRoom(room){
+    this.inRoom = room;
+    this.emit('LOBBY_joinedToRoom',room.id);
+  };
+  leaveRoom(room){
+    this.inRoom = false;
+    this.emit('LOBBY_leaveRoom');
+  };
+  deleteRoom(id){
+    this.emit('LOBBY_deleteRoom',id);
+  };
+  authTrue(){
+    this.emit('LOBBY_authTrue');
+    const that = this;
+    setTimeout(function(){
+      that.sendAllRoomsData();
+    },250);
+  };
+
+  sendAllRoomsData(){
+    const rooms = [];
+
+    for(let room in ROOMS){
+      const thisRoom = ROOMS[room];
+      rooms.push(thisRoom.getData());
+    };
+
+    this.emit('LOBBY_sendRoomsData',rooms);
+  };
+
+  sendRoomUpdate(roomData){
+    this.emit('LOBBY_updateRoom',roomData);
+  };
+
+  disconnect(){
+    if (this.inGame) {
+      //если его очередь ходить
+      if (this.inGame.turnBasedGame) {
+        if (this.inGame.queue[this.inGame.queueNum] === this.login) {
+          this.inGame.nextTurn();
+        };
+      };
+    };
+
+    if(this.inRoom){
+      this.inRoom.removePlayer(this.login);
+    };
+    this.inGame = false;
+  };
+};
+
+
+
+
+
+
+
+
+
+
+
+
 class GAME {
   //Очередь пусть формируется из тех, кто первый выбрал кредит
   constructor(properties) {
@@ -77,6 +283,7 @@ class GAME {
     properties.members.forEach((member, i) => {
       const properties = {
         login: member,
+        game:this,
       };
       const player = new PLAYER(properties);
       this.players[player.login] = player;
@@ -100,7 +307,6 @@ class GAME {
       const city = new CITY({name:cityName,game:this});
       this.cities[cityName] = city;
     };
-
 
     //нужно для отправки транспорта, только на стороне сервера
     this.transportMap = [
@@ -189,16 +395,12 @@ class GAME {
     return data;
   };
 
-
-
   sendToAll(message, data) {
-    this.members.forEach((member, i) => {
-      if (USERS[member]) {
-        USERS[member].socket.emit(message, data);
-      };
-    });
+    for(let player in this.players){
+      const thisPlayer = this.players[player];
+      thisPlayer.emit(message, data);
+    };
   };
-
 
   playerBuilding(data) {
       //происходит, когда игрок что-то строит, вызывается и проверяется в сокете ('GAME_building')
@@ -339,8 +541,6 @@ class GAME {
       }, that.tickTime);
     };
   };
-
-
   updateCities(){
     const data = {};
     for(let city in this.cities){
@@ -696,9 +896,7 @@ class CREDIT {
         pays: that.pays,
         deferment: that.deferment,
       };
-      if (USERS[that.player.login]) {
-        USERS[that.player.login].socket.emit('GAME_creditChanges', data);
-      };
+      that.player.emit('GAME_creditChanges', data);
     };
     if (this.deferment > 0) {
       this.deferment -= 1;
@@ -726,36 +924,28 @@ class PLAYER {
   };
   sendBalanceMessage(message,amount){
     this.balanceHistory.push({message,amount});
-    if(USERS[this.login]){
-      USERS[this.login].socket.emit('GAME_BalanceMessage', {
-        message,
-        amount,
-      });
-    };
+    this.emit('GAME_BalanceMessage', {
+      message,
+      amount,
+    });
   };
   applyCredit(credit) {
     credit.player = this;
     this.balance = credit.amount;
     this.credit = new CREDIT(credit);
-    if (USERS[this.login]) {
-      const socket = USERS[this.login].socket;
-      const data = {
-        amount: credit.amount,
-        pays: credit.pays,
-        deferment: credit.deferment,
-        procent: credit.procent,
-      };
-      if (socket) {
-        socket.emit('GAME_applyCredit', data);
-      };
+
+    const data = {
+      amount: credit.amount,
+      pays: credit.pays,
+      deferment: credit.deferment,
+      procent: credit.procent,
     };
+    this.emit('GAME_applyCredit', data);
   };
   changeBalance(value) {
     this.balance += value;
-    if (USERS[this.login]) {
-      const socket = USERS[this.login].socket;
-      socket.emit('GAME_changeBalance', this.balance);
-    };
+
+    this.emit('GAME_changeBalance', this.balance);
   };
   turnAction() {
     if (this.credit) {
@@ -770,7 +960,9 @@ class PLAYER {
   };
   emit(message,data){
     if(USERS[this.login]){
-      USERS[this.login].socket.emit(message,data);
+      if(USERS[this.login].inGame){
+        USERS[this.login].emit(message,data);
+      };
     };
   };
 };
@@ -901,9 +1093,19 @@ io.on('connection', function(socket) {
    */
   socket.on('auth', (data) => {
 
-    SOCKETS[socket.id].user = data.login;
-    USERS[data.login] = {};
-    USERS[data.login].socket = socket;
+
+
+    const user = new USER({socket,login:data.login})
+
+    SOCKETS[socket.id].user = user;
+    USERS[user.login] = user;
+    user.authTrue();
+
+
+
+
+
+    // socket.emit('auth_true',afterAuthData);
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
     // ROOMS.R_0000000000.owner = data.login;
@@ -911,68 +1113,96 @@ io.on('connection', function(socket) {
     // ROOMS.R_0000000000.members.push(data.login);
     /*ДЛЯ ОДНОГО ИГРОКА*/
 
-    /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-    if (ROOMS.R_0000000000.owner === null) {
-      ROOMS.R_0000000000.owner = data.login;
-    };
-    ROOMS.R_0000000000.members.push(data.login);
-    /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-
-    if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
-
-      const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
-
-      /* ГЕНЕРАЦИЯ на стороне клиента*/
-      // if (ownerSocket) {
-      //   //Вызов у хозяина комнаты старта начала генерации игры
-      //   ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
-      // };
-
-
-
-      //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
-
-      ROOMS.R_0000000000.members.forEach((member, i) => {
-        if (member != ROOMS.R_0000000000.owner) {
-          const memberSocket = USERS[member].socket;
-          if (memberSocket) {
-            //Участникам комнаты уведомление, что комната готова и идет генерация игры
-            memberSocket.emit('ROOM_ready');
-          };
-        };
-      });
-
-      /* ГЕНЕРАЦИЯ на стороне сервера*/
-      const game = new GAME(ROOMS.R_0000000000);
-      GAMES[game.id] = game;
-      game.generateMap();
-      const gameData = game.getData();
-      ROOMS.R_0000000000.members.forEach((member) => {
-        if (USERS[member]) {
-          USERS[member].game = GAMES[game.id];
-          USERS[member].socket.emit('GAME_data', gameData);
-        };
-      });
-    };
+    // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
+    // if (ROOMS.R_0000000000.owner === null) {
+    //   ROOMS.R_0000000000.owner = data.login;
+    // };
+    // ROOMS.R_0000000000.members.push(data.login);
+    // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
+    //
+    // if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
+    //
+    //   const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
+    //
+    //   /* ГЕНЕРАЦИЯ на стороне клиента*/
+    //   // if (ownerSocket) {
+    //   //   //Вызов у хозяина комнаты старта начала генерации игры
+    //   //   ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
+    //   // };
+    //
+    //
+    //
+    //   //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
+    //
+    //   ROOMS.R_0000000000.members.forEach((member, i) => {
+    //     if (member != ROOMS.R_0000000000.owner) {
+    //       const memberSocket = USERS[member].socket;
+    //       if (memberSocket) {
+    //         //Участникам комнаты уведомление, что комната готова и идет генерация игры
+    //         memberSocket.emit('ROOM_ready');
+    //       };
+    //     };
+    //   });
+    //
+    //   /* ГЕНЕРАЦИЯ на стороне сервера*/
+    //   const game = new GAME(ROOMS.R_0000000000);
+    //   GAMES[game.id] = game;
+    //   game.generateMap();
+    //   const gameData = game.getData();
+    //   ROOMS.R_0000000000.members.forEach((member) => {
+    //     if (USERS[member]) {
+    //       USERS[member].game = GAMES[game.id];
+    //       USERS[member].socket.emit('GAME_data', gameData);
+    //     };
+    //   });
+    // };
   });
 
   socket.on('disconnect', function() {
-    const user = USERS[SOCKETS[socket.id].user];
+    const user = SOCKETS[socket.id].user;
     if (user) {
-      if (user.game) {
-        //если его очередь ходить
-        if (user.game.turnBasedGame) {
-          if (user.game.queue[user.game.queueNum] === SOCKETS[socket.id].user) {
-            user.game.nextTurn();
-          };
-        };
-      };
-      delete USERS[SOCKETS[socket.id].user];
+      user.disconnect();
+      delete SOCKETS[socket.id].user;
     };
     delete SOCKETS[socket.id];
     console.log('disconnect');
   });
 
+
+  socket.on('LOBBY_room_create', (roomData) =>{
+    const room = new ROOM({
+      owner: roomData.owner,
+      maxMembers: roomData.maxMembers,
+      turnBasedGame: roomData.turnBasedGame,
+      turnTime: roomData.turnTime * 1000,
+      tickTime:roomData.tickTime * 1000,
+    });
+
+    ROOMS[room.id] = room;
+    room.addPlayer(roomData.owner);
+    sendToAllRoomsData();
+  });
+
+
+  socket.on('LOBBY_userLeaveRoom',(data)=>{
+    // const data = {
+    //   player:MAIN.userData.login,
+    //   room:MAIN.userData.inRoom,
+    // };
+
+    if(ROOMS[data.room]){
+      ROOMS[data.room].removePlayer(data.player);
+    };
+  });
+  socket.on('LOBBY_userJoinRoom',(data)=>{
+    // const data = {
+    //   player:MAIN.userData.login,
+    //   room:MAIN.userData.inRoom,
+    // };
+    if(ROOMS[data.room]){
+      ROOMS[data.room].addPlayer(data.player);
+    };
+  });
 
 //поменял на генерацию со стороны сервера
   // socket.on('GAME_generated', (gameData) => {
@@ -1053,31 +1283,10 @@ io.on('connection', function(socket) {
           building:building,
         },
     */
-
-    /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
     const game = GAMES[data.gameID];
     if (game) {
       //anticheat
       if (game.players[data.player].balance >= COASTS.buildings[data.build.building]) {
-
-        //если игра пошаговая, то нужно перепроверитьь его ли ход
-        // if (game.turnBasedGame) {
-        //   //если ходы не на паузе
-        //   if(!game.turnsPaused){
-        //     //чтобы игрок не мог построить вне его хода
-        //     if (game.queue[game.queueNum] === data.player) {
-        //         const cost = COASTS.buildings[data.build.building] * (-1);
-        //         game.players[data.player].changeBalance(cost);
-        //         game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
-        //         game.playerBuilding(data);
-        //     };
-        //   };
-        // } else {
-        //   const cost = COASTS.buildings[data.build.building] * (-1);
-        //   game.players[data.player].changeBalance(cost);
-        //   game.players[data.player].sendBalanceMessage(`Сonstruction of the ${data.build.building}`,cost);
-        //   game.playerBuilding(data);
-        // };
 
         if(GAMES[data.gameID]){
           const game = GAMES[data.gameID];
@@ -1103,11 +1312,6 @@ io.on('connection', function(socket) {
         };
       };
     };
-    /*ДЛЯ НЕСКОЛЬКИХ ИГРОКОВ*/
-
-    /*ДЛЯ ОДНОГО ИГРОКА*/
-    // socket.emit('GAME_applyBuilding',data.build);
-    /*ДЛЯ ОДНОГО ИГРОКА*/
   });
   socket.on('GAME_factory_applySettings',(data)=>{
     //происходит, когда игрок настраивает фабрику
@@ -1241,7 +1445,6 @@ io.on('connection', function(socket) {
         };
       };
     };
-
   });
 
 
