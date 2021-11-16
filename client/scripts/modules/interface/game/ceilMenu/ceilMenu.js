@@ -107,7 +107,7 @@ const CEIL_MENU = {
           if (MAIN.game.data.commonData.turnBasedGame) {
             if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
 
-              // исследование карты 
+              // исследование карты
               CEIL_MENU.hideSectorMenu();
               if (MAIN.game.scene.temporaryHexMesh) {
                 MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
@@ -121,8 +121,10 @@ const CEIL_MENU = {
               };
             }else{
               CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
-
             };
+            //!!!!ДОБАВИТЬ ВЕЗДЕ
+          }else{
+            CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
           };
 
         };

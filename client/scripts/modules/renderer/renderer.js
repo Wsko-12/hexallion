@@ -284,6 +284,26 @@ function init() {
       uFocus: {
         value: null
       },
+
+
+      uContrast: {
+        value: null
+      },
+      uBlackWhite: {
+        value: null
+      },
+      uRed: {
+        value: null
+      },
+      uGreen: {
+        value: null
+      },
+      uBlue: {
+        value: null
+      },
+      uShadowWhite:{
+        value: null
+      }
     },
 
     vertexShader: /* glsl */ `
@@ -303,6 +323,14 @@ function init() {
       uniform vec2 uResolution;
       uniform float uStrength;
       uniform float uFocus;
+
+
+      uniform float uContrast;
+      uniform float uBlackWhite;
+      uniform float uShadowWhite;
+      uniform float uRed;
+      uniform float uGreen;
+      uniform float uBlue;
 
       varying vec2 vUv;
       void main() {
@@ -351,8 +379,46 @@ function init() {
            }
          }
          Color /= Quality * Directions - 15.0;
-        gl_FragColor = vec4( Color*3.5 );
+
         /*Blur*/
+
+
+
+
+        /*Filter*/
+          // Яркость цвета
+          Cmax = max(Color.r, Color.g);
+          Cmax = 1.0 - max(Cmax, Color.b);
+          Cmax = pow(Cmax,10.0);
+
+          //Обесцвечивание всего
+          float blackWhite = (Color.r+Color.g+Color.b)/3.0;
+
+          vec4 blackWhiteValues = vec4(vec3(blackWhite),1.0);
+
+          Color = mix(Color,blackWhiteValues,uBlackWhite);
+
+
+          // Делаем котрасттный
+          Color = Color -  vec4( Cmax* uContrast );
+
+          //Обесцвечивание теней
+          Color =  Color +  vec4(Cmax * uShadowWhite);
+
+
+          //Цветной фильтр
+          Color.r +=  uRed;
+          Color.g +=  uGreen;
+          Color.b +=  uBlue;
+
+
+
+
+          gl_FragColor = vec4(Color*4.0);
+
+        /*Filter*/
+
+
       }`
 
   };
@@ -362,11 +428,19 @@ function init() {
   //shadowNoise
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.5;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright.value = 0.04;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 / Math.min(window.devicePixelRatio, 2);
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 / Math.min(window.devicePixelRatio, 2) + 0.2;
   //blur
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uResolution = RENDERER.uResolution;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 3;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = 0.5;
+
+  //Filter
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0.25;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0.2;
+    RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.2;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed.value = 0;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen.value = 0;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue.value = 0.015;
 
   RENDERER.composer.addPass(RENDERER.postrocessors.postrocessorMerged);
 
@@ -377,6 +451,17 @@ function init() {
   const blurGUI = postrocessorsGUI.addFolder('blur');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength, 'value', 0, 20).step(1).name('uStrength');
   blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus, 'value', 0, 1).step(0.01).name('uFocus');
+
+
+  const filterGUI = postrocessorsGUI.addFolder('Filter');
+  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast, 'value', 0, 1).step(0.01).name('uContrast');
+  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite, 'value', 0, 1).step(0.01).name('uBlackWhite');
+  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite, 'value', 0, 0.3).step(0.01).name('uShadowWhite');
+  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed, 'value', 0, 0.1).step(0.001).name('uRed');
+  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen, 'value', 0, 0.1).step(0.001).name('uGreen');
+  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue, 'value', 0, 0.1).step(0.001).name('uBlue');
+
+
 
   document.body.appendChild(RENDERER.stats.dom);
   window.addEventListener("resize", setSize);
