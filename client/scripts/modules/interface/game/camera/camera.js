@@ -172,7 +172,7 @@ const CAMERA = {
       },
       //two finger up/down min:-10,max:10,
       yAngle: {
-        min: 1,
+        min: 0.25,
         max: 4,
         current: 2,
       },
@@ -181,9 +181,9 @@ const CAMERA = {
     },
     //pinch/wheel min:1,max:10,
     zoom: {
-      max: 20,
+      max: 50,
       min: 2,
-      current: 8,
+      current: 25,
     },
   },
   shifts: {

@@ -29,6 +29,7 @@ import {
 } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/BokehPass.js';
 import { UnrealBloomPass } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/UnrealBloomPass.js';
 
+
 let clock = new THREE.Clock();
 
 
@@ -51,7 +52,11 @@ function init() {
 
   RENDERER.renderer.toneMapping = THREE.LinearToneMapping;
 
-  RENDERER.camera = new THREE.PerspectiveCamera(30, 2, 0.2, 500);
+  RENDERER.camera = new THREE.PerspectiveCamera(10, 2, 0.2, 500);
+  const cameraGUI = MAIN.GUI.addFolder('camera');
+  cameraGUI.add(RENDERER.camera, 'fov', 0, 100).step(1).name('fov').onChange(()=>{
+      RENDERER.camera.updateProjectionMatrix();
+  });
   RENDERER.camera.position.set(30, 30, 0);
   RENDERER.camera.lookAt(0, 0, 0);
   RENDERER.scene = new THREE.Scene();
@@ -428,16 +433,16 @@ function init() {
   //shadowNoise
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.5;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright.value = 0.04;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 / Math.min(window.devicePixelRatio, 2) + 0.2;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 // 15 / Math.min(window.devicePixelRatio, 2) + 0.2;
   //blur
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uResolution = RENDERER.uResolution;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 3;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = 0.5;
 
   //Filter
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0.25;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0.2;
-    RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.2;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0.05;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0.02;
+    RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.1;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue.value = 0.015;

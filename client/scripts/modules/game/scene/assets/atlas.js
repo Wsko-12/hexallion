@@ -47,6 +47,34 @@ ATLAS.models = [
     folder:'ceils/',
     file:'meadowCeil.glb',
   },
+  { name:'meadowDecor_0',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_0.glb',
+  },
+  { name:'meadowDecor_1',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_1.glb',
+  },
+  { name:'meadowDecor_2',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_2.glb',
+  },
+  { name:'meadowDecor_3',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_3.glb',
+  },
+  { name:'meadowDecor_4',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_4.glb',
+  },
+
+
+
+
+
+
+
+
   { name:'steelMineCeil',
     folder:'ceils/',
     file:'steelMineCeil.glb',
@@ -253,6 +281,10 @@ ATLAS.textures = [
   { name:'lights',
     folder:'ceils/',
     file:'lights.png',
+  },
+  { name:'ceils',
+    folder:'ceils/',
+    file:'ceils.png',
   },
 
 ];
