@@ -186,29 +186,35 @@ function openMenu(factory){
 
 
     function buyTruck(){
-      if(MAIN.game.data.playerData.balance >= MAIN.game.data.commonData.trucks.coast){
-        const data = {
-          player:MAIN.game.data.playerData.login,
-          gameID:MAIN.game.data.commonData.id,
+      if(!MAIN.game.data.playerData.gameOver){
+        if(MAIN.game.data.playerData.balance >= MAIN.game.data.commonData.trucks.coast){
+          const data = {
+            player:MAIN.game.data.playerData.login,
+            gameID:MAIN.game.data.commonData.id,
+          };
+          if(!MAIN.game.data.playerData.gameOver){
+            MAIN.socket.emit('GAME_truck_buy',data);
+          };
         };
-        MAIN.socket.emit('GAME_truck_buy',data);
       };
     };
 
     function loadTruck(truck){
-      if(MAIN.game.data.commonData.turnBasedGame){
-        if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
-          return;
+      if(!MAIN.game.data.playerData.gameOver){
+        if(MAIN.game.data.commonData.turnBasedGame){
+          if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+            return;
+          };
         };
-      };
-      if(factory){
-        const data = {
-          player:MAIN.game.data.playerData.login,
-          gameID:MAIN.game.data.commonData.id,
-          factoryID:factory.id,
-          truckID:truck.id,
+        if(factory){
+          const data = {
+            player:MAIN.game.data.playerData.login,
+            gameID:MAIN.game.data.commonData.id,
+            factoryID:factory.id,
+            truckID:truck.id,
+          };
+          MAIN.socket.emit('GAME_truck_load',data);
         };
-        MAIN.socket.emit('GAME_truck_load',data);
       };
     };
 
@@ -299,7 +305,9 @@ function openCard(truck){
     document.querySelector('#truckCard_button').ontouchstart = turn;
 
     function turn(){
-      truck.turn();
+      if(!MAIN.game.data.playerData.gameOver){
+        truck.turn();
+      };
     };
   };
 };

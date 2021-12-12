@@ -9,6 +9,7 @@ class PLAYER_DATA{
   constructor(login){
     this.login = login;
     this.balance = null;
+    this.gameOver = false;
     this.credit = null;
     this.factories = {};
     this.trucks = {};
@@ -17,6 +18,7 @@ class PLAYER_DATA{
       procent:0,
       earn:0,
     };
+
   };
 
   turnAction(){

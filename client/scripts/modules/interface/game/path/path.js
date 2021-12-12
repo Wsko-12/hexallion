@@ -45,7 +45,9 @@ function showSendButton(data) {
       if (data.truck.resource) {
         if (data.truck.place.x != null && data.truck.place.z != null) {
           data.truck.clearNotification();
-          MAIN.socket.emit('GAME_truck_send', serverData);
+          if(!MAIN.game.data.playerData.gameOver){
+            MAIN.socket.emit('GAME_truck_send', serverData);
+          };
         };
       };
     } else {
@@ -140,7 +142,9 @@ function showSellResourceButton(data) {
       truckID: data.truck.id,
       city: data.city,
     };
-    MAIN.socket.emit('GAME_resource_sell', sendData)
+    if(!MAIN.game.data.playerData.gameOver){
+        MAIN.socket.emit('GAME_resource_sell', sendData);
+    };
   };
 
 };

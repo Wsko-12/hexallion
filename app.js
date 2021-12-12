@@ -58,10 +58,10 @@ const ROOMS = {
     id: 'R_0000000000',
     gameID: null,
     owner: null,
-    maxMembers: 1,
+    maxMembers: 2,
     members: [],
     started: false,
-    turnBasedGame: false,
+    turnBasedGame: true,
     turnTime: 60000,
     tickTime:5000,
   },
@@ -476,14 +476,14 @@ class GAME {
       //если функция зациклилась (снова вернулась на того, от кого пришла)
       if (that.queueNum === startedTurnIndex) {
         //если он банкрот или вышел из игры, то тормозим всю функцию
-        if (nextPlayer.balance <= 0 || !USERS[nextPlayer.login]) {
+        if (nextPlayer.gameOver || !USERS[nextPlayer.login]) {
           that.turnsPaused = true;
         };
       };
       //сохраняем на ком был ход для setTimeout
       lastTurn = that.queueNum;
       //если у игрока все норм с балансом и он онлайн, то высылаем ход ему и ставим таймаут
-      if (nextPlayer.balance > 0 && USERS[nextPlayer.login]) {
+      if (!nextPlayer.gameOver && USERS[nextPlayer.login]) {
         const data = {
           currentTurn: that.queue[that.queueNum],
           turnTime: that.turnTime,
@@ -527,9 +527,12 @@ class GAME {
     const that = this;
     let allPlayersOff = true;
     for (let player in this.players) {
-      if (USERS[player]) {
+      if (USERS[player] && !this.players[player].gameOver) {
         allPlayersOff = false;
-        const thisPlayer = this.players[player];
+      };
+
+      const thisPlayer = this.players[player];
+      if(!thisPlayer.gameOver){
         thisPlayer.turnAction();
       };
     };
@@ -938,6 +941,7 @@ class PLAYER {
     this.balanceHistory = [];
     this.factoryList = new FACTORY_LIST(this);
     this.trucks = {};
+    this.gameOver =false;
   };
   sendBalanceMessage(message, amount) {
     this.balanceHistory.push({
@@ -981,6 +985,7 @@ class PLAYER {
     // console.log('Circle'+this.game.circle)
     // console.log('taxProcent' + taxProcent)
     const clearEarn = this.factoryList.calculateClearEarnings();
+
     const taxValue = clearEarn *taxProcent;
     this.balance -= taxValue;
     this.emit('GAME_taxValue',{
@@ -993,6 +998,17 @@ class PLAYER {
     this.sendBalanceMessage('Tax payment', (-taxValue));
 
     this.emit('GAME_changeBalance', this.balance);
+
+    if(this.balance + clearEarn < 0){
+      this.gameOver = true;
+      this.emit('GAME_over');
+      for(let truck in this.trucks){
+        this.trucks[truck].clear();
+      };
+      return
+    };
+
+
     this.emit('GAME_turn_action');
 
 
@@ -1152,16 +1168,16 @@ io.on('connection', function(socket) {
     // socket.emit('auth_true',afterAuthData);
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
-    ROOMS.R_0000000000.owner = data.login;
-    ROOMS.R_0000000000.members = [];
-    ROOMS.R_0000000000.members.push(data.login);
+    // ROOMS.R_0000000000.owner = data.login;
+    // ROOMS.R_0000000000.members = [];
+    // ROOMS.R_0000000000.members.push(data.login);
     /*ДЛЯ ОДНОГО ИГРОКА*/
 
     // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-    // if (ROOMS.R_0000000000.owner === null) {
-    //   ROOMS.R_0000000000.owner = data.login;
-    // };
-    // ROOMS.R_0000000000.members.push(data.login);
+    if (ROOMS.R_0000000000.owner === null) {
+      ROOMS.R_0000000000.owner = data.login;
+    };
+    ROOMS.R_0000000000.members.push(data.login);
     // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
     //
     if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
@@ -1349,10 +1365,12 @@ io.on('connection', function(socket) {
 
           if (game.players[data.player]) {
             const player = game.players[data.player];
-            const cost = COASTS.buildings[data.build.building] * (-1);
-            player.changeBalance(cost);
-            player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
-            game.playerBuilding(data);
+            if(!player.gameOver){
+              const cost = COASTS.buildings[data.build.building] * (-1);
+              player.changeBalance(cost);
+              player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
+              game.playerBuilding(data);
+            };
           };
 
         };
@@ -1376,9 +1394,11 @@ io.on('connection', function(socket) {
 
     if (GAMES[data.gameID]) {
       if (GAMES[data.gameID].players[data.player]) {
-        if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory]) {
-          if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory].settingsSetted === false) {
-            GAMES[data.gameID].players[data.player].factoryList.list[data.factory].setSettings(data.settings);
+        if(!GAMES[data.gameID].players[data.player].gameOver){
+          if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory]) {
+            if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory].settingsSetted === false) {
+              GAMES[data.gameID].players[data.player].factoryList.list[data.factory].setSettings(data.settings);
+            };
           };
         };
       };
@@ -1409,7 +1429,7 @@ io.on('connection', function(socket) {
       if (GAMES[data.gameID].players[data.player]) {
         const player = GAMES[data.gameID].players[data.player];
 
-        if (player.balance >= COASTS.trucks.coast) {
+        if (player.balance >= COASTS.trucks.coast && !player.gameOver) {
           if (game.trucks.count > 0) {
             game.trucks.count -= 1;
             player.changeBalance(-COASTS.trucks.coast);
@@ -1466,26 +1486,28 @@ io.on('connection', function(socket) {
 
       if (game.players[data.player]) {
         const player = game.players[data.player];
-        if (player.factoryList.list[data.factoryID]) {
-          const factory = player.factoryList.list[data.factoryID];
-          if (player.trucks[data.truckID]) {
-            const truck = player.trucks[data.truckID];
-            //проверяем, не занята ли клетка
-            if (game.transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0) {
-              const nData = {
-                game,
-                player,
-                factory,
-                truck,
+        if(!player.gameOver){
+          if (player.factoryList.list[data.factoryID]) {
+            const factory = player.factoryList.list[data.factoryID];
+            if (player.trucks[data.truckID]) {
+              const truck = player.trucks[data.truckID];
+              //проверяем, не занята ли клетка
+              if (game.transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0) {
+                const nData = {
+                  game,
+                  player,
+                  factory,
+                  truck,
+                };
+                factory.loadResourceToTruck(nData);
+              } else {
+                //если клетка на карте занята другим транспортом
+                const indexes = {
+                  z: factory.ceilIndex.z,
+                  x: factory.ceilIndex.x,
+                };
+                player.emit('GAME_truck_ceilFull', indexes);
               };
-              factory.loadResourceToTruck(nData);
-            } else {
-              //если клетка на карте занята другим транспортом
-              const indexes = {
-                z: factory.ceilIndex.z,
-                x: factory.ceilIndex.x,
-              };
-              player.emit('GAME_truck_ceilFull', indexes);
             };
           };
         };
@@ -1512,18 +1534,20 @@ io.on('connection', function(socket) {
       const game = GAMES[data.gameID];
       if (game.trucks.all[data.truckID]) {
         const truck = game.trucks.all[data.truckID];
+        if(!truck.player.gameOver){
         //если игра пошаговая, то нужно перепроверитьь его ли ход
-        if (game.turnBasedGame) {
-          //если ходы на паузе
-          if (game.turnsPaused) {
-            return;
+          if (game.turnBasedGame) {
+            //если ходы на паузе
+            if (game.turnsPaused) {
+              return;
+            };
+            if (game.queue[game.queueNum] != truck.player.login) {
+              return;
+            };
           };
-          if (game.queue[game.queueNum] != truck.player.login) {
-            return;
-          };
-        };
 
-        truck.send(data);
+          truck.send(data);
+        };
       };
 
     };
@@ -1562,14 +1586,15 @@ io.on('connection', function(socket) {
 
       if (game.players[data.player]) {
         const player = game.players[data.player];
+        if(!player.gameOver){
+          if (game.trucks.all[data.truckID]) {
+            const truck = game.trucks.all[data.truckID];
 
-        if (game.trucks.all[data.truckID]) {
-          const truck = game.trucks.all[data.truckID];
-
-          if (game.cities[data.city]) {
-            const city = game.cities[data.city];
-            if (truck.resource) {
-              city.sellResource(truck.resource);
+            if (game.cities[data.city]) {
+              const city = game.cities[data.city];
+              if (truck.resource) {
+                city.sellResource(truck.resource);
+              };
             };
           };
         };

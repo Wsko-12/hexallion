@@ -60,7 +60,11 @@ function init() {
     //   MAIN.pages.loading.changeComment('Game generation');
     //   MAIN.game.generation.start(roomData);
     // });
-
+    MAIN.socket.on('GAME_over', () => {
+      alert('Game over');
+      MAIN.game.functions.endTurn();
+      MAIN.game.data.playerData.gameOver = true;
+    });
     MAIN.socket.on('GAME_data', function(gameData) {
       //Происходит, когда вся gameData сгенерирована
 
@@ -143,8 +147,7 @@ function init() {
       if (MAIN.game.data.commonData.turnBasedGame) {
         MAIN.game.data.commonData.queue = data.currentTurn;
         if (data.currentTurn === MAIN.game.data.playerData.login) {
-          if (MAIN.game.data.playerData.balance > 0) {
-          } else {
+          if (MAIN.game.data.playerData.gameOver) {
             MAIN.game.functions.endTurn();
           };
         };

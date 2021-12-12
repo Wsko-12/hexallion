@@ -178,7 +178,10 @@ function showSettingsSetMenu(factory) {
       settings: settings,
     };
     factory.clearNotification();
-    MAIN.socket.emit('GAME_factory_applySettings', data);
+
+    if(!MAIN.game.data.playerData.gameOver){
+      MAIN.socket.emit('GAME_factory_applySettings', data);
+    };
   };
 };
 
@@ -236,7 +239,7 @@ function showFactoryMenu(factory){
 
   let actionButtonLine = null;
 
-  if(factory.settings.storage.includes(1)){
+  if(factory.settings.storage.includes(1) && !MAIN.game.data.playerData.gameOver){
     actionButtonLine = `
       <div id='factoryMenu_ActionButton'>
         <span style="margin:auto">Send truck</span>
@@ -291,8 +294,10 @@ function showFactoryMenu(factory){
     button.ontouchstart = openTruckMenu;
 
     function openTruckMenu(){
-      closeMenu();
-      MAIN.interface.game.trucks.openMenu(factory);
+      if(!MAIN.game.data.playerData.gameOver){
+        closeMenu();
+        MAIN.interface.game.trucks.openMenu(factory);
+      };
     };
   };
 

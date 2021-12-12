@@ -242,10 +242,14 @@ const CEIL_MENU = {
     if (chosenCeil.sectors[data.build.sector] === null) {
       if (MAIN.game.data.commonData.turnBasedGame) {
         if (MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login) {
-          MAIN.socket.emit('GAME_building', data);
+          if(!MAIN.game.data.playerData.gameOver){
+            MAIN.socket.emit('GAME_building', data);
+          };
         };
       } else {
-        MAIN.socket.emit('GAME_building', data);
+        if(!MAIN.game.data.playerData.gameOver){
+          MAIN.socket.emit('GAME_building', data);
+        };
       };
     };
   },
