@@ -153,13 +153,17 @@ FIELD.create = () => {
           break;
           case 'Northfield':
             // geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
-            cityGeometry = MAIN.game.scene.assets.geometries.northfieildCeil.clone();
-            lightGeometry = MAIN.game.scene.assets.geometries.northfieildLight.clone();
+            // cityGeometry = MAIN.game.scene.assets.geometries.northfieildCeil.clone();
+            // lightGeometry = MAIN.game.scene.assets.geometries.northfieildLight.clone();
+            cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone();
+            lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
           break;
           case 'Southcity':
             // geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();
-            cityGeometry = MAIN.game.scene.assets.geometries.southcityCeil.clone();
-            lightGeometry = MAIN.game.scene.assets.geometries.southcityLight.clone();
+            // cityGeometry = MAIN.game.scene.assets.geometries.southcityCeil.clone();
+            // lightGeometry = MAIN.game.scene.assets.geometries.southcityLight.clone();
+            cityGeometry = MAIN.game.scene.assets.geometries.westownCeil.clone();
+            lightGeometry = MAIN.game.scene.assets.geometries.westownLight.clone();
           break;
           default:
             geometry = MAIN.game.scene.assets.geometries.meadowCeil.clone();

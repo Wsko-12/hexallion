@@ -171,6 +171,21 @@ ATLAS.models = [
     folder:'buildings/',
     file:'roadDecor4.glb',
   },
+  { name:'roadDecor5',
+    folder:'buildings/',
+    file:'roadDecor5.glb',
+  },
+
+  { name:'roadDecor6',
+    folder:'buildings/',
+    file:'roadDecor6.glb',
+  },
+  { name:'roadDecor7',
+    folder:'buildings/',
+    file:'roadDecor7.glb',
+  },
+
+
 
   { name:'bridge',
     folder:'buildings/',
