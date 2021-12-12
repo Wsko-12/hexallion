@@ -99,13 +99,13 @@
 
         /*ДЛЯ ОДНОГО ИГРОКА*/
        // чтобы быстро перейти к созданию сцены
-        // const data = {
-        //   login:generateId('p',5)
-        // };
-        // MAIN.userData = {
-        //   login:data.login,
-        // };
-        // MAIN.socket.emit('auth',data);
+        const data = {
+          login:generateId('p',5)
+        };
+        MAIN.userData = {
+          login:data.login,
+        };
+        MAIN.socket.emit('auth',data);
 
         /*ДЛЯ ОДНОГО ИГРОКА*/
 

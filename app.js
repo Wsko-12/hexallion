@@ -58,7 +58,7 @@ const ROOMS = {
     id: 'R_0000000000',
     gameID: null,
     owner: null,
-    maxMembers: 2,
+    maxMembers: 1,
     members: [],
     started: false,
     turnBasedGame: true,
@@ -1168,16 +1168,16 @@ io.on('connection', function(socket) {
     // socket.emit('auth_true',afterAuthData);
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
-    // ROOMS.R_0000000000.owner = data.login;
-    // ROOMS.R_0000000000.members = [];
-    // ROOMS.R_0000000000.members.push(data.login);
+    ROOMS.R_0000000000.owner = data.login;
+    ROOMS.R_0000000000.members = [];
+    ROOMS.R_0000000000.members.push(data.login);
     /*ДЛЯ ОДНОГО ИГРОКА*/
 
     // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-    if (ROOMS.R_0000000000.owner === null) {
-      ROOMS.R_0000000000.owner = data.login;
-    };
-    ROOMS.R_0000000000.members.push(data.login);
+    // if (ROOMS.R_0000000000.owner === null) {
+    //   ROOMS.R_0000000000.owner = data.login;
+    // };
+    // ROOMS.R_0000000000.members.push(data.login);
     // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
     //
     if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {

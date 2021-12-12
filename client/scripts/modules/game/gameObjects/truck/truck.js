@@ -164,61 +164,64 @@ class Truck {
   };
 
   turn() {
-    MAIN.interface.game.trucks.turningInterfase = true;
-    this.ready = false;
-    this.cardOpened = true;
-    MAIN.interface.game.trucks.closeMenu();
-    const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
-    const that = this;
+    if(this.ready ){
+      this.ready = false;
+      MAIN.interface.game.trucks.turningInterfase = true;
+      this.cardOpened = true;
+      MAIN.interface.game.trucks.closeMenu();
+      const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
+      const that = this;
 
-    function diceAnimate() {
-      document.querySelector('#truckDice').style.display = 'block';
-      const diceDiv = document.querySelector('#truckDiceInner');
-      diceDiv.style.transitionDuration = '0s';
-      diceDiv.style.opacity = 1;
+      function diceAnimate() {
+        document.querySelector('#truckDice').style.display = 'block';
+        const diceDiv = document.querySelector('#truckDiceInner');
+        diceDiv.style.transitionDuration = '0s';
+        diceDiv.style.opacity = 1;
 
-      let animateCount = 0;
+        let animateCount = 0;
 
-      function animate() {
-        that.clearNotification();
-        animateCount++;
-        diceDiv.style.top = -Math.round(Math.random() * 5) * 100 + '%';
-        if (animateCount < 10) {
-          setTimeout(animate, 100);
-        } else {
-          //continue function
+        function animate() {
           that.clearNotification();
-          diceDiv.style.top = -(value - 1) * 100 + '%';
-          setTimeout(function() {
-            diceDiv.style.transitionDuration = '2s';
-            diceDiv.style.opacity = 0.3;
-          }, 100);
-          // setTimeout(function(){
-          //   document.querySelector('#truckDice').style.display = 'none';
-          // },2000);
-
-          if (value < 6) {
-
-            MAIN.interface.game.city.showCityPrices(that.resource);
-            document.querySelector('#truckCancelButton').style.display = 'flex';
-
-
-            MAIN.interface.dobleClickFunction.standard = false;
-            MAIN.interface.dobleClickFunction.function = function(object3D) {
-              MAIN.game.functions.findPath(value, that, object3D.userData);
-            };
+          animateCount++;
+          diceDiv.style.top = -Math.round(Math.random() * 5) * 100 + '%';
+          if (animateCount < 10) {
+            setTimeout(animate, 100);
           } else {
-            MAIN.interface.game.trucks.turningInterfase = false;
+            //continue function
+            that.clearNotification();
+            diceDiv.style.top = -(value - 1) * 100 + '%';
             setTimeout(function() {
-              document.querySelector('#truckDice').style.display = 'none';
-            }, 1500);
-          };
+              diceDiv.style.transitionDuration = '2s';
+              diceDiv.style.opacity = 0.3;
+            }, 100);
+            // setTimeout(function(){
+            //   document.querySelector('#truckDice').style.display = 'none';
+            // },2000);
 
+            if (value < 6) {
+
+              MAIN.interface.game.city.showCityPrices(that.resource);
+              document.querySelector('#truckCancelButton').style.display = 'flex';
+
+
+              MAIN.interface.dobleClickFunction.standard = false;
+              MAIN.interface.dobleClickFunction.function = function(object3D) {
+                MAIN.game.functions.findPath(value, that, object3D.userData);
+              };
+            } else {
+              MAIN.interface.game.trucks.turningInterfase = false;
+              setTimeout(function() {
+                document.querySelector('#truckDice').style.display = 'none';
+              }, 1500);
+            };
+
+          };
         };
+        animate();
       };
-      animate();
+      diceAnimate();
     };
-    diceAnimate();
+
   };
 
 
@@ -405,7 +408,7 @@ class Truck {
             };
           };
 
-          if (sectorName === 'road') {
+          if (sectorName === 'road' || fieldCeil.type === 'Westown' || fieldCeil.type === 'Northfield' || fieldCeil.type === 'Southcity') {
             position.y = 0;
           } else if (sectorName === 'bridgeStraight') {
             position.y = 0.2;

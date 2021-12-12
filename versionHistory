@@ -8,7 +8,8 @@ v1.0
     - bug with truck place.x == 0 and place.z == 0
     - bug when truck didn't send. It was when Tick was applied and at this time truck was it send mode. So, truck sended flag sended turned into true anyway.
       But send button in truck didn't switch off and notification didn't disapear.
-
+    - bug fix with double throw dice
+    - bug fix with truck position y when it is moving along city
 
 -- water station
 -- sand mine
@@ -16,6 +17,9 @@ v1.0
 -- gold mill
 
 
+
+-- game over
+-- taxes
 
 
 
@@ -33,4 +37,4 @@ v1.0
 -- turn bugfixes
 -- player factory colors
 -- clouds
--- decrease sun bright 
+-- decrease sun bright
