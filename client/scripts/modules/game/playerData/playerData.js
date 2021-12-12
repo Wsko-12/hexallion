@@ -12,6 +12,11 @@ class PLAYER_DATA{
     this.credit = null;
     this.factories = {};
     this.trucks = {};
+    this.tax = {
+      value:0,
+      procent:0,
+      earn:0,
+    };
   };
 
   turnAction(){

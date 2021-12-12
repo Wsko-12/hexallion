@@ -14,6 +14,7 @@ function updateCreditHistory(){
 };
 
 function addBalanceMessage(message,amount){
+  updatePayPerStep();
   let color;
   if(amount > 0){
     color = '#62e27a';
@@ -30,18 +31,8 @@ function addBalanceMessage(message,amount){
       <div>${message}</div>
       <div>${sign}${Math.abs(amount)}</div>
     </div>
-  `
+  `;
   document.querySelector('#balanceList').insertAdjacentHTML('afterBegin',div);
-
-
-
-
-
-
-
-
-  updatePayPerStep();
-
 };
 function init(amount){
   const interfaceSection = document.querySelector('#gameInterface')
@@ -66,7 +57,9 @@ function init(amount){
 
       </div>
       <div class='balanceHistory_title'>Balance</div>
-      <div class="creditHistory_text" style="margin-left:15px">Плата за ход $<span id='balanceHistory_payPerStep'>0<span></div>
+      <div class="creditHistory_text" style="margin-left:15px">Плата за ход $<span id='balanceHistory_payPerStep'>0</span></div>
+      <div class="creditHistory_text" style="margin-left:15px">Налоги <span id='balanceHistory_tax'>0</span>%</div>
+      <div class="creditHistory_text" style="margin-left:15px">Возможная выручка $<span id='balanceHistory_earn'>0</span></div>
       <div id='balanceList'></div>
     </div>
   `;
@@ -138,7 +131,14 @@ function updatePayPerStep(){
     pay += (credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)
   };
 
+
+  pay += MAIN.game.data.playerData.tax.value;
+
   div.innerHTML = pay;
+
+  document.querySelector('#balanceHistory_tax').innerHTML = MAIN.game.data.playerData.tax.procent*100;
+  document.querySelector('#balanceHistory_earn').innerHTML = MAIN.game.data.playerData.tax.earn;
+
 };
 
 function notEnoughMoney(){
