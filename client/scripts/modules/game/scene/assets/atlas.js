@@ -219,10 +219,29 @@ ATLAS.models = [
     file:'sawmillLight.glb',
   },
 
-  { name:'truck',
+  { name:'truck_sand',
     folder:'truck/',
-    file:'truck.glb',
+    file:'truck_sand.glb',
   },
+  { name:'truck_water',
+    folder:'truck/',
+    file:'truck_water.glb',
+  },
+  { name:'truck_wood',
+    folder:'truck/',
+    file:'truck_wood.glb',
+  },
+  { name:'truck_steel',
+    folder:'truck/',
+    file:'truck_steel.glb',
+  },
+  { name:'truck_gold',
+    folder:'truck/',
+    file:'truck_gold.glb',
+  },
+
+
+
 
   { name:'truckHitBox',
     folder:'truck/',
@@ -285,6 +304,10 @@ ATLAS.textures = [
   { name:'ceils',
     folder:'ceils/',
     file:'ceils.png',
+  },
+  { name:'ceils_256',
+    folder:'ceils/',
+    file:'ceils_256.png',
   },
 
 ];

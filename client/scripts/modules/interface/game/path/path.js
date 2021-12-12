@@ -44,10 +44,17 @@ function showSendButton(data) {
       data.truck.sended = true;
       if (data.truck.resource) {
         if (data.truck.place.x != null && data.truck.place.z != null) {
+          data.truck.clearNotification();
           MAIN.socket.emit('GAME_truck_send', serverData);
         };
       };
     } else {
+      // баг происходит, если пришел тик, а игрок все еще не отправил грузовик.
+      // тик возвращает ему sended = false, а тут сбивается опять
+      //два пути решения:
+      // 1.создавать апдейтовый ид
+      // 2.просто отключить send на карточке грузовика и почистить notifications что я и сделаю, потому что иначе выглядит так, будто ходы "скапливаются"
+      //  а так будет, что если игрок в данный тик не отправил груз, то просрал тик.
       closeAll();
     };
   };

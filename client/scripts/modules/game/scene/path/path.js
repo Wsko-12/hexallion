@@ -22,7 +22,7 @@ const PATH = {
         const marker =  MAIN.game.scene.assets.geometries[`pathMarker_${name}`].clone();
 
         marker.rotateY((sector*(-60) * Math.PI/180));
-        marker.translate(ceil.position.x,ceil.position.y,ceil.position.z);
+        marker.translate(ceil.position.x,ceil.position.y+0.025,ceil.position.z);
         geometry.push(marker);
       }else if(i === pathArray.length - 1){
         //конец
@@ -34,7 +34,7 @@ const PATH = {
         }
         const marker =  MAIN.game.scene.assets.geometries[`pathMarker_${name}`].clone();
         marker.rotateY((sector*(-60) * Math.PI/180));
-        marker.translate(ceil.position.x,ceil.position.y,ceil.position.z);
+        marker.translate(ceil.position.x,ceil.position.y+0.025,ceil.position.z);
         geometry.push(marker);
       }else{
         let sector = ceil.neighbours.indexOf(pathArray[i-1]);
@@ -45,7 +45,7 @@ const PATH = {
         }
         let marker =  MAIN.game.scene.assets.geometries[`pathMarker_${name}`].clone();
         marker.rotateY((sector*(-60) * Math.PI/180));
-        marker.translate(ceil.position.x,ceil.position.y,ceil.position.z);
+        marker.translate(ceil.position.x,ceil.position.y+0.025,ceil.position.z);
         geometry.push(marker);
 
         sector = ceil.neighbours.indexOf(pathArray[i+1]);
@@ -56,7 +56,7 @@ const PATH = {
         }
         marker =  MAIN.game.scene.assets.geometries[`pathMarker_${name}`].clone();
         marker.rotateY((sector*(-60) * Math.PI/180));
-        marker.translate(ceil.position.x,ceil.position.y,ceil.position.z);
+        marker.translate(ceil.position.x,ceil.position.y+0.025,ceil.position.z);
         geometry.push(marker);
       };
 

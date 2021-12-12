@@ -1,4 +1,4 @@
-0.1.0
+v1.0
 
 
 -- bag fixes:
@@ -6,6 +6,9 @@
     - brige bug fix with near ceil sand
     - bug with double send truck
     - bug with truck place.x == 0 and place.z == 0
+    - bug when truck didn't send. It was when Tick was applied and at this time truck was it send mode. So, truck sended flag sended turned into true anyway.
+      But send button in truck didn't switch off and notification didn't disapear.
+
 
 -- water station
 -- sand mine
@@ -21,6 +24,7 @@
 -- truck menu scale
 -- truck turn immediately after loading
 -- user can't open notification while truck turning
+-- truck via their loads
 
 
 -- show ceil full by truck on fieldCeil
@@ -28,3 +32,5 @@
 
 -- turn bugfixes
 -- player factory colors
+-- clouds
+-- decrease sun bright 

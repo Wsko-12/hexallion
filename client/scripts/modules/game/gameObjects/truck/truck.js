@@ -34,8 +34,7 @@ class Truck {
     this.place = indexes;
     const position = MAIN.game.functions.getScenePositionByCeilIndex(indexes);
 
-
-    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries.truck.clone(), MAIN.game.scene.mainMaterial);
+    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_${this.resource.name}`].clone(), MAIN.game.scene.mainMaterial);
     this.object3D.name = this.id;
 
     this.object3D.position.set(position.x, position.y, position.z);

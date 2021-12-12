@@ -286,7 +286,7 @@ function openCard(truck){
   };
 
 
-  if(truck.ready){
+  if(!truck.sended){
     const button = `
       <div class="trucksMenu-card-button" id="truckCard_button">
         <span class="trucksMenu-card-button-span">send<span>

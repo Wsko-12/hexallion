@@ -65,7 +65,7 @@ async function create() {
 
 
     MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:false});
-    MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.ceils,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.3,shininess:0});
+    MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.ceils_256,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.3,shininess:0});
 
     MAIN.game.scene.hitBoxGroup = new THREE.Group();
     MAIN.game.scene.hitBoxGroup.name = 'hitBoxGroup';
