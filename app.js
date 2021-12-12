@@ -54,17 +54,17 @@ const SOCKETS = {};
 const USERS = {};
 //Это данные комнаты, которую пользователь будет создавать в лобби
 const ROOMS = {
-  R_0000000000: {
-    id: 'R_0000000000',
-    gameID: null,
-    owner: null,
-    maxMembers: 1,
-    members: [],
-    started: false,
-    turnBasedGame: false,
-    turnTime: 60000,
-    tickTime:25000,
-  },
+  // R_0000000000: {
+  //   id: 'R_0000000000',
+  //   gameID: null,
+  //   owner: null,
+  //   maxMembers: 1,
+  //   members: [],
+  //   started: false,
+  //   turnBasedGame: false,
+  //   turnTime: 60000,
+  //   tickTime:25000,
+  // },
 };
 const GAMES = {
 
@@ -1098,7 +1098,7 @@ io.on('connection', function(socket) {
 
     SOCKETS[socket.id].user = user;
     USERS[user.login] = user;
-    // user.authTrue();
+    user.authTrue();
 
 
 
@@ -1107,9 +1107,9 @@ io.on('connection', function(socket) {
     // socket.emit('auth_true',afterAuthData);
 
     /*ДЛЯ ОДНОГО ИГРОКА*/
-    ROOMS.R_0000000000.owner = data.login;
-    ROOMS.R_0000000000.members = [];
-    ROOMS.R_0000000000.members.push(data.login);
+    // ROOMS.R_0000000000.owner = data.login;
+    // ROOMS.R_0000000000.members = [];
+    // ROOMS.R_0000000000.members.push(data.login);
     /*ДЛЯ ОДНОГО ИГРОКА*/
 
     // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
@@ -1119,43 +1119,43 @@ io.on('connection', function(socket) {
     // ROOMS.R_0000000000.members.push(data.login);
     // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
     //
-    if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
-
-      const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
-
-      /* ГЕНЕРАЦИЯ на стороне клиента*/
-      // if (ownerSocket) {
-      //   //Вызов у хозяина комнаты старта начала генерации игры
-      //   ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
-      // };
-
-
-
-      //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
-
-      ROOMS.R_0000000000.members.forEach((member, i) => {
-        if (member != ROOMS.R_0000000000.owner) {
-          const memberSocket = USERS[member].socket;
-          if (memberSocket) {
-            //Участникам комнаты уведомление, что комната готова и идет генерация игры
-            memberSocket.emit('ROOM_ready');
-          };
-        };
-      });
-
-      /* ГЕНЕРАЦИЯ на стороне сервера*/
-      const game = new GAME(ROOMS.R_0000000000);
-      GAMES[game.id] = game;
-      game.generateMap();
-      const gameData = game.getData();
-      ROOMS.R_0000000000.members.forEach((member) => {
-        if (USERS[member]) {
-          USERS[member].game = GAMES[game.id];
-          USERS[member].inGame = GAMES[game.id];
-          USERS[member].socket.emit('GAME_data', gameData);
-        };
-      });
-    };
+    // if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
+    //
+    //   const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
+    //
+    //   /* ГЕНЕРАЦИЯ на стороне клиента*/
+    //   // if (ownerSocket) {
+    //   //   //Вызов у хозяина комнаты старта начала генерации игры
+    //   //   ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
+    //   // };
+    //
+    //
+    //
+    //   //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
+    //
+    //   ROOMS.R_0000000000.members.forEach((member, i) => {
+    //     if (member != ROOMS.R_0000000000.owner) {
+    //       const memberSocket = USERS[member].socket;
+    //       if (memberSocket) {
+    //         //Участникам комнаты уведомление, что комната готова и идет генерация игры
+    //         memberSocket.emit('ROOM_ready');
+    //       };
+    //     };
+    //   });
+    //
+    //   /* ГЕНЕРАЦИЯ на стороне сервера*/
+    //   const game = new GAME(ROOMS.R_0000000000);
+    //   GAMES[game.id] = game;
+    //   game.generateMap();
+    //   const gameData = game.getData();
+    //   ROOMS.R_0000000000.members.forEach((member) => {
+    //     if (USERS[member]) {
+    //       USERS[member].game = GAMES[game.id];
+    //       USERS[member].inGame = GAMES[game.id];
+    //       USERS[member].socket.emit('GAME_data', gameData);
+    //     };
+    //   });
+    // };
   });
 
   socket.on('disconnect', function() {
