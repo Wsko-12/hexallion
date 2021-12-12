@@ -121,11 +121,20 @@ function init() {
       MAIN.interface.game.balance.init(MAIN.game.data.playerData.balance);
     });
 
+
+
     MAIN.socket.on('GAME_creditChanges', function(data) {
       MAIN.game.data.playerData.credit.deferment = data.deferment;
       MAIN.game.data.playerData.credit.pays = data.pays;
       MAIN.interface.game.balance.updateCreditHistory();
-    })
+    });
+
+    MAIN.socket.on('GAME_taxValue', function(data) {
+      MAIN.game.data.playerData.tax.value = data.value;
+      MAIN.game.data.playerData.tax.procent = data.procent;
+      MAIN.game.data.playerData.tax.earn = data.earn;
+    });
+
 
 
     //происходит, когда меняется ход игрока

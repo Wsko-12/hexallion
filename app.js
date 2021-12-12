@@ -63,7 +63,7 @@ const ROOMS = {
     started: false,
     turnBasedGame: false,
     turnTime: 60000,
-    tickTime:25000,
+    tickTime:5000,
   },
 };
 const GAMES = {
@@ -293,6 +293,10 @@ class GAME {
     this.turnId = null;
     this.tickPaused = false;
     this.cities = {};
+
+    this.tickNumber = 0;
+    this.circle = 0;
+
     for (let cityName of MAP_CONFIGS.cities) {
       const city = new CITY({
         name: cityName,
@@ -463,6 +467,8 @@ class GAME {
       that.queueNum += 1;
       if (that.queueNum >= that.queue.length) {
         that.queueNum = 0;
+        //круг замкнулся
+        that.circle += 1;
       };
 
       const nextPlayer = that.players[that.queue[that.queueNum]];
@@ -491,6 +497,7 @@ class GAME {
         nextPlayer.turnAction();
         //обновляем города
         that.updateCities();
+
 
         setTimeout(function() {
           //чтобы не сработало, если игрок переключит ход сам
@@ -526,7 +533,10 @@ class GAME {
         thisPlayer.turnAction();
       };
     };
-
+    this.tickNumber += 1;
+    if(this.tickNumber % this.members.length === 0){
+      this.circle += 1;
+    };
     this.updateCities();
     if (!allPlayersOff) {
       setTimeout(function() {
@@ -678,6 +688,19 @@ class FACTORY_LIST {
       };
     };
     this.player.emit('GAME_factoryList_updates', data);
+  };
+
+  calculateClearEarnings(){
+    let earnings = 0;
+    for (let factory in this.list) {
+      const thisFactory = this.list[factory];
+      if(thisFactory.settingsSetted){
+        const resPriceStock = COASTS.resources[thisFactory.resource].price;
+        const clearEarn = Math.round(resPriceStock + resPriceStock * ((thisFactory.quality * 15) * 0.01))  - thisFactory.price;
+        earnings+=clearEarn;
+      };
+    };
+    return earnings;
   };
 
 };
@@ -910,6 +933,7 @@ class CREDIT {
 class PLAYER {
   constructor(properties) {
     this.login = properties.login;
+    this.game = properties.game;
     this.balance = 0;
     this.balanceHistory = [];
     this.factoryList = new FACTORY_LIST(this);
@@ -944,15 +968,36 @@ class PLAYER {
     this.emit('GAME_changeBalance', this.balance);
   };
   turnAction() {
+    //credit
     if (this.credit) {
       this.credit.turn();
 
       this.factoryList.turn();
       this.factoryList.sendUpdates();
-
-      this.emit('GAME_changeBalance', this.balance);
-      this.emit('GAME_turn_action');
     };
+
+    //tax
+    const taxProcent = Math.floor(this.game.circle/10) * 0.02;
+    // console.log('Circle'+this.game.circle)
+    // console.log('taxProcent' + taxProcent)
+    const clearEarn = this.factoryList.calculateClearEarnings();
+    const taxValue = clearEarn *taxProcent;
+    this.balance -= taxValue;
+    this.emit('GAME_taxValue',{
+      value:taxValue,
+      procent:taxProcent,
+      earn:clearEarn,
+    });
+
+
+    this.sendBalanceMessage('Tax payment', (-taxValue));
+
+    this.emit('GAME_changeBalance', this.balance);
+    this.emit('GAME_turn_action');
+
+
+
+
   };
   emit(message, data) {
     if (USERS[this.login]) {
