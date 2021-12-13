@@ -136,7 +136,7 @@ function updatePayPerStep(){
 
   div.innerHTML = pay;
 
-  document.querySelector('#balanceHistory_tax').innerHTML = MAIN.game.data.playerData.tax.procent*100;
+  document.querySelector('#balanceHistory_tax').innerHTML = MAIN.game.data.playerData.tax.procent;
   document.querySelector('#balanceHistory_earn').innerHTML = MAIN.game.data.playerData.tax.earn;
 
 };

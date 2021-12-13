@@ -981,12 +981,12 @@ class PLAYER {
     };
 
     //tax
-    const taxProcent = Math.floor(this.game.circle/10) * 0.02;
+    const taxProcent = Math.floor(this.game.circle/10);
     // console.log('Circle'+this.game.circle)
     // console.log('taxProcent' + taxProcent)
     const clearEarn = this.factoryList.calculateClearEarnings();
 
-    const taxValue = clearEarn *taxProcent;
+    const taxValue = Math.floor(clearEarn * (taxProcent/100));
     this.balance -= taxValue;
     this.emit('GAME_taxValue',{
       value:taxValue,
