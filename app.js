@@ -349,8 +349,6 @@ class GAME {
       this.factoriesCount[factory] = FACTORIES[factory].count;
     };
 
-    console.log(this);
-
   };
 
   generateCityMap() {
@@ -449,6 +447,7 @@ class GAME {
         ceilIndex: data.build.ceilIndex,
         sector: data.build.sector,
         number:this.factoriesCount[data.build.building] + 1,
+        product:factory.resource,
       };
       this.players[data.player].emit('GAME_buildFactory', factoryClientData);
     };

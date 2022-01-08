@@ -57,67 +57,10 @@ function updateMenu(factory) {
 
 function showSettingsSetMenu(factory) {
   nowShowedFactoryMenu = null;
+  console.log(factory);
   const menu = document.querySelector('#factoryMenu');
   let name = factory.type;
   name = name.charAt(0).toUpperCase() + name.slice(1);
-  const section = `
-    <div id='factoryMenu_Container' class="factoryMenu_cardBackground_${factory.type}" >
-      <div id="factoryMenu_title">${name}</div>
-      <div id='factoryMenu_settings_points'>3</div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">speed</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_speed_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_speed_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_speed_plus" class="factoryMenu_settings_button">+</div>
-
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">quality</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_quality_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_quality_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_quality_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">low salary</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_salary_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_salary_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_salary_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">storage</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_storage_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_storage_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_storage_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div id="factoryMenu_Button">
-
-      <span style="margin:auto">OK</span>
-
-    </div>
-  `
-
-  menu.insertAdjacentHTML('beforeEnd', section);
-
-
-
   const settings = {
     points: 4,
     speed: 0,
@@ -126,6 +69,89 @@ function showSettingsSetMenu(factory) {
     storage: 0,
     cardUsed: null,
   };
+  const section = `
+    <div class="card" id="factoryMenu_SettingsCard">
+      <div class="card-header">
+          ${name} <span class="card-header-span"> | ${factory.number}</span>
+      </div>
+      <div id="factoryMenu_SettingsCard_Top">
+        <div class="factoryMenu_SettingsCard_Top-resourceLogo resource-bg-color-${factory.product}">
+          <span>${factory.product}</span>
+        </div>
+        <div id="factoryMenu_SettingsCard_Top-pointsCounter">
+          <span style="margin:auto">0<span id="factoryMenu_settings_points">${settings.points}</span></span>
+        </div>
+      </div>
+
+      <div id="factoryMenu_SettingsCard_Middle">
+        <div class="factoryMenu_SettingsCard_SettingsString">
+          <div class="factoryMenu_SettingsCard_SettingsString-title">
+            speed
+          </div>
+          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
+            <div id="factoryMenu_settings_speed_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
+            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
+              <div id="factoryMenu_settings_speed_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
+              </div>
+            </div>
+            <div id="factoryMenu_settings_speed_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
+          </div>
+        </div>
+
+        <div class="factoryMenu_SettingsCard_SettingsString">
+          <div class="factoryMenu_SettingsCard_SettingsString-title">
+            quality
+          </div>
+          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
+            <div id="factoryMenu_settings_quality_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
+            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
+              <div id="factoryMenu_settings_quality_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
+              </div>
+            </div>
+            <div id="factoryMenu_settings_quality_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
+          </div>
+        </div>
+
+        <div class="factoryMenu_SettingsCard_SettingsString">
+          <div class="factoryMenu_SettingsCard_SettingsString-title">
+            low salary
+          </div>
+          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
+            <div id="factoryMenu_settings_salary_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
+            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
+              <div id="factoryMenu_settings_salary_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
+              </div>
+            </div>
+            <div id="factoryMenu_settings_salary_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
+          </div>
+        </div>
+
+        <div class="factoryMenu_SettingsCard_SettingsString">
+          <div class="factoryMenu_SettingsCard_SettingsString-title">
+            storage
+          </div>
+          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
+            <div id="factoryMenu_settings_storage_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
+            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
+              <div id="factoryMenu_settings_storage_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
+              </div>
+            </div>
+            <div id="factoryMenu_settings_storage_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="factoryMenu_SettingsCard_Bottom" id="factoryMenu_Button">
+        <span style="margin:auto">APPLY</span>
+      </div>
+    </div>
+  `
+
+  menu.insertAdjacentHTML('beforeEnd', section);
+
+
+
+
 
 
 
@@ -188,7 +214,6 @@ function showSettingsSetMenu(factory) {
 //полностью фарматирует меню
 function showFactoryMenu(factory){
   factory.clearNotification();
-  console.log(factory)
   const menu = document.querySelector('#factoryMenu');
   menu.innerHTML = '';
   let name = factory.type;
@@ -272,39 +297,6 @@ function showFactoryMenu(factory){
       qualityLine += `<div class="quality-hole"></div>`
     };
   };
-
-  // const section = `
-  //       <div id="factoryMenu_Section">
-  //           <div id="factoryMenu_Card">
-  //               <div id="factoryMenu_Card_Title">${name}</div>
-  //               <div id="factoryMenu_Card_ProgressLine">
-  //                   <div id="factoryMenu_Card_ProgressLine_Title">
-  //                     Progress
-  //                   </div>
-  //                   <div id="factoryMenu_Card_ProgressLine_Container">
-  //                     ${progressLine}
-  //                   </div>
-  //                   <div id="factoryMenu_Card_ProgressLine_Price">
-  //                     $${factory.settings.stepPrice} per step
-  //                   </div>
-  //               </div>
-  //
-  //
-  //               <div id="factoryMenu_Card_StorageLine">
-  //                   <div id="factoryMenu_Card_StorageLine_Title">
-  //                     Storage
-  //                   </div>
-  //                   <div id="factoryMenu_Card_StorageLine_Container">
-  //                       ${storageLine}
-  //                   </div>
-  //               </div>
-  //               <div id="factoryMenu_Card_TEST"></div>
-  //           </div>
-  //           ${actionButtonLine ? actionButtonLine : ''}
-  //       </div>
-  //
-  //
-  // `;
 
   const section = `
     <div id="factoryMenu_Section">
