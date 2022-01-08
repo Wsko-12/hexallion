@@ -20,6 +20,7 @@ class Factory {
     // }
     this.id = properties.id;
     this.type = properties.building;
+    this.number = properties.number;
     this.fieldCeil = MAIN.game.data.map[properties.ceilIndex.z][properties.ceilIndex.x];
     this.settingsSetted = false;
     this.sector = properties.sector;

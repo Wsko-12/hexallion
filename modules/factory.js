@@ -11,6 +11,7 @@ const factoriesConfig = {
     //полная цена производства
     price:COASTS.resources.wood.productionPrice,
     resource:'wood',
+    count:10,
   },
 
   waterStation: {
@@ -21,6 +22,7 @@ const factoriesConfig = {
     //полная цена производства
     price:COASTS.resources.water.productionPrice,
     resource:'water',
+    count:12,
   },
 
   sandMine: {
@@ -31,6 +33,7 @@ const factoriesConfig = {
     //полная цена производства
     price:COASTS.resources.sand.productionPrice,
     resource:'sand',
+    count:14,
   },
 
   steelMill: {
@@ -41,6 +44,7 @@ const factoriesConfig = {
     //полная цена производства
     price:COASTS.resources.steel.productionPrice,
     resource:'steel',
+    count:8,
   },
 
   goldMill: {
@@ -51,6 +55,7 @@ const factoriesConfig = {
     //полная цена производства
     price:COASTS.resources.gold.productionPrice,
     resource:'gold',
+    count:4,
   },
 };
 module.exports = factoriesConfig;

@@ -188,6 +188,7 @@ function showSettingsSetMenu(factory) {
 //полностью фарматирует меню
 function showFactoryMenu(factory){
   factory.clearNotification();
+  console.log(factory)
   const menu = document.querySelector('#factoryMenu');
   menu.innerHTML = '';
   let name = factory.type;
@@ -199,19 +200,24 @@ function showFactoryMenu(factory){
   factory.settings.productLine.forEach((ceil,i) => {
     let line = '';
     if(ceil === 0){
-       line = `<div id="factoryMenu_Card_ProgressLine_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Empty"></div>`;
+       line = `<div class="resource-hole"></div>`;
     }else{
-      line = `<div id="factoryMenu_Card_ProgressLine_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Gag factoryMenu_Card_Full_${factory.settings.quality}">
-          <div class="factoryMenu_Card_Full_Image factoryMenu_Card_Ceil_${factory.settings.resource}"></div>
-      </div>`;
+      line = `<div class="resource-gag resource-bg-color-${factory.settings.resource}">
+                <div class="resource-gag-title">
+                  ${factory.settings.resource}
+                </div>
+                <div class="resource-gag-quality">
+                  Q${factory.settings.quality}
+                </div>
+              </div>`;
     };
     progressLine += line;
   });
 
-  //забить дополнительно промежутки (можно закоментить)
+  //забить дополнительно промежутки
   const progressGags = factory.settings.stockSpeed - factory.settings.productLine.length;
   for(let i=0;i<progressGags;i++){
-    const line = `<div class="factoryMenu_Card_Ceil factoryMenu_Card_Gag"></div>`;
+    const line = `<div class="resource-gag"></div>`;
     progressLine += line
   };
   /* ***Заполняем прогресс*** */
@@ -221,19 +227,23 @@ function showFactoryMenu(factory){
   factory.settings.storage.forEach((ceil,i) => {
     let line = '';
     if(ceil === 0){
-       line = `<div id="factoryMenu_Card_Storage_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Empty"></div>`;
+       line = `<div class="resource-hole"></div>`;
     }else{
-      line = `
-      <div id="factoryMenu_Card_Storage_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Gag factoryMenu_Card_Full_${factory.settings.quality}">
-          <div class="factoryMenu_Card_Full_Image factoryMenu_Card_Ceil_${factory.settings.resource}"></div>
-      </div>`;
+      line = `<div class="resource-gag resource-bg-color-${factory.settings.resource}">
+                <div class="resource-gag-title">
+                  ${factory.settings.resource}
+                </div>
+                <div class="resource-gag-quality">
+                  Q${factory.settings.quality}
+                </div>
+              </div>`;
     };
     storageLine += line;
   });
-  //забить дополнительно промежутки (можно закоментить)
+  //забить дополнительно промежутки
   const storageGags = 3 - (factory.settings.storage.length - factory.settings.stockStorage);
   for(let i=0;i<storageGags;i++){
-    const line = `<div class="factoryMenu_Card_Ceil factoryMenu_Card_Gag"></div>`;
+    const line = `<div class="resource-gag"></div>`;
     storageLine += line;
   };
 
@@ -253,35 +263,93 @@ function showFactoryMenu(factory){
 
   };
 
+  /* Заполняем качество */
+  let qualityLine = '';
+  for(let i = 0; i<3;i++){
+    if(i<factory.settings.quality){
+      qualityLine += `<div class="quality-gag"></div>`
+    }else{
+      qualityLine += `<div class="quality-hole"></div>`
+    };
+  };
+
+  // const section = `
+  //       <div id="factoryMenu_Section">
+  //           <div id="factoryMenu_Card">
+  //               <div id="factoryMenu_Card_Title">${name}</div>
+  //               <div id="factoryMenu_Card_ProgressLine">
+  //                   <div id="factoryMenu_Card_ProgressLine_Title">
+  //                     Progress
+  //                   </div>
+  //                   <div id="factoryMenu_Card_ProgressLine_Container">
+  //                     ${progressLine}
+  //                   </div>
+  //                   <div id="factoryMenu_Card_ProgressLine_Price">
+  //                     $${factory.settings.stepPrice} per step
+  //                   </div>
+  //               </div>
+  //
+  //
+  //               <div id="factoryMenu_Card_StorageLine">
+  //                   <div id="factoryMenu_Card_StorageLine_Title">
+  //                     Storage
+  //                   </div>
+  //                   <div id="factoryMenu_Card_StorageLine_Container">
+  //                       ${storageLine}
+  //                   </div>
+  //               </div>
+  //               <div id="factoryMenu_Card_TEST"></div>
+  //           </div>
+  //           ${actionButtonLine ? actionButtonLine : ''}
+  //       </div>
+  //
+  //
+  // `;
+
   const section = `
-        <div id="factoryMenu_Section">
-            <div id="factoryMenu_Card">
-                <div id="factoryMenu_Card_Title">${name}</div>
-                <div id="factoryMenu_Card_ProgressLine">
-                    <div id="factoryMenu_Card_ProgressLine_Title">
-                      Progress
-                    </div>
-                    <div id="factoryMenu_Card_ProgressLine_Container">
-                      ${progressLine}
-                    </div>
-                    <div id="factoryMenu_Card_ProgressLine_Price">
-                      $${factory.settings.stepPrice} per step
-                    </div>
-                </div>
-
-
-                <div id="factoryMenu_Card_StorageLine">
-                    <div id="factoryMenu_Card_StorageLine_Title">
-                      Storage
-                    </div>
-                    <div id="factoryMenu_Card_StorageLine_Container">
-                        ${storageLine}
-                    </div>
-                </div>
-                <div id="factoryMenu_Card_TEST"></div>
+    <div id="factoryMenu_Section">
+        <div id="factoryMenu_Card" class="card">
+          <div class="card-header">
+              ${name} <span class="card-header-span"> | ${factory.number}</span>
+          </div>
+          <div id="factoryMenu_Card_Top">
+            <div class="factoryMenu_Card_Titles">
+              PRODUCTION
             </div>
-            ${actionButtonLine ? actionButtonLine : ''}
+            <div id="factoryMenu_Card_ProductionPart_Container">
+              ${progressLine}
+
+            </div>
+          </div>
+          <div id="factoryMenu_Card_Bottom">
+            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.resource}">
+              <div class="factoryMenu_Card_ResourseLogo-title">
+                ${factory.settings.resource}
+              </div>
+              <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
+                <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">Q</span>
+                ${qualityLine}
+              </div>
+
+            </div>
+            <div id="factoryMenu_Card_StoragePart">
+              <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
+                STORAGE
+              </div>
+
+              <div class="factoryMenu_Card_StoragePart-storageContainer">
+                ${storageLine}
+              </div>
+
+              <div class="factoryMenu_Card_StoragePart-price">
+                $${factory.settings.stepPrice}/step
+              </div>
+
+            </div>
+          </div>
         </div>
+        ${actionButtonLine ? actionButtonLine : ''}
+    </div>
 
 
   `;

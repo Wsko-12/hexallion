@@ -201,7 +201,13 @@ class FieldCeil {
           //nearCeil for this building
           thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
             if (buildNearCeil == nearCeil || buildNearCeil === 'all') {
-              buttons.push(building);
+              if(building === 'road' || building === 'bridge'){
+                buttons.push(building);
+              }else{
+                if(MAIN.game.data.commonData.factoriesCount[building] > 0){
+                  buttons.push(building);
+                };
+              };
             };
           });
         };

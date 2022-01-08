@@ -342,7 +342,14 @@ class GAME {
       all: {},
     };
 
+    this.factoriesCount = {
 
+    };
+    for(let factory in FACTORIES){
+      this.factoriesCount[factory] = FACTORIES[factory].count;
+    };
+
+    console.log(this);
 
   };
 
@@ -387,6 +394,7 @@ class GAME {
         tickTime: this.tickTime,
         members: this.members,
         playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff'],
+        factoriesCount:this.factoriesCount,
       },
     };
     return data;
@@ -440,6 +448,7 @@ class GAME {
         building: data.build.building,
         ceilIndex: data.build.ceilIndex,
         sector: data.build.sector,
+        number:this.factoriesCount[data.build.building] + 1,
       };
       this.players[data.player].emit('GAME_buildFactory', factoryClientData);
     };
@@ -1366,10 +1375,24 @@ io.on('connection', function(socket) {
           if (game.players[data.player]) {
             const player = game.players[data.player];
             if(!player.gameOver){
-              const cost = COASTS.buildings[data.build.building] * (-1);
-              player.changeBalance(cost);
-              player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
-              game.playerBuilding(data);
+              //если это какая-то фабрика
+              if(game.factoriesCount[data.build.building]){
+                if(game.factoriesCount[data.build.building] > 0){
+                  game.factoriesCount[data.build.building] -= 1;
+                  const cost = COASTS.buildings[data.build.building] * (-1);
+                  player.changeBalance(cost);
+                  player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
+                  game.playerBuilding(data);
+                };
+
+              }else{
+                //если это дорога и тд, чему счет не ведется
+                const cost = COASTS.buildings[data.build.building] * (-1);
+                player.changeBalance(cost);
+                player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
+                game.playerBuilding(data);
+              };
+
             };
           };
 

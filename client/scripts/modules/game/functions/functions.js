@@ -56,7 +56,7 @@ const FUNCTIONS = {
         sector: 5
       }
     */
-
+    
     const factory = new Factory(configs);
     MAIN.game.data.playerData.factories[factory.id] = factory;
   },

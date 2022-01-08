@@ -114,6 +114,10 @@ function init() {
       */
 
       MAIN.game.functions.applyBuilding(data);
+      //отбовляем в общем числе построек
+      if(MAIN.game.data.commonData.factoriesCount[data.build.building]){
+        MAIN.game.data.commonData.factoriesCount[data.build.building] -= 1;
+      };
     });
 
     //происходит когда игрок выбрал себе кредит
