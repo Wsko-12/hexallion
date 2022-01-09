@@ -61,7 +61,7 @@ function init() {
   RENDERER.camera.lookAt(0, 0, 0);
   RENDERER.scene = new THREE.Scene();
   // RENDERER.controls = new OrbitControls(RENDERER.camera, RENDERER.renderer.domElement);
-  RENDERER.stats = new Stats();
+  // RENDERER.stats = new Stats();
 
 
 
@@ -468,7 +468,7 @@ function init() {
 
 
 
-  document.body.appendChild(RENDERER.stats.dom);
+  // document.body.appendChild(RENDERER.stats.dom);
   window.addEventListener("resize", setSize);
   setSize();
 };
@@ -520,7 +520,7 @@ function render() {
 
 
   // RENDERER.controls.update();
-  RENDERER.stats.update();
+  // RENDERER.stats.update();
   // RENDERER.renderer.render(RENDERER.scene, RENDERER.camera);
   RENDERER.composer.render();
 

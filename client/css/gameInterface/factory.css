@@ -65,12 +65,12 @@
 
 #factoryMenu_ActionButton{
   width: 125px;
-  height: 60px;
+  height: 40px;
   margin:auto;
   display: flex;
   margin-top:10px;
-  background-color:#cbcbcb;
-  border-radius: 10px;
+  /* background-color:#cbcbcb;
+  border-radius: 10px; */
 
     /* 3D */
   transform: translateX(-100%)rotateY(10deg);
@@ -78,6 +78,8 @@
 
 /* 3D */
 #factoryMenu_ActionButton:hover {
+  color:white;
+  background-color: #303030;
   transform: translateX(-102%)rotateY(15deg);
 }
 .factoryMenu_Card_Titles{

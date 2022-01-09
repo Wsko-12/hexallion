@@ -276,7 +276,7 @@ function showFactoryMenu(factory){
 
   if(factory.settings.storage.includes(1) && !MAIN.game.data.playerData.gameOver){
     actionButtonLine = `
-      <div id='factoryMenu_ActionButton'>
+      <div id='factoryMenu_ActionButton' class="card">
         <span style="margin:auto"> ${MAIN.interface.lang.factory.actionButton[MAIN.interface.lang.flag]}</span>
       </div>
     `;

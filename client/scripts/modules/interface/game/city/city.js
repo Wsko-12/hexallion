@@ -101,7 +101,7 @@ function openMenu(city){
   const card = `
 
     <div class="card-header">
-      city <span class="card-header-span"> | 0${cities.indexOf(city.name) + 1} </span>
+      city <span class="card-header-span"> | ${city.name} </span>
     </div>
     <div class="cityCard-title">
       ${city.name}
