@@ -30,12 +30,12 @@ const CREDIT = {
       <section id="chooseCreditMenuSection">
         <div id="chooseCreditMenuContainer">
           <div class="CreditMenu_Title">
-            Выберите ваш кредит
+            ${MAIN.interface.lang.credit.menuTitle[MAIN.interface.lang.flag]}
           </div>
           <div id="CreditMenu_List">
           </div>
           <div id="CreditMenu_Button">
-            <span style="margin:auto">Начать!</span>
+            <span style="margin:auto">${MAIN.interface.lang.credit.startButton[MAIN.interface.lang.flag]}</span>
           </div>
         </div>
       </section>
@@ -74,7 +74,7 @@ const CREDIT = {
         const card = `
         <div class="CreditMenu_Card card" id="credit_${credit}">
           <div class="card-header">
-              credit <span class="card-header-span creditColor-${credit}"> | ${thisCredit.title} </span>
+              loan <span class="card-header-span creditColor-${credit}"> | ${thisCredit.title} </span>
           </div>
 
           <div class="CreditMenu_Card_title creditColor-${credit}">
@@ -86,13 +86,13 @@ const CREDIT = {
           </div>
 
           <div class="CreditMenu_Card_line">
-            Процент: <span class="CreditMenu_Card_line-span">${thisCredit.procent}</span>
+            ${MAIN.interface.lang.credit.procent[MAIN.interface.lang.flag]}: <span class="CreditMenu_Card_line-span">${thisCredit.procent}</span>
           </div>
           <div class="CreditMenu_Card_line">
-            Платежи: <span class="CreditMenu_Card_line-span">${thisCredit.pays}</span>
+            ${MAIN.interface.lang.credit.payments[MAIN.interface.lang.flag]}: <span class="CreditMenu_Card_line-span">${thisCredit.pays}</span>
           </div>
           <div class="CreditMenu_Card_line">
-            Отсрочка: <span class="CreditMenu_Card_line-span">${thisCredit.deferment}</span>
+            ${MAIN.interface.lang.credit.deferral[MAIN.interface.lang.flag]}: <span class="CreditMenu_Card_line-span">${thisCredit.deferment}</span>
           </div>
         </div>
         `;

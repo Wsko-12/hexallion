@@ -8,6 +8,9 @@ import {
 import {
   GAME_INTERFACE
 } from './game/gameInterface.js';
+import {
+  LANG
+} from './game/language.js';
 
 
 //плавающая функция, которая можно включать и она будет вызываться при даблклике на экране
@@ -323,6 +326,7 @@ function checkEvents() {
 
 
 const INTERFACE = {
+  lang:LANG,
   deleteTouches,
   returnTouches,
   init,
