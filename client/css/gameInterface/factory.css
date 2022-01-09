@@ -81,6 +81,7 @@
   transform: translateX(-102%)rotateY(15deg);
 }
 .factoryMenu_Card_Titles{
+  text-transform: uppercase;
   font-size: 18px;
   font-weight: lighter;
   margin-bottom: 5px;

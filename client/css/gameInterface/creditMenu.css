@@ -1,102 +1,133 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 
 #chooseCreditMenuSection{
-  position: fixed;
-  left: 0;
-  top: 0;
   width: 100vw;
   height: 100vh;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: 'Roboto', sans-serif;
-    overflow: hidden;
+  position: fixed;
+  overflow: hidden;
   z-index: 100;
+  perspective: 1000px;
+  -webkit-perspective:1000px;
+  font-family: 'Roboto';
+
+  background-color: rgba(0,0,0,0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 #chooseCreditMenuContainer{
-  width: 90vw;
-  height: 400px;
   position: fixed;
+  width: 600px;
+  height: 310px;
   left: 50%;
-  top:50%;
-  transform: translate(-50%,-50%);
-  background-color: rgba(0,0,0,0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  top: 50%;
+  transform: translate(-50%);
   overflow: hidden;
-  border-radius: 10px;
+  font-family: sans-serif;
+  transform: translate(-50%,-50%) rotateX(10deg);
 }
-#chooseCreditMenuSection_title{
+.CreditMenu_Title{
   width: 100%;
-  height: 10%;
+  height: 30px;
   text-align: center;
-  font-size: 1.5em;
   font-weight: bold;
-  color: white;
-  text-shadow: 0px 0px 1px black;
+  color:white;
+  text-shadow: 0px 0px 2px black;
+  font-size: 20px;
 }
-#creditCardsContainer{
-  width: 100%;
-  height: 80%;
+
+
+#CreditMenu_Button{
+  width: 20%;
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-  justify-content: space-evenly;
+  margin: auto;
+  margin-top: 10px;
+  height: 30px;
+  background-color: #EAEAEA;
+  text-align: center;
+  font-weight: bold;
+  color:#303030;
+  /* text-shadow: 0px 0px 2px black; */
+  font-size: 20px;
+}
+
+#CreditMenu_Button:hover{
+  background-color: #303030;
+  color:white;
 
 }
-#chooseCreditMenuSection_footer{
+
+#CreditMenu_List{
   width: 100%;
-  height: 10%;
-  background-color: red;
-  text-align: center;
-  color: white;
-  text-shadow: 0px 0px 1px black;
-  background-color: rgba(0,0,0,0.4);
-  padding-top: 0.5%;
+  height: 240px;
+  overflow-x: scroll;
+  display: flex;
+  align-items: center;
 }
-.creditCard{
-  width: 16%;
-  height: 90%;
-  margin: 1%;
-  background-color: rgba(0,0,0,0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  flex: 0 0 auto;
-  color: white;
-  text-shadow: 0px 0px 1px black;
-  padding-top: 5%;
-  border-radius: 5%;
+
+.CreditMenu_Card{
+  width: 140px;
+  height: 200px;
+  flex:0 0 auto;
+  margin: 0px 20px;
 }
 .choosenCredit{
-  border: 2px solid white;
-}
-.creditCard_title{
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
-    width: 90%;
-    height: 20%;
-    margin: auto;
-}
-.creditCard_line{
-  font-size: 0.8em;
-  text-align: left;
-  margin: auto;
-  width: 90%;
+  border: 5px solid #39c747;
 }
 
-@media only screen and (orientation : landscape) and  (max-device-width : 1024px) {
-  #chooseCreditMenuContainer{
-    width: 90vw;
-    height: 60vh;
-  }
+.CreditMenu_Card_title{
+  width: 100%;
+  height: 65px;
+  text-transform: uppercase;
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: flex-end;
+
+  margin-top: 15px;
+
+  line-height: 80%;
+  /* background-color: #797979; */
+}
+.CreditMenu_Card_amount{
+  text-align: right;
+  font-weight: 700;
+  color:#303030;
+  font-size: 30px;
+  line-height: 80%;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
-@media only screen and (orientation : portrait) and  (max-device-width : 1024px) {
-  #chooseCreditMenuContainer{
-    width: 80vw;
-    height: 15vh;
-  }
+.CreditMenu_Card_line{
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 100;
 }
+.CreditMenu_Card_line-span{
+  font-weight: normal;
+}
+
+
+
+
+
+
+
+
+
+
+.creditColor-basic{
+  color:#C4C4C4;
+
+}
+.creditColor-longPause{
+  color:#539D5A;
+}
+.creditColor-huge{
+  color:#DDA653;
+}
+
+/*
+width: 220px;
+height: 330px; */

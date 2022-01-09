@@ -86,7 +86,7 @@ function showSettingsSetMenu(factory) {
       <div id="factoryMenu_SettingsCard_Middle">
         <div class="factoryMenu_SettingsCard_SettingsString">
           <div class="factoryMenu_SettingsCard_SettingsString-title">
-            speed
+            скорость
           </div>
           <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
             <div id="factoryMenu_settings_speed_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
@@ -100,7 +100,7 @@ function showSettingsSetMenu(factory) {
 
         <div class="factoryMenu_SettingsCard_SettingsString">
           <div class="factoryMenu_SettingsCard_SettingsString-title">
-            quality
+            качество
           </div>
           <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
             <div id="factoryMenu_settings_quality_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
@@ -114,7 +114,7 @@ function showSettingsSetMenu(factory) {
 
         <div class="factoryMenu_SettingsCard_SettingsString">
           <div class="factoryMenu_SettingsCard_SettingsString-title">
-            low salary
+            низкие зарплаты
           </div>
           <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
             <div id="factoryMenu_settings_salary_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
@@ -128,7 +128,7 @@ function showSettingsSetMenu(factory) {
 
         <div class="factoryMenu_SettingsCard_SettingsString">
           <div class="factoryMenu_SettingsCard_SettingsString-title">
-            storage
+            склад
           </div>
           <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
             <div id="factoryMenu_settings_storage_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
@@ -142,7 +142,7 @@ function showSettingsSetMenu(factory) {
       </div>
 
       <div class="factoryMenu_SettingsCard_Bottom" id="factoryMenu_Button">
-        <span style="margin:auto">APPLY</span>
+        <span style="margin:auto">Запустить</span>
       </div>
     </div>
   `
@@ -277,7 +277,7 @@ function showFactoryMenu(factory){
   if(factory.settings.storage.includes(1) && !MAIN.game.data.playerData.gameOver){
     actionButtonLine = `
       <div id='factoryMenu_ActionButton'>
-        <span style="margin:auto">Send truck</span>
+        <span style="margin:auto">Отпаравить</span>
       </div>
     `;
     if(MAIN.game.data.commonData.turnBasedGame){
@@ -306,7 +306,7 @@ function showFactoryMenu(factory){
           </div>
           <div id="factoryMenu_Card_Top">
             <div class="factoryMenu_Card_Titles">
-              PRODUCTION
+              производство
             </div>
             <div id="factoryMenu_Card_ProductionPart_Container">
               ${progressLine}
@@ -326,7 +326,7 @@ function showFactoryMenu(factory){
             </div>
             <div id="factoryMenu_Card_StoragePart">
               <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
-                STORAGE
+                склад
               </div>
 
               <div class="factoryMenu_Card_StoragePart-storageContainer">
@@ -334,7 +334,7 @@ function showFactoryMenu(factory){
               </div>
 
               <div class="factoryMenu_Card_StoragePart-price">
-                $${factory.settings.stepPrice}/step
+                $${factory.settings.stepPrice}/ход
               </div>
 
             </div>

@@ -6,6 +6,8 @@ const DB = require('./modules/db.js');
 const COASTS = require('./modules/coasts.js');
 const FACTORIES = require('./modules/factory.js');
 const MAP_CONFIGS = require('./modules/mapConfigs.js');
+const CREDITS = require('./modules/credits.js');
+
 
 
 http.listen(PORT, '0.0.0.0', () => {
@@ -909,11 +911,12 @@ class FACTORY {
 class CREDIT {
   constructor(properties) {
     this.player = properties.player;
-    this.amount = properties.amount;
-    this.paysParts = properties.pays;
-    this.pays = properties.pays;
-    this.deferment = properties.deferment;
-    this.procent = properties.procent;
+    const creditName = properties.name;
+    this.amount = CREDITS[creditName].amount;
+    this.paysParts = CREDITS[creditName].pays;
+    this.pays = CREDITS[creditName].pays;
+    this.deferment = CREDITS[creditName].deferment;
+    this.procent = CREDITS[creditName].procent;
   };
   turn() {
     const that = this;
@@ -961,17 +964,20 @@ class PLAYER {
       amount,
     });
   };
-  applyCredit(credit) {
-    credit.player = this;
-    this.balance = credit.amount;
-    this.credit = new CREDIT(credit);
-
-    const data = {
-      amount: credit.amount,
-      pays: credit.pays,
-      deferment: credit.deferment,
-      procent: credit.procent,
+  applyCredit(creditName) {
+    const credit = {
+      name:creditName,
     };
+    credit.player = this;
+
+    this.credit = new CREDIT(credit);
+    this.balance = this.credit.amount;
+
+    const data = {};
+    data.amount = this.credit.amount;
+    data.pays = this.credit.pays;
+    data.deferment = this.credit.deferment;
+    data.procent = this.credit.procent;
     this.emit('GAME_applyCredit', data);
   };
   changeBalance(value) {
@@ -1319,22 +1325,24 @@ io.on('connection', function(socket) {
     //просто баг фикс, чтобы он два раза не выбрал кредит
     if (GAMES[data.gameID].queue.indexOf(data.player) === -1) {
       //тут надо сделать античит по кредитам
-      GAMES[data.gameID].players[data.player].applyCredit(data.credit);
-      GAMES[data.gameID].queue.push(data.player);
-      //если пошаговая игра, то высылаем ходы
-      if (GAMES[data.gameID].turnBasedGame) {
-        //если это первый игрок в очереди, то отсылаем ему ход
-        if (GAMES[data.gameID].queue.length === 1) {
-          GAMES[data.gameID].nextTurn();
-        };
-        //если первый игрок уже проиграл или вышел и игра стала на паузу, а этот только выбрал кредит то чекаем следующий ход
-        if (GAMES[data.gameID].turnsPaused) {
-          GAMES[data.gameID].nextTurn();
-        };
-      } else {
+      if(CREDITS[data.credit]){
+        GAMES[data.gameID].players[data.player].applyCredit(data.credit);
+        GAMES[data.gameID].queue.push(data.player);
+        //если пошаговая игра, то высылаем ходы
+        if (GAMES[data.gameID].turnBasedGame) {
+          //если это первый игрок в очереди, то отсылаем ему ход
+          if (GAMES[data.gameID].queue.length === 1) {
+            GAMES[data.gameID].nextTurn();
+          };
+          //если первый игрок уже проиграл или вышел и игра стала на паузу, а этот только выбрал кредит то чекаем следующий ход
+          if (GAMES[data.gameID].turnsPaused) {
+            GAMES[data.gameID].nextTurn();
+          };
+        } else {
 
-        //если не пошаговая, то начинаем тики
-        GAMES[data.gameID].tick();
+          //если не пошаговая, то начинаем тики
+          GAMES[data.gameID].tick();
+        };
       };
     };
 

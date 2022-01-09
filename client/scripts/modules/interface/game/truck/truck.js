@@ -13,7 +13,7 @@ function init(){
 
     <div id="truckNotifications"></div>
     <div id="truckCard" class="card trucksMenu-card"></div>
-    <div id="truckCancelButton" > <span style="margin:auto">cancel</span> </div>
+    <div id="truckCancelButton" > <span style="margin:auto">Отмена</span> </div>
     <div id="truckDice">
       <div id="truckDiceInner">
       </div>
@@ -77,7 +77,7 @@ function openMenu(factory){
         </div>
 
         <div class="trucksMenu-card-button" id="truckMenu_card_buyButton">
-          <span class="trucksMenu-card-button-span">buy<span>
+          <span class="trucksMenu-card-button-span">купить<span>
         </div>
       </div>
 
@@ -121,7 +121,7 @@ function openMenu(factory){
           </div>
 
           <div class="trucksMenu-card-button" id="truckMenu_card_button_${thisTruck.id}">
-            <span class="trucksMenu-card-button-span">${thisTruck.resource?'show':'load'}<span>
+            <span class="trucksMenu-card-button-span">${thisTruck.resource?'показать':'загрузить'}<span>
           </div>
         </div>
       `
@@ -295,7 +295,7 @@ function openCard(truck){
   if(!truck.sended && truck.ready){
     const button = `
       <div class="trucksMenu-card-button" id="truckCard_button">
-        <span class="trucksMenu-card-button-span">send<span>
+        <span class="trucksMenu-card-button-span">отправить<span>
       </div>
     `
     truckCard.insertAdjacentHTML('beforeEnd',button);

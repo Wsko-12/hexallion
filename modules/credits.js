@@ -1,16 +1,6 @@
-
-
-//Этот кофиг по всем постройкам что и рядом с чем можно строить
-import {
-  MAIN
-} from '../../../../main.js';
-
-
-
-const CREDITS = {
+const credits = {
   basic:{
     title:'basic',
-
     //сколько дадут денег
     amount:120000,
 
@@ -37,7 +27,6 @@ const CREDITS = {
     procent:18,
 
   },
-
   huge:{
     title:'huge',
 
@@ -53,6 +42,4 @@ const CREDITS = {
 
   },
 };
-export {
-  CREDITS
-};
+module.exports = credits;
