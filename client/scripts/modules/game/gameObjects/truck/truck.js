@@ -229,7 +229,7 @@ class Truck {
 
   moveAlongWay(data) {
     //указывает, что последняя точка является городом, в который надо продать ресурс
-    let lastPointIsNeededCity = false;
+    // let lastPointIsNeededCity = false;
     let city = null;
     //указываем, что грузовик уехал
     MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
@@ -243,12 +243,12 @@ class Truck {
       //освобождаем ее
       MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = false;
 
-      //если этот город тотт, что нужен был игроку
-      if(data.playerMoveToCity){
-        if(MAIN.game.data.map[lastPoint.z][lastPoint.x].type === data.playerMoveToCity){
-          lastPointIsNeededCity = true;
-        };
-      };
+      // //если этот город тотт, что нужен был игроку
+      // if(data.playerMoveToCity){
+      //   if(MAIN.game.data.map[lastPoint.z][lastPoint.x].type === data.playerMoveToCity){
+      //     lastPointIsNeededCity = true;
+      //   };
+      // };
 
     };
 
@@ -444,14 +444,13 @@ class Truck {
             };
           }, 25)
         }else{
-          if(lastPointIsNeededCity){
-
+          if(data.selling){
             if(that.player === MAIN.game.data.playerData.login){
               const sendData = {
                 gameID:MAIN.game.data.commonData.id,
                 player:that.player,
                 truckID:that.id,
-                city:data.playerMoveToCity,
+                city:data.city,
               };
               MAIN.socket.emit('GAME_resource_sell',sendData)
             };

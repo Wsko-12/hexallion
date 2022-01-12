@@ -1081,7 +1081,7 @@ class TRUCK {
   send(data) {
     //если игрок направляется в город
     const lastPoin = data.path[data.path.length - 1];
-    let city = null
+    let city = null;
     if (this.game.cityMapNames[lastPoin.z][lastPoin.x] != 0) {
       city = this.game.cityMapNames[lastPoin.z][lastPoin.x];
     };
@@ -1089,9 +1089,13 @@ class TRUCK {
     //здесь можно делать проверку на фабрику
     const sendData = {
       truckID: this.id,
-      playerMoveToCity: data.playerMoveToCity,
+
       path: data.path,
+
+      selling:data.selling,
+      city:data.city,//only if selling == true;
     };
+
 
     //если вдруг игрок занял
     if (this.game.transportMap[lastPoin.z][lastPoin.x] === 1) {

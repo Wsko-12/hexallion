@@ -532,7 +532,11 @@ function render() {
      if(MAIN.interface.game.city.priceShow){
        MAIN.interface.game.city.updatePricePosition();
      };
-  }
+
+     if(MAIN.interface.game.path.buttonsShowed){
+       MAIN.interface.game.path.moveButtons();
+     };
+  };
 
   if(MAIN.game.data.playerData){
     for(let factory in MAIN.game.data.playerData.factories){
@@ -544,6 +548,9 @@ function render() {
       thisTruck.updateNotificationPosition();
     };
   };
+
+
+
 
 
 

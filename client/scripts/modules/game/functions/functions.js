@@ -56,7 +56,7 @@ const FUNCTIONS = {
         sector: 5
       }
     */
-    
+
     const factory = new Factory(configs);
     MAIN.game.data.playerData.factories[factory.id] = factory;
   },
@@ -134,7 +134,6 @@ const FUNCTIONS = {
 
   findPath(value, truck, fieldCeil) {
 
-
     const start = MAIN.game.data.map[truck.place.z][truck.place.x];
     const finish = fieldCeil;
 
@@ -151,7 +150,8 @@ const FUNCTIONS = {
               truck: truck,
               city: finish.type,
           };
-          MAIN.interface.game.path.showSellResourceButton(sendData);
+          MAIN.interface.game.path.showOnlySellButton(sendData);
+          MAIN.game.scene.path.clear();
         };
       };
     } else {
@@ -490,10 +490,10 @@ const FUNCTIONS = {
 
 
 
-      let playerMoveToCity = false;
-      if(shortest.path[shortest.path.length - 1].cityCeil){
-        playerMoveToCity = shortest.path[shortest.path.length - 1].type;
-      };
+      // let playerMoveToCity = false;
+      // if(shortest.path[shortest.path.length - 1].cityCeil){
+      //   playerMoveToCity = shortest.path[shortest.path.length - 1].type;
+      // };
 
       if (shortest.path.length > value + 1) {
         shortest.path.length = value + 1;
@@ -502,11 +502,11 @@ const FUNCTIONS = {
       const sendData = {
         truck: truck,
         path: shortest.path,
-        playerMoveToCity:playerMoveToCity,
+        // playerMoveToCity:playerMoveToCity,
       };
 
       MAIN.game.scene.path.show(shortest.path);
-      MAIN.interface.game.path.showSendButton(sendData);
+      MAIN.interface.game.path.showActionsButton(sendData);
     };
 
 
