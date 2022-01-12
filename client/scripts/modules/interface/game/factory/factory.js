@@ -57,7 +57,6 @@ function updateMenu(factory) {
 
 function showSettingsSetMenu(factory) {
   nowShowedFactoryMenu = null;
-  console.log(factory);
   const menu = document.querySelector('#factoryMenu');
   let name = factory.type;
   name = name.charAt(0).toUpperCase() + name.slice(1);

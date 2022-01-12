@@ -11,7 +11,6 @@ import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
 
 class Factory {
   constructor(properties) {
-    console.log(properties)
     // properties = {
     //   id: "sawmill_dVXiJM"
     //   building: "sawmill"
@@ -50,7 +49,7 @@ class Factory {
 
   setSettings(){
     //интерфейс по настройке фабрики
-    console.log('set settings',this);
+    // console.log('set settings',this);
   };
 
   onClick(){
