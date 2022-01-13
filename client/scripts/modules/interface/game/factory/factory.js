@@ -297,8 +297,6 @@ function showFactoryMenu(factory){
     };
   };
 
-
-  console.log(factory)
   let lowSalaryLine = '';
   for(let i = 0; i<3;i++){
     if(i<factory.settings.salary){

@@ -979,6 +979,7 @@ class PLAYER {
     data.pays = this.credit.pays;
     data.deferment = this.credit.deferment;
     data.procent = this.credit.procent;
+    data.creditName = creditName;
     this.emit('GAME_applyCredit', data);
   };
   changeBalance(value) {

@@ -106,3 +106,199 @@
     height:50vh;
   }
 }
+
+
+
+
+
+
+.balanceMenu-creditCard-hole{
+  height: 24px;
+  width: 12px;
+  border-radius: 18px;
+
+  background-color: #E1E1E1;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  flex:0 0 auto;
+  margin-right: 3px;
+}
+.balanceMenu-creditCard-gap{
+  height: 22px;
+  width: 12px;
+  border-radius: 18px;
+  flex: 0 0 auto;
+  font-weight: normal;
+  margin-right: 3px;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25);
+  background-color: white;
+}
+
+
+
+#balanceMenu_Container{
+  pointer-events: auto;
+  width: 260px;
+  height: 400px;
+  position: fixed;
+  left: 50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  padding: 5px;
+}
+
+
+#balanceMenu_CreditCard{
+  width: 250px;
+  height: 175px;
+  margin: auto;
+  margin-bottom:5px;
+}
+
+#balanceMenu_Container_Amount{
+  width: 100%;
+  height: 35px;
+  font-size: 35px;
+  font-weight: bold;
+  letter-spacing: -0.05em;
+  text-align: right;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: -15px;
+}
+.balanceMenu_Container_Titles{
+  height: 12px;
+  font-size: 12px;
+  font-weight: 200;
+  color:#303030;
+  font-family: 'Roboto Condensed';
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+#balanceMenu_Container_DeferalPart{
+  width: 100%;
+  height: 65px;
+  margin-top: -10px;
+
+}
+
+#balanceMenu_Container_PaymentsPart{
+  width: 100%;
+  height: 65px;
+
+}
+
+#balanceMenu_Container_PaymentsPart_Header{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.balanceMenu_Container_Titles_Payment{
+  font-size: 15px;
+  font-weight: 500;
+  color:#e72c2c;
+  letter-spacing: -0.05em;
+}
+
+
+#balanceMenu_Container_Deferral_Container{
+  width: 100%;
+  height: 52px;
+  display: flex;
+  flex-wrap: wrap;
+}
+#balanceMenu_Container_Payments_Container{
+  width: 100%;
+  height: 52px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.balanceMenu-creditCard-DeferralHole{
+}
+.balanceMenu-creditCard-PaymentHole{
+  background-color: #ff8686;
+}
+
+
+
+#balanceMenu_balanceHistory{
+  width: 250px;
+  height: 210px;
+}
+#balanceMenu_amount{
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 24px;
+  letter-spacing: -0.075em;
+}
+.balanceMenu_balanceHeader{
+  font-family: 'Roboto Condensed';
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+.balanceMenu_balanceHeader_Left{
+  width: 180px;
+  height: 50px;
+}
+.balanceMenu_balanceHeader_Right{
+  background-color: #303030;
+  width: 50px;
+  height: 50px;
+}
+.balanceMenu_balanceHeader_Loan{
+  padding: 0px 4px;
+  color:white;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: #C73636;
+  height: 20px;
+  align-items: center;
+}
+.balanceMenu_balanceHeader_Titles{
+  font-size: 12px;
+  color:#303030;
+
+}
+
+.balanceMenu_balanceHeader_Tax-top{
+  width: 50px;
+  font-size: 15px;
+  color:white;
+  text-align: center;
+  text-transform: uppercase;
+}
+.balanceMenu_balanceHeader_Tax-bottom{
+  width: 50px;
+  font-size: 28px;
+  color:white;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: -0.05em;
+}
+
+#balanceMenu_balanceList{
+  width: 100%;
+  background-color: #DDDDDD;
+  height: 95px;
+  margin-top: 5px;
+  overflow-y: scroll;
+  font-size: 10px;
+}
+
+.balanceMenu_balanceList-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 14px;
+  font-weight: normal;
+  font-size: 10px;
+  font-family: 'Roboto';
+  margin-bottom: 5px;
+  border-bottom: 1px dotted;
+}

@@ -4,35 +4,74 @@ import {
 
 // trigger socket.js -> MAIN.socket.on('GAME_applyCredit')
 function updateCreditHistory(){
-  const credit = MAIN.game.data.playerData.credit
-  document.querySelector(`#creditHistory_paysLeft`).innerHTML = `Осталось платежей: ${credit.pays}`;
-  document.querySelector(`#creditHistory_deferral`).innerHTML = `Отсрочка: ${credit.deferment}`; //`Payments defferal: ${credit.deferment}`;
-  document.querySelector(`#creditHistory_paysCoast`).innerHTML = `Цена платежа: $${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`; //Cost of payment
-  document.querySelector(`#creditHistory_allCount`).innerHTML = `Осталось оплатить: $${((credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100))*credit.pays}`;
+  const credit = MAIN.game.data.playerData.credit;
+  document.querySelector(`#creditHistory_paysCoast`).innerHTML = `${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`; //Cost of payment
+  document.querySelector(`#creditHistory_allCount`).innerHTML = `${((credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100))*credit.pays}`;
+  document.querySelector('#balanceMenu_balanceValue').innerHTML = MAIN.game.data.playerData.balance;
 
-  document.querySelector(`#creditHistory_ProgressLine`).style.width = ((credit.allPays - credit.pays)/credit.allPays*100)+'%';
+  const creditConfig = MAIN.game.configs.credits[credit.creditName];
+
+  console.log(credit)
+  console.log(creditConfig)
+
+
+  let deferralLine = '';
+  for(let i=1;i<=creditConfig.deferment;i++){
+    if(i === creditConfig.deferment - credit.deferment ){
+      if(credit.pays === creditConfig.pays){
+        deferralLine+=`<div class="balanceMenu-creditCard-gap"></div>`
+      }else{
+        deferralLine+=`<div class="balanceMenu-creditCard-hole balanceMenu-creditCard-DeferralHole"></div>`
+      };
+    }else{
+      deferralLine+=`<div class="balanceMenu-creditCard-hole balanceMenu-creditCard-DeferralHole"></div>`
+    };
+  };
+
+  document.querySelector('#balanceMenu_Container_Deferral_Container').innerHTML = deferralLine;
+
+
+  let paymentsLine = '';
+  for(let i=1;i<=creditConfig.pays;i++){
+    if(i === creditConfig.pays - credit.pays ){
+      if(credit.deferral === 0){
+        paymentsLine+=`<div class="balanceMenu-creditCard-hole balanceMenu-creditCard-PaymentHole"></div>`
+      }else{
+        paymentsLine+=`<div class="balanceMenu-creditCard-gap"></div>`
+      };
+    }else{
+      paymentsLine+=`<div class="balanceMenu-creditCard-hole balanceMenu-creditCard-PaymentHole"></div>`
+    };
+  };
+
+  document.querySelector('#balanceMenu_Container_Payments_Container').innerHTML = paymentsLine;
+
 };
 
 function addBalanceMessage(message,amount){
   updatePayPerStep();
   let color;
   if(amount > 0){
-    color = '#62e27a';
+    color = '#00a01e';
   }else{
     color = 'red';
   };
   if(amount === 0){
-    color = 'white';
+    color = '#303030';
   }
   const minus = amount >= 0 ? false:true;
   const sign = minus?'-$':'$'
   const div = `
-    <div class="balanceList_child" style="color:${color}">
-      <div>${message}</div>
-      <div>${sign}${Math.abs(amount)}</div>
+    <div class="balanceMenu_balanceList-item" style="color:${color}">
+      <div class="balanceMenu_balanceList-item_left">
+        ${message}
+      </div>
+      <div class="balanceMenu_balanceList-item_right">
+        ${sign}${Math.abs(amount)}
+      </div>
     </div>
   `;
-  document.querySelector('#balanceList').insertAdjacentHTML('afterBegin',div);
+  document.querySelector('#balanceMenu_balanceList').insertAdjacentHTML('afterBegin',div);
 };
 function init(amount){
   const interfaceSection = document.querySelector('#gameInterface')
@@ -41,45 +80,105 @@ function init(amount){
   const balanceDiv = document.querySelector('#balanceDiv');
   balanceDiv.innerHTML = amount;
 
+  const creditUser = MAIN.game.data.playerData.credit;
+  const creditConfig = MAIN.game.configs.credits[creditUser.creditName];
+
+
+
+
+
+
   const balanceHistorySection = `
     <div id="balanceHistoryClicker">
     <div>
-    <div id='balanceHistory'>
-      <div class='balanceHistory_title'>Credit</div>
-      <div id='creditHistory'>
-          <div id='creditHistory_paysLeft' class="creditHistory_text"></div>
-          <div id='creditHistory_deferral' class="creditHistory_text"></div>
-          <div id='creditHistory_allCount' class="creditHistory_text"></div>
-          <div id='creditHistory_paysCoast' class="creditHistory_text"></div>
-          <div class='creditHistory_CreditProgress'>
-            <div id='creditHistory_ProgressLine'></div>
+    <div id="balanceMenu_Container">
+      <div class="card" id='balanceMenu_CreditCard'>
+        <div class="card-header">
+            loan <span class="card-header-span creditColor-${creditUser.creditName}"> | ${creditConfig.title}</span>
+        </div>
+        <div id="balanceMenu_Container_Amount" class="creditColor-${creditUser.creditName}">
+          <span>$${creditConfig.amount}</span>
+        </div>
+        <div id="balanceMenu_Container_DeferalPart">
+          <div class="balanceMenu_Container_Titles">
+            deferral
+          </div>
+          <div id="balanceMenu_Container_Deferral_Container">
+
           </div>
 
+        </div>
+        <div id="balanceMenu_Container_PaymentsPart">
+          <div id='balanceMenu_Container_PaymentsPart_Header'>
+            <div class="balanceMenu_Container_Titles">
+              payments
+            </div>
+
+            <div class="balanceMenu_Container_Titles_Payment">
+              $<span id="creditHistory_paysCoast">1880</span>/step
+            </div>
+          </div>
+
+          <div id="balanceMenu_Container_Payments_Container">
+
+          </div>
+        </div>
+
       </div>
-      <div class='balanceHistory_title'>Balance</div>
-      <div class="creditHistory_text" style="margin-left:15px">Плата за ход $<span id='balanceHistory_payPerStep'>0</span></div>
-      <div class="creditHistory_text" style="margin-left:15px">Налоги <span id='balanceHistory_tax'>0</span>%</div>
-      <div class="creditHistory_text" style="margin-left:15px">Возможная выручка $<span id='balanceHistory_earn'>0</span></div>
-      <div id='balanceList'></div>
+
+
+      <div id="balanceMenu_balanceHistory" class="card">
+
+        <div class="card-header">
+            balance <span class="card-header-span"> | ${MAIN.game.data.playerData.login} </span>
+        </div>
+
+        <div id="balanceMenu_amount">
+          $<span id="balanceMenu_balanceValue">${MAIN.game.data.playerData.balance}</span>
+
+        </div>
+
+        <div class="balanceMenu_balanceHeader">
+          <div class="balanceMenu_balanceHeader_Left">
+            <div class="balanceMenu_balanceHeader_Loan">
+              <span style="text-transform:uppercase;font-size:15px">loan</span>
+              <span style="font-size:12px">left to pay: $<span id="creditHistory_allCount">130000</span></span>
+            </div>
+            <div class="balanceMenu_balanceHeader_Titles">
+              Possible earnings: $<span id='balanceHistory_earn'></span>
+            </div>
+            <div style="color:#C73636" class="balanceMenu_balanceHeader_Titles">
+              Pay per step: $<span id="balanceHistory_payPerStep"></span>
+            </div>
+          </div>
+          <div class="balanceMenu_balanceHeader_Right">
+            <div class="balanceMenu_balanceHeader_Tax-top">
+              tax
+            </div>
+            <div id="balanceMenu_Tax" class="balanceMenu_balanceHeader_Tax-bottom">
+              <span id="balanceHistory_tax"></span>%
+            </div>
+          </div>
+        </div>
+
+        <div id="balanceMenu_balanceList">
+
+        </div>
+
+
+      </div>
     </div>
   `;
   balanceSection.insertAdjacentHTML('beforeEnd',balanceHistorySection);
 
 
-  // for(let i =0;i<100;i++){
-  //   addBalanceMessage('test',(50-i));
-  // }
-
-
-  // MAIN.interface.deleteTouches(balanceDiv);
-
   const balanceHistoryClicker = document.querySelector('#balanceHistoryClicker');
   MAIN.interface.deleteTouches(balanceHistoryClicker);
-  MAIN.interface.returnTouches(document.querySelector('#balanceList'));
+  MAIN.interface.returnTouches(document.querySelector('#balanceMenu_balanceList'));
 
 
 
-  const balanceHistory = document.querySelector('#balanceHistory');
+  const balanceHistory = document.querySelector('#balanceMenu_balanceHistory');
 
   let balanceHistoryOpened = false;
 
@@ -101,6 +200,7 @@ function init(amount){
         updateCreditHistory();
       };
     };
+
     updatePayPerStep();
   };
 
@@ -193,6 +293,7 @@ function change(newBalance){
     };
   };
   animate();
+  document.querySelector('#balanceMenu_balanceValue').innerHTML = MAIN.game.data.playerData.balance;
 };
 const BALANCE = {
   init,
