@@ -83,44 +83,38 @@
   transform: translateX(-102%)rotateY(15deg);
 }
 .factoryMenu_Card_Titles{
+  font-family: 'Roboto Condensed', sans-serif;
   text-transform: uppercase;
-  font-size: 18px;
-  font-weight: lighter;
-  margin-bottom: 5px;
+  font-size: 15px;
+  font-weight: normal;
+  color:white;
 }
 
 
 #factoryMenu_Card_Top{
   width: 100%;
-  height: 58px;
+  height: 84px;
 }
-#factoryMenu_Card_ProductionPart_Container{
-  width: 100%;
-  display: flex;
-}
-#factoryMenu_Card_Bottom{
-  width: 100%;
-  height: 125px;
-  /* background-color: #499c5e; */
-  display: flex;
-  padding: 5px;
-}
-
 #factoryMenu_Card_ResourseLogo{
-  width: 115px;
-  height: 115px;
+  width: 230px;
+  height: 84px;
   padding: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+.factoryMenu_Card_ResourseLogo_Top{
+  display: flex;
+  justify-content: space-between;
+}
 .factoryMenu_Card_ResourseLogo-title{
   width: 100%;
-  font-size: 25px;
+  font-size: 20px;
   color: white;
   font-weight: 500;
 
 }
+
 .factoryMenu_Card_ResourseLogo-qualityContainer{
   display: flex;
   justify-content: flex-end;
@@ -137,21 +131,65 @@
 }
 
 
-#factoryMenu_Card_StoragePart{
+#factoryMenu_Card_Bottom{
+  width: 230px;
+
+  /* background-color: #499c5e; */
+  padding-top: 5px;
+}
+#factoryMenu_Card_ProductionPart{
+  padding-bottom: 5px;
+  width: 230px;
+  margin-bottom: 5px;
+}
+
+.factoryMenu_Card_ProductionPart_Header{
+  display: flex;
+  width: 230px;
+  height: 28px;
+  margin-bottom: 4px;
+  align-items: center;
+  padding-right: 10px;
+  padding-left: 4px;
+  justify-content: space-between;
+}
+
+.factoryMenu_LowSalary{
+  display: flex;
+  margin-left: 10px;
+  color: white;
+  font-size: 15px;
+  font-weight: 100;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+.factoryMenu_LowSalary_Container{
+  display: flex;
+}
+#factoryMenu_Card_ProductionPart_Container{
   width: 100%;
-  height: 100%;
-  padding: 10px;
+  display: flex;
+}
+
+
+
+#factoryMenu_Card_StoragePart{
+  width: 230px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #303030;
+  align-items: center;
+  padding-left: 4px;
 }
 
 .factoryMenu_Card_StoragePart-title{
-  text-align: center;
+  /* text-align: center; */
 }
 
 .factoryMenu_Card_StoragePart-storageContainer{
-  width: 100%;
   display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
 }
 
 
@@ -165,7 +203,7 @@
 #factoryMenu_Card_ProgressLine_Title{
     text-shadow: 0px 0px 1px rgba(0,0,0,0.8);
     color: #f9f9f9;
-    font-size: 1em;
+
 }
 #factoryMenu_Card_ProgressLine_Price{
   text-shadow: 0px 0px 1px rgba(0,0,0,0.8);
@@ -198,8 +236,10 @@
 
 .factoryMenu_Card_StoragePart-price{
   color: #c82828;
+  text-shadow: 0px 0px 1px white;
   text-align: center;
   font-size: 20px;
+  font-weight: 700;
 }
 
 
@@ -274,6 +314,7 @@
   font-weight: 100;
   text-transform: uppercase;
   font-size: 15px;
+  font-family: 'Roboto Condensed';
 
 }
 .factoryMenu_SettingsCard_SettingsString-SettingContainer{

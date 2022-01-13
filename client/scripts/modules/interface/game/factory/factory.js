@@ -297,6 +297,17 @@ function showFactoryMenu(factory){
     };
   };
 
+
+  console.log(factory)
+  let lowSalaryLine = '';
+  for(let i = 0; i<3;i++){
+    if(i<factory.settings.salary){
+      lowSalaryLine += `<div class="quality-gag"></div>`
+    }else{
+      lowSalaryLine += `<div class="quality-hole"></div>`
+    };
+  };
+
   const section = `
     <div id="factoryMenu_Section">
         <div id="factoryMenu_Card" class="card">
@@ -304,25 +315,47 @@ function showFactoryMenu(factory){
               ${name} <span class="card-header-span"> | ${factory.number}</span>
           </div>
           <div id="factoryMenu_Card_Top">
-            <div class="factoryMenu_Card_Titles">
-              ${MAIN.interface.lang.factory.production[MAIN.interface.lang.flag]}
-            </div>
-            <div id="factoryMenu_Card_ProductionPart_Container">
-              ${progressLine}
+            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.resource}">
+              <div class='factoryMenu_Card_ResourseLogo_Top'>
+                <div class="factoryMenu_Card_ResourseLogo-title">
+                  ${factory.settings.resource}
+                </div>
+                <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
+                  <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">${MAIN.interface.lang.factory.q[MAIN.interface.lang.flag]}</span>
+                  ${qualityLine}
+                </div>
+              </div>
 
             </div>
+
+
           </div>
           <div id="factoryMenu_Card_Bottom">
-            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.resource}">
-              <div class="factoryMenu_Card_ResourseLogo-title">
-                ${factory.settings.resource}
-              </div>
-              <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
-                <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">Q</span>
-                ${qualityLine}
-              </div>
+            <div id="factoryMenu_Card_ProductionPart">
+              <div class="factoryMenu_Card_ProductionPart_Header">
 
+                <div class="factoryMenu_Card_Titles">
+                  ${MAIN.interface.lang.factory.production[MAIN.interface.lang.flag]}
+                </div>
+
+                <div class="factoryMenu_LowSalary">
+                  ${MAIN.interface.lang.factory.ls[MAIN.interface.lang.flag]}
+                  <div class="factoryMenu_LowSalary_Container">
+                  ${lowSalaryLine}
+                  </div>
+                </div>
+
+                <svg style="position:absolute;z-index:-1;left:8px" width="230" height="28" viewBox="0 0 230 28" fill="none">
+                  <path d="M0 0H218L230 14L218 28H0V0Z" fill="#303030"/>
+                </svg>
+
+              </div>
+              <div id="factoryMenu_Card_ProductionPart_Container">
+                ${progressLine}
+
+              </div>
             </div>
+
             <div id="factoryMenu_Card_StoragePart">
               <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
                 ${MAIN.interface.lang.factory.storage[MAIN.interface.lang.flag]}
@@ -331,13 +364,12 @@ function showFactoryMenu(factory){
               <div class="factoryMenu_Card_StoragePart-storageContainer">
                 ${storageLine}
               </div>
-
-              <div class="factoryMenu_Card_StoragePart-price">
-                $${factory.settings.stepPrice}/${MAIN.interface.lang.factory.step[MAIN.interface.lang.flag]}
-              </div>
-
             </div>
+
           </div>
+
+
+
         </div>
         ${actionButtonLine ? actionButtonLine : ''}
     </div>

@@ -156,19 +156,17 @@
 
     </div> -->
 
-    <div id="factoryMenu_Settings_Container">
+    <!-- <div id="factoryMenu_Settings_Container">
       <div class="card" id="factoryMenu_SettingsCard">
         <div class="card-header">
             ${name} <span class="card-header-span"> | ${factory.number}</span>
         </div>
         <div id="factoryMenu_SettingsCard_Top">
           <div class="factoryMenu_SettingsCard_Top-resourceLogo resource-bg-color-${factory.product}">
-            <!-- <span>${factory.product}</span> -->
             <span>water</span>
 
           </div>
           <div id="factoryMenu_SettingsCard_Top-pointsCounter">
-            <!-- <span style="margin:auto">0<span id="factoryMenu_settings_points">${settings.points}</span></span> -->
             <span style="margin:auto">0<span id="factoryMenu_settings_points">4</span></span>
 
           </div>
@@ -236,6 +234,62 @@
           <span style="margin:auto">APPLY</span>
         </div>
       </div>
+    </div> -->
+
+
+
+    <div id="factoryMenu_Section">
+        <div id="factoryMenu_Card" class="card">
+          <div class="card-header">
+              <!-- ${name} <span class="card-header-span"> | ${factory.number}</span> -->
+              name <span class="card-header-span"> | 04</span>
+
+          </div>
+          <div id="factoryMenu_Card_Top">
+            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.resource}">
+              <div class='factoryMenu_Card_ResourseLogo_Top'>
+                <div class="factoryMenu_Card_ResourseLogo-title">
+                  ${factory.settings.resource}
+                </div>
+                <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
+                  <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">Q</span>
+                  ${qualityLine}
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+          <div id="factoryMenu_Card_Bottom">
+            <div id="factoryMenu_Card_ProductionPart">
+              <div class="factoryMenu_Card_Titles">
+                ${MAIN.interface.lang.factory.production[MAIN.interface.lang.flag]}
+              </div>
+              <div id="factoryMenu_Card_ProductionPart_Container">
+                ${progressLine}
+
+              </div>
+            </div>
+
+            <div id="factoryMenu_Card_StoragePart">
+              <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
+                ${MAIN.interface.lang.factory.storage[MAIN.interface.lang.flag]}
+              </div>
+
+              <div class="factoryMenu_Card_StoragePart-storageContainer">
+                ${storageLine}
+              </div>
+            </div>
+
+          </div>
+
+          <div class="factoryMenu_Card_StoragePart-price">
+            $${factory.settings.stepPrice}/${MAIN.interface.lang.factory.step[MAIN.interface.lang.flag]}
+          </div>
+
+        </div>
+        ${actionButtonLine ? actionButtonLine : ''}
     </div>
 
 

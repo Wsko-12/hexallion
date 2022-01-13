@@ -130,6 +130,7 @@ class Factory {
   applySettings(settings){
     this.settingsSetted = true;
     this.settings = settings;
+    console.log(settings)
   };
 
   applyUpdates(updates){

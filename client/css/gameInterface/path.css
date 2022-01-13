@@ -23,20 +23,21 @@
   pointer-events: auto;
   transition-duration: 0.05s;
   display: none;
-  width: 100px;
+  width: 160px;
   position: fixed;
   transform: translate(-50%,-50%);
-  height: 40px;
+  height: 60px;
   justify-content: space-around;
   perspective: 100px;
   -webkit-perspective:100px;
 
 }
 .pathSection_buttons{
-  width: 40px;
+  width: 60px;
   flex:0 0 auto;
-  height: 40px;
-  border-radius: 40px;
+  height: 60px;
+  border-radius: 60px;
+  opacity: 0.9;
   /* transform: rotateX(15deg); */
 
 }

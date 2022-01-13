@@ -64,7 +64,7 @@ const ROOMS = {
     members: [],
     started: false,
     turnBasedGame: true,
-    turnTime: 60000,
+    turnTime: 600000,
     tickTime:5000,
   },
 };
@@ -792,7 +792,7 @@ class FACTORY {
       this.storage.push(0);
     };
 
-
+    this.salaryPoints = settings.salary;
 
     this.sendNewSettings();
   };
@@ -808,6 +808,7 @@ class FACTORY {
       stockStorage: this.stockStorage,
       stockSpeed: this.stockSpeed,
       quality: this.quality,
+      salary:this.salaryPoints,
       productLine: this.productLine,
       price: this.price,
       stepPrice: this.stepPrice,

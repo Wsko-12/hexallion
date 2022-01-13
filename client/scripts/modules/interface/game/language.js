@@ -1,5 +1,5 @@
 const LANG = {
-  flag:'ru',
+  flag:'eng',
 
   credit:{
     menuTitle:{
@@ -59,6 +59,14 @@ const LANG = {
     step:{
       ru:'ход',
       eng:'step',
+    },
+    ls:{
+      ru:'НЗ',
+      eng:'LS',
+    },
+    q:{
+      ru:'К',
+      eng:'Q',
     },
   },
 
