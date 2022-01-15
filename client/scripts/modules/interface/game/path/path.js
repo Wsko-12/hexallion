@@ -168,13 +168,13 @@ function showButtons(buttons,data){
 
 
   if(buttons === 1){
-    moveButton.style.display = 'block';
+    moveButton.style.display = 'flex';
 
     moveButton.onclick = ()=>{action(false)};
     moveButton.ontouchstart = ()=>{action(false)};
   }else if(buttons === 2){
-    sellButton.style.display = 'block';
-    moveButton.style.display = 'block';
+    sellButton.style.display = 'flex';
+    moveButton.style.display = 'flex';
 
     moveButton.onclick = ()=>{action(false)};
     moveButton.ontouchstart = ()=>{action(false)};
@@ -182,7 +182,7 @@ function showButtons(buttons,data){
     sellButton.ontouchstart = ()=>{action(true)};
   }else{
     //если грузовик уже стоял в городе, то показываем только продажу;
-    sellButton.style.display = 'block';
+    sellButton.style.display = 'flex';
 
     sellButton.onclick = ()=>{immediatelySell()};
     sellButton.ontouchstart = ()=>{immediatelySell()};

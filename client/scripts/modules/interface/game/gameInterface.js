@@ -59,17 +59,42 @@ function init(){
     </section>
     <section id='pathSection'>
       <div id="pathSection_ButtonsContainer">
-        <div class="card pathSection_buttons" id="pathSection_moveButton">↓</div>
+        <div class="card pathSection_buttons" id="pathSection_moveButton">
+          <svg width="40" height="40" viewBox="0 0 40 40" style="margin: auto;margin-top: 3px;" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 15.6L20 28L40 15.6V27.6L20 40L0 27.6V15.6Z" fill="#303030"/>
+            <path d="M0 0L20 12.4L40 0V12L20 24.4L0 12V0Z" fill="#303030"/>
+          </svg>
+        </div>
         <div class="card pathSection_buttons" id="pathSection_sellButton">$</div>
       </div>
       <div id="pathSection_notification">you can't drive here</div>
     </section>
   </section>
+  <div id="fullScreenButton" class="card">
+    fullScreen
+  </div>
   `
+
+
+
+
+
+
   document.body.insertAdjacentHTML('beforeEnd',section);
   MAIN.interface.deleteTouches(document.querySelector('#sectorMenu'));
   MAIN.interface.deleteTouches(document.querySelector('#buildingMenu'));
 
+
+
+  document.querySelector('#fullScreenButton').onclick = function() {
+    if (!document.fullscreenElement) {
+      document.body.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      };
+    };
+  },
 
   FACTORY.init();
   TRUCK.init();

@@ -137,7 +137,7 @@ function openMenu(factory){
     const buyButton = document.querySelector('#truckMenu_card_buyButton');
     if(buyButton){
       buyButton.onclick = buyTruck;
-      buyButton.ontouchstart = buyTruck;
+      // buyButton.ontouchstart = buyTruck;
     };
 
     for(let truck in MAIN.game.data.playerData.trucks){

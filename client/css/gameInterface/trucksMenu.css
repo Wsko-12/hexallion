@@ -4,21 +4,24 @@
   position: fixed;
   overflow: hidden;
   z-index: 3;
-  perspective: 1000px;
-  -webkit-perspective:1000px;
+  perspective: 500px;
+  -webkit-perspective:500px;
 }
 #trucksMenuContainer{
   display: none;
   position: fixed;
+
+  overflow: hidden;
+  font-family: sans-serif;
+
+
   width: 400px;
   height: 120px;
   left: 50%;
   top:50%;
-  transform: translate(-50%,-50%);
-  overflow: hidden;
-  font-family: sans-serif;
+  -webkit-transform:translate(-50%,50%) scale(1.4) rotateX(20deg);
+  transform:translate(-50%,50%) scale(1.4) rotateX(20deg);
 
-  transform: translate(-50%,50%) rotateX(15deg) scale(130%);
 
 }
 
@@ -28,6 +31,7 @@
   height: 100%;
   overflow-x: scroll;
   display: flex;
+
 
 }
 
@@ -107,7 +111,8 @@
   position: absolute;
   left: 50%;
   top:50%;
-  transform: translate(-50%,-50%) translateX(80%)rotateY(-25deg) scale(150%);
+  -webkit-transform: translate(50%,-50%) rotateY(-25deg) scale(1.5);
+  transform: translate(50%,-50%) rotateY(-25deg) scale(1.5);
   display: none;
 }
 

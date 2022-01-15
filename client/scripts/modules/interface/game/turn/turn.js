@@ -6,7 +6,7 @@ function init() {
   const section = `
     <section id="turnSection">
       <div id="turnInfo"></div>
-      <div id="turnButton"><span style="margin:auto">end</span></div>
+      <div id="turnButton" class="card"><span style="margin:auto">end</span></div>
     </section>
   `
   document.querySelector('#gameInterface').insertAdjacentHTML('beforeEnd', section);

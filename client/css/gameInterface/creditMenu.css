@@ -6,8 +6,6 @@
   position: fixed;
   overflow: hidden;
   z-index: 100;
-  perspective: 1000px;
-  -webkit-perspective:1000px;
   font-family: 'Roboto';
 
   background-color: rgba(0,0,0,0.4);
@@ -18,13 +16,15 @@
 #chooseCreditMenuContainer{
   position: fixed;
   width: 600px;
-  height: 310px;
+  height: 300px;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%);
+  top:15%;
   overflow: hidden;
   font-family: sans-serif;
-  transform: translate(-50%,-50%) rotateX(10deg);
+  -webkit-transform:translate(-50%,0%);
+  transform:translate(-50%,0%);
+  perspective: 500px;
+  -webkit-perspective:500px;
 }
 .CreditMenu_Title{
   width: 100%;
@@ -59,10 +59,13 @@
 
 #CreditMenu_List{
   width: 100%;
-  height: 240px;
+  height: 220px;
   overflow-x: scroll;
   display: flex;
   align-items: center;
+  -webkit-transform: rotateX(10deg);
+  transform: rotateX(10deg);
+
 }
 
 .CreditMenu_Card{

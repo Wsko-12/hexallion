@@ -59,7 +59,7 @@
   height: 220px;
   margin:auto;
   /* 3D */
-  transform: translateX(-80%)rotateY(15deg);
+  transform: translateX(-60%)rotateY(15deg);
   border-left:1px solid #9e9c93;
 }
 
@@ -73,7 +73,7 @@
   border-radius: 10px; */
 
     /* 3D */
-  transform: translateX(-100%)rotateY(10deg);
+  transform: translateX(-80%)rotateY(10deg);
 }
 
 /* 3D */
