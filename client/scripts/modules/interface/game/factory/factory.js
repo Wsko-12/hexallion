@@ -344,7 +344,7 @@ function showFactoryMenu(factory){
                 </div>
 
                 <svg style="position:absolute;z-index:-1;left:8px" width="230" height="28" viewBox="0 0 230 28" fill="none">
-                  <path d="M0 0H218L230 14L218 28H0V0Z" fill="#303030"/>
+                  <path d="M0 0H218L230 14L218 28H0V0Z" fill="#b0b0b0"/>
                 </svg>
 
               </div>

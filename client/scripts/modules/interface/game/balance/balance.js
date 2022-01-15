@@ -11,10 +11,6 @@ function updateCreditHistory(){
 
   const creditConfig = MAIN.game.configs.credits[credit.creditName];
 
-  console.log(credit)
-  console.log(creditConfig)
-
-
   let deferralLine = '';
   for(let i=1;i<=creditConfig.deferment;i++){
     if(i === creditConfig.deferment - credit.deferment ){
@@ -49,6 +45,15 @@ function updateCreditHistory(){
 };
 
 function addBalanceMessage(message,amount){
+  if(message === null){
+    const div = `
+      <div class="balanceMenu_balanceList-item" style="border:none">
+      </div>
+    `;
+    document.querySelector('#balanceMenu_balanceList').insertAdjacentHTML('afterBegin',div);
+    updatePayPerStep();
+    return;
+  };
   updatePayPerStep();
   let color;
   if(amount > 0){
@@ -61,6 +66,63 @@ function addBalanceMessage(message,amount){
   }
   const minus = amount >= 0 ? false:true;
   const sign = minus?'-$':'$'
+
+  const language = MAIN.interface.lang.balanceMessages;
+
+  if(MAIN.interface.lang.flag === 'ru'){
+    if(message.startsWith('Tax payment')) {message = language.tax.ru};
+
+    if(message.startsWith('Sale of ')){
+      const strPart = message.substr(8);
+      message = language.sale.ru +' '+ language[message.substr(8)].ru;
+    };
+
+    if(message.startsWith('Buying a truck')){
+      // const strPart = message.substr(8);
+      message = language.truckBuying.ru;
+    };
+
+    if(message.startsWith('Credit payment')){
+        message = language.creditPayment.ru;
+    };
+
+
+  };
+
+  if(message.startsWith('Production on')){
+    const strPart = message.substr(14);
+
+    if(MAIN.interface.lang.flag === 'eng'){
+        message = `${language[strPart].eng} salary`;
+    };
+
+    if(MAIN.interface.lang.flag === 'ru'){
+        message = `Зарплата на ${language[strPart].ru}`;
+    };
+
+
+  };
+
+  if(message.startsWith('Сonstruction of the ')){
+    const strPart = message.substr(20);
+
+    if(MAIN.interface.lang.flag === 'eng'){
+      message = language[message.substr(20)].eng +' '+ language.construction.eng;
+    };
+
+    if(MAIN.interface.lang.flag === 'ru'){
+      message = language.construction.ru +' '+ language[message.substr(20)].ru;
+    };
+  };
+
+
+
+
+
+
+
+
+
   const div = `
     <div class="balanceMenu_balanceList-item" style="color:${color}">
       <div class="balanceMenu_balanceList-item_left">
@@ -84,7 +146,8 @@ function init(amount){
   const creditConfig = MAIN.game.configs.credits[creditUser.creditName];
 
 
-
+  const language = MAIN.interface.lang.balance;
+  const langFlag = MAIN.interface.lang.flag;
 
 
 
@@ -101,7 +164,7 @@ function init(amount){
         </div>
         <div id="balanceMenu_Container_DeferalPart">
           <div class="balanceMenu_Container_Titles">
-            deferral
+           ${language.deferral[langFlag]}
           </div>
           <div id="balanceMenu_Container_Deferral_Container">
 
@@ -111,11 +174,11 @@ function init(amount){
         <div id="balanceMenu_Container_PaymentsPart">
           <div id='balanceMenu_Container_PaymentsPart_Header'>
             <div class="balanceMenu_Container_Titles">
-              payments
+              ${language.payments[langFlag]}
             </div>
 
             <div class="balanceMenu_Container_Titles_Payment">
-              $<span id="creditHistory_paysCoast">1880</span>/step
+              $<span id="creditHistory_paysCoast">1880</span>/${language.step[langFlag]}
             </div>
           </div>
 
@@ -141,19 +204,19 @@ function init(amount){
         <div class="balanceMenu_balanceHeader">
           <div class="balanceMenu_balanceHeader_Left">
             <div class="balanceMenu_balanceHeader_Loan">
-              <span style="text-transform:uppercase;font-size:15px">loan</span>
-              <span style="font-size:12px">left to pay: $<span id="creditHistory_allCount">130000</span></span>
+              <span style="text-transform:uppercase;font-size:15px">${language.loan[langFlag]}</span>
+              <span style="font-size:12px">${language.debt[langFlag]}: $<span id="creditHistory_allCount">130000</span></span>
             </div>
             <div class="balanceMenu_balanceHeader_Titles">
-              Possible earnings: $<span id='balanceHistory_earn'></span>
+              ${language.possibleEarnings[langFlag]}: $<span id='balanceHistory_earn'></span>
             </div>
             <div style="color:#C73636" class="balanceMenu_balanceHeader_Titles">
-              Pay per step: $<span id="balanceHistory_payPerStep"></span>
+              ${language.stepPay[langFlag]}: $<span id="balanceHistory_payPerStep"></span>
             </div>
           </div>
           <div class="balanceMenu_balanceHeader_Right">
             <div class="balanceMenu_balanceHeader_Tax-top">
-              tax
+              ${language.tax[langFlag]}
             </div>
             <div id="balanceMenu_Tax" class="balanceMenu_balanceHeader_Tax-bottom">
               <span id="balanceHistory_tax"></span>%

@@ -1,5 +1,5 @@
 const LANG = {
-  flag:'eng',
+  flag:'ru',
 
   credit:{
     menuTitle:{
@@ -97,6 +97,136 @@ const LANG = {
     },
 
   },
+
+  balance:{
+    deferral:{
+      ru:'отсрочка',
+      eng:'deferral',
+    },
+
+    payments:{
+      ru:'платежи',
+      eng:'payments',
+    },
+    step:{
+      ru:'ход',
+      eng:'step',
+    },
+
+    loan:{
+      ru:'кредит',
+      eng:'loan',
+    },
+    debt:{
+      ru:'долг',
+      eng:'debt',
+    },
+
+    possibleEarnings:{
+      ru:'Возможная прибыль',
+      eng:'Possible earnings',
+    },
+
+    stepPay:{
+      ru:'Плата за ход',
+      eng:'Step pay',
+    },
+
+    tax:{
+      ru:'налог',
+      eng:'tax',
+    }
+  },
+
+
+  balanceMessages:{
+    tax:{
+      ru:'Налог',
+    },
+    construction:{
+      ru: 'Постройка',
+      eng: 'construction'
+    },
+    sawmill:{
+      ru:'лесопилки',
+      eng:'Sawmill',
+    },
+    waterStation:{
+      ru:'станции водоочистки',
+      eng:'Water station',
+    },
+    sandMine:{
+      ru:'песчаного карьера',
+      eng:'Sand mine',
+    },
+    steelMill:{
+      ru:'сталелитейного завода',
+      eng:'Steel mill',
+    },
+    goldMill:{
+      ru:'золотодобывающего завода',
+      eng:'Gold mill',
+    },
+    road:{
+      ru:'дороги',
+      eng:'Road',
+    },
+    bridge:{
+      ru:'моста',
+      eng:'Bridge',
+    },
+
+    sale:{
+      ru:'Продажа',
+    },
+    wood:{
+      ru:'дерева',
+    },
+    water:{
+      ru:'воды',
+    },
+    sand:{
+      ru:'песка',
+    },
+    steel:{
+      ru:'стали',
+    },
+    gold:{
+      ru:'золота',
+    },
+
+    truckBuying:{
+      ru:'Покупка грузовика',
+    },
+
+
+    Sawmill:{
+      eng:'Sawmill',
+      ru: 'лесопилке',
+    },
+
+    WaterStation:{
+      eng:'Water station',
+      ru: 'станции водоочистки',
+    },
+    SandMine:{
+      eng:'Sand mine',
+      ru:'песчаном карьере',
+    },
+    SteelMill:{
+      eng:'Steel mill',
+      ru:'сталелитейном заводе',
+    },
+    GoldMill:{
+      eng:'Gold mill',
+      ru:'золотодобывающем заводе',
+    },
+
+    creditPayment:{
+      ru:'Кредитный платеж',
+    },
+
+  }
 
 
 

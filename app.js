@@ -503,7 +503,9 @@ class GAME {
         //отправляем всем чей ход
         that.sendToAll('GAME_reciveTurn', data);
 
+
         // отправляем ему все функции для хода(кредит, фермы и тд)
+
         nextPlayer.turnAction();
         //обновляем города
         that.updateCities();
@@ -543,6 +545,7 @@ class GAME {
 
       const thisPlayer = this.players[player];
       if(!thisPlayer.gameOver){
+
         thisPlayer.turnAction();
       };
     };
@@ -831,7 +834,7 @@ class FACTORY {
   turn() {
     if (this.settingsSetted) {
       this.player.balance -= this.stepPrice;
-      this.player.sendBalanceMessage(`${this.name.charAt(0).toUpperCase() + this.name.slice(1)} production`, -this.stepPrice);
+      this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
       //если в storage есть место
       if (this.storage.includes(0)) {
         if (!this.productLine.includes(1)) {
@@ -988,6 +991,8 @@ class PLAYER {
     this.emit('GAME_changeBalance', this.balance);
   };
   turnAction() {
+    //отправляем пустое сообщения для balanceHistory
+    this.sendBalanceMessage(null);
     //credit
     if (this.credit) {
       this.credit.turn();
