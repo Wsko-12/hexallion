@@ -26,10 +26,17 @@ AUTH.showPage = () => {
   */
 
   const authPage = `
-    <form id='auth'>
-      <input id='login'>
-      <button type="submit">OK</button>
-    </form>
+      <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)">
+        <form id='auth' >
+          <input type="text" id='login'/ style="
+            -webkit-user-select: initial;
+          -khtml-user-select: initial;
+          -moz-user-select: initial;
+          -ms-user-select: initial;
+          user-select: initial;">
+          <button type="submit">OK</button>
+        </form>
+      </div>
   `;
 
   MAIN.pages.screen.innerHTML = authPage;

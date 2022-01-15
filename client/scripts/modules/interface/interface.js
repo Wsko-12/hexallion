@@ -294,10 +294,10 @@ function checkEvents() {
   if (!INTERFACE.mouse.clicked) {
     if (INTERFACE.mouse.y < window.innerHeight / cameraMoveActiveZone) {
       //move forward
-      INTERFACE.game.camera.shifts.y = INTERFACE.game.camera.shifts.speed;
+      // INTERFACE.game.camera.shifts.y = INTERFACE.game.camera.shifts.speed;
     } else if (INTERFACE.mouse.y > (window.innerHeight - window.innerHeight / cameraMoveActiveZone)) {
       //move backward
-      INTERFACE.game.camera.shifts.y = -INTERFACE.game.camera.shifts.speed;
+      // INTERFACE.game.camera.shifts.y = -INTERFACE.game.camera.shifts.speed;
     } else {
       if (!INTERFACE.touch.single) {
         INTERFACE.game.camera.shifts.y = 0;
@@ -306,10 +306,10 @@ function checkEvents() {
 
     if (INTERFACE.mouse.x < (window.innerWidth / cameraMoveActiveZone)) {
       //move left
-      INTERFACE.game.camera.shifts.x = -INTERFACE.game.camera.shifts.speed;
+      // INTERFACE.game.camera.shifts.x = -INTERFACE.game.camera.shifts.speed;
     } else if (INTERFACE.mouse.x > (window.innerWidth - window.innerWidth / cameraMoveActiveZone)) {
       //move right
-      INTERFACE.game.camera.shifts.x = INTERFACE.game.camera.shifts.speed;
+      // INTERFACE.game.camera.shifts.x = INTERFACE.game.camera.shifts.speed;
     } else {
       if (!INTERFACE.touch.single) {
         INTERFACE.game.camera.shifts.x = 0;
@@ -321,6 +321,7 @@ function checkEvents() {
     INTERFACE.mouse.onclickPosition.x = INTERFACE.mouse.x;
     INTERFACE.mouse.onclickPosition.y = INTERFACE.mouse.y;
   };
+
 };
 
 

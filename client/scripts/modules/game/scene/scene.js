@@ -166,7 +166,7 @@ async function create() {
 
     FIELD.create();
     TIME.init();
-    CLOUDS.init();
+    // CLOUDS.init();
     RENDERER.render();
 
     resolve('sceneReady');

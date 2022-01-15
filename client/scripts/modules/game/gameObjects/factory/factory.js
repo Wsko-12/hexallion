@@ -73,14 +73,14 @@ class Factory {
     };
 
     const id = generateId('notification',6);
-    let notification = `<div class="factoryNotification" id="${id}">!</div>`;
+    let notification = `<div class="factoryNotification" id="${id}"><span class="span-notification">!</span></div>`;
 
     if(type === 'resourceReady'){
-      notification = `<div class="factoryNotification" id="${id}">✓</div>`
+      notification = `<div class="factoryNotification" id="${id}"><span class="span-notification">✓</span></div>`
     };
 
     if(type === 'storrageFull'){
-      notification = `<div class="factoryNotification redNotification" id="${id}">!</div>`;
+      notification = `<div class="factoryNotification redNotification" id="${id}"><span class="span-notification">!</span></div>`;
     };
 
 

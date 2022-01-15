@@ -246,7 +246,8 @@ function changeTrucksCount(){
 
 function openCard(truck){
   truck.cardOpened = true;
-  truck.clearNotification();
+  //либо коментить эту строку, либо уменьшить хитбокс города
+  // truck.clearNotification();
   const clicker =  document.querySelector('#trucksMenuSection');
   clicker.style.pointerEvents = 'auto';
 

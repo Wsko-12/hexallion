@@ -80,7 +80,7 @@
 #factoryMenu_ActionButton:hover {
   color:white;
   background-color: #303030;
-  transform: translateX(-102%)rotateY(15deg);
+  transform: translateX(-80%)rotateY(15deg);
 }
 .factoryMenu_Card_Titles{
   font-family: 'Roboto Condensed', sans-serif;

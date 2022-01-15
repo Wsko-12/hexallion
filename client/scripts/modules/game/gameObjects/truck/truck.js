@@ -70,7 +70,7 @@ class Truck {
       this.notification.remove();
     }
     const id = generateId('notification', 6);
-    const notification = `<div class="truckNotification" id="${id}">!</div>`
+    const notification = `<div class="truckNotification" id="${id}"><span class="span-notification">!</span></div>`
 
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd', notification);
     this.notification = document.querySelector(`#${id}`);
@@ -439,11 +439,12 @@ class Truck {
             pathIndex++;
           };
           setTimeout(() => {
-            if(that.hitBoxMesh && that.object3D){
+            if(that.object3D){
               move();
             };
-          }, 25)
+          }, 25);
         }else{
+
           if(data.selling){
             if(that.player === MAIN.game.data.playerData.login){
               const sendData = {

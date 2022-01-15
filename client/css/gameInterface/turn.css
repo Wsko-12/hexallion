@@ -16,7 +16,7 @@
 
 #turnInfo{
   position: fixed;
-  bottom:2%;
+  bottom:10%;
   right: 8%;
   transform: translateX(-50%);
 }
@@ -27,7 +27,7 @@
   height: 10vh;
   font-size: 0.9em;
   font-weight: 400;
-  bottom:10%;
+  bottom:15%;
   right: 10%;
 
 

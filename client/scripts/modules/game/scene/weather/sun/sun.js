@@ -11,10 +11,10 @@ const colors = [
   [0, 0, 0,1],//6
   [120, 0, 0,1],//8
   [210, 50, 0,0.5],//10
-  [180, 150, 150,0.7],//12
-  [180, 180, 180,0.7],//14
-  [180, 180, 180,0.7],//16
-  [180, 180, 150,0.7],//18
+  [180, 150, 150,0.5],//12
+  [180, 180, 180,0.5],//14
+  [180, 180, 180,0.5],//16
+  [180, 180, 150,0.5],//18
   [200, 100, 5,0.7],//20
   [120, 0, 0,0.5],//22
 
@@ -84,7 +84,8 @@ function changeColor(){
   ];
 
   sun.color.set(`rgb(${sunColor})`);
-  sun.intensity = interpolate(colors[currentPart][3],colors[nextPart][3],intValue);
+  //через bloom потому что нужно число от 0 до 1
+  sun.intensity = interpolateBloom(colors[currentPart][3],colors[nextPart][3],intValue);
   MAIN.game.scene.lights.sky.material.color.set(`rgb(${sunColor})`);
   MAIN.renderer.postrocessors.bloomPass.threshold =  interpolateBloom(bloomTrashhold[currentPart][0],bloomTrashhold[nextPart][0],intValue);
   MAIN.game.scene.lights.moonlight.intensity = 1-MAIN.renderer.postrocessors.bloomPass.threshold;
