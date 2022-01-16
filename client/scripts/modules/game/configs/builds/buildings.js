@@ -14,6 +14,15 @@ const BUILDINGS = {
     ceil:['meadow','sand','steelMine','goldMine'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand','steelMine','goldMine'],
     coast:5000,
+
+
+    title:{
+      eng:'road',
+      ru:'дорога',
+    },
+    //для ceilMenu
+    buttonColor:'#303030',
+
   },
 
   bridge:{
@@ -22,6 +31,13 @@ const BUILDINGS = {
     ceil:['sea'],
     nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand','steelMine','goldMine'],
     coast:7500,
+
+    title:{
+      eng:'bridge',
+      ru:'мост',
+    },
+    buttonColor:'#303030',
+
   },
   sawmill:{
     name:'Sawmill',
@@ -30,6 +46,12 @@ const BUILDINGS = {
     nearCeil:['forest'],
     coast:19500,
     product:'wood',
+
+    title:{
+      eng:'sawmill',
+      ru:'лесопилка',
+    },
+    buttonColor:'#887265',
   },
 
 
@@ -40,6 +62,12 @@ const BUILDINGS = {
     nearCeil:['sea'],
     coast:12000,
     product:'water',
+
+    title:{
+      eng:'water station',
+      ru:'станция водоочистки',
+    },
+    buttonColor:'#ADCCD0',
   },
 
   sandMine:{
@@ -49,6 +77,12 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:7500,
     product:'sand',
+
+    title:{
+      eng:'sand mine',
+      ru:'песчаный карьер',
+    },
+    buttonColor:'#E3DAB9',
   },
 
   steelMill:{
@@ -58,6 +92,12 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:34500,
     product:'steel',
+
+    title:{
+      eng:'steel mill',
+      ru:'завод стали',
+    },
+    buttonColor:'#AEACAA',
   },
 
   goldMill:{
@@ -67,6 +107,12 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:73500,
     product:'gold',
+
+    title:{
+      eng:'gold mill',
+      ru:'завод золота',
+    },
+    buttonColor:'#F9D761',
   },
   // field:{
   //   name:'Field',

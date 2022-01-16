@@ -34,20 +34,21 @@ function generateId(type, x) {
 
 const CEIL_MENU = {
   showSectorMenu(ceil, sector, buttons) {
+    console.log(buttons);
     const section = document.querySelector('#onCeilDoubleClick');
-    section.style.display = 'block';
+    section.style.display = 'flex';
     const menu = document.querySelector('#sectorMenu');
-    menu.style.display = 'block';
+    menu.style.display = 'flex';
 
-    buttons.push('cancel');
+    // buttons.push('cancel');
     const radius = menu.clientWidth / 2;
 
-    let changeSectorButton = `<div id='changeSectorButton' class='changeSectorMenuButton' style="top:${radius/1.3}px;left:${radius/1.3}px;">
-        <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/changeSectorButton.png">
-      </div>`;
-    menu.insertAdjacentHTML('beforeEnd', changeSectorButton);
-    changeSectorButton = document.querySelector(`#changeSectorButton`);
-
+    // let changeSectorButton = `<div id='changeSectorButton' class='changeSectorMenuButton' style="top:${radius/1.3}px;left:${radius/1.3}px;">
+    //     <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/changeSectorButton.png">
+    //   </div>`;
+    // menu.insertAdjacentHTML('beforeEnd', changeSectorButton);
+    const changeSectorButton = document.querySelector(`#changeSectorButton`);
+    const lang = MAIN.interface.lang.flag;
     function changeSector() {
       let newSector = sector;
       let startedSector = sector;
@@ -75,6 +76,7 @@ const CEIL_MENU = {
     changeSectorButton.onclick = changeSector;
     changeSectorButton.ontouchstart = changeSector;
 
+    document.querySelector('#sectorMenu_List').innerHTML = '';
     buttons.forEach((buttonName, i) => {
 
 
@@ -82,13 +84,28 @@ const CEIL_MENU = {
         x: radius * Math.sin((((360 / (buttons.length)) * i) - 90) * Math.PI / 180) + radius / 1.25,
         y: radius * Math.cos((((360 / (buttons.length)) * i) - 90) * Math.PI / 180) + radius / 1.25,
       };
-      const id = generateId('button', 4)
-      const button = `<div id='${id}' class='sectorMenuButton' style="top:${position.x}px;left:${position.y}px;">
-          <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/${buttonName}.png">
+      const id = generateId('button', 4);
+      const button = `
+        <div class="sectorMenu_button" id='${id}' style="background-color:${MAIN.game.configs.buildings[buttonName].buttonColor}">
+          <div class="sectorMenu_button_title">
+            ${MAIN.game.configs.buildings[buttonName].title[lang]}
+          </div>
+          <div class="sectorMenu_button_price">
+            $${MAIN.game.configs.buildings[buttonName].coast}
+          </div>
         </div>`;
 
 
-      menu.insertAdjacentHTML('beforeEnd', button);
+
+
+
+
+
+        // `<div id='${id}' class='sectorMenuButton' style="top:${position.x}px;left:${position.y}px;">
+        //   <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/${buttonName}.png">
+        // </div>`;
+
+      document.querySelector('#sectorMenu_List').insertAdjacentHTML('beforeEnd', button);
 
       function action() {
         if (buttonName === 'cancel') {
@@ -147,7 +164,7 @@ const CEIL_MENU = {
     const section = document.querySelector('#onCeilDoubleClick');
     section.style.display = 'none';
     const menu = document.querySelector('#sectorMenu');
-    menu.innerHTML = '';
+    // menu.innerHTML = '';
     const buildingMenu = document.querySelector('#buildingMenu');
     // buildingMenu.innerHTML = '';
     buildingMenu.style.display = 'none';
@@ -155,27 +172,46 @@ const CEIL_MENU = {
 
   hideBuildMenu() {
     const sectorMenu = document.querySelector('#sectorMenu');
-    sectorMenu.style.display = 'block';
+    sectorMenu.style.display = 'flex';
     const buildingMenu = document.querySelector('#buildingMenu');
     buildingMenu.style.display = 'none';
   },
   showBuildingMenu(ceil, sector, building) {
-    const menu = document.querySelector('#buildingMenu');
-    // menu.innerHTML = '';
-    menu.style.display = 'block';
-
     const sectorMenu = document.querySelector('#sectorMenu');
     sectorMenu.style.display = 'none';
+    const menu = document.querySelector('#buildingMenu');
+    menu.innerHTML = '';
+    menu.style.display = 'flex';
+    const lang = MAIN.interface.lang.flag;
+    const div = `
+
+          <div class="buildingMenu_card" style="background-color:${MAIN.game.configs.buildings[building].buttonColor}">
+              <div class="buildingMenu_card_title" id="buildName">
+                ${MAIN.game.configs.buildings[building].title[lang]}
+              </div>
+              <div class="buildingMenu_card_price" id="buildCoast">
+                $${MAIN.game.configs.buildings[building].coast}
+              </div>
+            </div>
+            <div class="buildingMenu_button" id="cancelBuild">
+              <span class="buildingMenu_button-span">назад</span>
+            </div>
+
+            <div class="buildingMenu_button" id='aceptBuild'>
+              <span class="buildingMenu_button-span">построить</span>
+            </div>`;
+
+    menu.insertAdjacentHTML('beforeEnd', div);
 
 
-    const buildName = document.querySelector('#buildName');
-    buildName.innerHTML = MAIN.game.configs.buildings[building].name;
-
-    const buildCoast = document.querySelector('#buildCoast');
-    buildCoast.innerHTML = '$' + MAIN.game.configs.buildings[building].coast;
-
-    const buildDescription = document.querySelector('#buildDescription');
-    buildDescription.innerHTML = MAIN.game.configs.buildings[building].description;
+    // const buildName = document.querySelector('#buildName');
+    // buildName.innerHTML = MAIN.game.configs.buildings[building].name;
+    //
+    // const buildCoast = document.querySelector('#buildCoast');
+    // buildCoast.innerHTML = '$' + MAIN.game.configs.buildings[building].coast;
+    //
+    // const buildDescription = document.querySelector('#buildDescription');
+    // buildDescription.innerHTML = MAIN.game.configs.buildings[building].description;
 
     const cancelButton = document.querySelector('#cancelBuild');
     cancelButton.onclick = () => {
