@@ -613,7 +613,7 @@ class FieldCeil {
         factoryBottomGeometry.translate(this.position.x, this.position.y, this.position.z);
 
 
-        const playerIndex = MAIN.game.data.commonData.members.indexOf(player)
+        const playerIndex = MAIN.game.data.commonData.members.indexOf(player);
         const newFactoryBottomGeometry = BufferGeometryUtils.mergeBufferGeometries([factoryBottomGeometry,MAIN.game.scene.colorsGeommetry[playerIndex].geometry]);
         MAIN.game.scene.colorsGeommetry[playerIndex].geometry.dispose();
         delete MAIN.game.scene.colorsGeommetry[playerIndex].geometry;

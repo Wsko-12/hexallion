@@ -155,7 +155,7 @@ function init() {
             MAIN.game.functions.endTurn();
           };
         };
-        MAIN.interface.game.turn.makeTimer(data.turnTime / 1000, data.currentTurn);
+        MAIN.interface.game.turn.makeTimer(data.turnTime / 1000, data);
       };
     });
 

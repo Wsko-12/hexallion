@@ -64,8 +64,8 @@ const ROOMS = {
     members: [],
     started: false,
     turnBasedGame: true,
-    turnTime: 600000,
-    tickTime:5000,
+    turnTime: 180000,
+    tickTime:45000,
   },
 };
 const GAMES = {
@@ -296,6 +296,7 @@ class GAME {
     this.tickPaused = false;
     this.cities = {};
 
+    this.tickStarted = false;
     this.tickNumber = 0;
     this.circle = 0;
 
@@ -393,7 +394,7 @@ class GAME {
         trucks: this.trucks,
         tickTime: this.tickTime,
         members: this.members,
-        playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff'],
+        playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
         factoriesCount:this.factoriesCount,
       },
     };
@@ -545,12 +546,11 @@ class GAME {
 
       const thisPlayer = this.players[player];
       if(!thisPlayer.gameOver){
-
         thisPlayer.turnAction();
       };
     };
     this.tickNumber += 1;
-    if(this.tickNumber % this.members.length === 0){
+    if(this.tickNumber % 20 === 0){
       this.circle += 1;
     };
     this.updateCities();
@@ -1002,7 +1002,7 @@ class PLAYER {
     };
 
     //tax
-    const taxProcent = Math.floor(this.game.circle/10);
+    const taxProcent = this.game.circle;
     // console.log('Circle'+this.game.circle)
     // console.log('taxProcent' + taxProcent)
     const clearEarn = this.factoryList.calculateClearEarnings();
@@ -1248,6 +1248,7 @@ io.on('connection', function(socket) {
     const user = SOCKETS[socket.id].user;
     if (user) {
       user.disconnect();
+      delete USERS[user.login];
       delete SOCKETS[socket.id].user;
     };
     delete SOCKETS[socket.id];
@@ -1352,7 +1353,11 @@ io.on('connection', function(socket) {
         } else {
 
           //если не пошаговая, то начинаем тики
-          GAMES[data.gameID].tick();
+          if(!GAMES[data.gameID].tickStarted){
+            GAMES[data.gameID].tickStarted = true;
+            GAMES[data.gameID].tick();
+          };
+
         };
       };
     };

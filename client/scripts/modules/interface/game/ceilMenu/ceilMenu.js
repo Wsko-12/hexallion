@@ -34,7 +34,6 @@ function generateId(type, x) {
 
 const CEIL_MENU = {
   showSectorMenu(ceil, sector, buttons) {
-    console.log(buttons);
     const section = document.querySelector('#onCeilDoubleClick');
     section.style.display = 'flex';
     const menu = document.querySelector('#sectorMenu');

@@ -22,12 +22,12 @@ function init() {
 
 let timerId = null;
 
-function makeTimer(value, player) {
+function makeTimer(value, data) {
 
   let timer = value;
   let random = Math.random();
   timerId = random;
-
+  const player = data.currentTurn;
   function animate() {
     if (random === timerId) {
       timer--;
@@ -42,8 +42,9 @@ function makeTimer(value, player) {
         } else {
           if (player === MAIN.game.data.commonData.queue && !MAIN.game.data.commonData.turnsPaused) {
             document.querySelector('#turnButton').style.display = `none`;
-            document.querySelector('#turnInfo').style.color = 'white'
-            document.querySelector('#turnInfo').innerHTML = `turn: ${player}  ${timer}sec`;
+            document.querySelector('#turnInfo').style.color = 'white';
+            const message = `turn: <span style="color:${MAIN.game.data.commonData.playerColors[MAIN.game.data.commonData.members.indexOf(player)]}">${player}</span>  ${timer}sec`
+            document.querySelector('#turnInfo').innerHTML = message;
             setTimeout(animate, 1000);
           };
         };
