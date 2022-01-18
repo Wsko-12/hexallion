@@ -8,17 +8,21 @@
 }
 
 #balanceDiv{
-    pointer-events: auto;
+  pointer-events: auto;
   color: white;
-  text-shadow: 0px 0px 1px black;
-  font-weight: bold;
   font-family: 'Roboto', sans-serif;
   text-align: center;
   font-size: 1.5em;
   position: fixed;
-  top:10%;
+  top:20px;
   left: 50%;
   transform: translateX(-50%);
+  padding: 0px 10px;
+  background-color: rgba(0,0,0,0.3);
+}
+#balanceDiv_span{
+  letter-spacing: -0.05em;
+
 }
 #balanceHistoryClicker{
   pointer-events: auto;

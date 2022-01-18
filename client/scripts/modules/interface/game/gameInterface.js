@@ -36,6 +36,15 @@ function init(){
 
   <section id='sceneNotifications'></section>
   <section id="gameInterface">
+    <div id="leftMenu">
+      <div class="leftMenu-buttons" id="leftMenu_openTruck">
+        <div class="icon icon-truck"></div>
+      </div>
+
+      <div class="leftMenu-buttons" id="leftMenu_openLeaderTable">
+        <div class="icon icon-table"></div>
+      </div>
+    </div>
     <section id="onCeilDoubleClick">
       <div id="sectorMenu">
           <div class="sectorMenu_Left">
@@ -52,6 +61,7 @@ function init(){
     </section>
     <section id='balanceSection'>
       <div id='balanceDiv'>
+        $<span id='balanceDiv_span'><span>
       </div>
     </section>
     <section id='pathSection'>
@@ -70,6 +80,7 @@ function init(){
   <div id="fullScreenButton" class="card">
     fullScreen
   </div>
+
   `
 
 

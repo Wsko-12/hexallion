@@ -140,7 +140,9 @@ function init(amount){
   // interfaceSection.insertAdjacentHTML('beforeEnd',section);
   const balanceSection = document.querySelector('#balanceSection');
   const balanceDiv = document.querySelector('#balanceDiv');
-  balanceDiv.innerHTML = amount;
+
+  const balanceDivSpan = document.querySelector('#balanceDiv_span');
+  balanceDivSpan.innerHTML = amount;
 
   const creditUser = MAIN.game.data.playerData.credit;
   const creditConfig = MAIN.game.configs.credits[creditUser.creditName];
@@ -251,7 +253,7 @@ function init(amount){
 
 
   function showBalanceHistory(event){
-    if(event.target === balanceDiv || event.target === balanceHistoryClicker){
+    if(event.target === balanceDiv || event.target === balanceHistoryClicker || event.target === balanceDivSpan){
       if(balanceHistoryOpened){
         balanceHistoryOpened = false;
         balanceHistoryClicker.style.display = 'none';
@@ -267,9 +269,11 @@ function init(amount){
     updatePayPerStep();
   };
 
+  MAIN.interface.deleteTouches(balanceDiv);
   balanceDiv.onclick = showBalanceHistory;
   balanceDiv.ontouchstart = showBalanceHistory;
 
+  MAIN.interface.deleteTouches(balanceHistoryClicker);
   balanceHistoryClicker.onclick = showBalanceHistory;
   balanceHistoryClicker.ontouchstart = showBalanceHistory;
 
@@ -327,7 +331,8 @@ function notEnoughMoney(){
   animate();
 };
 function change(newBalance){
-  const div = document.querySelector('#balanceDiv');
+  const div = document.querySelector('#balanceDiv_span');
+  const parentDiv = document.querySelector('#balanceDiv');
   let startedBalance = MAIN.game.data.playerData.balance;
   MAIN.game.data.playerData.balance = newBalance;
   let curentAnimate = 0;
@@ -342,17 +347,20 @@ function change(newBalance){
   function animate(){
     const value = interpolate(startedBalance,newBalance,curentAnimate);
     if(value > startedBalance){
-      div.style.color = 'green'
+      parentDiv.style.color = '#00a01e'
     }else if(value < startedBalance){
-      div.style.color = 'red'
+      parentDiv.style.color = '#C73636'
     };
-    div.innerHTML = '$'+value;
+    div.innerHTML = value;
     curentAnimate++;
     if(curentAnimate < maxAnimate){
       setTimeout(animate,50)
     }else{
-      div.style.color = 'white';
-      div.innerHTML = '$'+newBalance;
+      parentDiv.style.color = 'white';
+      if(newBalance < 0){
+        parentDiv.style.color = '#C73636';
+      }
+      div.innerHTML = newBalance;
     };
   };
   animate();

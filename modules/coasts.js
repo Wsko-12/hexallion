@@ -13,7 +13,7 @@ const coasts = {
 
   trucks : {
     //сколько грузовиков всего в игре
-    count: 20,
+    count: 26,
     coast: 10000,
   },
 

@@ -1,0 +1,19 @@
+#leftMenu{
+  width: 50px;
+  position: fixed;
+  pointer-events: auto;
+  left: 5px;
+  top:50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.leftMenu-buttons{
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0,0,0,0.3);
+  margin: 4px 0px;
+
+}

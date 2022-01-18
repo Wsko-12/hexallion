@@ -1,0 +1,13 @@
+.icon{
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.icon-truck{
+  background-image: url(../img/icons/truck.png);
+}
+
+.icon-table{
+  background-image: url(../img/icons/table.png);
+}

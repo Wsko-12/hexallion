@@ -29,26 +29,27 @@ function init(){
   clicker.onclick = closeMenu;
   clicker.ontouchstart = closeMenu;
 
-
   const cancelButton = document.querySelector('#truckCancelButton');
   MAIN.interface.deleteTouches(cancelButton);
   cancelButton.onclick = MAIN.interface.game.path.closeAll;
   cancelButton.ontouchstart = MAIN.interface.game.path.closeAll;
+
+
+  const leftMenuButton = document.querySelector('#leftMenu_openTruck');
+  MAIN.interface.deleteTouches(leftMenuButton);
+  leftMenuButton.onclick = () => {openMenu(null)};
+  leftMenuButton.ontouchstart = () => {openMenu(null)};
+
 };
 
 let nowShowedFactory = null;
 function openMenu(factory){
 
     //это сделано для реопена меню(апдейта)
-
     if(factory){
       nowShowedFactory = factory;
     }else{
-      if(nowShowedFactory){
-        factory = nowShowedFactory;
-      }else{
-        return;
-      };
+      factory = nowShowedFactory;
     };
 
     document.querySelector('#trucksMenuContainer').style.display = 'block';
@@ -67,7 +68,7 @@ function openMenu(factory){
     if(MAIN.game.data.commonData.trucks.count > 0){
       const buyTruckCard = `
 
-      <div class="card trucksMenu-card">
+      <div class="card trucksMenu-card" id="truckMenu_card_buy">
         <div class="card-header">
           TRUCK <span class="card-header-span" id="truckMenu_card_count"> | 0${MAIN.game.data.commonData.trucks.count}</span>
         </div>
@@ -85,6 +86,7 @@ function openMenu(factory){
 
       list += buyTruckCard;
     };
+
 
 
     for(let truck in MAIN.game.data.playerData.trucks){
@@ -111,8 +113,17 @@ function openMenu(factory){
           <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${thisTruck.id}">×</div>
         `
       };
+
+      let truckButton = null;
+      //если открыли меню с кнопки интерфейса, то фабрика === null
+      if(factory){
+        truckButton = thisTruck.resource?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:MAIN.interface.lang.truck.load[MAIN.interface.lang.flag]
+      }else{
+        truckButton = thisTruck.resource?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:'';
+      }
+
       const truckCard = `
-        <div class="card trucksMenu-card">
+        <div class="card trucksMenu-card" id="truckMenu_card_${thisTruck.id}">
           <div class="card-header">
             TRUCK <span class="card-header-span"> | 0${thisTruck.truckNumber}</span>
           </div>
@@ -121,7 +132,7 @@ function openMenu(factory){
           </div>
 
           <div class="trucksMenu-card-button" id="truckMenu_card_button_${thisTruck.id}">
-            <span class="trucksMenu-card-button-span">${thisTruck.resource?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:MAIN.interface.lang.truck.load[MAIN.interface.lang.flag]}<span>
+            <span class="trucksMenu-card-button-span">${truckButton}<span>
           </div>
         </div>
       `
@@ -134,10 +145,15 @@ function openMenu(factory){
 
 
     //вешаем функции
+
+    //чтобы при двойном тапе не зумилось
+    MAIN.interface.deleteTouches(document.querySelector('#truckMenu_card_buy'));
+
     const buyButton = document.querySelector('#truckMenu_card_buyButton');
     if(buyButton){
+      MAIN.interface.deleteTouches(buyButton);
       buyButton.onclick = buyTruck;
-      // buyButton.ontouchstart = buyTruck;
+      buyButton.ontouchstart = buyTruck;
     };
 
     for(let truck in MAIN.game.data.playerData.trucks){
@@ -156,11 +172,17 @@ function openMenu(factory){
         };
       };
 
-
       if(thisTruck.resource === null){
-        thisButton.onclick = load;
-        thisButton.ontouchstart = load;
+        if(factory){
+          MAIN.interface.deleteTouches(thisButton);
+          thisButton.onclick = load;
+          thisButton.ontouchstart = load;
+
+        }else{
+          thisButton.parentNode.removeChild(thisButton);
+        };
       }else{
+        MAIN.interface.deleteTouches(thisButton);
         thisButton.onclick = show;
         thisButton.ontouchstart = show;
       };
@@ -175,9 +197,6 @@ function openMenu(factory){
         closeMenu();
         loadTruck(thisTruck);
       };
-
-
-
 
     };
 
