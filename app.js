@@ -550,9 +550,7 @@ class GAME {
       };
     };
     this.tickNumber += 1;
-    if(this.tickNumber % 20 === 0){
-      this.circle += 1;
-    };
+
     this.updateCities();
     if (!allPlayersOff) {
       setTimeout(function() {
@@ -1002,9 +1000,15 @@ class PLAYER {
     };
 
     //tax
-    const taxProcent = this.game.circle;
-    // console.log('Circle'+this.game.circle)
-    // console.log('taxProcent' + taxProcent)
+
+    let taxProcent;
+    if(this.game.turnBasedGame){
+      taxProcent  = Math.floor(this.game.circle/10);
+    }else{
+      taxProcent = Math.floor(this.game.tickNumber/10);
+    };
+
+    
     const clearEarn = this.factoryList.calculateClearEarnings();
 
     const taxValue = Math.floor(clearEarn * (taxProcent/100));

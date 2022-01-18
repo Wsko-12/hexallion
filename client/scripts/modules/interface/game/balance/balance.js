@@ -5,6 +5,14 @@ import {
 // trigger socket.js -> MAIN.socket.on('GAME_applyCredit')
 function updateCreditHistory(){
   const credit = MAIN.game.data.playerData.credit;
+
+  if(credit.pays === 0){
+    const creditCard =   document.querySelector('#balanceMenu_CreditCard');
+    if(creditCard){
+      creditCard.style.display = 'none';
+    };
+  };
+
   document.querySelector(`#creditHistory_paysCoast`).innerHTML = `${(credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100)}`; //Cost of payment
   document.querySelector(`#creditHistory_allCount`).innerHTML = `${((credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100))*credit.pays}`;
   document.querySelector('#balanceMenu_balanceValue').innerHTML = MAIN.game.data.playerData.balance;
@@ -41,6 +49,7 @@ function updateCreditHistory(){
   };
 
   document.querySelector('#balanceMenu_Container_Payments_Container').innerHTML = paymentsLine;
+
 
 };
 
