@@ -22,6 +22,7 @@ const ROOMS = {
 
     const page = `
       <div id="roomsPage">
+        <div id="roomsPageBG"></div>
         <div id="roomsList">
           <div class='room-card' id="createRoomCard">
             <div class='card-header'>Creating room</div>
@@ -140,6 +141,7 @@ const ROOMS = {
 
 
         }else{
+          room.turnBasedGame = false;
           document.querySelector('#roomCard-turn-title').innerHTML = 'Tick time:';
 
 
@@ -334,7 +336,6 @@ const ROOMS = {
       document.querySelector(`#${data.id}_button`).ontouchstart = ()=>{joinRoom()};
     };
   },
-
 
   updatePage(data){
     for(let room in this.showedRooms){

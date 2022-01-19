@@ -15,7 +15,20 @@ const SOCKET = {
 
 function init() {
   if (MAIN.socket) {
-    MAIN.socket.on('LOBBY_authTrue', () => {
+
+    MAIN.socket.on('AUTH_false', (data) => {
+      MAIN.pages.auth.showError(data.reason, data.password);
+    });
+
+
+
+
+    MAIN.socket.on('AUTH_true', (data) => {
+      MAIN.userData = {
+        login:data.login,
+        inRoom:false,
+      };
+      document.title += ` | ${data.login}`;
       MAIN.pages.rooms.showPage();
     });
 

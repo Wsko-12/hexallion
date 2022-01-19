@@ -3,13 +3,17 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
+
+  <title>hexallion</title>
     <link rel="stylesheet" href="./css/master.css">
-    <link rel="stylesheet" href="./css/rooms/rooms.css">
+    <link rel="stylesheet" href="./css/gameInterface/rooms.css">
 
 
 
     <link rel="stylesheet" href="./css/gameInterface/gameScreen.css">
+    <link rel="stylesheet" href="./css/gameInterface/auth.css">
+
     <link rel="stylesheet" href="./css/gameInterface/icons.css">
 
     <link rel="stylesheet" href="./css/gameInterface/ceilMenu.css">
@@ -102,13 +106,13 @@
 
         /*ДЛЯ ОДНОГО ИГРОКА*/
        // чтобы быстро перейти к созданию сцены
-        const data = {
-          login:generateId('p',5)
-        };
-        MAIN.userData = {
-          login:data.login,
-        };
-        MAIN.socket.emit('auth',data);
+        // const data = {
+        //   login:generateId('p',5)
+        // };
+        // MAIN.userData = {
+        //   login:data.login,
+        // };
+        // MAIN.socket.emit('auth',data);
 
         /*ДЛЯ ОДНОГО ИГРОКА*/
 
