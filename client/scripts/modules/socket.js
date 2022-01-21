@@ -15,6 +15,22 @@ const SOCKET = {
 
 function init() {
   if (MAIN.socket) {
+    MAIN.socket.on('DEV_GAMEPLAY',()=>{
+      /*ДЛЯ ОДНОГО ИГРОКА*/
+     // чтобы быстро перейти к созданию сцены
+       const data = {
+         login:generateId('p',5)
+       };
+       MAIN.userData = {
+         login:data.login,
+       };
+       MAIN.socket.emit('auth',data);
+
+      /*ДЛЯ ОДНОГО ИГРОКА*/
+    });
+
+
+
 
     MAIN.socket.on('AUTH_false', (data) => {
       MAIN.pages.auth.showError(data.reason, data.password);

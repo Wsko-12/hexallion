@@ -3,7 +3,6 @@ const app = express();
 const http = require('http').createServer(app);
 const PORT = process.env.PORT || 3000;
 const DB = require('./modules/db.js');
-const AUTH = require('./modules/auth.js');
 const COASTS = require('./modules/coasts.js');
 const FACTORIES = require('./modules/factory.js');
 const MAP_CONFIGS = require('./modules/mapConfigs.js');
@@ -11,9 +10,11 @@ const CREDITS = require('./modules/credits.js');
 const bcrypt = require('bcryptjs');
 
 
-DB.connectToDB().then((result) =>{
-  console.log(result);
 
+//сразу делает игру
+const DEV_GAMEPLAY = true;
+
+if(DEV_GAMEPLAY){
   http.listen(PORT, '0.0.0.0', () => {
     console.log('Сервер запущен');
   });
@@ -23,7 +24,25 @@ DB.connectToDB().then((result) =>{
   });
 
   app.use('/', express.static(__dirname + '/client'));
-});
+
+}else{
+  DB.connectToDB().then((result) =>{
+    console.log(result);
+
+    http.listen(PORT, '0.0.0.0', () => {
+      console.log('Сервер запущен');
+    });
+
+    app.get('/', (req, res) => {
+      res.sendFile(__dirname + '/client/index.html');
+    });
+
+    app.use('/', express.static(__dirname + '/client'));
+  });
+};
+
+
+
 
 
 
@@ -76,6 +95,8 @@ const ROOMS = {
   //   tickTime:45000,
   // },
 };
+
+
 const GAMES = {
 
 };
@@ -182,6 +203,19 @@ class ROOM {
 
     this.delete();
   };
+};
+
+
+if(DEV_GAMEPLAY){
+  ROOMS.R_0000000000 = new ROOM({id: 'R_0000000000',
+        gameID: null,
+        owner: null,
+        maxMembers:1,
+        members: [],
+        started: false,
+        turnBasedGame: true,
+        turnTime: 180000,
+        tickTime:45000,});
 };
 
 function sendToAllRoomsData() {
@@ -401,6 +435,7 @@ class GAME {
         trucks: this.trucks,
         tickTime: this.tickTime,
         members: this.members,
+        //#bfbfbf серый для скринов
         playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
         factoriesCount:this.factoriesCount,
       },
@@ -1171,87 +1206,73 @@ io.on('connection', function(socket) {
    * Если логин первый, то это хозяин комнаты
    * Дальше, как наберется нужное кол-во игроков, то Пользователь должен начать игру.
    */
+
+
+
+   if(DEV_GAMEPLAY){
+     socket.emit('DEV_GAMEPLAY');
+   };
   socket.on('auth', (data) => {
-    AUTH.checkUser(data).then((result)=>{
-      console.log(result)
-    });
-
-
-
-
+    // AUTH.checkUser(data).then((result)=>{
+    //   console.log(result)
+    // });
 
     const user = new USER({
       socket,
       login: data.login
-    })
+    });
 
     SOCKETS[socket.id].user = user;
     USERS[user.login] = user;
     user.authTrue();
 
 
+    if(DEV_GAMEPLAY){
+      /*ДЛЯ ОДНОГО ИГРОКА*/
+      ROOMS.R_0000000000.owner = data.login;
+      ROOMS.R_0000000000.members = [];
+      ROOMS.R_0000000000.members.push(data.login);
+      /*ДЛЯ ОДНОГО ИГРОКА*/
+
+      // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
+      // if (ROOMS.R_0000000000.owner === null) {
+      //   ROOMS.R_0000000000.owner = data.login;
+      // };
+      // ROOMS.R_0000000000.members.push(data.login);
+      // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
 
 
 
-    // socket.emit('auth_true',afterAuthData);
+      if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
 
-    /*ДЛЯ ОДНОГО ИГРОКА*/
-    // ROOMS.R_0000000000.owner = data.login;
-    // ROOMS.R_0000000000.members = [];
-    // ROOMS.R_0000000000.members.push(data.login);
-    /*ДЛЯ ОДНОГО ИГРОКА*/
+        const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
 
-    // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-    // if (ROOMS.R_0000000000.owner === null) {
-    //   ROOMS.R_0000000000.owner = data.login;
-    // };
-    // ROOMS.R_0000000000.members.push(data.login);
-    // /*БОЛЬШЕ ОДНОГО ИГРОКА*/
-    //
+        //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
 
+        ROOMS.R_0000000000.members.forEach((member, i) => {
+          if (member != ROOMS.R_0000000000.owner) {
+            const memberSocket = USERS[member].socket;
+            if (memberSocket) {
+              //Участникам комнаты уведомление, что комната готова и идет генерация игры
+              memberSocket.emit('ROOM_ready');
+            };
+          };
+        });
 
-
-
-
-
-
-    // if (ROOMS.R_0000000000.members.length === ROOMS.R_0000000000.maxMembers) {
-    //
-    //   const ownerSocket = USERS[ROOMS.R_0000000000.owner].socket;
-    //
-    //   /* ГЕНЕРАЦИЯ на стороне клиента*/
-    //   // if (ownerSocket) {
-    //   //   //Вызов у хозяина комнаты старта начала генерации игры
-    //   //   ownerSocket.emit('GAME_generate', ROOMS.R_0000000000);
-    //   // };
-    //
-    //
-    //
-    //   //ЭТО ДОЛЖНО БЫТЬ, КОГДА КОМНАТА ГОТОВА
-    //
-    //   ROOMS.R_0000000000.members.forEach((member, i) => {
-    //     if (member != ROOMS.R_0000000000.owner) {
-    //       const memberSocket = USERS[member].socket;
-    //       if (memberSocket) {
-    //         //Участникам комнаты уведомление, что комната готова и идет генерация игры
-    //         memberSocket.emit('ROOM_ready');
-    //       };
-    //     };
-    //   });
-    //
-    //   /* ГЕНЕРАЦИЯ на стороне сервера*/
-    //   const game = new GAME(ROOMS.R_0000000000);
-    //   GAMES[game.id] = game;
-    //   game.generateMap();
-    //   const gameData = game.getData();
-    //   ROOMS.R_0000000000.members.forEach((member) => {
-    //     if (USERS[member]) {
-    //       USERS[member].game = GAMES[game.id];
-    //       USERS[member].inGame = GAMES[game.id];
-    //       USERS[member].socket.emit('GAME_data', gameData);
-    //     };
-    //   });
-    // };
+        /* ГЕНЕРАЦИЯ на стороне сервера*/
+        const game = new GAME(ROOMS.R_0000000000);
+        GAMES[game.id] = game;
+        game.generateMap();
+        const gameData = game.getData();
+        ROOMS.R_0000000000.members.forEach((member) => {
+          if (USERS[member]) {
+            USERS[member].game = GAMES[game.id];
+            USERS[member].inGame = GAMES[game.id];
+            USERS[member].socket.emit('GAME_data', gameData);
+          };
+        });
+      };
+    };
   });
 
   socket.on('AUTH',(data)=>{
@@ -1330,12 +1351,6 @@ io.on('connection', function(socket) {
           };
         });
     };
-
-
-
-
-
-
   });
 
 
