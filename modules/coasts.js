@@ -25,27 +25,31 @@ const coasts = {
       price:8000,
       sailSpeed:5,
       productionPrice:3000,
+      raw:null,
     },
     water:{
       price:15000,
       sailSpeed:6,
       productionPrice:7000,
+      raw:null,
     },
     wood:{
       price:24000,
       sailSpeed:7,
       productionPrice:11000,
+      raw:null,
     },
     steel:{
       price:43000,
       sailSpeed:8,
       productionPrice:20000,
+      raw:null,
     },
     gold:{
       price:89000,
       sailSpeed:9,
       productionPrice:40000,
-
+      raw:null,
     },
 
 

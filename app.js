@@ -386,9 +386,7 @@ class GAME {
       all: {},
     };
 
-    this.factoriesCount = {
-
-    };
+    this.factoriesCount = {};
     for(let factory in FACTORIES){
       this.factoriesCount[factory] = FACTORIES[factory].count;
     };
@@ -778,140 +776,361 @@ class FACTORY {
 
     this.storage = FACTORIES[properties.building].storage;
     this.stockSpeed = FACTORIES[properties.building].speed;
-    this.quality = 0;
+
 
 
 
     if(this.category === 'mining'){
+        this.quality = 0;
         this.product = FACTORIES[properties.building].product;
     }else if(this.category === 'factory'){
-
+        this.products = FACTORIES[properties.building].products;
+        this.rawStorage = {};
+        this.products.forEach((product) => {
+          product.raw.forEach((raw) => {
+            this.rawStorage[raw] = null;
+          });
+        });
+        this.productSelected = null;
+        this.productInProcess = null;
     };
 
 
   };
 
   setSettings(settings) {
+    const points = 4
+    if(this.category === 'mining'){
+      //проверяем на читы хотя вроде все внутри функции и область видимости не пробьешь
+      //anticheat
+      let pointsCounter = 0;
+      for (let property in settings) {
+        if (property != 'cardUsed') {
+          pointsCounter += settings[property];
+        };
+      };
+
+      if (pointsCounter > points) {
+        if (settings.cardUsed === null) {
+          return;
+        };
+      };
+      this.quality = settings.quality;
+
+      this.settingsSetted = true;
+
+      this.productLine = [];
+      //сначала забиваем стандартом
+      for (let i = 0; i < FACTORIES[this.name].speed; i++) {
+        this.productLine.push(0);
+      };
+      //потом отрезаем скорости
+      for (let i = 0; i < settings.speed; i++) {
+        this.productLine.pop();
+      };
+
+
+      //полная цена за все производство
+      const prise = FACTORIES[this.name].price
+
+      //каждый salary point сбивает цену производства на 15%
+      //сразу добавляем +15% к стоймости, если у игрока зарплаты на 0 прокачаны;
+
+      // const newPrise = prise + (prise*(0.15));
+      const newPrise = prise;
+
+      this.price = Math.round(newPrise - (newPrise * (0.15 * settings.salary)));
+      this.stepPrice = Math.round(this.price / this.productLine.length);
+
+      this.stockStorage = FACTORIES[this.name].storage;
+      this.storage = [];
+      for (let i = 0; i < FACTORIES[this.name].storage + settings.storage; i++) {
+        this.storage.push(0);
+      };
+
+      this.salaryPoints = settings.salary;
+
+      this.sendNewSettings();
+
+    };
     //происходит, когда игрок меняет настройки
 
+    if(this.category === 'factory'){
+      //проверяем на читы хотя вроде все внутри функции и область видимости не пробьешь
+      //anticheat
 
-    //проверяем на читы хотя вроде все внутри функции и область видимости не пробьешь
-    //anticheat
-    const points = 4;
-    let pointsCounter = 0;
-    for (let property in settings) {
-      if (property != 'cardUsed') {
-        pointsCounter += settings[property];
+      //speed
+      //low salary
+      //storage
+      //volume
+      //!!! quality будет браться от raw ресурса
+
+      let pointsCounter = 0;
+      for (let property in settings) {
+        if (property != 'cardUsed') {
+          pointsCounter += settings[property];
+        };
       };
-    };
 
-    if (pointsCounter > points) {
-      if (settings.cardUsed === null) {
-        return;
+      if (pointsCounter > points) {
+        if (settings.cardUsed === null) {
+          return;
+        };
       };
+
+      this.settingsSetted = true;
+
+      this.productLine = [];
+      //сначала забиваем стандартом
+      for (let i = 0; i < FACTORIES[this.name].speed; i++) {
+        this.productLine.push(0);
+      };
+      //потом отрезаем скорости
+      for (let i = 0; i < settings.speed; i++) {
+        this.productLine.pop();
+      };
+
+
+      //каждый salary point сбивает цену производства на 15%
+      this.salaryPoints = settings.salary;
+
+
+      // this.price = Math.round(newPrise - (newPrise * (0.15 * settings.salary)));
+      // this.stepPrice = Math.round(this.price / this.productLine.length);
+
+      this.stockStorage = FACTORIES[this.name].storage;
+      this.storage = [];
+      for (let i = 0; i < FACTORIES[this.name].storage + settings.storage; i++) {
+        //null потому что могут быть разные ресурсы на складе
+        this.storage.push(null);
+      };
+
+
+      this.volume = settings.volume;
+      this.sendNewSettings();
+
     };
-    this.quality = settings.quality;
 
-    this.settingsSetted = true;
-
-    this.productLine = [];
-    //сначала забиваем стандартом
-    for (let i = 0; i < FACTORIES[this.name].speed; i++) {
-      this.productLine.push(0);
-    };
-    //потом отризаем скорости
-    for (let i = 0; i < settings.speed; i++) {
-      this.productLine.pop();
-    };
-
-
-    //полная цена за все производство
-    const prise = FACTORIES[this.name].price
-
-    //каждый salary point сбивает цену производства на 15%
-    //сразу добавляем +15% к стоймости, если у игрока зарплаты на 0 прокачаны;
-
-    // const newPrise = prise + (prise*(0.15));
-    const newPrise = prise;
-
-    this.price = Math.round(newPrise - (newPrise * (0.15 * settings.salary)));
-    this.stepPrice = Math.round(this.price / this.productLine.length);
-
-    this.stockStorage = FACTORIES[this.name].storage;
-    this.storage = [];
-    for (let i = 0; i < FACTORIES[this.name].storage + settings.storage; i++) {
-      this.storage.push(0);
-    };
-
-    this.salaryPoints = settings.salary;
-
-    this.sendNewSettings();
   };
 
   sendNewSettings() {
-    const data = {
-      id: this.id,
-      name: this.name,
-      product: this.product,
-      storage: this.storage,
-      //надо, чтобы забить на карточке клетки
-      stockStorage: this.stockStorage,
-      stockSpeed: this.stockSpeed,
-      quality: this.quality,
-      salary:this.salaryPoints,
-      productLine: this.productLine,
-      price: this.price,
-      stepPrice: this.stepPrice,
+    let data = {};
+    if(this.category === 'mining'){
+       data = {
+        id: this.id,
+        name: this.name,
+        product: this.product,
+        storage: this.storage,
+        //надо, чтобы забить на карточке клетки
+        stockStorage: this.stockStorage,
+        stockSpeed: this.stockSpeed,
+        quality: this.quality,
+        salary:this.salaryPoints,
+        productLine: this.productLine,
+        price: this.price,
+        stepPrice: this.stepPrice,
+      };
+    }else if(this.category === 'factory'){
+        data = {
+         id: this.id,
+         name: this.name,
+         product: this.product,
+         storage: this.storage,
+         //надо, чтобы забить на карточке клетки
+         productLine: this.productLine,
+         stockStorage: this.stockStorage,
+         stockSpeed: this.stockSpeed,
+
+         salary:this.salaryPoints,
+       };
     };
+
+
     this.player.emit('GAME_factory_newSettings', data);
   };
 
   sendUpdates() {
-    const updates = {
-      factoryID: this.id,
-      updates: {
-        productLine: this.productLine,
-        storage: this.storage,
-      },
+    let updates;
+    if(this.category === 'mining'){
+       updates = {
+        factoryID: this.id,
+        updates: {
+          productLine: this.productLine,
+          storage: this.storage,
+        },
+      };
     };
+
 
     this.player.emit('GAME_factory_update', updates);
   };
 
   turn() {
-    if (this.settingsSetted) {
-      this.player.balance -= this.stepPrice;
-      this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
-      //если в storage есть место
-      if (this.storage.includes(0)) {
-        if (!this.productLine.includes(1)) {
-          //если вообще не начато производство
-          this.productLine[0] = 1;
-        } else {
-          //если производтсво кончилось
-          if (this.productLine[this.productLine.length - 1] === 1) {
-            this.storage.unshift(this.storage.pop());
-            this.storage[0] = 1;
-            if (this.storage.includes(0)) {
-              this.productLine.unshift(this.productLine.pop());
-            } else {
-              this.productLine.forEach((item, i) => {
-                this.productLine[i] = 0;
-              });
-            };
+    if(this.category === 'mining'){
+      if (this.settingsSetted) {
+        this.player.balance -= this.stepPrice;
+        this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
+        //если в storage есть место
+        if (this.storage.includes(0)) {
+          if (!this.productLine.includes(1)) {
+            //если вообще не начато производство
+            this.productLine[0] = 1;
           } else {
-            this.productLine.unshift(this.productLine.pop());
+            //если производтсво кончилось
+            if (this.productLine[this.productLine.length - 1] === 1) {
+              this.storage.unshift(this.storage.pop());
+              this.storage[0] = 1;
+              if (this.storage.includes(0)) {
+                this.productLine.unshift(this.productLine.pop());
+              } else {
+                this.productLine.forEach((item, i) => {
+                  this.productLine[i] = 0;
+                });
+              };
+            } else {
+              this.productLine.unshift(this.productLine.pop());
+            };
           };
+        } else {
+          //в хранилище нет места
+          this.productLine.forEach((item, i) => {
+            this.productLine[i] = 0;
+          });
         };
       } else {
-        //в хранилище нет места
-        this.productLine.forEach((item, i) => {
-          this.productLine[i] = 0;
-        });
+        //выслать уведомление по настройке фабрики
       };
-    } else {
-      //выслать уведомление по настройке фабрики
     };
+
+
+    if(this.category === 'factory'){
+      //если продукт выбран
+      if(this.productSelected){
+        //если уже какой-то продукт производится
+        if(this.productInProcess){
+          //1. если это последний этап производства
+          if (this.productLine[this.productLine.length - 1] === 1) {
+            //скидываем продукты на склад
+            //1. ищем стандары продукта
+            const productConfigs = this.products.find((product) => {
+                if(product.name === this.productInProcess.name){
+                    return product;
+                };
+            });
+
+            //2. добавляем объем производства на фабрике к стандартному
+            let productionVolume = productConfigs.volume + this.volume;
+
+            //3. и запихиваем клоны ресурса во все свободные места на складе
+            this.storage.forEach((place) => {
+              if(place === null){
+                if(productionVolume > 0){
+                  productionVolume--;
+                  place = this.productInProcess.clone();
+                };
+              };
+            });
+
+            //4. очищаем продукт в процессе
+            this.productInProcess = null;
+
+            //5.запускаем функцию еще раз
+            this.turn();
+          }else{
+            //проводим ход
+            productLine.unshift(productLine.pop());
+            //считаем, сколько денег должен
+            const productConfigs = this.products.find((product) => {
+                if(product.name === this.productInProcess.name){
+                    return product;
+                };
+            });
+            const stepPrice = Math.round(productConfigs.price - (productConfigs.price * (0.15 * this.salary)));
+            this.player.balance -= stepPrice;
+            this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -stepPrice);
+          };
+        }else{
+          //если не начато производство продукта
+          //0. проверяем, есть ли вообще такой продукт на фабрике
+          //0.1  находим желаемый продукт
+          const productConfigs = this.products.find((product) => {
+              if(product.name === this.productSelected){
+                  return product;
+              };
+          });
+
+          //0.2 если undefined то выходим
+          if(!productConfigs){
+            return;
+          };
+
+          //1. проверяем, есть ли все сырье для этого продукта
+          //1.2. смотрим есть ли на rawStorage нужные продукты
+          //изначально ставим, что у нас есть все продукты (потому что из forEach return не срабатывает)
+          let allProduct = true;
+          productConfigs.raw.forEach((rawProductName, i) => {
+            //если хоть одного продукта не хватает
+            if(!this.rawStorage[rawProductName]){
+              allProduct = false;
+            };
+          });
+
+
+          //2. если все продукты есть
+          if(allProduct){
+            //2.1 создаем массив сырья, чтобы посчитать качество будущего продукта
+            const raw = [];
+
+            productConfigs.raw.forEach((rawProductName, i) => {
+              //2.4 добавляемм в массив нужных продуктов
+              raw.push(this.rawStorage[rawProductName]);
+              //2.3 удаляем его со склада
+              this.rawStorage[rawProductName] = null;
+            });
+
+            //3. считаем качество будущего продукта
+            function calculateQuality(){
+                // let sum = 0;
+                // raw.forEach((product) => {
+                //   sum += product.quality;
+                // });
+                // return Math.floor(sum/raw.length);
+
+                const sum = raw.reduce(function (accumulator, currentValue) {return accumulator + currentValue.quality}, 0);
+                return Math.floor(sum/raw.length);
+            };
+
+            let productQuality = calculateQuality();
+
+            //4. создаем нужный продукт
+            const product = new PRODUCT({
+              name:productConfigs.name,
+              quality:productQuality,
+              player:this.player,
+              factory:this.factory,
+            });
+
+            this.productInProcess = product;
+
+            //5. начинаем производство
+            this.productLine[0] = 1;
+
+
+
+
+          };
+        };
+
+      }else{
+        this.player.balance -= this.downtimeCost;
+        this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
+      };
+
+
+
+
+    };
+
   };
 
 
@@ -1198,8 +1417,23 @@ class PRODUCT {
     this.game = properties.game;
     this.player = properties.player;
     this.factory = properties.factory;
-    this.truck = properties.truck;
+    this.truck = properties.truck || null;
     this.id = generateId(`Product_${this.name}`, 5);
+  };
+  clone(){
+    const clone = new PRODUCT(this);
+    return clone;
+  };
+  getData(){
+    const data = {
+      id:this.id,
+      quality:this.quality,
+      game:this.game.id,
+      player:this.player.login,
+      factory:this.factory.id,
+      truck:this.truck ? this.truck.id : null,
+    };
+    return data;
   };
 };
 
@@ -1752,7 +1986,6 @@ io.on('connection', function(socket) {
 
 
   socket.on('GAME_product_sell', (data) => {
-    console.log('GAME_product_sell')
     if (GAMES[data.gameID]) {
       const game = GAMES[data.gameID];
 

@@ -59,6 +59,26 @@ const factoriesConfig = {
   },
 
 
+  oilRefinery:{
+    category:'factory',
+    storage:3,
+    speed:5,
+    products:[
+      {
+        name:'plastic',
+        price:24000,
+        raw:['wood'], //!!!!!! ЗАМЕНИТЬ НА OIL
+        //сколько приозведется ресурса за раз
+        productionVolume:2,
+      }
+    ],
+    //цена простоя
+    downtimeCost:12000,
+    count:10,
+
+  },
+
+
 
 
 
