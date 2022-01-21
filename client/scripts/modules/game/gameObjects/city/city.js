@@ -2,9 +2,6 @@ import {
   MAIN
 } from '../../../../main.js';
 import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
-import {
-  resouresBase
-} from '../resource/resource.js';
 
 class City{
   constructor(properties){
@@ -18,67 +15,67 @@ class City{
   createStorage(){
     const storage = {};
 
-    for(let resource in resouresBase){
-      const thisResource = resouresBase[resource];
+    for(let product in MAIN.game.configs.products){
+      const thisProduct = MAIN.game.configs.products[product];
 
       //касается только данного реесурса
-      const resStore = {};
+      const prodStore = {};
 
       //его линия прогресса
-      resStore.line = [];
-      for(let i = 0;i<thisResource.sailSpeed;i++){
-        resStore.line.push(0);
+      prodStore.line = [];
+      for(let i = 0;i<thisProduct.sailSpeed;i++){
+        prodStore.line.push(0);
       };
 
       //максимальная цена ресурса
-      resStore.maxPrice = thisResource.price;
+      prodStore.maxPrice = thisProduct.price;
 
 
 
       //массив цен на данный этап ресурса
-      resStore.prices = [];
-      resStore.line.forEach((item, i) => {
+      prodStore.prices = [];
+      prodStore.line.forEach((item, i) => {
         //harder city price
-        // const discount =(1 - ((i+1)/resStore.line.length)) + (0.10 - 0.10 * (i+1)/resStore.line.length);
-        const discount = 1 - (i+1)/resStore.line.length;
+        // const discount =(1 - ((i+1)/prodStore.line.length)) + (0.10 - 0.10 * (i+1)/prodStore.line.length);
+        const discount = 1 - (i+1)/prodStore.line.length;
 
-        let price = Math.round(resStore.maxPrice - resStore.maxPrice*discount);
+        let price = Math.round(prodStore.maxPrice - prodStore.maxPrice*discount);
         if(price < 0){
           price = 0
         };
-        resStore.prices[i] = price;
+        prodStore.prices[i] = price;
       });
 
-      storage[resource] = resStore;
+      storage[product] = prodStore;
     };
     return storage;
   };
 
-  getCurrentResourcePrice(resoure){
-    const firstFullCeilIndex = this.storage[resoure].line.indexOf(1);
+  getCurrentProductPrice(product){
+    const firstFullCeilIndex = this.storage[product].line.indexOf(1);
     if(firstFullCeilIndex === -1){
-      return this.storage[resoure].prices[this.storage[resoure].prices.length - 1];
+      return this.storage[product].prices[this.storage[product].prices.length - 1];
     }else if(firstFullCeilIndex === 0){
       return 0;
     }else{
-      return this.storage[resoure].prices[firstFullCeilIndex - 1];
+      return this.storage[product].prices[firstFullCeilIndex - 1];
     };
   };
 
 
   turn(){
-    for(let resourceStore in this.storage){
-      const thisResourceStore = this.storage[resourceStore];
-      thisResourceStore.line.pop();
-      thisResourceStore.line.unshift(0);
+    for(let productStore in this.storage){
+      const thisProductStore = this.storage[productStore];
+      thisProductStore.line.pop();
+      thisProductStore.line.unshift(0);
     };
   };
 
 
-  showPrice(resource){
+  showPrice(product){
     this.priceNotification = document.querySelector(`#${this.name}_priceNotification`);
-    const price = this.getCurrentResourcePrice(resource.name);
-    const qualityPrice = Math.round(price + price*((resource.quality*15)*0.01));
+    const price = this.getCurrentProductPrice(product.name);
+    const qualityPrice = Math.round(price + price*((product.quality*15)*0.01));
 
     this.priceNotification.innerHTML = '$'+qualityPrice;
   };

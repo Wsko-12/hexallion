@@ -243,15 +243,15 @@ function init() {
           data = {
             player:this.player.login,
             truckID:this.id,
-            resoure:{
-              name:this.resource.name,
-              quality:this.resoure.quality,
+            product:{
+              name:this.product.name,
+              quality:this.product.quality,
             },
           };
         */
 
         if(MAIN.game.data.commonData.trucks.all[data.truckID]){
-          MAIN.game.data.commonData.trucks.all[data.truckID].resource = data.resoure;
+          MAIN.game.data.commonData.trucks.all[data.truckID].product = data.product;
         };
 
     });
@@ -304,8 +304,8 @@ function init() {
     MAIN.socket.on('GAME_city_update',(data)=>{
       for(let city in MAIN.game.data.cities){
         const thisCity = MAIN.game.data.cities[city];
-        for(let res in thisCity.storage){
-          thisCity.storage[res].line = data[city][res];
+        for(let prod in thisCity.storage){
+          thisCity.storage[prod].line = data[city][prod];
         };
       };
 
@@ -321,8 +321,8 @@ function init() {
 
     //происходит, когда кто-то продает ресурс в город
     MAIN.socket.on('GAME_city_updateOne',(data)=>{
-      for(let res in data.storage){
-        MAIN.game.data.cities[data.name].storage[res].line = data.storage[res];
+      for(let prod in data.storage){
+        MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
       };
 
       if(MAIN.interface.game.city.cardOpened){

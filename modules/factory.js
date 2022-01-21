@@ -4,58 +4,66 @@ const COASTS = require('./coasts.js');
 
 const factoriesConfig = {
   sawmill: {
-    mining:true,
+    category:'mining',
     //минимум 4 из-за прокачки
     speed:6,
     storage:2,
     //полная цена производства
-    price:COASTS.resources.wood.productionPrice,
-    resource:'wood',
+    price:COASTS.products.wood.productionPrice,
+    product:'wood',
     count:10,
   },
 
   waterStation: {
-    mining:true,
+    category:'mining',
     //минимум 4 из-за прокачки
     speed:5,
     storage:2,
     //полная цена производства
-    price:COASTS.resources.water.productionPrice,
-    resource:'water',
+    price:COASTS.products.water.productionPrice,
+    product:'water',
     count:12,
   },
 
   sandMine: {
-    mining:true,
+    category:'mining',
     //минимум 4 из-за прокачки
     speed:4,
     storage:2,
     //полная цена производства
-    price:COASTS.resources.sand.productionPrice,
-    resource:'sand',
+    price:COASTS.products.sand.productionPrice,
+    product:'sand',
     count:14,
   },
 
   steelMill: {
-    mining:true,
+    category:'mining',
     //минимум 4 из-за прокачки
     speed:7,
     storage:2,
     //полная цена производства
-    price:COASTS.resources.steel.productionPrice,
-    resource:'steel',
+    price:COASTS.products.steel.productionPrice,
+    product:'steel',
     count:8,
   },
 
   goldMill: {
-    mining:true,
+    category:'mining',
     //минимум 4 из-за прокачки
     speed:8,
     storage:2,
     //полная цена производства
-    price:COASTS.resources.gold.productionPrice,
-    resource:'gold',
+    price:COASTS.products.gold.productionPrice,
+    product:'gold',
     count:4,
   },
+
+
+
+
+
+
+
+
 };
 module.exports = factoriesConfig;

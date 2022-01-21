@@ -3,7 +3,6 @@ const coasts = {
   buildings: {
     road:5000,
     bridge:7500,
-
     sawmill:19500,
     waterStation:12000,
     sandMine:7500,
@@ -21,7 +20,7 @@ const coasts = {
 
 
 
-  resources:{
+  products:{
     sand:{
       price:8000,
       sailSpeed:5,

@@ -91,23 +91,23 @@ function openMenu(factory){
 
     for(let truck in MAIN.game.data.playerData.trucks){
       const thisTruck = MAIN.game.data.playerData.trucks[truck];
-      let resource = '';
+      let product = '';
 
-      if(!thisTruck.resource){
-        resource = `
+      if(!thisTruck.product){
+        product = `
           <div class="trucksMenu-card-resource resource-hole"></div>
         `;
       };
 
 
-      if(thisTruck.resource){
-        resource = `
-          <div class="trucksMenu-card-resource resource-gag resource-bg-color-${thisTruck.resource.name}">
+      if(thisTruck.product){
+        product = `
+          <div class="trucksMenu-card-resource resource-gag resource-bg-color-${thisTruck.product.name}">
             <div class="resource-gag-title">
-              ${thisTruck.resource.name}
+              ${thisTruck.product.name}
             </div>
             <div class="resource-gag-quality">
-              Q${thisTruck.resource.quality}
+              Q${thisTruck.product.quality}
             </div>
           </div>
           <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${thisTruck.id}">×</div>
@@ -117,9 +117,9 @@ function openMenu(factory){
       let truckButton = null;
       //если открыли меню с кнопки интерфейса, то фабрика === null
       if(factory){
-        truckButton = thisTruck.resource?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:MAIN.interface.lang.truck.load[MAIN.interface.lang.flag]
+        truckButton = thisTruck.product?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:MAIN.interface.lang.truck.load[MAIN.interface.lang.flag]
       }else{
-        truckButton = thisTruck.resource?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:'';
+        truckButton = thisTruck.product?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:'';
       }
 
       const truckCard = `
@@ -128,7 +128,7 @@ function openMenu(factory){
             TRUCK <span class="card-header-span"> | 0${thisTruck.truckNumber}</span>
           </div>
           <div style="display:flex">
-            ${resource}
+            ${product}
           </div>
 
           <div class="trucksMenu-card-button" id="truckMenu_card_button_${thisTruck.id}">
@@ -172,7 +172,7 @@ function openMenu(factory){
         };
       };
 
-      if(thisTruck.resource === null){
+      if(thisTruck.product === null){
         if(factory){
           MAIN.interface.deleteTouches(thisButton);
           thisButton.onclick = load;
@@ -270,13 +270,13 @@ function openCard(truck){
   const clicker =  document.querySelector('#trucksMenuSection');
   clicker.style.pointerEvents = 'auto';
 
-  const resource = `
-    <div class="trucksMenu-card-resource resource-gag resource-bg-color-${truck.resource.name}">
+  const product = `
+    <div class="trucksMenu-card-resource resource-gag resource-bg-color-${truck.product.name}">
       <div class="resource-gag-title">
-        ${truck.resource.name}
+        ${truck.product.name}
       </div>
       <div class="resource-gag-quality">
-        Q${truck.resource.quality}
+        Q${truck.product.quality}
       </div>
     </div>
     <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
@@ -287,7 +287,7 @@ function openCard(truck){
         TRUCK <span class="card-header-span"> | 0${truck.truckNumber}</span>
       </div>
       <div style="display:flex">
-        ${resource}
+        ${product}
       </div>
   `
 

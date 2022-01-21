@@ -18,11 +18,15 @@ class Factory {
     //
     //   sector: 5
     // }
+
     this.id = properties.id;
+    this.settingsSetted = false;
+    this.category = properties.category;
+    //просто подраздел ('sawmill', 'waterStation')
     this.type = properties.building;
     this.number = properties.number;
     this.fieldCeil = MAIN.game.data.map[properties.ceilIndex.z][properties.ceilIndex.x];
-    this.settingsSetted = false;
+
     this.product = properties.product;
     this.sector = properties.sector;
     this.position = this.fieldCeil.getSectorPosition(properties.sector);
@@ -45,6 +49,12 @@ class Factory {
     if(!this.settingsSetted){
       this.createNotification();
     };
+
+
+
+
+
+
   };
 
   setSettings(){

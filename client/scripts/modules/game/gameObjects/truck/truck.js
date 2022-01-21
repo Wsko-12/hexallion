@@ -10,7 +10,7 @@ class Truck {
     this.id = properties.id;
     this.player = properties.player;
     this.truckNumber = properties.truckNumber;
-    this.resource = null;
+    this.product = null;
 
     this.place = {
       z: 0,
@@ -34,7 +34,7 @@ class Truck {
     this.place = indexes;
     const position = MAIN.game.functions.getScenePositionByCeilIndex(indexes);
 
-    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_${this.resource.name}`].clone(), MAIN.game.scene.mainMaterial);
+    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_${this.product.name}`].clone(), MAIN.game.scene.mainMaterial);
     this.object3D.name = this.id;
 
     this.object3D.position.set(position.x, position.y, position.z);
@@ -118,7 +118,7 @@ class Truck {
   clear(){
     this.clearNotification();
     this.onMap = false;
-    this.resource = null;
+    this.product = null;
 
     //clear map for  destroy truck button
     if(MAIN.game.data.map[this.place.z]){
@@ -200,7 +200,7 @@ class Truck {
 
             if (value < 6) {
 
-              MAIN.interface.game.city.showCityPrices(that.resource);
+              MAIN.interface.game.city.showCityPrices(that.product);
               document.querySelector('#truckCancelButton').style.display = 'flex';
 
 
@@ -453,7 +453,7 @@ class Truck {
                 truckID:that.id,
                 city:data.city,
               };
-              MAIN.socket.emit('GAME_resource_sell',sendData)
+              MAIN.socket.emit('GAME_product_sell',sendData)
             };
           };
         };

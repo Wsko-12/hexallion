@@ -105,49 +105,6 @@ function closeAll() {
   hideButtons();
 };
 
-// function showSellResourceButton(data) {
-//   MAIN.game.scene.path.clear();
-//   const button = document.querySelector('#pathSection_sendButton');
-//   document.querySelector('#pathSection_sendButton_title').innerHTML = 'Sell';
-//
-//   MAIN.interface.deleteTouches(button);
-//   button.onclick = null;
-//   button.ontouchstart = null;
-//
-//   button.onclick = sell;
-//   button.ontouchstart = sell;
-//
-//   button.style.display = 'flex';
-//
-//   function sell() {
-//     MAIN.interface.game.trucks.turningInterfase = false;
-//     MAIN.interface.game.city.hideCityPrices();
-//     button.style.display = 'none';
-//     MAIN.interface.dobleClickFunction.standard = true;
-//     MAIN.interface.dobleClickFunction.function = null;
-//     document.querySelector('#truckCancelButton').style.display = 'none';
-//     document.querySelector('#truckDice').style.display = 'none';
-//     MAIN.game.scene.path.clear();
-//
-//
-//     const serverData = {
-//       gameID: MAIN.game.data.commonData.id,
-//       truckID: data.truck.id,
-//     };
-//
-//     const sendData = {
-//       gameID: MAIN.game.data.commonData.id,
-//       player: MAIN.game.data.playerData.login,
-//       truckID: data.truck.id,
-//       city: data.city,
-//     };
-//     if(!MAIN.game.data.playerData.gameOver){
-//         MAIN.socket.emit('GAME_resource_sell', sendData);
-//     };
-//   };
-//
-// };
-
 function showButtons(buttons,data){
   PATH.buttonsDOM = document.querySelector('#pathSection_ButtonsContainer');
   PATH.buttonsDOM.style.display = 'flex';
@@ -222,7 +179,7 @@ function showButtons(buttons,data){
     //bug fix не знаю откуда взялся, но после высылки грузовика не закрылось path меню
     if (!data.truck.sended) {
       data.truck.sended = true;
-      if (data.truck.resource) {
+      if (data.truck.product) {
         if (data.truck.place.x != null && data.truck.place.z != null) {
           data.truck.clearNotification();
           if(!MAIN.game.data.playerData.gameOver){
@@ -262,7 +219,7 @@ function showButtons(buttons,data){
       city: data.city,
     };
     if(!MAIN.game.data.playerData.gameOver){
-        MAIN.socket.emit('GAME_resource_sell', sendData);
+        MAIN.socket.emit('GAME_product_sell', sendData); 
     };
 
   };

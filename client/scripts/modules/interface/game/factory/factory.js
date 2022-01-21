@@ -226,9 +226,9 @@ function showFactoryMenu(factory){
     if(ceil === 0){
        line = `<div class="resource-hole"></div>`;
     }else{
-      line = `<div class="resource-gag resource-bg-color-${factory.settings.resource}">
+      line = `<div class="resource-gag resource-bg-color-${factory.settings.product}">
                 <div class="resource-gag-title">
-                  ${factory.settings.resource}
+                  ${factory.settings.product}
                 </div>
                 <div class="resource-gag-quality">
                   Q${factory.settings.quality}
@@ -253,9 +253,9 @@ function showFactoryMenu(factory){
     if(ceil === 0){
        line = `<div class="resource-hole"></div>`;
     }else{
-      line = `<div class="resource-gag resource-bg-color-${factory.settings.resource}">
+      line = `<div class="resource-gag resource-bg-color-${factory.settings.product}">
                 <div class="resource-gag-title">
-                  ${factory.settings.resource}
+                  ${factory.settings.product}
                 </div>
                 <div class="resource-gag-quality">
                   Q${factory.settings.quality}
@@ -313,10 +313,10 @@ function showFactoryMenu(factory){
               ${name} <span class="card-header-span"> | ${factory.number}</span>
           </div>
           <div id="factoryMenu_Card_Top">
-            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.resource}">
+            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.product}">
               <div class='factoryMenu_Card_ResourseLogo_Top'>
                 <div class="factoryMenu_Card_ResourseLogo-title">
-                  ${factory.settings.resource}
+                  ${factory.settings.product}
                 </div>
                 <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
                   <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">${MAIN.interface.lang.factory.q[MAIN.interface.lang.flag]}</span>

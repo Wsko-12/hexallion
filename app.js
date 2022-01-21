@@ -492,8 +492,10 @@ class GAME {
         ceilIndex: data.build.ceilIndex,
         sector: data.build.sector,
         number:this.factoriesCount[data.build.building] + 1,
-        product:factory.resource,
+        product:factory.product,
+        category:factory.category,
       };
+
       this.players[data.player].emit('GAME_buildFactory', factoryClientData);
     };
 
@@ -607,9 +609,8 @@ class GAME {
       thisCity.update();
 
       data[city] = {};
-
-      for (let res in thisCity.storage) {
-        data[city][res] = thisCity.storage[res].line
+      for (let prod in thisCity.storage) {
+        data[city][prod] = thisCity.storage[prod].line
       };
     };
     this.sendToAll('GAME_city_update', data);
@@ -626,73 +627,73 @@ class CITY {
   };
   createStorage() {
     const storage = {};
-    const resouresBase = COASTS.resources;
-    for (let resource in resouresBase) {
-      const thisResource = resouresBase[resource];
+    const productBase = COASTS.products;
+    for (let product in productBase) {
+      const thisProduct = productBase[product];
 
       //касается только данного реесурса
-      const resStore = {};
+      const prodStore = {};
 
       //его линия прогресса
-      resStore.line = [];
-      for (let i = 0; i < thisResource.sailSpeed; i++) {
-        resStore.line.push(0);
+      prodStore.line = [];
+      for (let i = 0; i < thisProduct.sailSpeed; i++) {
+        prodStore.line.push(0);
       };
 
       //максимальная цена ресурса
-      resStore.maxPrice = thisResource.price;
+      prodStore.maxPrice = thisProduct.price;
 
 
 
       //массив цен на данный этап ресурса
-      resStore.prices = [];
-      resStore.line.forEach((item, i) => {
+      prodStore.prices = [];
+      prodStore.line.forEach((item, i) => {
         //harder city price
         // const discount = (1 - ((i+1)/resStore.line.length)) + (0.10 - 0.10 * (i+1)/resStore.line.length);
-        const discount = 1 - ((i + 1) / resStore.line.length);
-        let price = Math.round(resStore.maxPrice - resStore.maxPrice * discount);
+        const discount = 1 - ((i + 1) / prodStore.line.length);
+        let price = Math.round(prodStore.maxPrice - prodStore.maxPrice * discount);
         if (price < 0) {
           price = 0
         };
-        resStore.prices[i] = price;
+        prodStore.prices[i] = price;
       });
-      storage[resource] = resStore;
+      storage[product] = prodStore;
     };
     return storage;
   };
 
 
 
-  sellResource(resoure) {
+  sellProduct(product) {
     let price = 0;
-    const firstFullCeilIndex = this.storage[resoure.name].line.indexOf(1);
+    const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
     if (firstFullCeilIndex === -1) {
-      price = this.storage[resoure.name].prices[this.storage[resoure.name].prices.length - 1];
+      price = this.storage[product.name].prices[this.storage[product.name].prices.length - 1];
     } else if (firstFullCeilIndex === 0) {
       price = 0;
     } else {
-      price = this.storage[resoure.name].prices[firstFullCeilIndex - 1];
+      price = this.storage[product.name].prices[firstFullCeilIndex - 1];
     };
 
-    this.storage[resoure.name].line[0] = 1;
+    this.storage[product.name].line[0] = 1;
 
-    const newPrice = Math.round(price + price * ((resoure.quality * 15) * 0.01));
-    resoure.player.changeBalance(newPrice);
-    resoure.player.sendBalanceMessage(`Sale of ${resoure.name}`, newPrice);
+    const newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+    product.player.changeBalance(newPrice);
+    product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
 
 
 
     this.sendUpdate();
-    resoure.truck.clear();
+    product.truck.clear();
   };
 
 
 
   update() {
-    for (let resourceStore in this.storage) {
-      const thisResourceStore = this.storage[resourceStore];
-      thisResourceStore.line.pop();
-      thisResourceStore.line.unshift(0);
+    for (let productStore in this.storage) {
+      const thisProductStore = this.storage[productStore];
+      thisProductStore.line.pop();
+      thisProductStore.line.unshift(0);
     };
   };
 
@@ -700,10 +701,9 @@ class CITY {
     const data = {
       name: this.name,
       storage: {},
-    }
-
-    for (let res in this.storage) {
-      data.storage[res] = this.storage[res].line;
+    };
+    for (let prod in this.storage) {
+      data.storage[prod] = this.storage[prod].line;
     };
     this.game.sendToAll('GAME_city_updateOne', data)
   };
@@ -747,8 +747,8 @@ class FACTORY_LIST {
     for (let factory in this.list) {
       const thisFactory = this.list[factory];
       if(thisFactory.settingsSetted){
-        const resPriceStock = COASTS.resources[thisFactory.resource].price;
-        const clearEarn = Math.round(resPriceStock + resPriceStock * ((thisFactory.quality * 15) * 0.01))  - thisFactory.price;
+        const prodPriceStock = COASTS.products[thisFactory.product].price;
+        const clearEarn = Math.round(prodPriceStock + prodPriceStock * ((thisFactory.quality * 15) * 0.01))  - thisFactory.price;
         earnings+=clearEarn;
       };
     };
@@ -762,19 +762,33 @@ class FACTORY {
     this.player = properties.player;
     this.id = properties.id;
     this.name = properties.building;
-    //завод добывает ресурсы или перерабатывает
-    this.mining = FACTORIES[properties.building].mining;
-    this.resource = FACTORIES[properties.building].resource;
 
     this.ceilIndex = properties.ceilIndex;
     this.sector = properties.sector;
 
-    this.storage = FACTORIES[properties.building].storage;
-    this.stockSpeed = FACTORIES[properties.building].speed;
-    this.quality = 0;
     //этот параметр сработает, когда придет апдейт на фабрику, нужно будет установить настройки фабрики
     //ее параметры скорость, стоймость, качество
     this.settingsSetted = false;
+
+
+
+    //завод добывает ресурсы или перерабатывает
+    this.category = FACTORIES[properties.building].category;
+
+
+    this.storage = FACTORIES[properties.building].storage;
+    this.stockSpeed = FACTORIES[properties.building].speed;
+    this.quality = 0;
+
+
+
+    if(this.category === 'mining'){
+        this.product = FACTORIES[properties.building].product;
+    }else if(this.category === 'factory'){
+
+    };
+
+
   };
 
   setSettings(settings) {
@@ -838,8 +852,7 @@ class FACTORY {
     const data = {
       id: this.id,
       name: this.name,
-      mining: this.mining,
-      resource: this.resource,
+      product: this.product,
       storage: this.storage,
       //надо, чтобы забить на карточке клетки
       stockStorage: this.stockStorage,
@@ -903,7 +916,7 @@ class FACTORY {
 
 
 
-  loadResourceToTruck(data) {
+  loadProductToTruck(data) {
     /*
 
     const data = {
@@ -915,7 +928,7 @@ class FACTORY {
    */
 
 
-    if (data.truck.resource === null) {
+    if (data.truck.product === null) {
       if (this.storage[0] === 1) {
         //забираем единицу вначале
         this.storage.shift();
@@ -925,8 +938,8 @@ class FACTORY {
         //отправляем игроку update фабрики
         this.sendUpdates();
 
-        const resourceProperties = {
-          name: this.resource,
+        const productProperties = {
+          name: this.product,
           quality: this.quality,
           game: data.game,
           player: data.player,
@@ -934,8 +947,8 @@ class FACTORY {
           truck: data.truck,
         };
 
-        const resource = new RESOURCE(resourceProperties);
-        data.truck.loadResource(resource);
+        const product = new PRODUCT(productProperties);
+        data.truck.loadProduct(product);
         data.truck.placeTruck(this);
       };
     };
@@ -1091,20 +1104,20 @@ class TRUCK {
     this.player = properties.player;
     this.game = properties.game;
     this.truckNumber = properties.truckNumber;
-    this.resource = null;
+    this.product = null;
     this.positionIndexes = {};
   };
 
 
-  loadResource(resource) {
-    this.resource = resource;
+  loadProduct(product) {
+    this.product = product;
 
     const data = {
       player: this.player.login,
       truckID: this.id,
-      resoure: {
-        name: this.resource.name,
-        quality: this.resource.quality,
+      product: {
+        name: this.product.name,
+        quality: this.product.quality,
       },
     };
 
@@ -1163,7 +1176,7 @@ class TRUCK {
   };
 
   clear() {
-    this.resource = null;
+    this.product = null;
     //if player destroy truck
     if (this.game.transportMap[this.positionIndexes.z]) {
       if (this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x]) {
@@ -1178,7 +1191,7 @@ class TRUCK {
   };
 };
 
-class RESOURCE {
+class PRODUCT {
   constructor(properties) {
     this.name = properties.name;
     this.quality = properties.quality;
@@ -1186,7 +1199,7 @@ class RESOURCE {
     this.player = properties.player;
     this.factory = properties.factory;
     this.truck = properties.truck;
-    this.id = generateId(`Resource_${this.name}`, 5);
+    this.id = generateId(`Product_${this.name}`, 5);
   };
 };
 
@@ -1657,7 +1670,7 @@ io.on('connection', function(socket) {
                   factory,
                   truck,
                 };
-                factory.loadResourceToTruck(nData);
+                factory.loadProductToTruck(nData);
               } else {
                 //если клетка на карте занята другим транспортом
                 const indexes = {
@@ -1738,7 +1751,8 @@ io.on('connection', function(socket) {
 
 
 
-  socket.on('GAME_resource_sell', (data) => {
+  socket.on('GAME_product_sell', (data) => {
+    console.log('GAME_product_sell')
     if (GAMES[data.gameID]) {
       const game = GAMES[data.gameID];
 
@@ -1750,8 +1764,8 @@ io.on('connection', function(socket) {
 
             if (game.cities[data.city]) {
               const city = game.cities[data.city];
-              if (truck.resource) {
-                city.sellResource(truck.resource);
+              if (truck.product) {
+                city.sellProduct(truck.product);
               };
             };
           };

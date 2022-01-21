@@ -51,16 +51,16 @@ function openMenu(city){
     'Southcity',
   ];
 
-  let resourceList = '';
-  for(let resource in city.storage){
-    const thisRes = city.storage[resource];
+  let productList = '';
+  for(let product in city.storage){
+    const thisProd = city.storage[product];
 
 
     let holes = '';
 
-    thisRes.line.forEach((item, i) => {
+    thisProd.line.forEach((item, i) => {
       if(item === 0){
-        const price = thisRes.prices[i];
+        const price = thisProd.prices[i];
         const str = `
           <div class="resource-hole">
             <div class="cityCard-resource-info-holes-price">$${price}</div>
@@ -69,8 +69,8 @@ function openMenu(city){
         holes+=str;
       }else{
         const str = `
-          <div class="resource-gag resource-bg-color-${resource}" style="margin:">
-            <div class="resource-gag-title">${resource}</div>
+          <div class="resource-gag resource-bg-color-${product}" style="margin:">
+            <div class="resource-gag-title">${product}</div>
           </div>
         `
         holes+=str;
@@ -79,15 +79,15 @@ function openMenu(city){
 
 
 
-    const resListItem = `
+    const prodListItem = `
       <div class="cityCard-list-item">
-        <div class="resource-bg-color-${resource} cityCard-resource-image">
+        <div class="resource-bg-color-${product} cityCard-resource-image">
           <div class="cityCard-resource-image-name">
-            ${resource}
+            ${product}
           </div>
         </div>
         <div class="cityCard-resource-info">
-          <div class="cityCard-resource-info-price ">$${city.getCurrentResourcePrice(resource)}</div>
+          <div class="cityCard-resource-info-price ">$${city.getCurrentProductPrice(product)}</div>
           <div class="cityCard-resource-info-holes">
             ${holes}
           </div>
@@ -95,7 +95,7 @@ function openMenu(city){
       </div>
     `
 
-    resourceList += resListItem;
+    productList += prodListItem;
   };
 
   const card = `
@@ -109,7 +109,7 @@ function openMenu(city){
 
 
     <div class="cityCard-list" id="cityCard_list">
-      ${resourceList}
+      ${productList}
     </div>
 
   `
@@ -136,12 +136,12 @@ function closeMenu(event){
 };
 
 
-function showCityPrices(resoure){
-  CITY.priceShow = resoure;
+function showCityPrices(product){
+  CITY.priceShow = product;
   document.querySelector('#cityPriceSection').style.display = 'block';
   for(let city in MAIN.game.data.cities){
     const thisCity = MAIN.game.data.cities[city];
-    thisCity.showPrice(resoure);
+    thisCity.showPrice(product);
   };
 };
 
