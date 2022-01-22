@@ -11,8 +11,8 @@ const BUILDINGS = {
   road:{
     name:'Road',
     description:'Дорога для транспорта',
-    ceil:['meadow','sand','steelMine','goldMine'],
-    nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand','steelMine','goldMine'],
+    ceil:['meadow','sand','steelMine','goldMine','oilMine'],
+    nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand','steelMine','goldMine','oilMine'],
     coast:5000,
 
 
@@ -29,7 +29,7 @@ const BUILDINGS = {
     name:'Bridge',
     description:'Мост для транспорта',
     ceil:['sea'],
-    nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand','steelMine','goldMine'],
+    nearCeil:['meadow','sea','Westown','Southcity','Northfield','sand','steelMine','goldMine','oilMine'],
     coast:7500,
 
     title:{
@@ -42,7 +42,7 @@ const BUILDINGS = {
   sawmill:{
     name:'Sawmill',
     description:'Производство досок',
-    ceil:['meadow','sand','steelMine','goldMine'],
+    ceil:['meadow','sand','steelMine','goldMine','oilMine'],
     nearCeil:['forest'],
     coast:19500,
     product:'wood',
@@ -58,7 +58,7 @@ const BUILDINGS = {
   waterStation:{
     name:'Water station',
     description:'Производство чистой воды',
-    ceil:['meadow','sand','steelMine','goldMine'],
+    ceil:['meadow','sand','steelMine','goldMine','oilMine'],
     nearCeil:['sea'],
     coast:12000,
     product:'water',
@@ -113,6 +113,22 @@ const BUILDINGS = {
       ru:'завод золота',
     },
     buttonColor:'#F9D761',
+  },
+
+  oilWell:{
+    name:'Oil well',
+    description:'Добыча нефти',
+    ceil:['oilMine'],
+    nearCeil:['all'],
+    coast:7500,
+    product:'oil',
+
+    title:{
+      eng:'oil well',
+      ru:'нефтяная вышка',
+    },
+    buttonColor:'#454758',
+
   },
   // field:{
   //   name:'Field',

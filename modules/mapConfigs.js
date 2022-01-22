@@ -3,9 +3,10 @@
 const mapConfigs = {};
 
 mapConfigs.ceils = {
-  meadow:40,
+  meadow:36,
   goldMine:1,
   steelMine:2,
+  oilMine:4,
   sand:10,
   // meadow: 79,
    forest: 15,

@@ -100,6 +100,23 @@ const PRODUCTS = {
     },
   },
 
+  oil:{
+    price:8000,
+    sailSpeed:5,
+    category:'raw',
+    manufacture:['oilWell'],
+    //где является ингредиентом
+    ingrediend:['plastic','petrol','rubber','glue'],
+    //из чего производится
+    raws: null,
+
+    lang:{
+      ru:'нефть',
+      eng:'oil',
+    },
+
+  },
+
 
 };
 export {

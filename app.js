@@ -433,8 +433,8 @@ class GAME {
         trucks: this.trucks,
         tickTime: this.tickTime,
         members: this.members,
-        //#bfbfbf серый для скринов
-        playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
+        //'#fc4a4a'# серый для скринов
+        playerColors: ['#bfbfbf', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
         factoriesCount:this.factoriesCount,
       },
     };

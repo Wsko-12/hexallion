@@ -8,6 +8,7 @@ const coasts = {
     sandMine:7500,
     steelMill:34500,
     goldMill:73500,
+    oilWell:7500,
   },
 
   trucks : {
@@ -49,6 +50,12 @@ const coasts = {
       price:89000,
       sailSpeed:9,
       productionPrice:40000,
+      raw:null,
+    },
+    oil:{
+      price:8000,
+      sailSpeed:5,
+      productionPrice:3000,
       raw:null,
     },
 

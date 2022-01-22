@@ -58,6 +58,21 @@ const factoriesConfig = {
     count:4,
   },
 
+  oilWell:{
+    category:'mining',
+    //минимум 4 из-за прокачки
+    speed:4,
+    storage:2,
+    //полная цена производства
+    price:COASTS.products.oil.productionPrice,
+    product:'oil',
+    count:14,
+  },
+
+
+
+
+
 
   oilRefinery:{
     category:'factory',

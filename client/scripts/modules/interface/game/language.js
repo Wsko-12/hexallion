@@ -167,6 +167,10 @@ const LANG = {
       ru:'золотодобывающего завода',
       eng:'Gold mill',
     },
+    oilWell:{
+      ru:'нефтяной вышке',
+      eng:'Oil mill',
+    },
     road:{
       ru:'дороги',
       eng:'Road',
@@ -194,6 +198,9 @@ const LANG = {
     gold:{
       ru:'золота',
     },
+    oil:{
+      ru:'нефти',
+    },
 
     truckBuying:{
       ru:'Покупка грузовика',
@@ -220,6 +227,10 @@ const LANG = {
     GoldMill:{
       eng:'Gold mill',
       ru:'золотодобывающем заводе',
+    },
+    OilWell:{
+      eng:'Oil well',
+      ru:'нефтедобывающей вышке',
     },
 
     creditPayment:{

@@ -219,21 +219,6 @@ ATLAS.models = [
 
 
 
-
-  { name:'factoryBottom',
-    folder:'buildings/',
-    file:'factoryBottom.glb',
-  },
-
-  { name:'sawmill',
-    folder:'buildings/',
-    file:'sawmill.glb',
-  },
-  { name:'sawmillLight',
-    folder:'buildings/',
-    file:'sawmillLight.glb',
-  },
-
   { name:'truck_sand',
     folder:'truck/',
     file:'truck_sand.glb',
@@ -254,7 +239,32 @@ ATLAS.models = [
     folder:'truck/',
     file:'truck_gold.glb',
   },
+  { name:'truck_oil',
+    folder:'truck/',
+    file:'truck_water.glb',
+  },
 
+
+
+  { name:'factoryBottom',
+    folder:'buildings/',
+    file:'factoryBottom.glb',
+  },
+
+  { name:'sawmill',
+    folder:'buildings/',
+    file:'sawmill.glb',
+  },
+  { name:'sawmillLight',
+    folder:'buildings/',
+    file:'sawmillLight.glb',
+  },
+
+
+  { name:'oilWell',
+    folder:'buildings/',
+    file:'oilWell.glb',
+  },
 
 
 
