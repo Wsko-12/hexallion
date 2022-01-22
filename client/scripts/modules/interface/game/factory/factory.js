@@ -36,6 +36,7 @@ function showMenu(factory) {
   nowShowedFactoryMenu = factory;
   updateMenu(factory);
 };
+
 function closeMenu(event) {
   nowShowedFactoryMenu = null;
   const factoryMenuClicker = document.querySelector('#factoryMenuClicker');
@@ -56,110 +57,93 @@ function updateMenu(factory) {
 };
 
 function showSettingsSetMenu(factory) {
+
   nowShowedFactoryMenu = null;
   const menu = document.querySelector('#factoryMenu');
-  let name = factory.type;
-  name = name.charAt(0).toUpperCase() + name.slice(1);
+  const name = MAIN.game.configs.buildings[factory.type].name;
   const settings = {
     points: 4,
-    speed: 0,
-    salary: 0,
-    quality: 0,
-    storage: 0,
-    cardUsed: null,
   };
+
+  if (factory.category === 'mining') {
+    settings.speed = 0;
+    settings.salary = 0;
+    settings.quality = 0;
+    settings.storage = 0;
+  };
+  if (factory.category === 'factory') {
+    settings.speed = 0;
+    settings.salary = 0;
+    settings.volume = 0;
+    settings.storage = 0;
+  };
+
+
+
+  let settingsList = '';
+  for (let property in settings) {
+    if (property != 'points') {
+      const line = `
+        <div class="factory_body_settingsLine">
+          <div class="factory_body_settingsLine-left">
+            ${MAIN.interface.lang.factory[property][MAIN.interface.lang.flag]}
+          </div>
+          <div class="factory_body_settingsLine-right">
+            <div id="factoryMenu_settings_${property}_minus" class="factory_body_settingsLine-button">
+              -
+            </div>
+            <div class="factory_body_settingsLine-text">
+              <span id="factoryMenu_settings_${property}_value">0</span>
+            </div>
+            <div id="factoryMenu_settings_${property}_plus" class="factory_body_settingsLine-button">
+              +
+            </div>
+          </div>
+        </div>
+      `
+      settingsList += line;
+    };
+
+  };
+
+  settingsList += `
+            <div class="factory_body_settingsLine-accept">
+              <div id="factoryMenu_Button" class="factory_body_settings_acceptButton">
+                <span class="factory_body_settings_acceptButton-span">${MAIN.interface.lang.factory.run[MAIN.interface.lang.flag]}</span>
+              </div>
+            </div>`;
+
+
   const section = `
-    <div class="card" id="factoryMenu_SettingsCard">
-      <div class="card-header">
-          ${name} <span class="card-header-span"> | ${factory.number}</span>
-      </div>
-      <div id="factoryMenu_SettingsCard_Top">
-        <div class="factoryMenu_SettingsCard_Top-resourceLogo resource-bg-color-${factory.product}">
-          <span>${factory.product}</span>
+    <div class="factory_card">
+      <div class="factory_header factory_header_bg-oilWell">
+        <div class="factory_header_header">
+          ${name} <span class="factory_header_header-span">| ${factory.number}</span>
         </div>
-        <div id="factoryMenu_SettingsCard_Top-pointsCounter">
-          <span style="margin:auto">0<span id="factoryMenu_settings_points">${settings.points}</span></span>
-        </div>
-      </div>
-
-      <div id="factoryMenu_SettingsCard_Middle">
-        <div class="factoryMenu_SettingsCard_SettingsString">
-          <div class="factoryMenu_SettingsCard_SettingsString-title">
-            ${MAIN.interface.lang.factory.speed[MAIN.interface.lang.flag]}
+        <div class="factory_header_body">
+          <div class="factory_header_body-left">
+            <span>${MAIN.interface.lang.factory.settings[MAIN.interface.lang.flag]}</span>
           </div>
-          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-            <div id="factoryMenu_settings_speed_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-              <div id="factoryMenu_settings_speed_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-              </div>
-            </div>
-            <div id="factoryMenu_settings_speed_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-          </div>
-        </div>
-
-        <div class="factoryMenu_SettingsCard_SettingsString">
-          <div class="factoryMenu_SettingsCard_SettingsString-title">
-            ${MAIN.interface.lang.factory.quality[MAIN.interface.lang.flag]}
-          </div>
-          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-            <div id="factoryMenu_settings_quality_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-              <div id="factoryMenu_settings_quality_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-              </div>
-            </div>
-            <div id="factoryMenu_settings_quality_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-          </div>
-        </div>
-
-        <div class="factoryMenu_SettingsCard_SettingsString">
-          <div class="factoryMenu_SettingsCard_SettingsString-title">
-            ${MAIN.interface.lang.factory.salary[MAIN.interface.lang.flag]}
-          </div>
-          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-            <div id="factoryMenu_settings_salary_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-              <div id="factoryMenu_settings_salary_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-              </div>
-            </div>
-            <div id="factoryMenu_settings_salary_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-          </div>
-        </div>
-
-        <div class="factoryMenu_SettingsCard_SettingsString">
-          <div class="factoryMenu_SettingsCard_SettingsString-title">
-            ${MAIN.interface.lang.factory.storage[MAIN.interface.lang.flag]}
-          </div>
-          <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-            <div id="factoryMenu_settings_storage_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-            <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-              <div id="factoryMenu_settings_storage_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-              </div>
-            </div>
-            <div id="factoryMenu_settings_storage_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
+          <div class="factory_header_body-right">
+            <span id="factoryMenu_settings_points">0${settings.points}</span>
           </div>
         </div>
       </div>
-
-      <div class="factoryMenu_SettingsCard_Bottom" id="factoryMenu_Button">
-        <span style="margin:auto">${MAIN.interface.lang.factory.run[MAIN.interface.lang.flag]}</span>
+      <div class="factory_body">
+        <div class="factory_body_body-settings">
+          ${settingsList}
+        </div>
       </div>
     </div>
-  `
+  `;
 
   menu.insertAdjacentHTML('beforeEnd', section);
 
-
-
-
-
-
-
   function changeSettings(plus, property) {
-    const progress = document.querySelector(`#factoryMenu_settings_${property}_progress`);
     if (plus) {
       if (settings.points > 0 && settings[property] < 3) {
         settings.points--;
-        settings[property]++
+        settings[property]++;
       };
     } else {
       if (settings[property] > 0) {
@@ -167,8 +151,9 @@ function showSettingsSetMenu(factory) {
         settings[property]--;
       };
     };
-    progress.style.width = (settings[property] / 3) * 100 + '%';
-    document.querySelector(`#factoryMenu_settings_points`).innerHTML = settings.points;
+    document.querySelector(`#factoryMenu_settings_points`).innerHTML = '0' + settings.points;
+
+    document.querySelector(`#factoryMenu_settings_${property}_value`).innerHTML = settings[property];
   };
 
   for (let property in settings) {
@@ -189,8 +174,6 @@ function showSettingsSetMenu(factory) {
     };
   };
 
-
-
   document.querySelector('#factoryMenu_Button').onclick = applySettings;
   document.querySelector('#factoryMenu_Button').ontouchstart = applySettings;
 
@@ -204,14 +187,14 @@ function showSettingsSetMenu(factory) {
     };
     factory.clearNotification();
 
-    if(!MAIN.game.data.playerData.gameOver){
+    if (!MAIN.game.data.playerData.gameOver) {
       MAIN.socket.emit('GAME_factory_applySettings', data);
     };
   };
 };
 
 //полностью фарматирует меню
-function showFactoryMenu(factory){
+function showFactoryMenu(factory) {
   factory.clearNotification();
   const menu = document.querySelector('#factoryMenu');
   menu.innerHTML = '';
@@ -221,11 +204,11 @@ function showFactoryMenu(factory){
 
   /* Заполняем прогресс*/
   let progressLine = '';
-  factory.settings.productLine.forEach((ceil,i) => {
+  factory.settings.productLine.forEach((ceil, i) => {
     let line = '';
-    if(ceil === 0){
-       line = `<div class="resource-hole"></div>`;
-    }else{
+    if (ceil === 0) {
+      line = `<div class="resource-hole"></div>`;
+    } else {
       line = `<div class="resource-gag resource-bg-color-${factory.settings.product}">
                 <div class="resource-gag-title">
                   ${factory.settings.product}
@@ -240,7 +223,7 @@ function showFactoryMenu(factory){
 
   //забить дополнительно промежутки
   const progressGags = factory.settings.stockSpeed - factory.settings.productLine.length;
-  for(let i=0;i<progressGags;i++){
+  for (let i = 0; i < progressGags; i++) {
     const line = `<div class="resource-gag"></div>`;
     progressLine += line
   };
@@ -248,11 +231,11 @@ function showFactoryMenu(factory){
 
   /* Заполняем склад */
   let storageLine = '';
-  factory.settings.storage.forEach((ceil,i) => {
+  factory.settings.storage.forEach((ceil, i) => {
     let line = '';
-    if(ceil === 0){
-       line = `<div class="resource-hole"></div>`;
-    }else{
+    if (ceil === 0) {
+      line = `<div class="resource-hole"></div>`;
+    } else {
       line = `<div class="resource-gag resource-bg-color-${factory.settings.product}">
                 <div class="resource-gag-title">
                   ${factory.settings.product}
@@ -266,21 +249,21 @@ function showFactoryMenu(factory){
   });
   //забить дополнительно промежутки
   const storageGags = 3 - (factory.settings.storage.length - factory.settings.stockStorage);
-  for(let i=0;i<storageGags;i++){
+  for (let i = 0; i < storageGags; i++) {
     const line = `<div class="resource-gag"></div>`;
     storageLine += line;
   };
 
   let actionButtonLine = null;
 
-  if(factory.settings.storage.includes(1) && !MAIN.game.data.playerData.gameOver){
+  if (factory.settings.storage.includes(1) && !MAIN.game.data.playerData.gameOver) {
     actionButtonLine = `
       <div id='factoryMenu_ActionButton' class="card">
         <span style="margin:auto"> ${MAIN.interface.lang.factory.actionButton[MAIN.interface.lang.flag]}</span>
       </div>
     `;
-    if(MAIN.game.data.commonData.turnBasedGame){
-      if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+    if (MAIN.game.data.commonData.turnBasedGame) {
+      if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
         actionButtonLine = null;
       };
     };
@@ -289,19 +272,19 @@ function showFactoryMenu(factory){
 
   /* Заполняем качество */
   let qualityLine = '';
-  for(let i = 0; i<3;i++){
-    if(i<factory.settings.quality){
+  for (let i = 0; i < 3; i++) {
+    if (i < factory.settings.quality) {
       qualityLine += `<div class="quality-gag"></div>`
-    }else{
+    } else {
       qualityLine += `<div class="quality-hole"></div>`
     };
   };
 
   let lowSalaryLine = '';
-  for(let i = 0; i<3;i++){
-    if(i<factory.settings.salary){
+  for (let i = 0; i < 3; i++) {
+    if (i < factory.settings.salary) {
       lowSalaryLine += `<div class="quality-gag"></div>`
-    }else{
+    } else {
       lowSalaryLine += `<div class="quality-hole"></div>`
     };
   };
@@ -377,13 +360,13 @@ function showFactoryMenu(factory){
   menu.insertAdjacentHTML('beforeEnd', section);
 
 
-  if(actionButtonLine){
+  if (actionButtonLine) {
     const button = document.querySelector('#factoryMenu_ActionButton');
     button.onclick = openTruckMenu;
     button.ontouchstart = openTruckMenu;
 
-    function openTruckMenu(){
-      if(!MAIN.game.data.playerData.gameOver){
+    function openTruckMenu() {
+      if (!MAIN.game.data.playerData.gameOver) {
         closeMenu();
         MAIN.interface.game.trucks.openMenu(factory);
       };
@@ -393,8 +376,8 @@ function showFactoryMenu(factory){
 
 };
 //это только меняет значения
-function updateFactoryMenu(factory){
-  if(nowShowedFactoryMenu){
+function updateFactoryMenu(factory) {
+  if (nowShowedFactoryMenu) {
     showFactoryMenu(nowShowedFactoryMenu);
   };
 };

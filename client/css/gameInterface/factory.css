@@ -1,365 +1,402 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playball&display=swap');
+
 #factorySection{
   width: 100vw;
   height: 100vh;
   pointer-events: none;
   position: fixed;
-    z-index: 1;
+  z-index: 1;
 }
-.factoryMenu_cardBackground_sawmill{
+/* .factoryMenu_cardBackground_sawmill{
   background-image: url(../img/factoryCards/sawmill.jpg);
-}
+} */
 #factoryMenuClicker{
   pointer-events: auto;
-  display: none;
+  display: block;
   position: fixed;
   overflow: hidden;
   width: 100vw;
   height: 100vh;
+
 }
 #factoryMenu{
+  /* position: fixed; */
+  /* font-family: 'Roboto Condensed', sans-serif;
+  color: white;
+  border-radius: 10px;*/
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  perspective: 500px;
+  -webkit-perspective:500px;
+}
+
+
+.factory_card{
+  pointer-events: auto;
+  width: 170px;
+  height: 250px;
+  background-color: #196d96;
   position: fixed;
-  font-family: 'Roboto Condensed', sans-serif;
-  color: white;
-  /* text-shadow:0px 0px 2px black; */
-  border-radius: 10px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-#factoryMenu_Section{
-    position: fixed;
-  display: flex;
-  font-family: 'Roboto Condensed', sans-serif;
-  left: 50%;
   top:50%;
-  transform: translate(-50%,-50%);
-  flex-direction: column;
-  perspective: 1000px;
-  -webkit-perspective:1000px;
+  left:50%;
+  -webkit-transform:translate(-150%,-50%) scale(1.5) rotateY(10deg);
+  transform:translate(-150%,-50%) scale(1.5) rotateY(10deg);
 
-  filter: drop-shadow(-20px 0px 10px rgba(0,0,0,0.2));
-  -webkit-filter: drop-shadow(10px 0px 15px rgba(0,0,0,0.5));
-
-}
-
-#factoryMenu_Card{
-  width: 330px;
-  height: 220px;
-  margin:auto;
-  /* 3D */
-  transform: translateX(-60%)rotateY(15deg);
-  border-left:1px solid #9e9c93;
-}
-
-#factoryMenu_ActionButton{
-  width: 125px;
-  height: 40px;
-  margin:auto;
-  display: flex;
-  margin-top:10px;
-  /* background-color:#cbcbcb;
-  border-radius: 10px; */
-
-    /* 3D */
-  transform: translateX(-80%)rotateY(10deg);
-}
-
-/* 3D */
-#factoryMenu_ActionButton:hover {
-  color:white;
-  background-color: #303030;
-  transform: translateX(-80%)rotateY(15deg);
-}
-.factoryMenu_Card_Titles{
-  font-family: 'Roboto Condensed', sans-serif;
-  text-transform: uppercase;
-  font-size: 15px;
-  font-weight: normal;
-  color:white;
-}
-
-
-#factoryMenu_Card_Top{
-  width: 100%;
-  height: 84px;
-}
-#factoryMenu_Card_ResourseLogo{
-  width: 230px;
-  height: 84px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.factoryMenu_Card_ResourseLogo_Top{
-  display: flex;
-  justify-content: space-between;
-}
-.factoryMenu_Card_ResourseLogo-title{
-  width: 100%;
-  font-size: 20px;
-  color: white;
-  font-weight: 500;
-
-}
-
-.factoryMenu_Card_ResourseLogo-qualityContainer{
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0px;
-  width: 100%;
-  align-items: center;
-
-}
-.factoryMenu_Card_ResourseLogo-qualityContainer-q{
-  color: white;
-  font-weight: 600;
-  margin: 2px;
-  font-size: 20px;
-}
-
-
-#factoryMenu_Card_Bottom{
-  width: 230px;
-
-  /* background-color: #499c5e; */
-  padding-top: 5px;
-}
-#factoryMenu_Card_ProductionPart{
-  padding-bottom: 5px;
-  width: 230px;
-  margin-bottom: 5px;
-}
-
-.factoryMenu_Card_ProductionPart_Header{
-  display: flex;
-  width: 230px;
-  height: 28px;
-  margin-bottom: 4px;
-  align-items: center;
-  padding-right: 10px;
-  padding-left: 4px;
-  justify-content: space-between;
-}
-
-.factoryMenu_LowSalary{
-  display: flex;
-  margin-left: 10px;
-  color: white;
-  font-size: 15px;
-  font-weight: 100;
-  justify-content: space-between;
-  align-items: center;
-  font-family: 'Roboto Condensed', sans-serif;
-}
-.factoryMenu_LowSalary_Container{
-  display: flex;
-}
-#factoryMenu_Card_ProductionPart_Container{
-  width: 100%;
-  display: flex;
-}
-
-
-
-#factoryMenu_Card_StoragePart{
-  width: 230px;
-  height: 28px;
-  display: flex;
-  justify-content: space-between;
-  background-color: #b0b0b0;
-  align-items: center;
-  padding-left: 4px;
-}
-
-.factoryMenu_Card_StoragePart-title{
-  /* text-align: center; */
-}
-
-.factoryMenu_Card_StoragePart-storageContainer{
-  display: flex;
-}
-
-
-
-#factoryMenu_Card_ProgressLine{
-  width: 100%;
-  height: 70px;
-  margin-top: 10px;
-}
-
-#factoryMenu_Card_ProgressLine_Title{
-    text-shadow: 0px 0px 1px rgba(0,0,0,0.8);
-    color: #f9f9f9;
-
-}
-#factoryMenu_Card_ProgressLine_Price{
-  text-shadow: 0px 0px 1px rgba(0,0,0,0.8);
-  color: #ff8a8a;
-  text-align: center;
-}
-#factoryMenu_Card_ProgressLine_Container{
-  width: 100%;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-}
-
-#factoryMenu_Card_StorageLine{
-  width: 100%;
-  height: 70px;
-  margin-top: 60px;
-}
-#factoryMenu_Card_StorageLine_Title{
-  text-shadow: 0px 0px 1px rgba(0,0,0,0.8);
-  color: #f9f9f9;
-  font-size: 1em;
-}
-#factoryMenu_Card_StorageLine_Container{
-  width: 100%;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-}
-
-.factoryMenu_Card_StoragePart-price{
-  color: #c82828;
-  text-shadow: 0px 0px 1px white;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-
-
-
-
-
-
-#factoryMenu_SettingsCard{
-  width: 220px;
-  height: 330px;
   overflow: hidden;
 
-  position: fixed;
-  left: 50%;
-  top:50%;
-  transform: translate(-50%,-50%);
+  border-radius: 10px;
 
-}
-/* #factoryMenu_Button{
-  display: flex;
-  width: 100px;
-  height: 50px;;
-  border-radius: 20px;
-} */
+  box-shadow: 0px 0px 10px black;
 
-
-#factoryMenu_SettingsCard_Top{
-  width: 100%;
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  /* margin-top: 15px; */
-  margin-bottom: 10px;
-}
-
-
-.factoryMenu_SettingsCard_Top-resourceLogo{
-  width: 60px;
-  height: 60px;
-  background-color: #3c8fb5;
-  padding: 5px;
-  font-size: 15px;
-  font-weight: 500;
-  color: white;
-}
-
-#factoryMenu_SettingsCard_Top-pointsCounter{
-  width: 60%;
-  display: flex;
-  font-size: 50px;
-  font-weight: 100;
-
-}
-
-
-
-#factoryMenu_SettingsCard_Middle{
-  width: 100%;
-  height: 180px;
-}
-
-.factoryMenu_SettingsCard_SettingsString{
-  width: 100%;
-  height: 22%;
-  margin-bottom: 3%;
-}
-
-.factoryMenu_SettingsCard_SettingsString-title{
-  width: 100%;
-  height: 30%;
-  font-weight: 100;
-  text-transform: uppercase;
-  font-size: 15px;
   font-family: 'Roboto Condensed';
 
 }
-.factoryMenu_SettingsCard_SettingsString-SettingContainer{
-  width: 100%;
+
+  .factory_header{
+    width: 100%;
+    height: 34%;
+    padding: 10px;
+    background-size: 100%;
+    filter: contrast(1.3) brightness(1.3);
+  }
+  .factory_header_bg-oilWell{
+    background-image: url(../img/factoryCards/oilWell.png);
+
+  }
+
+    .factory_header_header{
+      font-size: 10px;
+      text-transform: uppercase;
+      font-family: 'Roboto Condensed';
+      color: white;
+      text-shadow: 0px 0px 10px black;
+    }
+    .factory_header_header-span{
+      /* text-transform: uppercase; */
+      font-weight: bold;
+    }
+    .factory_header_body{
+      display: flex;
+      width: 100%;
+      height: 75%;
+      align-items: center;
+      font-family: 'Roboto';
+      color: white;
+      text-shadow: 0px 0px 10px black;
+      letter-spacing: -0.05em;
+
+
+    }
+    .factory_header_body-left{
+      width: 70%;
+      height: 70%;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .factory_header_body-right{
+      width: 30%;
+      height: 70%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 36px;
+      font-weight: bold;
+
+    }
+  .factory_body{
+    padding: 10px;
+    width: 100%;
+    height: 72%;
+    background-color: #FAF9F8;
+    border-radius: 20px 20px 0px 0px;
+    position: relative;
+    top:-6%;
+    box-shadow: 0px 0px 30px black;
+
+  }
+    .factory_body_body-settings{
+      width: 100%;
+      height: 100%;
+    }
+
+    .factory_body_settingsLine{
+      width: 100%;
+      height: 18%;
+      margin-bottom: 2%;
+      border-radius: 10px;
+      box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+    }
+      .factory_body_settingsLine-left{
+        width: 32%;
+        height: 100%;
+        /* background-color: red; */
+        padding-left: 10px;
+        font-size: 11px;
+        color:#303030;
+        line-height: 0.9em;
+        display: flex;
+        align-items: center;
+
+      }
+      .factory_body_settingsLine-right{
+        width: 65%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+      .factory_body_settingsLine-button{
+        font-family: 'Roboto';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        height: 25px;
+        border:1px solid #D7355C;
+        color:#D7355C;
+        border-radius: 10px;
+      }
+      .factory_body_settingsLine-button:hover{
+        background-color: #D7355C;
+        color:white;
+        border:none;
+      }
+      .factory_body_settingsLine-text{
+        width: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        color:#D7355C;
+      }
+    .factory_body_settingsLine-accept{
+      width: 100%;
+      height: 18%;
+      margin-top: 5%;
+      margin-bottom: 2%;
+      display: flex;
+    }
+      .factory_body_settings_acceptButton{
+        margin: auto;
+        height: 100%;
+        background-color: #D7355C;
+        display: flex;
+        align-items: center;
+        padding: 0px 15%;
+        border-radius: 20px;
+        text-transform: uppercase;
+      }
+      .factory_body_settings_acceptButton-span{
+        color: white;
+        font-family: 'Roboto';
+        font-size: 12px;
+      }
+
+
+
+
+
+
+  .factory_body_footer{
+    width: 100%;
+    height: 20%;
+    margin-top: 5px;
+    background-color: red;
+  }
+  .factory_footer{
+    width: 100%;
+    height: 75%;
+    background-color:#FAF9F8;
+    position: relative;
+    top:-12.5%;
+    overflow: hidden;
+    padding: 0px 10px;
+    transition-duration: 0.4s;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 0px 8px rgb(0, 0, 0, 0.5);
+  }
+
+  .factory_footer:hover{
+    top:-79%;
+  }
+    .factory_footer_header{
+      align-items: center;
+      display: flex;
+      font-size: 12px;
+      justify-content: center;
+      width: 100%;
+      height: 10%;
+      color:#D7355C;
+    }
+
+
+
+
+
+.factory_product-hole{
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.25);
+  margin-right: 2px;
+
   display: flex;
-  height: 70%;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+
+}
+.factory_product-hole-rawStorage{
+  background-color: #ffb6b6;
 }
 
-.factoryMenu_SettingsCard_SettingsString-button{
-  width: 30%;
-  height: 100%;
-  font-weight: 400;
-  text-align: center;
-  font-size: 20px;
-}
-
-.factoryMenu_SettingsCard_SettingsString-button:hover{
-    background-color: #303030;
-    color: white;
-}
-
-.factoryMenu_SettingsCard_SettingsString-progressBar{
-  width: 36%;
-  height: 40%;
-  background-color: #bbbbbb;
-}
-
-.factoryMenu_SettingsCard_SettingsString-progress{
-  width: 0%;
-  height: 100%;
-  background-color: #303030;
-}
-
-
-.factoryMenu_SettingsCard_Bottom{
+.factory_body_rawStorage{
   width: 100%;
-  margin: auto;
-  height: 14.5%;
-  background-color: #303030;
-  color: white;
+  height: 28px;
+  position: relative;
+  top:-30px;
   display: flex;
-
 }
-.factoryMenu_SettingsCard_Bottom:hover{
-    background-color: #666666;
+
+
+.factory_product-gap{
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background-color: #FAF9F8;
+  border: 1px solid #303030;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.factory_body_progressBar{
+  width: 100%;
+  height: 28px;
+  background-color: #E4E4E4;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.factory_body_progressBar_scaleContainer{
+  width: 100%;
+  height: 50%;
+  position: relative;
+  top:50%;
+  display: flex;
+}
+
+.factory_body_progressBar_scale{
+  border-right: 1px solid #606060;
+  height: 100%;
+  display: flex;
+  color: #606060;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+.factory_body_progressBar_scale-first{
+  width: 28px;
+}
+.factory_body_progressBar_scale-last{
+  border-right:none;
+}
+.factory_body_progressBar_productContainer{
+  width: 18%;
+  height: 28px;
+  position: relative;
+  top:-50%;
+}
+
+.factory_body_body-production{
+  width: 100%;
+  height: 52%;
+  margin-bottom: 5px;
+  display: flex;
+}
+.factory_body_body-production-left{
+  width: 60%;
+  height: 100%;
+}
+.factory_body_ingredientList{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+  .factory_body_ingredientList-item{
+    width: 100%;
+    height: 15px;
+    margin-bottom: 2px;
+    display: flex;
+    border-radius: 5px;
+  }
+  .factory_body_ingredientList-item:hover{
+    background-color: #A3D735
+  }
+  .factory_body_ingredientList-item-selected{
+    background-color: #A3D735;
+  }
+    .factory_body_ingredientList-icon{
+      width: 15px;
+      height: 15px;
+      background-size: cover;
+    }
+    .factory_body_ingredientList-arrow{
+      width: 15px;
+      height: 15px;
+      color: #303030;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin: 0px 4px;
+    }
+    .factory_body_ingredientList-arrow-coast{
+      line-height: 5px;
+      font-size: 7px;
+      margin-top: 1px;
+    }
+    .factory_body_ingredientList-arrow-symbol{
+      line-height: 6px;
+      font-size:17px;
+    }
+    .factory_body_ingredientList-volume{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 15px;
+      color: #303030;
+      font-size: 9px;
+      letter-spacing: -0.02em;
+    }
+
+.factory_body_body-production-right{
+  width: 40%;
+  height: 100%;
+  /* background-color: #6c948a; */
+}
+
+
+
+
+
+
+.factory_body_storage{
+  width: 100%;
+  /* background-color: red; */
+  height: 28px;
 }

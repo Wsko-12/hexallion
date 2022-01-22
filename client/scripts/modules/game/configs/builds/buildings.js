@@ -46,7 +46,7 @@ const BUILDINGS = {
     nearCeil:['forest'],
     coast:19500,
     product:'wood',
-
+    category:'mining',
     title:{
       eng:'sawmill',
       ru:'лесопилка',
@@ -62,7 +62,7 @@ const BUILDINGS = {
     nearCeil:['sea'],
     coast:12000,
     product:'water',
-
+    category:'mining',
     title:{
       eng:'water station',
       ru:'станция водоочистки',
@@ -77,7 +77,7 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:7500,
     product:'sand',
-
+    category:'mining',
     title:{
       eng:'sand mine',
       ru:'песчаный карьер',
@@ -92,7 +92,7 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:34500,
     product:'steel',
-
+    category:'mining',
     title:{
       eng:'steel mill',
       ru:'завод стали',
@@ -107,7 +107,7 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:73500,
     product:'gold',
-
+    category:'mining',
     title:{
       eng:'gold mill',
       ru:'завод золота',
@@ -122,13 +122,30 @@ const BUILDINGS = {
     nearCeil:['all'],
     coast:7500,
     product:'oil',
-
+    category:'mining',
     title:{
       eng:'oil well',
       ru:'нефтяная вышка',
     },
     buttonColor:'#454758',
 
+  },
+
+
+  oilRefinery:{
+    name:'Oil refinery',
+    description:'Переработка нефти',
+    ceil:['meadow','sand','steelMine','goldMine','oilMine'],
+    nearCeil:['all'],
+    coast:7500,
+    product:['petrol'],
+    raw:['oil'],
+    category:'factory',
+    title:{
+      eng:'oil refinery',
+      ru:'Переработка нефти',
+    },
+    buttonColor:'#454758',
   },
   // field:{
   //   name:'Field',

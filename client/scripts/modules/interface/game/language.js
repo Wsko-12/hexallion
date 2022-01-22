@@ -44,8 +44,12 @@ const LANG = {
       ru:'склад',
       eng:'storage',
     },
+    volume:{
+      ru:'объем произ-ва',
+      eng:'prod volume',
+    },
     salary:{
-      ru:'низкие зарплаты',
+      ru:'низкие затраты',
       eng:'low salary',
     },
     production:{
@@ -68,6 +72,10 @@ const LANG = {
       ru:'К',
       eng:'Q',
     },
+    settings:{
+      ru:'настройки',
+      eng:'settings',
+    }
   },
 
   truck:{
@@ -171,6 +179,10 @@ const LANG = {
       ru:'нефтяной вышке',
       eng:'Oil mill',
     },
+    oilRefinery:{
+      ru:'нпз',
+      eng:'Oil refinery',
+    },
     road:{
       ru:'дороги',
       eng:'Road',
@@ -200,6 +212,9 @@ const LANG = {
     },
     oil:{
       ru:'нефти',
+    },
+    petrol:{
+      ru:'бензина',
     },
 
     truckBuying:{
@@ -232,12 +247,16 @@ const LANG = {
       eng:'Oil well',
       ru:'нефтедобывающей вышке',
     },
+    OilRefinery:{
+      eng:'Oil refinery',
+      ru:'нпз',
+    },
 
     creditPayment:{
       ru:'Кредитный платеж',
     },
 
-  }
+  },
 
 
 

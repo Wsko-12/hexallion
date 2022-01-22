@@ -80,12 +80,13 @@ const factoriesConfig = {
     speed:5,
     products:[
       {
-        name:'plastic',
-        price:24000,
-        raw:['wood'], //!!!!!! ЗАМЕНИТЬ НА OIL
+        name:'petrol',
+        //цена всего производства
+        price:2000,
+        raw:['oil'],
         //сколько приозведется ресурса за раз
         productionVolume:2,
-      }
+      },
     ],
     //цена простоя
     downtimeCost:12000,

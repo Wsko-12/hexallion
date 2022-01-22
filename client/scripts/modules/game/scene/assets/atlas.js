@@ -266,6 +266,11 @@ ATLAS.models = [
     file:'oilWell.glb',
   },
 
+  { name:'oilRefinery',
+    folder:'buildings/',
+    file:'oilRefinery.glb',
+  },
+
 
 
   { name:'truckHitBox',

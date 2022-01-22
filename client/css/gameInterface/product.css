@@ -1,0 +1,41 @@
+.product-icon{
+  background-size: cover;
+  width: 20px;
+  height: 20px;
+}
+.product-qualityContainer{
+  display: flex;
+  align-items: center;
+
+}
+.product-quality{
+  width: 3px;
+  height: 3px;
+  border-radius: 3px;
+  background-color: #303030;
+  margin: 0px 1px;
+}
+
+
+.product-sand{
+  background-image: url(../img/product/sand.png);
+}
+.product-water{
+  background-image: url(../img/product/water.png);
+}
+.product-wood{
+  background-image: url(../img/product/wood.png);
+}
+.product-steel{
+  background-image: url(../img/product/steel.png);
+}
+.product-gold{
+  background-image: url(../img/product/gold.png);
+}
+.product-oil{
+  background-image: url(../img/product/oil.png);
+}
+
+.product-petrol{
+  background-image: url(../img/product/petrol.png);
+}

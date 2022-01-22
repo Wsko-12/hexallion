@@ -433,8 +433,9 @@ class GAME {
         trucks: this.trucks,
         tickTime: this.tickTime,
         members: this.members,
-        //'#fc4a4a'# серый для скринов
-        playerColors: ['#bfbfbf', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
+        //#bfbfbf серый для скринов
+        //#fc4a4a красный для игрока
+        playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
         factoriesCount:this.factoriesCount,
       },
     };
@@ -459,7 +460,6 @@ class GAME {
         building:building,
       }
     */
-
     data.build.id = generateId(data.build.building, 5);
 
 
@@ -745,9 +745,20 @@ class FACTORY_LIST {
     for (let factory in this.list) {
       const thisFactory = this.list[factory];
       if(thisFactory.settingsSetted){
-        const prodPriceStock = COASTS.products[thisFactory.product].price;
-        const clearEarn = Math.round(prodPriceStock + prodPriceStock * ((thisFactory.quality * 15) * 0.01))  - thisFactory.price;
-        earnings+=clearEarn;
+
+
+        if(thisFactory.category === 'mining'){
+          const prodPriceStock = COASTS.products[thisFactory.product].price;
+          const clearEarn = Math.round(prodPriceStock + prodPriceStock * ((thisFactory.quality * 15) * 0.01))  - thisFactory.price;
+          earnings+=clearEarn;
+        }else if(thisFactory.category === 'mining'){
+          let allProductSum = 0;
+          thisFactory.products.forEach((product) => {
+            // const coast =
+          });
+
+        };
+
       };
     };
     return earnings;
@@ -890,6 +901,7 @@ class FACTORY {
         this.productLine.pop();
       };
 
+      this.speedPoints = settings.speed;
 
       //каждый salary point сбивает цену производства на 15%
       this.salaryPoints = settings.salary;
@@ -906,7 +918,7 @@ class FACTORY {
       };
 
 
-      this.volume = settings.volume;
+      this.volumePoints = settings.volume;
       this.sendNewSettings();
 
     };
@@ -934,14 +946,16 @@ class FACTORY {
         data = {
          id: this.id,
          name: this.name,
-         product: this.product,
+         products: this.products,
          storage: this.storage,
          //надо, чтобы забить на карточке клетки
          productLine: this.productLine,
          stockStorage: this.stockStorage,
          stockSpeed: this.stockSpeed,
-
          salary:this.salaryPoints,
+         productSelected:this.productSelected,
+         productInProcess:this.productInProcess,
+         rawStorage:this.rawStorage,
        };
     };
 
@@ -959,6 +973,18 @@ class FACTORY {
           storage: this.storage,
         },
       };
+    };
+    if(this.category === 'factory'){
+      updates = {
+       factoryID: this.id,
+       updates: {
+         productLine: this.productLine,
+         productSelected:this.productSelected,
+       },
+
+
+
+     };
     };
 
 
@@ -1045,8 +1071,8 @@ class FACTORY {
                     return product;
                 };
             });
-            const stepPrice = Math.round(productConfigs.price - (productConfigs.price * (0.15 * this.salary)));
-            this.player.balance -= stepPrice;
+            const productionPrice = Math.round(productConfigs.price - (productConfigs.price * (0.15 * this.salaryPoints)));
+            this.player.balance -= Math.floor(productionPrice/(this.stockSpeed - this.speedPoints));
             this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -stepPrice);
           };
         }else{
@@ -1792,8 +1818,8 @@ io.on('connection', function(socket) {
       settings:{
         points:3,
         speed:0,
+        quality or value,
         salary:0,
-        quality:0,
       };
     };*/
 

@@ -57,11 +57,6 @@ class Factory {
 
   };
 
-  setSettings(){
-    //интерфейс по настройке фабрики
-    // console.log('set settings',this);
-  };
-
   onClick(){
     //происходит при клике на сектор этой фабрики
     //на хитбокс фабрики
@@ -133,31 +128,34 @@ class Factory {
     };
   };
 
-  update(updates){
-
-  };
 
   applySettings(settings){
     this.settingsSetted = true;
     this.settings = settings;
+    // console.log(this)
   };
 
   applyUpdates(updates){
-    this.settings.productLine = updates.productLine;
-    this.settings.storage = updates.storage;
+    if(this.category === 'mining'){
+      this.settings.productLine = updates.productLine;
+      this.settings.storage = updates.storage;
 
-    if(!this.settings.storage.includes(0)){
-        this.createNotification('storrageFull');
-        return;
-    };
+      if(!this.settings.storage.includes(0)){
+          this.createNotification('storrageFull');
+          return;
+      };
 
 
-    if(this.settings.storage.includes(1)){
-      if(this.notification === null){
-        this.createNotification('resourceReady');
+      if(this.settings.storage.includes(1)){
+        if(this.notification === null){
+          this.createNotification('resourceReady');
+        };
       };
     };
 
+    if(this.category === 'factory'){
+      
+    };
   };
 };
 

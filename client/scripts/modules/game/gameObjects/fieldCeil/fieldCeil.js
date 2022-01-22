@@ -201,10 +201,10 @@ class FieldCeil {
           //nearCeil for this building
           thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
             if (buildNearCeil == nearCeil || buildNearCeil === 'all') {
-              if(building === 'road' || building === 'bridge'){
+              if (building === 'road' || building === 'bridge') {
                 buttons.push(building);
-              }else{
-                if(MAIN.game.data.commonData.factoriesCount[building] > 0){
+              } else {
+                if (MAIN.game.data.commonData.factoriesCount[building] > 0) {
                   buttons.push(building);
                 };
               };
@@ -405,9 +405,7 @@ class FieldCeil {
         delete MAIN.game.scene.lights.buildingLights.geometry;
         MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
 
-      };
-
-      if (building === 'bridge') {
+      } else if (building === 'bridge') {
         let lightGeometry;
         if (this.neighbours[sector].type === 'meadow' || this.neighbours[sector].type === 'sand' || this.neighbours[sector].type === 'steelMine' || this.neighbours[sector].type === 'goldMine' || this.neighbours[sector].type === 'oilMine' || this.neighbours[sector].cityCeil) {
           buildGeommetry = MAIN.game.scene.assets.geometries.bridge.clone();
@@ -466,11 +464,8 @@ class FieldCeil {
           delete MAIN.game.scene.lights.buildingLights.geometry;
           MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
         };
-      };
-
-      if(building === 'sawmill' || building === 'waterStation' || building === 'sandMine' || building === 'steelMill' || building === 'goldMill' || building === 'oilWell'){
-      if (building === 'sawmill') {
-        buildGeommetry = MAIN.game.scene.assets.geometries.sawmill.clone();
+      } else {
+        buildGeommetry = MAIN.game.scene.assets.geometries[building].clone();
         buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
         buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
         newGeometryArray.push(buildGeommetry);
@@ -481,171 +476,41 @@ class FieldCeil {
         MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
 
 
-        const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        const lightArray = [MAIN.game.scene.lights.buildingLights.geometry];
-        lightGeometry.rotateY((sector * (-60) * Math.PI / 180));
-        lightGeometry.translate(this.position.x, this.position.y, this.position.z);
-        lightArray.push(lightGeometry);
+        //   const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
+        //   const lightArray = [MAIN.game.scene.lights.buildingLights.geometry];
+        //   lightGeometry.rotateY((sector * (-60) * Math.PI / 180));
+        //   lightGeometry.translate(this.position.x, this.position.y, this.position.z);
+        //   lightArray.push(lightGeometry);
+        //
+        //   const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+        //   MAIN.game.scene.lights.buildingLights.geometry.dispose();
+        //   delete MAIN.game.scene.lights.buildingLights.geometry;
+        //   MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
 
-        const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        delete MAIN.game.scene.lights.buildingLights.geometry;
-        MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
-
-        this.sectors[sector] = 'sawmill';
-      };
-
-      if (building === 'waterStation') {
-        buildGeommetry = MAIN.game.scene.assets.geometries.waterStation.clone();
-        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
-        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
-        newGeometryArray.push(buildGeommetry);
-
-        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
-        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
-        delete MAIN.renderer.scene.ceilsMesh.geometry;
-        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
+        this.sectors[sector] = building;
 
 
-        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        // lightArray.push(lightGeometry);
+        if (building === 'waterStation') {
+          //также у соседнего сектора закрываем доступ к стройке тут
+          const indexInNeighbour = this.neighbours[sector].neighbours.indexOf(this);
+          this.neighbours[sector].sectors[indexInNeighbour] = 'full';
+        };
 
-        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        // delete MAIN.game.scene.lights.buildingLights.geometry;
-        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+        // подложка цвета игрока
 
-        this.sectors[sector] = 'waterStation';
-
-
-        //также у соседнего сектора закрываем доступ к стройке тут
-        const indexInNeighbour = this.neighbours[sector].neighbours.indexOf(this);
-        this.neighbours[sector].sectors[indexInNeighbour] = 'full';
-      };
-
-      if (building === 'sandMine') {
-        buildGeommetry = MAIN.game.scene.assets.geometries.sandMine.clone();
-        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
-        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
-        newGeometryArray.push(buildGeommetry);
-
-        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
-        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
-        delete MAIN.renderer.scene.ceilsMesh.geometry;
-        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
-
-
-        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        // lightArray.push(lightGeometry);
-
-        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        // delete MAIN.game.scene.lights.buildingLights.geometry;
-        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
-
-        this.sectors[sector] = 'sandMine';
-      };
-
-      if (building === 'steelMill') {
-        buildGeommetry = MAIN.game.scene.assets.geometries.steelMill.clone();
-        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
-        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
-        newGeometryArray.push(buildGeommetry);
-
-        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
-        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
-        delete MAIN.renderer.scene.ceilsMesh.geometry;
-        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
-
-
-        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        // lightArray.push(lightGeometry);
-
-        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        // delete MAIN.game.scene.lights.buildingLights.geometry;
-        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
-
-        this.sectors[sector] = 'steelMill';
-      };
-
-      if (building === 'goldMill') {
-        buildGeommetry = MAIN.game.scene.assets.geometries.goldMill.clone();
-        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
-        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
-        newGeometryArray.push(buildGeommetry);
-
-        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
-        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
-        delete MAIN.renderer.scene.ceilsMesh.geometry;
-        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
-
-
-        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        // lightArray.push(lightGeometry);
-
-        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        // delete MAIN.game.scene.lights.buildingLights.geometry;
-        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
-
-        this.sectors[sector] = 'goldMill';
-      };
-
-      if (building === 'oilWell') {
-        buildGeommetry = MAIN.game.scene.assets.geometries.oilWell.clone();
-        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
-        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
-        newGeometryArray.push(buildGeommetry);
-
-        const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
-        MAIN.renderer.scene.ceilsMesh.geometry.dispose();
-        delete MAIN.renderer.scene.ceilsMesh.geometry;
-        MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
-
-
-        // const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        // const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        // lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        // lightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        // lightArray.push(lightGeometry);
-
-        // const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        // MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        // delete MAIN.game.scene.lights.buildingLights.geometry;
-        // MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
-
-        this.sectors[sector] = 'goldMill';
-      };
-
-
-      // подложка цвета игрока
-
-        const factoryBottomGeometry =  MAIN.game.scene.assets.geometries.factoryBottom.clone();
+        const factoryBottomGeometry = MAIN.game.scene.assets.geometries.factoryBottom.clone();
         factoryBottomGeometry.rotateY((sector * (-60) * Math.PI / 180));
         factoryBottomGeometry.translate(this.position.x, this.position.y, this.position.z);
 
 
         const playerIndex = MAIN.game.data.commonData.members.indexOf(player);
-        const newFactoryBottomGeometry = BufferGeometryUtils.mergeBufferGeometries([factoryBottomGeometry,MAIN.game.scene.colorsGeommetry[playerIndex].geometry]);
+        const newFactoryBottomGeometry = BufferGeometryUtils.mergeBufferGeometries([factoryBottomGeometry, MAIN.game.scene.colorsGeommetry[playerIndex].geometry]);
         MAIN.game.scene.colorsGeommetry[playerIndex].geometry.dispose();
         delete MAIN.game.scene.colorsGeommetry[playerIndex].geometry;
         MAIN.game.scene.colorsGeommetry[playerIndex].geometry = newFactoryBottomGeometry;
 
 
-    };
+      };
 
     };
   };
@@ -686,8 +551,8 @@ class FieldCeil {
       opacity: 0.9,
     }));
     mesh.name = 'CeilEmptyByTruck';
-    mesh.scale.set(1.05,1.05,1.05);
-    mesh.position.set(this.position.x,0.01,this.position.z);
+    mesh.scale.set(1.05, 1.05, 1.05);
+    mesh.position.set(this.position.x, 0.01, this.position.z);
     MAIN.renderer.scene.add(mesh);
 
     let animationFrame = 0;

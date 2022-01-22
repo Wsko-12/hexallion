@@ -3,295 +3,385 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="../../../../../../css/gameInterface/factory.css">
-    <link rel="stylesheet" href="../../../../../../css/gameInterface/resource.css">
-    <link rel="stylesheet" href="../../../../../../css/gameInterface/card.css">
 
     <link rel="stylesheet" href="../../../../../../css/master.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/rooms.css">
+
+
+
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/gameScreen.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/auth.css">
+
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/icons.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/product.css">
+
+
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/ceilMenu.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/balance.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/turn.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/factory.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/trucksMenu.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/path.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/gameNotifications.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/creditMenu.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/city.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/card.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/resource.css">
 
   </head>
-  <body>
-    <!-- <div id="factoryMenu_Section">
-        <div id="factoryMenu_Card" class="card">
-          <div class="card-header">
-              SAWMILL <span class="card-header-span"> | 10</span>
-          </div>
-          <div id="factoryMenu_Card_Top">
-            <div class="factoryMenu_Card_Titles">
-              PRODUCTION
+  <!-- SETTINGS -->
+  <!-- <body>
+    <section id="factorySection">
+      <div id="factoryNotifications"></div>
+      <div id="factoryMenuClicker">
+        <div id="factoryMenu">
+
+
+          <div class="factory_card">
+            <div class="factory_header factory_header_bg-oilWell">
+              <div class="factory_header_header">
+                oil well <span class="factory_header_header-span">| 10</span>
+              </div>
+              <div class="factory_header_body">
+                <div class="factory_header_body-left">
+                  <span>Settings</span>
+                </div>
+                <div class="factory_header_body-right">
+                  <span>04</span>
+                </div>
+              </div>
             </div>
-            <div id="factoryMenu_Card_ProductionPart_Container">
-              <div class="resource-hole">
+            <div class="factory_body">
+              <div class="factory_body_body-settings">
 
-              </div>
-              <div class="resource-gag resource-bg-color-wood">
-                <div class="resource-gag-title">
-                  wood
+
+                <div class="factory_body_settingsLine">
+                  <div class="factory_body_settingsLine-left">
+                    низкие затраты
+                  </div>
+                  <div class="factory_body_settingsLine-right">
+                    <div class="factory_body_settingsLine-button">
+                      -
+                    </div>
+                    <div class="factory_body_settingsLine-text">
+                      <span>4</span>
+                    </div>
+                    <div class="factory_body_settingsLine-button">
+                      +
+                    </div>
+                  </div>
                 </div>
-                <div class="resource-gag-quality">
-                  Q3
-                </div>
 
 
-              </div>
-              <div class="resource-hole">
 
-              </div>
-              <div class="resource-hole">
-
-              </div>
-              <div class="resource-hole">
-
-              </div>
-              <div class="resource-hole">
-
-              </div>
-              <div class="resource-hole">
-
-              </div>
-              <div class="resource-gag">
-
-              </div>
-
-
-            </div>
-          </div>
-          <div id="factoryMenu_Card_Bottom">
-            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-wood">
-              <div class="factoryMenu_Card_ResourseLogo-title">
-                wood
-              </div>
-              <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
-                <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">Q</span>
-                <div class="quality-gag">
-
-                </div>
-                <div class="quality-hole">
-
-                </div>
-                <div class="quality-hole">
-
+                <div class="factory_body_settingsLine-accept">
+                  <div class="factory_body_settings_acceptButton">
+                    <span class="factory_body_settings_acceptButton-span">accept</span>
+                  </div>
                 </div>
               </div>
+              <div class="factory_body_footer">
+                <div class="factory_body_footer_button">
 
-            </div>
-            <div id="factoryMenu_Card_StoragePart">
-              <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
-                STORAGE
-              </div>
-              <div class="factoryMenu_Card_StoragePart-storageContainer">
-                <div class="resource-hole">
-
-                </div>
-                <div class="resource-hole">
-
-                </div>
-                <div class="resource-gag">
-
-                </div>
-                <div class="resource-gag">
-
-                </div>
-                <div class="resource-gag">
-
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div id="factoryMenu_ActionButton"></div>
-    </div> -->
-
-
-    <!-- <div id='factoryMenu_Container' class="factoryMenu_cardBackground_${factory.type}" >
-      <div id="factoryMenu_title">${name}</div>
-      <div id='factoryMenu_settings_points'>3</div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">speed</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_speed_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_speed_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_speed_plus" class="factoryMenu_settings_button">+</div>
-
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">quality</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_quality_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_quality_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_quality_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">low salary</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_salary_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_salary_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_salary_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">storage</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_storage_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_storage_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_storage_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div id="factoryMenu_Button">
-
-      <span style="margin:auto">OK</span>
-
-    </div> -->
-
-    <!-- <div id="factoryMenu_Settings_Container">
-      <div class="card" id="factoryMenu_SettingsCard">
-        <div class="card-header">
-            ${name} <span class="card-header-span"> | ${factory.number}</span>
-        </div>
-        <div id="factoryMenu_SettingsCard_Top">
-          <div class="factoryMenu_SettingsCard_Top-resourceLogo resource-bg-color-${factory.product}">
-            <span>water</span>
-
-          </div>
-          <div id="factoryMenu_SettingsCard_Top-pointsCounter">
-            <span style="margin:auto">0<span id="factoryMenu_settings_points">4</span></span>
-
-          </div>
-        </div>
-
-        <div id="factoryMenu_SettingsCard_Middle">
-          <div class="factoryMenu_SettingsCard_SettingsString">
-            <div class="factoryMenu_SettingsCard_SettingsString-title">
-              speed
-            </div>
-            <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-              <div id="factoryMenu_settings_speed_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-              <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-                <div id="factoryMenu_settings_speed_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-                </div>
-              </div>
-              <div id="factoryMenu_settings_speed_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-            </div>
-          </div>
-
-          <div class="factoryMenu_SettingsCard_SettingsString">
-            <div class="factoryMenu_SettingsCard_SettingsString-title">
-              quality
-            </div>
-            <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-              <div id="factoryMenu_settings_quality_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-              <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-                <div id="factoryMenu_settings_quality_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-                </div>
-              </div>
-              <div id="factoryMenu_settings_quality_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-            </div>
-          </div>
-
-          <div class="factoryMenu_SettingsCard_SettingsString">
-            <div class="factoryMenu_SettingsCard_SettingsString-title">
-              low salary
-            </div>
-            <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-              <div id="factoryMenu_settings_salary_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-              <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-                <div id="factoryMenu_settings_salary_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-                </div>
-              </div>
-              <div id="factoryMenu_settings_salary_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-            </div>
-          </div>
-
-          <div class="factoryMenu_SettingsCard_SettingsString">
-            <div class="factoryMenu_SettingsCard_SettingsString-title">
-              storage
-            </div>
-            <div class="factoryMenu_SettingsCard_SettingsString-SettingContainer">
-              <div id="factoryMenu_settings_storage_minus" class="factoryMenu_SettingsCard_SettingsString-button">-</div>
-              <div class="factoryMenu_SettingsCard_SettingsString-progressBar">
-                <div id="factoryMenu_settings_storage_progress" class="factoryMenu_SettingsCard_SettingsString-progress">
-                </div>
-              </div>
-              <div id="factoryMenu_settings_storage_plus" class="factoryMenu_SettingsCard_SettingsString-button">+</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="factoryMenu_SettingsCard_Bottom" id="factoryMenu_Button">
-          <span style="margin:auto">APPLY</span>
-        </div>
-      </div>
-    </div> -->
-
-
-
-    <div id="factoryMenu_Section">
-        <div id="factoryMenu_Card" class="card">
-          <div class="card-header">
-              <!-- ${name} <span class="card-header-span"> | ${factory.number}</span> -->
-              name <span class="card-header-span"> | 04</span>
-
-          </div>
-          <div id="factoryMenu_Card_Top">
-            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.resource}">
-              <div class='factoryMenu_Card_ResourseLogo_Top'>
-                <div class="factoryMenu_Card_ResourseLogo-title">
-                  ${factory.settings.resource}
-                </div>
-                <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
-                  <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">Q</span>
-                  ${qualityLine}
                 </div>
               </div>
 
             </div>
 
 
-          </div>
-          <div id="factoryMenu_Card_Bottom">
-            <div id="factoryMenu_Card_ProductionPart">
-              <div class="factoryMenu_Card_Titles">
-                ${MAIN.interface.lang.factory.production[MAIN.interface.lang.flag]}
+            <div class="factory_footer">
+              <div class="factory_footer_header">
+                <span>автоотправка</span>
               </div>
-              <div id="factoryMenu_Card_ProductionPart_Container">
-                ${progressLine}
+            </div>
+          </div>
+
+
+
+          <div class="factory_card">
+            <div class="factory_header factory_header_bg-oilWell">
+              <div class="factory_header_header">
+                oil well <span class="factory_header_header-span">| 10</span>
+              </div>
+              <div class="factory_header_body">
+                <div class="factory_header_body-left">
+                  <span>Settings</span>
+                </div>
+                <div class="factory_header_body-right">
+                  <span>04</span>
+                </div>
+              </div>
+            </div>
+            <div class="factory_body">
+              <div class="factory_body_body-settings">
+
+
+                <div class="factory_body_settingsLine">
+                  <div class="factory_body_settingsLine-left">
+                    низкие затраты
+                  </div>
+                  <div class="factory_body_settingsLine-right">
+                    <div class="factory_body_settingsLine-button">
+                      -
+                    </div>
+                    <div class="factory_body_settingsLine-text">
+                      <span>4</span>
+                    </div>
+                    <div class="factory_body_settingsLine-button">
+                      +
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="factory_body_settingsLine-accept">
+                  <div class="factory_body_settings_acceptButton">
+                    <span class="factory_body_settings_acceptButton-span">accept</span>
+                  </div>
+                </div>
+
 
               </div>
             </div>
-
-            <div id="factoryMenu_Card_StoragePart">
-              <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
-                ${MAIN.interface.lang.factory.storage[MAIN.interface.lang.flag]}
-              </div>
-
-              <div class="factoryMenu_Card_StoragePart-storageContainer">
-                ${storageLine}
-              </div>
-            </div>
-
-          </div>
-
-          <div class="factoryMenu_Card_StoragePart-price">
-            $${factory.settings.stepPrice}/${MAIN.interface.lang.factory.step[MAIN.interface.lang.flag]}
           </div>
 
         </div>
-        ${actionButtonLine ? actionButtonLine : ''}
-    </div>
+      </div>
+    </section>
+  </body> -->
 
 
-  </body>
+
+
+
+
+ <body>
+   <section id="factorySection">
+     <div id="factoryNotifications"></div>
+     <div id="factoryMenuClicker">
+       <div id="factoryMenu">
+
+
+         <div class="factory_card">
+           <div class="factory_header factory_header_bg-oilWell">
+             <div class="factory_header_header">
+               oil well <span class="factory_header_header-span">| 10</span>
+             </div>
+           </div>
+
+           <div class="factory_body">
+
+             <!-- raw storage -->
+             <div class="factory_body_rawStorage">
+               <div class="factory_product-hole factory_product-hole-rawStorage">
+                 <div class="product-icon product-oil"></div>
+               </div>
+
+               <div class="factory_product-gap">
+                 <div class="product-icon product-petrol"></div>
+                 <div class="product-qualityContainer">
+                   <span class="product-quality"></span>
+                   <span class="product-quality"></span>
+                   <span class="product-quality"></span>
+                 </div>
+               </div>
+             </div>
+             <!-- /raw storage -->
+
+             <!-- body -->
+             <div style="position:relative; top:-28px; height:100%;">
+
+               <!-- progress bar -->
+               <div class="factory_body_progressBar">
+                 <div class="factory_body_progressBar_scaleContainer">
+
+                   <!-- 82% / (steps - 1) -->
+                   <div class="factory_body_progressBar_scale factory_body_progressBar_scale-first">
+                     <span>8</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>7</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>6</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>5</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>4</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>3</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>2</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale factory_body_progressBar_scale-last" style="width:11.71%">
+                     <span>1</span>
+                   </div>
+
+                 </div>
+
+                 <div class="factory_body_progressBar_productContainer" style="left:11.71%">
+                   <div class="factory_product-gap">
+                     <div class="product-icon product-petrol"></div>
+                     <div class="product-qualityContainer">
+                       <span class="product-quality"></span>
+                       <span class="product-quality"></span>
+                       <span class="product-quality"></span>
+                     </div>
+                   </div>
+                 </div>
+
+               </div>
+               <!-- /progress bar -->
+
+
+
+
+                <!-- central part -->
+               <div class="factory_body_body-production">
+                 <div class="factory_body_ingredientList">
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+
+                   <div class="factory_body_ingredientList-item factory_body_ingredientList-item-selected">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-sand"></div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-sand"></div>
+                     <div class="factory_body_ingredientList-icon product-steel"></div>
+                     <div class="factory_body_ingredientList-icon product-gold"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-sand"></div>
+                     <div class="factory_body_ingredientList-icon product-steel"></div>
+                     <div class="factory_body_ingredientList-icon product-gold"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+
+
+
+                 </div>
+
+
+                 <div class="factory_body_body-production-right">
+
+                 </div>
+               </div>
+               <!-- /central part -->
+
+
+               <div class="factory_body_storage">
+
+               </div>
+             </div>
+
+
+
+
+
+
+             <!-- /body -->
+
+
+
+           </div>
+
+
+           <div class="factory_footer">
+             <div class="factory_footer_header">
+               <span>автоотправка</span>
+             </div>
+           </div>
+         </div>
+
+
+       </div>
+     </div>
+   </section>
+ </body>
 </html>
