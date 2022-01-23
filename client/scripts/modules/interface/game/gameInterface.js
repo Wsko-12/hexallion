@@ -74,6 +74,9 @@ function init(){
         </div>
         <div class="card pathSection_buttons" id="pathSection_sellButton">$</div>
       </div>
+      <div id="pathSection_neadersContainer">
+
+      </div>
       <div id="pathSection_notification">you can't drive here</div>
     </section>
   </section>

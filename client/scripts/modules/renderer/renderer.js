@@ -536,6 +536,10 @@ function render() {
      if(MAIN.interface.game.path.buttonsShowed){
        MAIN.interface.game.path.moveButtons();
      };
+
+     if(MAIN.interface.game.path.neederOfProduct.length > 0){
+       MAIN.interface.game.path.moveWhereProductIsNeeded();
+     };
   };
 
   if(MAIN.game.data.playerData){

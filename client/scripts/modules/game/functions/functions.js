@@ -150,6 +150,7 @@ const FUNCTIONS = {
               truck: truck,
               city: finish.type,
           };
+
           MAIN.interface.game.path.showOnlySellButton(sendData);
           MAIN.game.scene.path.clear();
         };

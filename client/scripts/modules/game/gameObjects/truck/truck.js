@@ -234,9 +234,13 @@ class Truck {
 
             if (value < 6) {
 
-              MAIN.interface.game.city.showCityPrices(that.product);
+              // MAIN.interface.game.city.showCityPrices(that.product);
+              const data = {
+                truck:that,
+                value:value,
+              }
+              MAIN.interface.game.path.showWhereProductIsNeeded(data);
               document.querySelector('#truckCancelButton').style.display = 'flex';
-
 
               MAIN.interface.dobleClickFunction.standard = false;
               MAIN.interface.dobleClickFunction.function = function(object3D) {
