@@ -9,7 +9,7 @@ import {
 /*
   raw - сырье
   construction - стройматериалы
-
+  hardware - хоз товары
 
 
 
@@ -113,6 +113,23 @@ const PRODUCTS = {
     lang:{
       ru:'нефть',
       eng:'oil',
+    },
+
+  },
+
+  petrol:{
+    price:8000,
+    sailSpeed:5,
+    category:'hardware',
+    manufacture:['oilRefinery'],
+    //где является ингредиентом
+    ingrediend:null,
+    //из чего производится
+    raws: ['oil'],
+
+    lang:{
+      ru:'бензин',
+      eng:'petrol',
     },
 
   },

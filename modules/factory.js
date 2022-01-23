@@ -76,8 +76,8 @@ const factoriesConfig = {
 
   oilRefinery:{
     category:'factory',
-    storage:3,
-    speed:5,
+    storage:2,
+    speed:9,
     products:[
       {
         name:'petrol',

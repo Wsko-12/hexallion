@@ -36,6 +36,24 @@
   background-image: url(../img/product/oil.png);
 }
 
+
+
 .product-petrol{
   background-image: url(../img/product/petrol.png);
+}
+
+
+
+
+.product-plastic{
+  background-image: url(../img/product/plastic.png);
+}
+.product-paints{
+  background-image: url(../img/product/paints.png);
+}
+.product-rubber{
+  background-image: url(../img/product/rubber.png);
+}
+.product-glue{
+  background-image: url(../img/product/rubber.png);
 }

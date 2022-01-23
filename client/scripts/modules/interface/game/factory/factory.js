@@ -198,180 +198,266 @@ function showFactoryMenu(factory) {
   factory.clearNotification();
   const menu = document.querySelector('#factoryMenu');
   menu.innerHTML = '';
-  let name = factory.type;
-  name = name.charAt(0).toUpperCase() + name.slice(1);
+  let name = MAIN.game.configs.buildings[factory.type].name;
 
-
-  /* Заполняем прогресс*/
-  let progressLine = '';
-  factory.settings.productLine.forEach((ceil, i) => {
+  let rawStorage = '<div class="factory_body_rawStorage">';
+  if(factory.category === 'factory'){
     let line = '';
-    if (ceil === 0) {
-      line = `<div class="resource-hole"></div>`;
-    } else {
-      line = `<div class="resource-gag resource-bg-color-${factory.settings.product}">
-                <div class="resource-gag-title">
-                  ${factory.settings.product}
-                </div>
-                <div class="resource-gag-quality">
-                  Q${factory.settings.quality}
-                </div>
-              </div>`;
-    };
-    progressLine += line;
-  });
+    for(let product in factory.settings.rawStorage){
+      const thisProduct = factory.settings.rawStorage[product];
+      //если на склад загружен
+      if(thisProduct){
+        let quality = '';
+        for(let i = 0;i < thisProduct.quality;i++){
+          quality+=`<span class="product-quality"></span>`;
+        };
+        line = `<div class="factory_product-gap">
+                   <div class="product-icon product-${product}"></div>
+                   <div class="product-qualityContainer">
+                     ${quality}
+                   </div>
+                 </div>`
 
-  //забить дополнительно промежутки
-  const progressGags = factory.settings.stockSpeed - factory.settings.productLine.length;
-  for (let i = 0; i < progressGags; i++) {
-    const line = `<div class="resource-gag"></div>`;
-    progressLine += line
-  };
-  /* ***Заполняем прогресс*** */
-
-  /* Заполняем склад */
-  let storageLine = '';
-  factory.settings.storage.forEach((ceil, i) => {
-    let line = '';
-    if (ceil === 0) {
-      line = `<div class="resource-hole"></div>`;
-    } else {
-      line = `<div class="resource-gag resource-bg-color-${factory.settings.product}">
-                <div class="resource-gag-title">
-                  ${factory.settings.product}
-                </div>
-                <div class="resource-gag-quality">
-                  Q${factory.settings.quality}
-                </div>
-              </div>`;
-    };
-    storageLine += line;
-  });
-  //забить дополнительно промежутки
-  const storageGags = 3 - (factory.settings.storage.length - factory.settings.stockStorage);
-  for (let i = 0; i < storageGags; i++) {
-    const line = `<div class="resource-gag"></div>`;
-    storageLine += line;
-  };
-
-  let actionButtonLine = null;
-
-  if (factory.settings.storage.includes(1) && !MAIN.game.data.playerData.gameOver) {
-    actionButtonLine = `
-      <div id='factoryMenu_ActionButton' class="card">
-        <span style="margin:auto"> ${MAIN.interface.lang.factory.actionButton[MAIN.interface.lang.flag]}</span>
-      </div>
-    `;
-    if (MAIN.game.data.commonData.turnBasedGame) {
-      if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
-        actionButtonLine = null;
+      }else{
+        line = `<div class="factory_product-hole factory_product-hole-rawStorage">
+                   <div class="product-icon product-${product}"></div>
+                </div>`
       };
+
     };
-
+    rawStorage += line;
   };
-
-  /* Заполняем качество */
-  let qualityLine = '';
-  for (let i = 0; i < 3; i++) {
-    if (i < factory.settings.quality) {
-      qualityLine += `<div class="quality-gag"></div>`
-    } else {
-      qualityLine += `<div class="quality-hole"></div>`
-    };
-  };
-
-  let lowSalaryLine = '';
-  for (let i = 0; i < 3; i++) {
-    if (i < factory.settings.salary) {
-      lowSalaryLine += `<div class="quality-gag"></div>`
-    } else {
-      lowSalaryLine += `<div class="quality-hole"></div>`
-    };
-  };
-
-  const section = `
-    <div id="factoryMenu_Section">
-        <div id="factoryMenu_Card" class="card">
-          <div class="card-header">
-              ${name} <span class="card-header-span"> | ${factory.number}</span>
-          </div>
-          <div id="factoryMenu_Card_Top">
-            <div id="factoryMenu_Card_ResourseLogo" class="resource-bg-color-${factory.settings.product}">
-              <div class='factoryMenu_Card_ResourseLogo_Top'>
-                <div class="factoryMenu_Card_ResourseLogo-title">
-                  ${factory.settings.product}
-                </div>
-                <div class="factoryMenu_Card_ResourseLogo-qualityContainer">
-                  <span class="factoryMenu_Card_ResourseLogo-qualityContainer-q">${MAIN.interface.lang.factory.q[MAIN.interface.lang.flag]}</span>
-                  ${qualityLine}
-                </div>
-              </div>
-
-            </div>
+  rawStorage += `</div>`;
 
 
-          </div>
-          <div id="factoryMenu_Card_Bottom">
-            <div id="factoryMenu_Card_ProductionPart">
-              <div class="factoryMenu_Card_ProductionPart_Header">
+  let progressBar = `<div class="factory_body_progressBar">`;
 
-                <div class="factoryMenu_Card_Titles">
-                  ${MAIN.interface.lang.factory.production[MAIN.interface.lang.flag]}
-                </div>
+    let scaleContainer = `<div class="factory_body_progressBar_scaleContainer">`;
+    const stepScale = 82/(factory.settings.productLine.length - 1);
+    const scale = stepScale.toFixed(2);
+    for(let i = 0;i<factory.settings.productLine.length;i++){
+      const line = `
+        <div class="factory_body_progressBar_scale
+             ${i === 0?'factory_body_progressBar_scale-first':''}
+             ${i === factory.settings.productLine.length - 1?'factory_body_progressBar_scale-last':''}"
 
-                <div class="factoryMenu_LowSalary">
-                  ${MAIN.interface.lang.factory.ls[MAIN.interface.lang.flag]}
-                  <div class="factoryMenu_LowSalary_Container">
-                  ${lowSalaryLine}
-                  </div>
-                </div>
-
-                <svg style="position:absolute;z-index:-1;left:8px" width="230" height="28" viewBox="0 0 230 28" fill="none">
-                  <path d="M0 0H218L230 14L218 28H0V0Z" fill="#b0b0b0"/>
-                </svg>
-
-              </div>
-              <div id="factoryMenu_Card_ProductionPart_Container">
-                ${progressLine}
-
-              </div>
-            </div>
-
-            <div id="factoryMenu_Card_StoragePart">
-              <div class="factoryMenu_Card_Titles factoryMenu_Card_StoragePart-title">
-                ${MAIN.interface.lang.factory.storage[MAIN.interface.lang.flag]}
-              </div>
-
-              <div class="factoryMenu_Card_StoragePart-storageContainer">
-                ${storageLine}
-              </div>
-            </div>
-
-          </div>
-
-
-
+            style="${i===0?'':`width:${scale}%`}">
+          <span>${factory.settings.productLine.length - i}</span>
         </div>
-        ${actionButtonLine ? actionButtonLine : ''}
-    </div>
+      `
+      scaleContainer+=line;
+    };
+    scaleContainer+= `</div>`;
+    progressBar+=scaleContainer;
 
 
-  `;
-  menu.insertAdjacentHTML('beforeEnd', section);
+    const productIndex = factory.settings.productLine.indexOf(1);
+    let productContainer = `
+          <div class="factory_body_progressBar_productContainer"
+          style="left:${productIndex?productIndex*stepScale+'%':''}">`;
 
 
-  if (actionButtonLine) {
-    const button = document.querySelector('#factoryMenu_ActionButton');
-    button.onclick = openTruckMenu;
-    button.ontouchstart = openTruckMenu;
-
-    function openTruckMenu() {
-      if (!MAIN.game.data.playerData.gameOver) {
-        closeMenu();
-        MAIN.interface.game.trucks.openMenu(factory);
+    if(productIndex != -1){
+      let quality = '';
+      for(let i = 0;i < factory.settings.productInProcess.quality;i++){
+        quality+=`<span class="product-quality"></span>`;
       };
+      productContainer += `
+                          <div class="factory_product-gap">
+                             <div class="product-icon product-${factory.settings.productInProcess.name}"></div>
+                             <div class="product-qualityContainer">
+                               ${quality}
+                             </div>
+                           </div>`;
+    };
+    productContainer += `</div>`;
+    progressBar+=productContainer;
+
+  progressBar+= `</div>`;
+
+
+
+
+  let ingredientList = '';
+    if(factory.category === 'mining'){
+      ingredientList += `
+      <div class="factory_body_body-production-left">
+      <div class="factory_body_productHugeIcon product-${factory.product}"></div>`;
+    };
+
+    if(factory.category === 'factory'){
+      ingredientList += `<div class="factory_body_ingredientList">`;
+        for(let i = 0;i<factory.settings.products.length;i++){
+          const thisProduct = factory.settings.products[i];
+          let ingredients = '';
+          for(let j = 0;j<thisProduct.raw.length;j++){
+            const thisIngredient = thisProduct.raw[j];
+            ingredients+= `
+              <div class=" factory_body_ingredientList-icon product-${thisIngredient}"></div>
+            `;
+          };
+
+          const arrow = `
+            <div class="factory_body_ingredientList-arrow">
+              <div class="factory_body_ingredientList-arrow-coast">
+                $${thisProduct.price}
+              </div>
+              <div class="factory_body_ingredientList-arrow-symbol">
+                →
+              </div>
+            </div>
+          `;
+          const product = `<div class="factory_body_ingredientList-icon product-${thisProduct.name}"></div>`
+
+          const volume = `
+              <div class="factory_body_ingredientList-volume">
+                <span>x${thisProduct.productionVolume + factory.settings.volumePoints}</span>
+              </div>
+          `;
+
+          ingredientList+= `
+            <div class="factory_body_ingredientList-item" id="factory_body_ingredientList_item_${thisProduct.name}">
+              ${ingredients}
+              ${arrow}
+              ${product}
+              ${volume}
+            </div>
+          `;
+        };
+    };
+
+
+  ingredientList+='</div>';
+
+
+
+  let settingsPart = `<div class="factory_body_body-production-right">`;
+    const settings = {};
+    if(factory.category === 'mining'){
+      settings.ls = factory.settings.salaryPoints;
+      settings.q = factory.settings.qualityPoints;
+      settings.s = factory.settings.speedPoints;
+    };
+    if(factory.category === 'factory'){
+      settings.ls = factory.settings.salaryPoints;
+      settings.v = factory.settings.volumePoints;
+      settings.s = factory.settings.speedPoints;
+    };
+
+    for(let param in settings){
+      let line = `<div class="factory_body_body-production_settings-list">`;
+
+      line += `<div class="factory_body_body-production_settings-text">
+      ${MAIN.interface.lang.factory[param][MAIN.interface.lang.flag]}
+      </div>`;
+      for(let i = 0;i<3;i++){
+        if(i<settings[param]){
+          line+=`<div class="factory_body_body-production_settings-gap"></div>`;
+        };
+        if(i>=settings[param]){
+          line +=`<div class="factory_body_body-production_settings-hole"></div>`;
+        }
+      };
+      line += `</div>`;
+      settingsPart+= line;
+    };
+  settingsPart += '</div>';
+
+
+
+  let storagePart = ` <div class="factory_body_storage">`;
+
+  for(let i=0;i<factory.settings.storage.length;i++){
+    const product = factory.settings.storage[i];
+    if(product){
+      let quality = ``;
+      for(let i = 0;i < product.quality;i++){
+        quality+=`<span class="product-quality"></span>`;
+      };
+      storagePart += `
+        <div class="factory_product-gap" id="factory_storage_${i}">
+          <div class="product-icon product-${product.name}"></div>
+          <div class="product-qualityContainer">
+            ${quality}
+          </div>
+        </div>`;
+    }else{
+      storagePart += `<div class="factory_product-hole"></div>`;
     };
   };
+
+
+  for(let i=0;i<5;i++){
+    if(i>=factory.settings.storage.length){
+      storagePart += `<div class="factory_storage-gap"></div>`;
+    };
+  };
+
+
+  storagePart += `</div>`;
+
+  const card = `
+          <div class="factory_card">
+             <div class="factory_header factory_header_bg-oilWell">
+               <div class="factory_header_header">
+                 ${name} <span class="factory_header_header-span">| ${factory.number}</span>
+               </div>
+             </div>
+
+             <div class="factory_body">
+
+               <!-- raw storage -->
+               ${rawStorage}
+               <!-- /raw storage -->
+
+               <!-- body -->
+               <div style="position:relative; top:-28px; height:100%;">
+
+                 <!-- progress bar -->
+                 ${progressBar}
+                 <!-- /progress bar -->
+
+                 <!-- central part -->
+                 <div class="factory_body_body-production">
+                   ${ingredientList}
+                   ${settingsPart}
+                 </div>
+                 <!-- /central part -->
+
+                 <!-- storage part -->
+                 ${storagePart}
+                 <!-- /storage part -->
+
+               </div>
+               <!-- /body -->
+             </div>
+
+
+             <div class="factory_footer">
+               <div class="factory_footer_header">
+                 <span>${MAIN.interface.lang.factory.autosend[MAIN.interface.lang.flag]}</span>
+               </div>
+             </div>
+
+           </div>
+
+           <div id="factory_card_error">
+
+           </div>
+  `;
+
+  menu.innerHTML = '';
+  menu.insertAdjacentHTML('beforeEnd',card);
+
+  document.querySelector(`#factory_card_error`).style.display = 'none';
+
+
+  factory.settings.storage.forEach((product, i) => {
+    if(product){
+      document.querySelector(`#factory_storage_${i}`).onclick = ()=>{factory.sendProduct(i)};
+    };
+  });
+
 
 
 };
@@ -381,11 +467,59 @@ function updateFactoryMenu(factory) {
     showFactoryMenu(nowShowedFactoryMenu);
   };
 };
+
+function showFactoryError(messageCode){
+  const errors = {
+    roadEmpty:{
+      ru:'дорога у фабрики занята',
+      eng:'the road near the factory is occupied',
+    },
+    noTruck:{
+      ru:'сначала купите грузовик',
+      eng:'buy a truck first',
+    },
+    noFreeTruck:{
+      ru:'нет свободных грузовиков',
+      eng:'no free trucks',
+    },
+    turn:{
+      ru:'дождитесь своего хода',
+      eng:'wait for your turn',
+    },
+
+  };
+
+  const errorDiv = document.querySelector(`#factory_card_error`);
+
+  errorDiv.style.display = 'flex';
+  errorDiv.style.transitionDuration = '0s';
+  errorDiv.style.opacity = 1;
+  errorDiv.innerHTML = `<div class='factory_card_error_icon'>!</div><div class='factory_card_error_text'>${errors[messageCode][MAIN.interface.lang.flag]}</div>`;
+
+  const rand = Math.random().toString();
+  errorDiv.dataset.rand = rand;
+  setTimeout(()=>{
+    errorDiv.style.transitionDuration = '4s';
+    errorDiv.style.opacity = 0;
+  },500);
+  setTimeout(()=>{
+    if(errorDiv){
+      if(errorDiv.dataset.rand === rand){
+        errorDiv.style.display = 'none';
+      };
+    };
+  },4000);
+
+};
+
+
 const FACTORY = {
   init,
   showMenu,
+  closeMenu,
   nowShowedFactoryMenu,
   updateFactoryMenu,
+  showFactoryError,
 };
 export {
   FACTORY

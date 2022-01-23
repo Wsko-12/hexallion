@@ -1,5 +1,5 @@
 const LANG = {
-  flag:'ru',
+  flag:'eng',
 
   credit:{
     menuTitle:{
@@ -72,10 +72,22 @@ const LANG = {
       ru:'К',
       eng:'Q',
     },
+    s:{
+      ru:'С',
+      eng:'S',
+    },
+    v:{
+      ru:'О',
+      eng:'V',
+    },
     settings:{
       ru:'настройки',
       eng:'settings',
-    }
+    },
+    autosend:{
+      ru:'автоотправка',
+      eng:'autosend',
+    },
   },
 
   truck:{

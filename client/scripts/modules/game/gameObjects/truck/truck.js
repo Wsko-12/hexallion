@@ -26,13 +26,39 @@ class Truck {
     this.hitBoxMesh = null;
     this.cardOpened = false;
     this.onMap = false;
+
+
+
+    this.autosend = false;
   };
 
-  placeOnMap(indexes) {
+  placeOnMap(data) {
+
+    // const data = {
+    //   autosend: false
+    //   game: "Game_FraPKW"
+    //   id: "Truck_SIkSCq"
+    //   player: "p_CvWHlz"
+    //   positionIndexes: {x: 5, z: 7}
+    //   product: {
+    //             factory: "waterStation_2cfZyI"
+    //             game: "Game_FraPKW"
+    //             id: "Product_water_HfUnX2"
+    //             name: "water"
+    //             player: "p_CvWHlz"
+    //             quality: 0
+    //             truck: "Truck_SIkSCq"
+    //           }
+    //   truckNumber: 26
+    // }
+
     this.onMap = true;
     this.sended = false;
-    this.place = indexes;
-    const position = MAIN.game.functions.getScenePositionByCeilIndex(indexes);
+    this.place = data.positionIndexes;
+    this.product = data.product;
+    this.autosend = data.autosend;
+
+    const position = MAIN.game.functions.getScenePositionByCeilIndex(data.positionIndexes);
 
     this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_${this.product.name}`].clone(), MAIN.game.scene.mainMaterial);
     this.object3D.name = this.id;
@@ -55,6 +81,14 @@ class Truck {
         that.showCard();
       };
       this.createNotification();
+    };
+
+
+
+    if(data.player === MAIN.game.data.playerData.login){
+      if(!this.autosend){
+        this.turn();
+      };
     };
 
   };
@@ -223,9 +257,6 @@ class Truck {
     };
 
   };
-
-
-
 
   moveAlongWay(data) {
     //указывает, что последняя точка является городом, в который надо продать ресурс
@@ -463,6 +494,7 @@ class Truck {
     animate();
 
   };
+
 };
 export {
   Truck

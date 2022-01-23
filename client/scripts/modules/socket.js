@@ -222,7 +222,7 @@ function init() {
 
     //обновление только одной
     MAIN.socket.on('GAME_factory_update',(data)=>{
-      MAIN.game.data.playerData.factories[data.factoryID].applyUpdates(data.updates);
+      MAIN.game.data.playerData.factories[data.id].applyUpdates(data);
       MAIN.interface.game.factory.updateFactoryMenu();
     });
 
@@ -271,15 +271,42 @@ function init() {
       };
       */
 
-      if(MAIN.game.data.commonData.trucks.all[data.truckID]){
-        const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
-        thisTruck.placeOnMap(data.place);
+      // if(MAIN.game.data.commonData.trucks.all[data.truckID]){
+      //   const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
+      //   thisTruck.placeOnMap(data.place);
+      //
+      //   //ход грузовика сразу после загрузки
+      //   if(thisTruck.player === MAIN.game.data.playerData.login){
+      //     thisTruck.turn();
+      //   };
+      // };
 
-        //ход грузовика сразу после загрузки
-        if(thisTruck.player === MAIN.game.data.playerData.login){
-          thisTruck.turn();
-        };
+
+
+
+
+      // const data = {
+      //   autosend: false
+      //   game: "Game_FraPKW"
+      //   id: "Truck_SIkSCq"
+      //   player: "p_CvWHlz"
+      //   positionIndexes: {x: 5, z: 7}
+      //   product: {
+      //             factory: "waterStation_2cfZyI"
+      //             game: "Game_FraPKW"
+      //             id: "Product_water_HfUnX2"
+      //             name: "water"
+      //             player: "p_CvWHlz"
+      //             quality: 0
+      //             truck: "Truck_SIkSCq"
+      //           }
+      //   truckNumber: 26
+      // }
+      if(MAIN.game.data.commonData.trucks.all[data.id]){
+        const thisTruck = MAIN.game.data.commonData.trucks.all[data.id];
+        thisTruck.placeOnMap(data);
       };
+
     });
 
     MAIN.socket.on('GAME_truck_clear',(truckID)=>{

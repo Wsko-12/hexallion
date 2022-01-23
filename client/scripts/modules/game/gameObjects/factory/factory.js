@@ -49,12 +49,6 @@ class Factory {
     if(!this.settingsSetted){
       this.createNotification();
     };
-
-
-
-
-
-
   };
 
   onClick(){
@@ -139,23 +133,68 @@ class Factory {
     if(this.category === 'mining'){
       this.settings.productLine = updates.productLine;
       this.settings.storage = updates.storage;
-
-      if(!this.settings.storage.includes(0)){
-          this.createNotification('storrageFull');
-          return;
-      };
-
-
-      if(this.settings.storage.includes(1)){
-        if(this.notification === null){
-          this.createNotification('resourceReady');
-        };
-      };
+      this.settings.productSelected = updates.productSelected;
+      this.settings.productInProcess = updates.productInProcess;
     };
 
     if(this.category === 'factory'){
-      
+
     };
+  };
+
+
+  sendProduct(index, auto){
+    //factory interface -> showFactoryMenu -> factory.sendProduct(i);
+    if(!auto){
+      //сначала проверяем есть ли грузовики
+      //если есть, то проверяем есть ли свободный
+      //если нет там и там то открываем меню грузовиков и передаем туда параметр загрузки грузовика
+      if(MAIN.game.data.commonData.turnBasedGame){
+        if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+          MAIN.interface.game.factory.showFactoryError('turn');
+          return;
+        };
+      };
+
+
+
+
+      if(this.fieldCeil.roadEmpty){
+        MAIN.interface.game.factory.showFactoryError('roadEmpty');
+        return;
+      };
+      const truckList = MAIN.game.data.playerData.trucks;
+      if(Object.keys(truckList).length === 0){
+        MAIN.interface.game.factory.showFactoryError('noTruck');
+        return;
+      };
+
+      const freeTrucks = [];
+      for(let truck in truckList){
+        if(truckList[truck].product === null){
+          freeTrucks.push(truckList[truck]);
+        };
+      };
+
+      if(freeTrucks.length === 0){
+        MAIN.interface.game.factory.showFactoryError('noFreeTruck');
+      }else{
+        const data = {
+          gameID:MAIN.game.data.commonData.id,
+          player:MAIN.game.data.playerData.login,
+          factoryID:this.id,
+          truckID:freeTrucks[0].id,
+          auto:false,
+          storageIndex:index,
+        };
+        MAIN.interface.game.factory.closeMenu();
+        MAIN.socket.emit('GAME_factory_sendProduct',data);
+      };
+    };
+
+
+
+
   };
 };
 

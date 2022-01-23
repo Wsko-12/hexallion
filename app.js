@@ -474,6 +474,7 @@ class GAME {
 
       const properties = {
         player: this.players[data.player],
+        game:this,
         id: data.build.id,
         building: data.build.building,
         ceilIndex: data.build.ceilIndex,
@@ -729,11 +730,8 @@ class FACTORY_LIST {
     for (let factory in this.list) {
       const thisFactory = this.list[factory];
       if (thisFactory.settingsSetted) {
-        const factoryData = {
-          id: thisFactory.id,
-          storage: thisFactory.storage,
-          productLine: thisFactory.productLine,
-        };
+        const factoryData = thisFactory.getUpdates();
+
         data[thisFactory.id] = factoryData;
       };
     };
@@ -768,7 +766,9 @@ class FACTORY_LIST {
 
 class FACTORY {
   constructor(properties) {
+    this.game = properties.game;
     this.player = properties.player;
+
     this.id = properties.id;
     this.name = properties.building;
 
@@ -794,8 +794,12 @@ class FACTORY {
     if(this.category === 'mining'){
         this.quality = 0;
         this.product = FACTORIES[properties.building].product;
+        this.productInProcess = null;
+        this.productSelected = FACTORIES[properties.building].product;
+
     }else if(this.category === 'factory'){
         this.products = FACTORIES[properties.building].products;
+        this.downtimeCost = FACTORIES[properties.building].downtimeCost;
         this.rawStorage = {};
         this.products.forEach((product) => {
           product.raw.forEach((raw) => {
@@ -827,6 +831,7 @@ class FACTORY {
         };
       };
       this.quality = settings.quality;
+      this.qualityPoints = settings.quality;
 
       this.settingsSetted = true;
 
@@ -839,6 +844,7 @@ class FACTORY {
       for (let i = 0; i < settings.speed; i++) {
         this.productLine.pop();
       };
+      this.speedPoints = settings.speed;
 
 
       //полная цена за все производство
@@ -852,14 +858,15 @@ class FACTORY {
 
       this.price = Math.round(newPrise - (newPrise * (0.15 * settings.salary)));
       this.stepPrice = Math.round(this.price / this.productLine.length);
+      this.salaryPoints = settings.salary;
+
 
       this.stockStorage = FACTORIES[this.name].storage;
       this.storage = [];
       for (let i = 0; i < FACTORIES[this.name].storage + settings.storage; i++) {
-        this.storage.push(0);
+        this.storage.push(null);
       };
-
-      this.salaryPoints = settings.salary;
+      this.storagePoints = settings.storage;
 
       this.sendNewSettings();
 
@@ -916,6 +923,7 @@ class FACTORY {
         //null потому что могут быть разные ресурсы на складе
         this.storage.push(null);
       };
+      this.storagePoints = settings.storage;
 
 
       this.volumePoints = settings.volume;
@@ -941,6 +949,12 @@ class FACTORY {
         productLine: this.productLine,
         price: this.price,
         stepPrice: this.stepPrice,
+
+        productInProcess:this.productInProcess,
+        speedPoints:this.speedPoints,
+        salaryPoints:this.salaryPoints,
+        qualityPoints:this.qualityPoints,
+        storagePoints:this.storagePoints,
       };
     }else if(this.category === 'factory'){
         data = {
@@ -956,56 +970,78 @@ class FACTORY {
          productSelected:this.productSelected,
          productInProcess:this.productInProcess,
          rawStorage:this.rawStorage,
+
+
+         speedPoints:this.speedPoints,
+         salaryPoints:this.salaryPoints,
+         volumePoints:this.volumePoints,
+         storagePoints:this.storagePoints,
        };
     };
-
 
     this.player.emit('GAME_factory_newSettings', data);
   };
 
-  sendUpdates() {
-    let updates;
-    if(this.category === 'mining'){
-       updates = {
-        factoryID: this.id,
-        updates: {
-          productLine: this.productLine,
-          storage: this.storage,
-        },
+  getUpdates(){
+
+    const updates = {
+      id:this.id,
+      productSelected:this.productSelected,
+      productInProcess:this.productInProcess?this.productInProcess.getData():null,
+      productLine:this.productLine,
+      storage:[],
+    };
+
+    for(let i = 0;i<this.storage.length;i++){
+      if(this.storage[i]){
+        updates.storage.push(this.storage[i].getData());
+      }else{
+        updates.storage.push(null);
       };
     };
+
+
     if(this.category === 'factory'){
-      updates = {
-       factoryID: this.id,
-       updates: {
-         productLine: this.productLine,
-         productSelected:this.productSelected,
-       },
 
-
-
-     };
     };
 
 
-    this.player.emit('GAME_factory_update', updates);
+    return updates;
+  };
+
+  sendUpdates() {
+    this.player.emit('GAME_factory_update', this.getUpdates());
   };
 
   turn() {
     if(this.category === 'mining'){
       if (this.settingsSetted) {
-        this.player.balance -= this.stepPrice;
-        this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
         //если в storage есть место
-        if (this.storage.includes(0)) {
+        if (this.storage.includes(null)) {
           if (!this.productLine.includes(1)) {
             //если вообще не начато производство
+            if(!this.productInProcess){
+              this.productInProcess = new PRODUCT({
+                game:this.game,
+                factory:this,
+                player:this.player,
+
+                name:this.productSelected,
+                quality:this.qualityPoints,
+              });
+            };
+            this.player.balance -= this.stepPrice;
+            this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
             this.productLine[0] = 1;
           } else {
             //если производтсво кончилось
             if (this.productLine[this.productLine.length - 1] === 1) {
-              this.storage.unshift(this.storage.pop());
-              this.storage[0] = 1;
+              const emptySpace = this.storage.indexOf(null);
+              if(emptySpace != -1){
+                this.storage[emptySpace] = this.productInProcess;
+              };
+              this.productInProcess = null;
+
               if (this.storage.includes(0)) {
                 this.productLine.unshift(this.productLine.pop());
               } else {
@@ -1013,12 +1049,18 @@ class FACTORY {
                   this.productLine[i] = 0;
                 });
               };
+
+              this.turn();
             } else {
+              this.player.balance -= this.stepPrice;
+              this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
               this.productLine.unshift(this.productLine.pop());
             };
           };
         } else {
           //в хранилище нет места
+          this.player.balance -= Math.floor(this.stepPrice/2);
+          this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -Math.floor(this.stepPrice/2));
           this.productLine.forEach((item, i) => {
             this.productLine[i] = 0;
           });
@@ -1108,7 +1150,7 @@ class FACTORY {
             const raw = [];
 
             productConfigs.raw.forEach((rawProductName, i) => {
-              //2.4 добавляемм в массив нужных продуктов
+              //2.4 добавляем в массив нужных продуктов
               raw.push(this.rawStorage[rawProductName]);
               //2.3 удаляем его со склада
               this.rawStorage[rawProductName] = null;
@@ -1130,77 +1172,48 @@ class FACTORY {
 
             //4. создаем нужный продукт
             const product = new PRODUCT({
-              name:productConfigs.name,
-              quality:productQuality,
+              game:this.game,
               player:this.player,
               factory:this.factory,
+
+              name:productConfigs.name,
+              quality:productQuality,
             });
 
             this.productInProcess = product;
 
             //5. начинаем производство
             this.productLine[0] = 1;
-
-
-
-
           };
         };
 
       }else{
         this.player.balance -= this.downtimeCost;
-        this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
+        this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, - this.downtimeCost);
       };
-
-
-
-
     };
-
   };
 
-
-
-  loadProductToTruck(data) {
-    /*
-
-    const data = {
-                 game,
-                 player,
-                 factory,
-                 truck,
-               };
-   */
-
-
-    if (data.truck.product === null) {
-      if (this.storage[0] === 1) {
-        //забираем единицу вначале
-        this.storage.shift();
-        //вкидываем ноль в конец
-        this.storage.push(0);
-
-        //отправляем игроку update фабрики
+  sendProduct(data){
+    // const data = {
+    //   gameID:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factoryID:this.id,
+    //   truckID:freeTrucks[0].id,
+    //   auto:false,
+    //   storageIndex:index,
+    // };
+    data.factory = this;
+    if(this.storage[data.storageIndex]){
+      if(this.player.trucks[data.truckID]){
+        this.player.trucks[data.truckID].loadProduct(this.storage[data.storageIndex],data);
+        this.storage[data.storageIndex] = null;
         this.sendUpdates();
-
-        const productProperties = {
-          name: this.product,
-          quality: this.quality,
-          game: data.game,
-          player: data.player,
-          factory: data.factory,
-          truck: data.truck,
-        };
-
-        const product = new PRODUCT(productProperties);
-        data.truck.loadProduct(product);
-        data.truck.placeTruck(this);
       };
     };
 
-
-
   };
+
 };
 
 
@@ -1345,42 +1358,65 @@ class PLAYER {
 
 class TRUCK {
   constructor(properties) {
-    this.id = generateId('Truck', 5);
-    this.player = properties.player;
     this.game = properties.game;
+    this.player = properties.player;
+
+    this.id = generateId('Truck', 5);
+
+
     this.truckNumber = properties.truckNumber;
     this.product = null;
     this.positionIndexes = {};
+    this.autosend = false;
   };
 
 
-  loadProduct(product) {
+  loadProduct(product, data) {
+    // const data = {
+    //   gameID:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factoryID:this.id,
+    //   truckID:freeTrucks[0].id,
+    //   auto:false,
+    //   storageIndex:index,
+    //   factory:FACTORY,
+    // };
     this.product = product;
+    product.truck = this;
+    this.autosend = data.auto;
 
-    const data = {
-      player: this.player.login,
-      truckID: this.id,
-      product: {
-        name: this.product.name,
-        quality: this.product.quality,
-      },
-    };
+    this.placeTruck(data);
 
-    this.game.sendToAll('GAME_truck_loaded', data);
+
+    // const data = {
+    //   player: this.player.login,
+    //   truckID: this.id,
+    //   product: {
+    //     name: this.product.name,
+    //     quality: this.product.quality,
+    //   },
+    // };
+    //
+    // this.game.sendToAll('GAME_truck_loaded', data);
   };
 
 
   //размешает грузовик на карте
-  placeTruck(factory) {
-    this.game.transportMap[factory.ceilIndex.z][factory.ceilIndex.x] = 1;
-    this.positionIndexes.x = factory.ceilIndex.x;
-    this.positionIndexes.z = factory.ceilIndex.z;
-    const data = {
-      player: this.player.login,
-      truckID: this.id,
-      place: factory.ceilIndex,
-    };
-    this.game.sendToAll('GAME_truck_place', data);
+  placeTruck(data) {
+    // const data = {
+    //   gameID:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factoryID:this.id,
+    //   truckID:freeTrucks[0].id,
+    //   auto:false,
+    //   storageIndex:index,
+    //   factory:FACTORY,
+    // };
+    this.game.transportMap[data.factory.ceilIndex.z][data.factory.ceilIndex.x] = 1;
+    this.positionIndexes.x = data.factory.ceilIndex.x;
+    this.positionIndexes.z = data.factory.ceilIndex.z;
+
+    this.game.sendToAll('GAME_truck_place', this.getData());
   };
 
   send(data) {
@@ -1434,17 +1470,36 @@ class TRUCK {
     this.game.sendToAll('GAME_truck_clear', this.id);
 
   };
+
+  getData(){
+    const data = {
+      game:this.game.id,
+      player:this.player.login,
+      id:this.id,
+
+      truckNumber:this.truckNumber,
+      product:this.product?this.product.getData():null,
+      positionIndexes:this.positionIndexes,
+      autosend:this.autosend,
+    };
+    return data;
+  };
 };
 
 class PRODUCT {
   constructor(properties) {
-    this.name = properties.name;
-    this.quality = properties.quality;
     this.game = properties.game;
     this.player = properties.player;
     this.factory = properties.factory;
-    this.truck = properties.truck || null;
+    this.name = properties.name;
+
     this.id = generateId(`Product_${this.name}`, 5);
+
+
+    this.quality = properties.quality;
+
+    this.truck = properties.truck || null;
+
   };
   clone(){
     const clone = new PRODUCT(this);
@@ -1452,11 +1507,14 @@ class PRODUCT {
   };
   getData(){
     const data = {
-      id:this.id,
-      quality:this.quality,
       game:this.game.id,
       player:this.player.login,
       factory:this.factory.id,
+
+      id:this.id,
+      name:this.name,
+      quality:this.quality,
+
       truck:this.truck ? this.truck.id : null,
     };
     return data;
@@ -1837,6 +1895,44 @@ io.on('connection', function(socket) {
 
   });
 
+  socket.on('GAME_factory_sendProduct',(data)=>{
+    //с фабрики высылается продукт factory.js class factory -> sendProduct
+
+    // const data = {
+    //   gameID:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factoryID:this.id,
+    //   truckID:freeTrucks[0].id,
+    //   auto:false,
+    //   storageIndex:index,
+    // };
+
+    if (GAMES[data.gameID]) {
+      const game = GAMES[data.gameID];
+      //если игра пошаговая, то нужно перепроверитьь его ли ход
+      if (game.turnBasedGame) {
+        //если ходы на паузе
+        if (game.turnsPaused) {
+          return;
+        };
+        if (game.queue[game.queueNum] != data.player) {
+          return;
+        };
+      };
+      if (GAMES[data.gameID].players[data.player]) {
+        const player = GAMES[data.gameID].players[data.player];
+        if(player.factoryList.list[data.factoryID]){
+          const factory = player.factoryList.list[data.factoryID];
+
+          if(GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0){
+            factory.sendProduct(data);
+          };
+        };
+      };
+    };
+
+  });
+
 
 
   socket.on('GAME_truck_buy', (data) => {
@@ -1889,6 +1985,11 @@ io.on('connection', function(socket) {
     };
 
   });
+
+
+
+
+
 
   socket.on('GAME_truck_load', (data) => {
     //происходит, когда игрок загружает грузовик
