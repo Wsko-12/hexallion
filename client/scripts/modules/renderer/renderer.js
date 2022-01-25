@@ -48,6 +48,7 @@ function init() {
     value: new THREE.Vector2(window.innerWidth, window.innerHeight)
   };
   RENDERER.renderer.shadowMap.enabled = true;
+  RENDERER.renderer.shadowMap.autoUpdate = false;
   RENDERER.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   RENDERER.renderer.toneMapping = THREE.LinearToneMapping;
@@ -507,9 +508,15 @@ function setSize() {
   MAIN.interface.mouse.y = window.innerHeight/2;
 
 };
-
+let renderShadow = 0;
 function render() {
   RENDERER.time = clock.getElapsedTime();
+  renderShadow++;
+
+  if(renderShadow === 10){
+      RENDERER.renderer.shadowMap.needsUpdate = true;
+      renderShadow = 0;
+  };
 
   if (MAIN.game.scene) {
     if (MAIN.game.scene.uTime) {
