@@ -35,8 +35,10 @@ class FieldCeil {
     if (this.cityCeil) {
       const city = new City({
         name: this.type,
-        position: properties.position
+        position: properties.position,
+        fieldCeil:this,
       });
+      this.city = city;
       MAIN.game.data.cities[this.type] = city;
     };
   };

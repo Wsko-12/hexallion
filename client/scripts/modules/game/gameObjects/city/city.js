@@ -11,6 +11,8 @@ class City{
 
     this.storage = this.createStorage();
     this.priceNotification = null;
+
+    this.fieldCeil = properties.fieldCeil;
   };
   createStorage(){
     const storage = {};

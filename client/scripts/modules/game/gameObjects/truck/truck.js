@@ -243,8 +243,18 @@ class Truck {
               document.querySelector('#truckCancelButton').style.display = 'flex';
 
               MAIN.interface.dobleClickFunction.standard = false;
-              MAIN.interface.dobleClickFunction.function = function(object3D) {
-                MAIN.game.functions.findPath(value, that, object3D.userData);
+              MAIN.interface.dobleClickFunction.function = async function(object3D) {
+                const data = {
+                  start:MAIN.game.data.map[that.place.z][that.place.x],
+                  finish:object3D.userData,
+                  value:value,
+                  autosend:false,
+                  finalObject:object3D.userData.cityCeil?object3D.userData.city:null,
+                  truck:that,
+                };
+                MAIN.game.functions.pathFinder(data).then((result) =>{
+                  console.log(result);
+                });
               };
             } else {
               MAIN.interface.game.trucks.turningInterfase = false;

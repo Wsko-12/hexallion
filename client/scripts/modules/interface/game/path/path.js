@@ -278,7 +278,48 @@ function showWhereProductIsNeeded(data){
 
 
 
-  container.insertAdjacentHTML('beforeEnd',contant)
+  container.insertAdjacentHTML('beforeEnd',contant);
+
+
+  async function findPath(finalObject){
+    const pathData = {
+      start:MAIN.game.data.map[data.truck.place.z][data.truck.place.x],
+      finish:finalObject.fieldCeil,
+      value:data.value,
+      autosend:false,
+      finalObject:finalObject,
+      truck:data.truck,
+    };
+    MAIN.game.functions.pathFinder(pathData).then((result) =>{
+      console.log(result);
+    });
+  };
+
+
+
+
+  function applyFunnctions(){
+    for(let factory in MAIN.game.data.playerData.factories){
+      const thatFactory = MAIN.game.data.playerData.factories[factory];
+      if(thatFactory.category === 'factory'){
+        if(thatFactory.settingsSetted){
+          if(thatFactory.settings.rawStorage[data.truck.product.name] === null){
+            document.querySelector(`#pathSection_neader_${thatFactory.name}`).onclick = ()=>{findPath(thatFactory)};
+          };
+        };
+      };
+    };
+
+
+    for(let city in MAIN.game.data.cities){
+      const thatCity = MAIN.game.data.cities[city];
+      document.querySelector(`#pathSection_neader_${city}`).onclick = ()=>{findPath(thatCity)};
+    };
+
+  };
+
+  applyFunnctions();
+
 };
 
 
@@ -312,6 +353,8 @@ function moveWhereProductIsNeeded(){
 
 
 };
+
+
 const PATH = {
   point3D:{
     x:0,
