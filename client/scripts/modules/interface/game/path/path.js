@@ -380,7 +380,8 @@ function showWhereProductIsNeeded(data){
 
   for(let city in MAIN.game.data.cities){
     const thatCity = MAIN.game.data.cities[city];
-    const price = thatCity.getCurrentProductPrice(data.truck.product.name);
+    let price = thatCity.getCurrentProductPrice(data.truck.product.name);
+    price = Math.floor(price+(price*(0.15*data.truck.product.quality)));
     const line = `<div class="pathSection_neadersContainer-item-city" id="pathSection_neader_${city}">
                     <div class="pathSection_neadersContainer-cityContainer">
                       <div class="pathSection_neadersContainer-iconBox-city">
