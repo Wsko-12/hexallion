@@ -687,6 +687,29 @@ class CITY {
   };
 
 
+  unloadTruck(truck){
+    let price = 0;
+    const product = truck.product;
+    const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
+    if (firstFullCeilIndex === -1) {
+      price = this.storage[product.name].prices[this.storage[product.name].prices.length - 1];
+    } else if (firstFullCeilIndex === 0) {
+      price = 0;
+    } else {
+      price = this.storage[product.name].prices[firstFullCeilIndex - 1];
+    };
+
+    this.storage[product.name].line[0] = 1;
+
+    const newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+    product.player.changeBalance(newPrice);
+    product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
+
+    this.sendUpdate();
+    truck.clear();
+  };
+
+
 
   update() {
     for (let productStore in this.storage) {
@@ -1002,7 +1025,15 @@ class FACTORY {
 
 
     if(this.category === 'factory'){
-
+      updates.rawStorage = {};
+      for(let product in this.rawStorage){
+        const thisProduct = this.rawStorage[product]
+        if(thisProduct){
+          updates.rawStorage[product] = thisProduct.getData();
+        }else{
+          updates.rawStorage[product] = null;
+        }
+      };
     };
 
 
@@ -1013,7 +1044,9 @@ class FACTORY {
     this.player.emit('GAME_factory_update', this.getUpdates());
   };
 
-  turn() {
+  turn(auto) {
+    //auto значит, что был загружен в фабрику ресурс и если не все ресурсы собратны, то не надо еще раз
+    //с игрока снимать деньги за содержание фабрики
     if(this.category === 'mining'){
       if (this.settingsSetted) {
         //если в storage есть место
@@ -1079,6 +1112,8 @@ class FACTORY {
           //1. если это последний этап производства
           if (this.productLine[this.productLine.length - 1] === 1) {
             //скидываем продукты на склад
+            //0. очищаем productLine
+            this.productLine[this.productLine.length - 1] = 0;
             //1. ищем стандары продукта
             const productConfigs = this.products.find((product) => {
                 if(product.name === this.productInProcess.name){
@@ -1087,14 +1122,15 @@ class FACTORY {
             });
 
             //2. добавляем объем производства на фабрике к стандартному
-            let productionVolume = productConfigs.volume + this.volume;
+            let productionVolume = productConfigs.productionVolume + this.volumePoints;
 
             //3. и запихиваем клоны ресурса во все свободные места на складе
-            this.storage.forEach((place) => {
+
+            this.storage.forEach((place, i) => {
               if(place === null){
                 if(productionVolume > 0){
                   productionVolume--;
-                  place = this.productInProcess.clone();
+                  this.storage[i] = this.productInProcess.clone();
                 };
               };
             });
@@ -1106,7 +1142,7 @@ class FACTORY {
             this.turn();
           }else{
             //проводим ход
-            productLine.unshift(productLine.pop());
+            this.productLine.unshift(this.productLine.pop());
             //считаем, сколько денег должен
             const productConfigs = this.products.find((product) => {
                 if(product.name === this.productInProcess.name){
@@ -1115,7 +1151,7 @@ class FACTORY {
             });
             const productionPrice = Math.round(productConfigs.price - (productConfigs.price * (0.15 * this.salaryPoints)));
             this.player.balance -= Math.floor(productionPrice/(this.stockSpeed - this.speedPoints));
-            this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -stepPrice);
+            this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -Math.floor(productionPrice/(this.stockSpeed - this.speedPoints)));
           };
         }else{
           //если не начато производство продукта
@@ -1174,7 +1210,7 @@ class FACTORY {
             const product = new PRODUCT({
               game:this.game,
               player:this.player,
-              factory:this.factory,
+              factory:this,
 
               name:productConfigs.name,
               quality:productQuality,
@@ -1188,8 +1224,10 @@ class FACTORY {
         };
 
       }else{
-        this.player.balance -= this.downtimeCost;
-        this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, - this.downtimeCost);
+        if(!auto){
+          this.player.balance -= this.downtimeCost;
+          this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, - this.downtimeCost);
+        };
       };
     };
   };
@@ -1213,6 +1251,78 @@ class FACTORY {
     };
 
   };
+
+  sendRawProduct(data){
+    // const data = {
+    //   gameID:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factoryID:this.id,
+    //   truckID:freeTrucks[0].id,
+    //   auto:false,
+    //   product:,
+    // };
+    data.factory = this;
+    if(this.rawStorage[data.product]){
+      if(this.player.trucks[data.truckID]){
+        this.player.trucks[data.truckID].loadProduct(this.rawStorage[data.product],data);
+        this.rawStorage[data.product] = null;
+        this.sendUpdates();
+      };
+    };
+
+  };
+
+  unloadTruck(truck){
+    if(this.category === 'factory'){
+
+      if(truck.product.name in this.rawStorage){
+        this.rawStorage[truck.product.name] = truck.product;
+        this.rawStorage[truck.product.name].factory = this;
+      };
+
+      truck.clear();
+      this.turn(true);
+      this.sendUpdates();
+    };
+    // let price = 0;
+    // const product = truck.product;
+    // const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
+    // if (firstFullCeilIndex === -1) {
+    //   price = this.storage[product.name].prices[this.storage[product.name].prices.length - 1];
+    // } else if (firstFullCeilIndex === 0) {
+    //   price = 0;
+    // } else {
+    //   price = this.storage[product.name].prices[firstFullCeilIndex - 1];
+    // };
+    //
+    // this.storage[product.name].line[0] = 1;
+    //
+    // const newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+    // product.player.changeBalance(newPrice);
+    // product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
+
+
+  };
+
+
+  setProductSelected(data){
+
+    this.products.find((product) => {
+        if(product.name === data.product){
+            this.productSelected = data.product;
+            return;
+        };
+    });
+
+    this.turn(true);
+
+    this.sendUpdates();
+
+  };
+
+
+
+
 
 };
 
@@ -1420,43 +1530,112 @@ class TRUCK {
   };
 
   send(data) {
-    //если игрок направляется в город
-    const lastPoin = data.path[data.path.length - 1];
-    let city = null;
-    if (this.game.cityMapNames[lastPoin.z][lastPoin.x] != 0) {
-      city = this.game.cityMapNames[lastPoin.z][lastPoin.x];
-    };
+    // //если игрок направляется в город
+    // const lastPoin = data.path[data.path.length - 1];
+    // let city = null;
+    // if (this.game.cityMapNames[lastPoin.z][lastPoin.x] != 0) {
+    //   city = this.game.cityMapNames[lastPoin.z][lastPoin.x];
+    // };
+    //
+    // //здесь можно делать проверку на фабрику
+    // const sendData = {
+    //   truckID: this.id,
+    //
+    //   path: data.path,
+    //
+    //   selling:data.selling,
+    //   city:data.city,//only if selling == true;
+    // };
+    //
+    //
+    // //если вдруг игрок занял
+    // if (this.game.transportMap[lastPoin.z][lastPoin.x] === 1) {
+    //   return;
+    // };
+    //
+    // //bug fix не знаю, как он вылетел, но было что когда оттправил грузовик, не отключилось path меню у игрока
+    // if (this.positionIndexes.z != undefined && this.positionIndexes.x != undefined) {
+    //   this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+    //   this.positionIndexes.x = lastPoin.x;
+    //   this.positionIndexes.z = lastPoin.z;
+    //   //если едет не в город, то обновляем позиции
+    //   if (city === null) {
+    //     this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+    //   };
+    //   this.game.sendToAll('GAME_truck_sending', sendData);
+    // };
 
-    //здесь можно делать проверку на фабрику
-    const sendData = {
-      truckID: this.id,
-
-      path: data.path,
-
-      selling:data.selling,
-      city:data.city,//only if selling == true;
-    };
 
 
-    //если вдруг игрок занял
-    if (this.game.transportMap[lastPoin.z][lastPoin.x] === 1) {
-      return;
-    };
+    // data = {
+    //   game: 'Game_nxwqNu',
+    //   player: 'p_dFUXZK',
+    //   truck: 'Truck_nsCGHC',
+    //   product: 'Product_oil_HKBmSU',
+    //   path: [ { z: 6, x: 9 } ],
+    //   autosend: false,
+    //   delivery: true,
+    //   finalObject: 'oilRefinery_uGeDnF'
+    // }
 
-    //bug fix не знаю, как он вылетел, но было что когда оттправил грузовик, не отключилось path меню у игрока
-    if (this.positionIndexes.z != undefined && this.positionIndexes.x != undefined) {
-      this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
-      this.positionIndexes.x = lastPoin.x;
-      this.positionIndexes.z = lastPoin.z;
-      //если едет не в город, то обновляем позиции
-      if (city === null) {
-        this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+
+    //грузовик в той же клетке, значит можно сразу разружать
+    if(data.path.length === 1){
+      if(data.sell){
+        data.city = data.finalObject;
+        if (this.game.cities[data.city]) {
+          const city = this.game.cities[data.city];
+          if (this.product.id === data.product) {
+            city.unloadTruck(this);
+          };
+        };
       };
-      this.game.sendToAll('GAME_truck_sending', sendData);
+      if(data.delivery){
+        const factory = this.player.factoryList.list[data.finalObject];
+        if (factory) {
+          if (this.product.id === data.product) {
+            factory.unloadTruck(this);
+          };
+        };
+      };
+      return;
+    }else{
+      //если на разгрузку, то последнюю точку занимать не надо
+      if(data.delivery || data.sell){
+
+        this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+
+      }else{
+          //если вдруг игрок занял
+          const lastPoin = data.path[data.path.length - 1];
+          if (this.game.transportMap[lastPoin.z][lastPoin.x] === 1) {
+            return;
+          };
+          if (this.positionIndexes.z != undefined && this.positionIndexes.x != undefined) {
+            this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+            this.positionIndexes.x = lastPoin.x;
+            this.positionIndexes.z = lastPoin.z;
+            this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+          };
+      };
+
+      const sendData = {
+        autosend:false,
+        truck: this.id,
+        path: data.path,
+        sell:data.sell,
+        delivery:data.delivery,
+        finalObject:data.finalObject,
+      };
+      this.game.sendToAll('GAME_truck_sending',sendData);
     };
+
   };
 
   clear() {
+    if(this.product){
+      this.product.truck = null;
+    };
     this.product = null;
     //if player destroy truck
     if (this.game.transportMap[this.positionIndexes.z]) {
@@ -1510,7 +1689,6 @@ class PRODUCT {
       game:this.game.id,
       player:this.player.login,
       factory:this.factory.id,
-
       id:this.id,
       name:this.name,
       quality:this.quality,
@@ -1895,6 +2073,42 @@ io.on('connection', function(socket) {
 
   });
 
+
+  socket.on('GAME_factory_setProductSelected',(data)=>{
+
+    // const data = {
+    //   game:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factory:this.id,
+    //   product:product,
+    // }
+
+    if (GAMES[data.game]) {
+      // const game = GAMES[data.gameID];
+      // //если игра пошаговая, то нужно перепроверитьь его ли ход
+      // if (game.turnBasedGame) {
+      //   //если ходы на паузе
+      //   if (game.turnsPaused) {
+      //     return;
+      //   };
+      //   if (game.queue[game.queueNum] != data.player) {
+      //     return;
+      //   };
+      // };
+
+      if (GAMES[data.game].players[data.player]) {
+        const player = GAMES[data.game].players[data.player];
+        if(player.factoryList.list[data.factory]){
+          const factory = player.factoryList.list[data.factory];
+          factory.setProductSelected(data);
+        };
+      };
+    };
+
+  });
+
+
+
   socket.on('GAME_factory_sendProduct',(data)=>{
     //с фабрики высылается продукт factory.js class factory -> sendProduct
 
@@ -1926,6 +2140,44 @@ io.on('connection', function(socket) {
 
           if(GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0){
             factory.sendProduct(data);
+          };
+        };
+      };
+    };
+
+  });
+
+  socket.on('GAME_factory_sendProduct_raw',(data)=>{
+    //с фабрики высылается продукт factory.js class factory -> sendProduct
+
+    // const data = {
+    //   gameID:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    //   factoryID:this.id,
+    //   truckID:freeTrucks[0].id,
+    //   auto:false,
+    //   product:productName,
+    // };
+
+    if (GAMES[data.gameID]) {
+      const game = GAMES[data.gameID];
+      //если игра пошаговая, то нужно перепроверитьь его ли ход
+      if (game.turnBasedGame) {
+        //если ходы на паузе
+        if (game.turnsPaused) {
+          return;
+        };
+        if (game.queue[game.queueNum] != data.player) {
+          return;
+        };
+      };
+      if (GAMES[data.gameID].players[data.player]) {
+        const player = GAMES[data.gameID].players[data.player];
+        if(player.factoryList.list[data.factoryID]){
+          const factory = player.factoryList.list[data.factoryID];
+
+          if(GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0){
+            factory.sendRawProduct(data);
           };
         };
       };
@@ -2051,21 +2303,21 @@ io.on('connection', function(socket) {
 
   socket.on('GAME_truck_send', (data) => {
     //происходит, когда игрок высылает грузовик
-    //trigger interface -> game -> path.js -> showSendButton() -> send();
 
-    /*
-    const data = {
-      gameID:MAIN.game.data.commonData.id,
-      truckID:data.truck.id,
-      path:pathServerData,
-    };
-    */
-
-
-    if (GAMES[data.gameID]) {
-      const game = GAMES[data.gameID];
-      if (game.trucks.all[data.truckID]) {
-        const truck = game.trucks.all[data.truckID];
+    // data = {
+    //   game: 'Game_nxwqNu',
+    //   player: 'p_dFUXZK',
+    //   truck: 'Truck_nsCGHC',
+    //   product: 'Product_oil_HKBmSU',
+    //   path: [ { z: 6, x: 9 } ],
+    //   autosend: false,
+    //   delivery: true,
+    //   finalObject: 'oilRefinery_uGeDnF'
+    // }
+    if (GAMES[data.game]) {
+      const game = GAMES[data.game];
+      if (game.trucks.all[data.truck]) {
+        const truck = game.trucks.all[data.truck];
         if(!truck.player.gameOver){
         //если игра пошаговая, то нужно перепроверитьь его ли ход
           if (game.turnBasedGame) {
@@ -2078,12 +2330,12 @@ io.on('connection', function(socket) {
             };
           };
 
-          truck.send(data);
+          if(truck.product.id === data.product){
+            truck.send(data);
+          };
         };
       };
-
     };
-
   });
 
   socket.on('GAME_truck_destroy', (data) => {
@@ -2113,28 +2365,63 @@ io.on('connection', function(socket) {
 
 
   socket.on('GAME_product_sell', (data) => {
-    if (GAMES[data.gameID]) {
-      const game = GAMES[data.gameID];
+    // const sendData = {
+    //   game:MAIN.game.data.commonData.id,
+    //   player:that.player,
+    //   truck:that.id,
+    //   city:data.finalObject,
+    //   product:that.product.id,
+    // };
 
+
+    if (GAMES[data.game]) {
+      const game = GAMES[data.game];
       if (game.players[data.player]) {
         const player = game.players[data.player];
         if(!player.gameOver){
-          if (game.trucks.all[data.truckID]) {
-            const truck = game.trucks.all[data.truckID];
-
+          if (game.trucks.all[data.truck]) {
+            const truck = game.trucks.all[data.truck];
             if (game.cities[data.city]) {
               const city = game.cities[data.city];
-              if (truck.product) {
-                city.sellProduct(truck.product);
+              if (truck.product.id === data.product) {
+                city.unloadTruck(truck);
               };
             };
           };
         };
       };
     };
-
-
   });
+
+  socket.on('GAME_product_delivery', (data) => {
+    // const sendData = {
+    //   game:MAIN.game.data.commonData.id,
+    //   player:that.player,
+    //   truck:that.id,
+    //   factory:data.finalObject,
+    //   product:that.product.id,
+    // };
+
+
+    if (GAMES[data.game]) {
+      const game = GAMES[data.game];
+      if (game.players[data.player]) {
+        const player = game.players[data.player];
+        if(!player.gameOver){
+          if (game.trucks.all[data.truck]) {
+            const truck = game.trucks.all[data.truck];
+            if (player.factoryList.list[data.factory]) {
+              const factory = player.factoryList.list[data.factory];
+              if (truck.product.id === data.product) {
+                factory.unloadTruck(truck);
+              };
+            };
+          };
+        };
+      };
+    };
+  });
+
 
 
   socket.on('GAME_endTurn', (data) => {

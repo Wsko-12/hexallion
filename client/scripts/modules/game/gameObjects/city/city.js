@@ -8,7 +8,7 @@ class City{
     this.name = properties.name;
     this.position = properties.position;
 
-
+    this.category = 'city';
     this.storage = this.createStorage();
     this.priceNotification = null;
 

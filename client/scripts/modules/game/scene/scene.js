@@ -61,6 +61,7 @@ async function create() {
     MAIN.game.scene.pathGroup = new THREE.Group();
     MAIN.game.scene.pathGroup.name = 'pathGroup';
     MAIN.game.scene.pathMaterial = new THREE.MeshBasicMaterial({color:0x66d28e});
+    MAIN.game.scene.pathMaterialRed = new THREE.MeshBasicMaterial({color:0xc43c3c});
     RENDERER.scene.add(MAIN.game.scene.pathGroup );
 
 

@@ -27,21 +27,18 @@ function init() {
   factoryMenuClicker.ontouchstart = closeMenu;
 };
 
-//надо для того, чтобы был апдейт если игрок смотрит меню фабрики
-let nowShowedFactoryMenu = null;
 
 function showMenu(factory) {
   const factoryMenuClicker = document.querySelector('#factoryMenuClicker');
   factoryMenuClicker.style.display = 'block';
-  nowShowedFactoryMenu = factory;
+  FACTORY.nowShowedFactoryMenu = factory;
   updateMenu(factory);
 };
 
 function closeMenu(event) {
-  nowShowedFactoryMenu = null;
   const factoryMenuClicker = document.querySelector('#factoryMenuClicker');
-  const factoryMenuSection = document.querySelector('#factoryMenu_Section');
-  if (event === undefined || event.target === factoryMenuClicker || event.target === factoryMenuSection) {
+  if (event === undefined || event.target === factoryMenuClicker) {
+    FACTORY.nowShowedFactoryMenu = null;
     factoryMenuClicker.style.display = 'none';
   };
 };
@@ -58,7 +55,7 @@ function updateMenu(factory) {
 
 function showSettingsSetMenu(factory) {
 
-  nowShowedFactoryMenu = null;
+  FACTORY.nowShowedFactoryMenu = factory;
   const menu = document.querySelector('#factoryMenu');
   const name = MAIN.game.configs.buildings[factory.type].name;
   const settings = {
@@ -195,6 +192,7 @@ function showSettingsSetMenu(factory) {
 
 //полностью фарматирует меню
 function showFactoryMenu(factory) {
+
   factory.clearNotification();
   const menu = document.querySelector('#factoryMenu');
   menu.innerHTML = '';
@@ -211,7 +209,7 @@ function showFactoryMenu(factory) {
         for(let i = 0;i < thisProduct.quality;i++){
           quality+=`<span class="product-quality"></span>`;
         };
-        line = `<div class="factory_product-gap">
+        line = `<div class="factory_product-gap" id="factory_rawProduct_${product}">
                    <div class="product-icon product-${product}"></div>
                    <div class="product-qualityContainer">
                      ${quality}
@@ -316,7 +314,7 @@ function showFactoryMenu(factory) {
           `;
 
           ingredientList+= `
-            <div class="factory_body_ingredientList-item" id="factory_body_ingredientList_item_${thisProduct.name}">
+            <div class="factory_body_ingredientList-item ${factory.settings.productSelected === thisProduct.name ? 'factory_body_ingredientList-item-selected':''}" id="factory_body_ingredientList_item_${thisProduct.name}">
               ${ingredients}
               ${arrow}
               ${product}
@@ -458,13 +456,28 @@ function showFactoryMenu(factory) {
     };
   });
 
+  for(let product in factory.settings.rawStorage){
+    if(factory.settings.rawStorage[product]){
+      document.querySelector(`#factory_rawProduct_${product}`).onclick = ()=>{factory.sendRawProduct(product)};
+    };
+  };
+
+
+  if(factory.category === 'factory'){
+    for(let i = 0;i<factory.settings.products.length;i++){
+
+      const thisProduct = factory.settings.products[i];
+      document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).onclick = ()=>{
+        factory.setProductSelected(thisProduct.name)}
+    };
+  };
 
 
 };
 //это только меняет значения
-function updateFactoryMenu(factory) {
-  if (nowShowedFactoryMenu) {
-    showFactoryMenu(nowShowedFactoryMenu);
+function updateFactoryMenu() {
+  if (FACTORY.nowShowedFactoryMenu) {
+    showFactoryMenu(FACTORY.nowShowedFactoryMenu);
   };
 };
 
@@ -513,11 +526,12 @@ function showFactoryError(messageCode){
 };
 
 
+
 const FACTORY = {
   init,
   showMenu,
   closeMenu,
-  nowShowedFactoryMenu,
+  nowShowedFactoryMenu:null,
   updateFactoryMenu,
   showFactoryError,
 };

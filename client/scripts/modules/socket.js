@@ -309,6 +309,16 @@ function init() {
 
     });
 
+
+    //происходит, когда кто-то высылает грузовик
+    MAIN.socket.on('GAME_truck_sending',(data)=>{
+      if(MAIN.game.data.commonData.trucks.all[data.truck]){
+        const thisTruck = MAIN.game.data.commonData.trucks.all[data.truck];
+        thisTruck.moveAlongWay(data);
+      };
+    });
+
+
     MAIN.socket.on('GAME_truck_clear',(truckID)=>{
       //происходит, когда игрок загружает грузовик, и он размещается на карте
       /*
@@ -363,13 +373,7 @@ function init() {
     });
 
 
-    //происходит, когда кто-то высылает грузовик
-    MAIN.socket.on('GAME_truck_sending',(data)=>{
-      if(MAIN.game.data.commonData.trucks.all[data.truckID]){
-        const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
-        thisTruck.moveAlongWay(data);
-      };
-    });
+
 
 
 

@@ -60,7 +60,9 @@ class Truck {
 
     const position = MAIN.game.functions.getScenePositionByCeilIndex(data.positionIndexes);
 
-    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_${this.product.name}`].clone(), MAIN.game.scene.mainMaterial);
+    // this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_${this.product.name}`].clone(), MAIN.game.scene.mainMaterial);
+    this.object3D = new THREE.Mesh(MAIN.game.scene.assets.geometries[`truck_water`].clone(), MAIN.game.scene.mainMaterial);
+
     this.object3D.name = this.id;
 
     this.object3D.position.set(position.x, position.y, position.z);
@@ -238,13 +240,13 @@ class Truck {
               const data = {
                 truck:that,
                 value:value,
-              }
+              };
               MAIN.interface.game.path.showWhereProductIsNeeded(data);
               document.querySelector('#truckCancelButton').style.display = 'flex';
 
               MAIN.interface.dobleClickFunction.standard = false;
               MAIN.interface.dobleClickFunction.function = async function(object3D) {
-                const data = {
+                const pathData = {
                   start:MAIN.game.data.map[that.place.z][that.place.x],
                   finish:object3D.userData,
                   value:value,
@@ -252,8 +254,18 @@ class Truck {
                   finalObject:object3D.userData.cityCeil?object3D.userData.city:null,
                   truck:that,
                 };
-                MAIN.game.functions.pathFinder(data).then((result) =>{
-                  console.log(result);
+                MAIN.interface.game.path.hideButtons();
+
+                MAIN.game.functions.pathFinder(pathData).then((result) =>{
+                  if(result){
+                    pathData.path = result;
+                    MAIN.game.scene.path.show(pathData).then((data)=>{
+                      data.cuttedPath = MAIN.game.functions.cutPath(data.path,data.value);
+                      MAIN.interface.game.path.showActionsButton(data);
+                    });
+                  }else{
+                    MAIN.game.scene.path.clear();
+                  };
                 });
               };
             } else {
@@ -273,35 +285,266 @@ class Truck {
   };
 
   moveAlongWay(data) {
-    //указывает, что последняя точка является городом, в который надо продать ресурс
-    // let lastPointIsNeededCity = false;
-    let city = null;
+    // //указывает, что последняя точка является городом, в который надо продать ресурс
+    // // let lastPointIsNeededCity = false;
+    // let city = null;
+    // //указываем, что грузовик уехал
+    // MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
+    // //занимаем финальную точку
+    // const lastPoint = data.path[data.path.length - 1];
+    // MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
+    //
+    //
+    // //если финальная точка город
+    // if( MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil){
+    //   //освобождаем ее
+    //   MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = false;
+    //
+    //   // //если этот город тотт, что нужен был игроку
+    //   // if(data.playerMoveToCity){
+    //   //   if(MAIN.game.data.map[lastPoint.z][lastPoint.x].type === data.playerMoveToCity){
+    //   //     lastPointIsNeededCity = true;
+    //   //   };
+    //   // };
+    //
+    // };
+    //
+    //
+    // this.place = {
+    //   z: lastPoint.z,
+    //   x: lastPoint.x
+    // };
+    //
+    // const that = this;
+    //
+    // function animate() {
+    //   //индех, на какой из точек находится грузовик
+    //   let pathIndex = 0;
+    //   //индех, на каком прогрессе находится грузовик В КЛЕТКЕ
+    //   let moveIndex = 0;
+    //   let maxRadius = Math.sqrt(3);
+    //
+    //   function move() {
+    //     moveIndex += 1;
+    //     if (pathIndex < data.path.length) {
+    //       const centerCeilIndexes = data.path[pathIndex];
+    //       const fieldCeil = MAIN.game.data.map[centerCeilIndexes.z][centerCeilIndexes.x];
+    //
+    //       const position = {
+    //         x: fieldCeil.position.x,
+    //         y: fieldCeil.position.y,
+    //         z: fieldCeil.position.z
+    //       };
+    //       //передвижение грузовика
+    //       if (pathIndex === 0) {
+    //         if (moveIndex > 5) {
+    //           const radius = (moveIndex - 5) * (maxRadius / 10);
+    //           const nextCenterCeilIndexes = data.path[pathIndex + 1];
+    //           const nextCeil = MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+    //           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+    //           const angle = angleIndex * 60 - 60;
+    //           position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+    //           position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+    //         };
+    //       } else if (pathIndex === data.path.length - 1) {
+    //         if (moveIndex < 5) {
+    //           const radius = (5 - moveIndex) * (maxRadius / 10);
+    //           const previousCenterCeilIndexes = data.path[pathIndex - 1];
+    //           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+    //           const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
+    //           const angle = angleIndex * 60 - 60;
+    //           position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+    //           position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+    //         };
+    //       } else {
+    //         if (moveIndex < 5) {
+    //           const radius = (5 - moveIndex) * (maxRadius / 10);
+    //           const previousCenterCeilIndexes = data.path[pathIndex - 1];
+    //           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+    //           const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
+    //           const angle = angleIndex * 60 - 60;
+    //           position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+    //           position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+    //         };
+    //         if (moveIndex === 5) {
+    //           position.x = fieldCeil.position.x;
+    //           position.z = fieldCeil.position.z;
+    //         };
+    //
+    //         if (moveIndex > 5) {
+    //           const radius = (moveIndex - 5) * (maxRadius / 10);
+    //           const nextCenterCeilIndexes = data.path[pathIndex + 1];
+    //           const nextCeil = MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+    //           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+    //           const angle = angleIndex * 60 - 60;
+    //           position.x += Math.cos(angle * (Math.PI / 180)) * radius;
+    //           position.z += Math.sin(angle * (Math.PI / 180)) * radius;
+    //         };
+    //       };
+    //
+    //       // вращение грузовика по Y
+    //       //сдесь походу можно только задавать этот "вектор" когда трак в середине клетки
+    //       if (pathIndex === 0) {
+    //         if (moveIndex > 5) {
+    //           const nextCeilIndex = data.path[pathIndex + 1];
+    //           const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+    //           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+    //           const angle = angleIndex * -60;
+    //           that.object3D.rotation.y = angle * (Math.PI / 180);
+    //           if(that.hitBoxMesh){
+    //             that.hitBoxMesh.rotation.y = angle * (Math.PI / 180);
+    //           };
+    //         }
+    //       } else if (pathIndex === data.path.length - 1) {
+    //
+    //       } else {
+    //         if (moveIndex > 5) {
+    //           const nextCeilIndex = data.path[pathIndex + 1];
+    //           const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+    //           const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
+    //           const angle = angleIndex * -60;
+    //           that.object3D.rotation.y = angle * (Math.PI / 180);
+    //           if(that.hitBoxMesh){
+    //             that.hitBoxMesh.rotation.y = angle * (Math.PI / 180);
+    //           };
+    //
+    //         }
+    //       };
+    //
+    //       //позиция по Y
+    //       let sectorName = null;
+    //       if (pathIndex === 0) {
+    //         if (moveIndex > 5) {
+    //           const nextCeilIndex = data.path[pathIndex + 1];
+    //           const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+    //           const sectorIndex = fieldCeil.neighbours.indexOf(nextCeil);
+    //
+    //           sectorName = fieldCeil.sectors[sectorIndex];
+    //
+    //         } else {
+    //           if (fieldCeil.type === 'sea') {
+    //             sectorName = 'bridgeStraight';
+    //           } else {
+    //             sectorName = 'road';
+    //           };
+    //         };
+    //       } else if (pathIndex === data.path.length - 1) {
+    //
+    //         if (moveIndex < 5) {
+    //           const previousCenterCeilIndexes = data.path[pathIndex - 1];
+    //           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+    //           const sectorIndex = fieldCeil.neighbours.indexOf(previousCeil);
+    //           sectorName = fieldCeil.sectors[sectorIndex];
+    //         } else {
+    //           if (fieldCeil.type === 'sea') {
+    //             sectorName = 'bridgeStraight';
+    //           } else {
+    //             sectorName = 'road';
+    //           };
+    //         };
+    //
+    //       } else {
+    //         if (moveIndex < 5) {
+    //           const previousCenterCeilIndexes = data.path[pathIndex - 1];
+    //           const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+    //           const sectorIndex = fieldCeil.neighbours.indexOf(previousCeil);
+    //           sectorName = fieldCeil.sectors[sectorIndex];
+    //         };
+    //         if (moveIndex === 5) {
+    //           if (fieldCeil.type === 'sea') {
+    //             sectorName = 'bridgeStraight';
+    //           } else {
+    //             sectorName = 'road';
+    //           };
+    //         };
+    //         if (moveIndex > 5) {
+    //           const nextCeilIndex = data.path[pathIndex + 1];
+    //           const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+    //           const sectorIndex = fieldCeil.neighbours.indexOf(nextCeil);
+    //           sectorName = fieldCeil.sectors[sectorIndex];
+    //         };
+    //       };
+    //
+    //       if (sectorName === 'road' || fieldCeil.type === 'Westown' || fieldCeil.type === 'Northfield' || fieldCeil.type === 'Southcity') {
+    //         position.y = 0;
+    //       } else if (sectorName === 'bridgeStraight') {
+    //         position.y = 0.2;
+    //       } else {
+    //         let shift = 0;
+    //         if (moveIndex < 5) {
+    //           shift = moveIndex / 5;
+    //         } else {
+    //           shift = Math.abs(10 - moveIndex) / 5
+    //         };
+    //         position.y = shift * 0.2;
+    //       };
+    //
+    //       //в принципе, наклон когда движется под горку можно не писать, так как его все равно не видно
+    //
+    //
+    //       if(that.object3D){
+    //         that.object3D.position.set(position.x, position.y, position.z);
+    //       };
+    //       if(that.hitBoxMesh){
+    //         that.hitBoxMesh.position.set(position.x, position.y, position.z);
+    //       };
+    //
+    //
+    //
+    //       if (moveIndex === 10) {
+    //         moveIndex = 0;
+    //         pathIndex++;
+    //       };
+    //       setTimeout(() => {
+    //         if(that.object3D){
+    //           move();
+    //         };
+    //       }, 25);
+    //     }else{
+    //
+    //       if(data.selling){
+    //         if(that.player === MAIN.game.data.playerData.login){
+    //           const sendData = {
+    //             gameID:MAIN.game.data.commonData.id,
+    //             player:that.player,
+    //             truckID:that.id,
+    //             city:data.city,
+    //           };
+    //           MAIN.socket.emit('GAME_product_sell',sendData)
+    //         };
+    //       };
+    //     };
+    //   };
+    //   move();
+    // };
+    // animate();
+
+
+    // const sendData = {
+    //   autosend:false,
+    //   truck: this.id,
+    //   path: data.path,
+    //   sell:data.sell,
+    //   delivery:data.delivery,
+    // };
+
+
     //указываем, что грузовик уехал
     MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
     //занимаем финальную точку
     const lastPoint = data.path[data.path.length - 1];
-    MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
-
-
-    //если финальная точка город
-    if( MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil){
-      //освобождаем ее
-      MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = false;
-
-      // //если этот город тотт, что нужен был игроку
-      // if(data.playerMoveToCity){
-      //   if(MAIN.game.data.map[lastPoint.z][lastPoint.x].type === data.playerMoveToCity){
-      //     lastPointIsNeededCity = true;
-      //   };
-      // };
-
+    //если грузовик ЕДЕТ на последнюю точку
+    if(!data.sell && !data.delivery){
+      if(!MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil){
+        MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
+      };
     };
-
 
     this.place = {
       z: lastPoint.z,
       x: lastPoint.x
     };
+
 
     const that = this;
 
@@ -490,22 +733,51 @@ class Truck {
           }, 25);
         }else{
 
-          if(data.selling){
-            if(that.player === MAIN.game.data.playerData.login){
+          // if(data.selling){
+          //   if(that.player === MAIN.game.data.playerData.login){
+          //     const sendData = {
+          //       gameID:MAIN.game.data.commonData.id,
+          //       player:that.player,
+          //       truckID:that.id,
+          //       city:data.city,
+          //     };
+          //     MAIN.socket.emit('GAME_product_sell',sendData)
+          //   };
+          // };
+          if(that.player === MAIN.game.data.playerData.login){
+            if(data.sell){
               const sendData = {
-                gameID:MAIN.game.data.commonData.id,
+                game:MAIN.game.data.commonData.id,
                 player:that.player,
-                truckID:that.id,
-                city:data.city,
+                truck:that.id,
+                city:data.finalObject,
+                product:that.product.id,
               };
-              MAIN.socket.emit('GAME_product_sell',sendData)
+              MAIN.socket.emit('GAME_product_sell',sendData);
             };
+            if(data.delivery){
+              const sendData = {
+                game:MAIN.game.data.commonData.id,
+                player:that.player,
+                truck:that.id,
+                factory:data.finalObject,
+                product:that.product.id,
+              };
+              MAIN.socket.emit('GAME_product_delivery',sendData);
+            };
+
           };
+
         };
       };
       move();
     };
     animate();
+
+
+
+
+
 
   };
 

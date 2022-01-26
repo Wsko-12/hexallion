@@ -36,7 +36,6 @@ function showNotification(coords3D) {
 };
 
 function closeAll() {
-  // console.log("closeAll")
   MAIN.interface.game.trucks.turningInterfase = false;
   MAIN.interface.game.city.hideCityPrices();
   const button = document.querySelector('#pathSection_sendButton');
@@ -171,13 +170,13 @@ function showButtons(buttons,data){
 
 function hideButtons(){
   PATH.buttonsDOM = document.querySelector('#pathSection_ButtonsContainer');
+  PATH.buttonsDOM.innerHTML = '';
   PATH.buttonsShowed = false;
   PATH.buttonsDOM.style.display = 'none';
 };
 
 function moveButtons(){
-  const tempV = new Vector3(PATH.point3D.x, 0, PATH.point3D.z);
-  // console.log(MAIN.interface.game.camera.configs.rail.yAngle.current); 0-4
+  const tempV = new Vector3(PATH.finalObject.position.x, 0.7, PATH.finalObject.position.z);
   tempV.project(MAIN.renderer.camera);
 
   // convert the normalized position to CSS coordinates
@@ -193,20 +192,148 @@ function moveButtons(){
   //   };
   // });
 
-  PATH.buttonsDOM.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+  PATH.buttonsDOM.style.transform = `translate(0px, -50%) translate(0px, -5px) translate(${x}px,${y}px)`;
 
 };
 
 function showActionsButton(data){
-  PATH.point3D.x = data.path[data.path.length-1].position.x;
-  PATH.point3D.z = data.path[data.path.length-1].position.z;
 
-  if(data.path[data.path.length-1].cityCeil){
-    //если финальная точка оказалась городом, то показываем две кнопки отправить  и продать
-    showButtons(2,data);
+  if(data.finalObject){
+    PATH.finalObject = data.finalObject;
   }else{
-    showButtons(1,data);
+    PATH.finalObject = data.path[data.path.length - 1];
+  }
+
+  const container = document.querySelector('#pathSection_ButtonsContainer');
+  PATH.buttonsDOM = container;
+  container.style.display = 'flex';
+  PATH.buttonsShowed = true;
+  let buttons = '';
+  const lastPoint = data.path[data.path.length -1];
+
+  if(data.path.length != data.cuttedPath.length){
+    // это значит, что грузовик не доедет до последней точки, скидываем только кнопку move
+    if(data.finalObject){
+      if(data.finalObject.category === 'city'){
+        buttons +=`
+          <div class="pathSection_buttons-spaceHolder-city"></div>
+          <div class="pathSection_buttons" id="pathSection_buttons_move">
+            <div class="pathSection_buttons_icon icon-move"></div>
+          </div>
+        `;
+      };
+      if(data.finalObject.category === 'factory'){
+        buttons +=`
+          <div class="pathSection_buttons-spaceHolder-factory"></div>
+          <div class="pathSection_buttons" id="pathSection_buttons_move">
+            <div class="pathSection_buttons_icon icon-move"></div>
+          </div>
+        `;
+      };
+    }else{
+      buttons +=`
+        <div class="pathSection_buttons-spaceHolder-none"></div>
+        <div class="pathSection_buttons pathSection_buttons-noSpaceHolder" id="pathSection_buttons_move">
+          <div class="pathSection_buttons_icon icon-move"></div>
+        </div>
+      `;
+    };
+  }else{
+    // это значит, что грузовик доедет до последней точки
+    if(data.finalObject){
+      if(data.finalObject.category === 'city'){
+        buttons +=`
+          <div class="pathSection_buttons-spaceHolder-city"></div>
+          <div class="pathSection_buttons" id="pathSection_buttons_sell">
+            <div class="pathSection_buttons_icon icon-money"></div>
+          </div>
+          <div class="pathSection_buttons" id="pathSection_buttons_move">
+            <div class="pathSection_buttons_icon icon-move"></div>
+          </div>
+        `;
+      };
+      if(data.finalObject.category === 'factory'){
+        buttons +=`
+          <div class="pathSection_buttons-spaceHolder-factory"></div>
+          <div class="pathSection_buttons" id="pathSection_buttons_delivery">
+            <div class="pathSection_buttons_icon icon-delivery"></div>
+          </div>
+          <div class="pathSection_buttons" id="pathSection_buttons_move">
+            <div class="pathSection_buttons_icon icon-move" ></div>
+          </div>
+        `;
+      };
+    }else{
+      buttons +=`
+        <div class="pathSection_buttons-spaceHolder-none"></div>
+        <div class="pathSection_buttons pathSection_buttons-noSpaceHolder" id="pathSection_buttons_move">
+          <div class="pathSection_buttons_icon icon-move"></div>
+        </div>
+      `;
+    };
+
+  }
+
+  container.insertAdjacentHTML('beforeEnd',buttons);
+
+
+  function applyFunctions(){
+    const move = document.querySelector('#pathSection_buttons_move');
+    const delivery = document.querySelector('#pathSection_buttons_delivery');
+    const sell = document.querySelector('#pathSection_buttons_sell');
+
+    if(move){
+      MAIN.interface.deleteTouches(move);
+      move.onclick = ()=>{action()};
+    };
+    if(delivery){
+      MAIN.interface.deleteTouches(delivery);
+      delivery.onclick = ()=>{action('delivery')};
+    };
+    if(sell){
+      MAIN.interface.deleteTouches(sell);
+      sell.onclick = ()=>{action('sell')};
+    };
+
+
+
+
+
+    function action(act){
+
+      const sendData = {
+        game:MAIN.game.data.commonData.id,
+        player:MAIN.game.data.playerData.login,
+        truck:data.truck.id,
+        product:data.truck.product.id,
+        path:[],
+        autosend:false,
+      };
+      data.cuttedPath.forEach((ceil, i) => {
+        sendData.path.push(ceil.indexes);
+      });
+
+
+      if(act === 'delivery'){
+        sendData.delivery = true;
+        sendData.finalObject = data.finalObject.id;
+      };
+      if(act === 'sell'){
+        sendData.sell = true;
+        sendData.finalObject = data.finalObject.name;
+      };
+
+
+      MAIN.socket.emit('GAME_truck_send',sendData);
+
+      MAIN.interface.game.path.closeAll();
+      MAIN.game.scene.path.clear();
+    };
+
   };
+  applyFunctions()
+
+
 };
 
 function showOnlySellButton(data){
@@ -231,17 +358,16 @@ function showWhereProductIsNeeded(data){
   for(let factory in MAIN.game.data.playerData.factories){
     const thatFactory = MAIN.game.data.playerData.factories[factory];
     if(thatFactory.category === 'factory'){
-      // console.log(thatFactory,data);
       if(thatFactory.settingsSetted){
         if(thatFactory.settings.rawStorage[data.truck.product.name] === null){
-          const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${thatFactory.name}">
+          const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${thatFactory.id}">
                           <div class="pathSection_neadersContainer-iconBox">
                               <div class="pathSection_neadersContainer-icon product-${data.truck.product.name}"></div>
                           </div>
                         </div>`;
           contant+=line;
           const neaderData = {
-            boxId:`#pathSection_neader_${thatFactory.name}`,
+            boxId:`#pathSection_neader_${thatFactory.id}`,
             object3DPosition:thatFactory.position,
           };
           PATH.neederOfProduct.push(neaderData);
@@ -258,7 +384,7 @@ function showWhereProductIsNeeded(data){
     const line = `<div class="pathSection_neadersContainer-item-city" id="pathSection_neader_${city}">
                     <div class="pathSection_neadersContainer-cityContainer">
                       <div class="pathSection_neadersContainer-iconBox-city">
-                          <div class="pathSection_neadersContainer-icon product-${data.truck.product.name}"></div>
+                          <div class="pathSection_neadersContainer-icon-city product-${data.truck.product.name}"></div>
                       </div>
                       <div class="pathSection_neadersContainer-price">
                         <span id="pathSection_neader_${city}-price">$${price}</span>
@@ -290,21 +416,32 @@ function showWhereProductIsNeeded(data){
       finalObject:finalObject,
       truck:data.truck,
     };
+    MAIN.interface.game.path.hideButtons();
     MAIN.game.functions.pathFinder(pathData).then((result) =>{
-      console.log(result);
+      if(result){
+        pathData.path = result;
+        MAIN.game.scene.path.show(pathData).then((data)=>{
+          data.cuttedPath = MAIN.game.functions.cutPath(data.path,data.value);
+          MAIN.interface.game.path.showActionsButton(data);
+        });
+      }else{
+
+        MAIN.game.scene.path.clear(pathData);
+      };
     });
   };
 
 
 
 
-  function applyFunnctions(){
+  function applyFunctions(){
     for(let factory in MAIN.game.data.playerData.factories){
       const thatFactory = MAIN.game.data.playerData.factories[factory];
       if(thatFactory.category === 'factory'){
         if(thatFactory.settingsSetted){
           if(thatFactory.settings.rawStorage[data.truck.product.name] === null){
-            document.querySelector(`#pathSection_neader_${thatFactory.name}`).onclick = ()=>{findPath(thatFactory)};
+            MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${thatFactory.id}`));
+            document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = ()=>{findPath(thatFactory)};
           };
         };
       };
@@ -313,12 +450,13 @@ function showWhereProductIsNeeded(data){
 
     for(let city in MAIN.game.data.cities){
       const thatCity = MAIN.game.data.cities[city];
+      MAIN.interface.deleteTouches(  document.querySelector(`#pathSection_neader_${city}`));
       document.querySelector(`#pathSection_neader_${city}`).onclick = ()=>{findPath(thatCity)};
     };
 
   };
 
-  applyFunnctions();
+  applyFunctions();
 
 };
 
@@ -342,7 +480,6 @@ function hideWhereProductIsNeeded(){
 };
 
 function moveWhereProductIsNeeded(){
-  // console.log('a')
   PATH.neederOfProduct.forEach((neader, i) => {
     const tempV = new Vector3(neader.object3DPosition.x, 0.7, neader.object3DPosition.z);
     tempV.project(MAIN.renderer.camera);
@@ -355,6 +492,8 @@ function moveWhereProductIsNeeded(){
 };
 
 
+
+
 const PATH = {
   point3D:{
     x:0,
@@ -365,6 +504,7 @@ const PATH = {
 
   showActionsButton,
   showOnlySellButton,
+  hideButtons,
   moveButtons,
   hideButtons,
 
@@ -380,7 +520,7 @@ const PATH = {
   moveWhereProductIsNeeded,
   updateCityPrise,
   truck:null,
-
+  finalObject:null,
 
 
 

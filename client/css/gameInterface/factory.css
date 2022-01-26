@@ -350,7 +350,7 @@
     border-radius: 5px;
   }
   .factory_body_ingredientList-item:hover{
-    background-color: #A3D735
+    background-color: #A3D735;
   }
   .factory_body_ingredientList-item-selected{
     background-color: #A3D735;

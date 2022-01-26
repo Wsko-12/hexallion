@@ -519,6 +519,7 @@ const FUNCTIONS = {
 
 
   pathFinder: async function(data){
+    // в truck js и в interface path.js(с иконок)
     // data = {
     //   autosend: false
     //   finalObject: City {name: 'Southcity', position: {…}, storage: {…}, priceNotification: null, fieldCeil: FieldCeil}
@@ -540,10 +541,16 @@ const FUNCTIONS = {
 
       //если на конечной точке нет дороги или нет финального объекта
       if (data.finish.centralRoad || data.finalObject) {
+        // если стоит в одной и той же клетке
+        if(data.finalObject){
+           if(data.finalObject.fieldCeil === data.start){
+               resPath([data.start]);
+               return;
+           };
+        };
         findFirstPath().then((result)=>{
           if(result){
             findMorePaths().then((resultedPaths)=>{
-              console.log(resultedPaths);
               choseShortestPath(resultedPaths).then((shorterPath)=>{
                 resPath(shorterPath);
               });
@@ -574,7 +581,7 @@ const FUNCTIONS = {
                     if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                       if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                         //если она не занята грузовиком
-                        if (!neighbour.roadEmpty) {
+                        // if (!neighbour.roadEmpty) {
                           if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
                             //если к соседу проложена дорога
                             const index = neighbour.neighbours.indexOf(ceil);
@@ -588,7 +595,8 @@ const FUNCTIONS = {
                               };
                             };
                           };
-                        };
+                          //если она не занята грузовиком
+                        // };
                       };
                     };
                   };
@@ -718,7 +726,7 @@ const FUNCTIONS = {
                       if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                         if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                           //если она не занята грузовиком
-                          if (!neighbour.roadEmpty) {
+                          // if (!neighbour.roadEmpty) {
                             if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
                               //если к соседу проложена дорога
                               const index = neighbour.neighbours.indexOf(ceil);
@@ -732,7 +740,8 @@ const FUNCTIONS = {
                                 };
                               };
                             };
-                          };
+                            //если она не занята грузовиком
+                          // };
                         };
                       };
                     };
@@ -862,6 +871,11 @@ const FUNCTIONS = {
           return chorterPathPromise;
         };
       }else{
+        if(data.finalObject){
+          if(data.fieldCeil === data.start){
+            resPath([]);
+          };
+        };
         resPath(false);
       };
 
@@ -869,7 +883,28 @@ const FUNCTIONS = {
     return pathPromise;
   },
 
+
+
+  //нужно потому, что в фаиндере убрал проверку на занятостью грузовиком
+  cutPath(path,value){
+    const cutted = [];
+    for(let i = 0;i<path.length;i++){
+      if(i != 0){
+        if(path[i].roadEmpty || i > value){
+
+          break;
+        };
+      };
+      cutted.push(path[i])
+    };
+
+    return cutted;
+
+  },
+
 };
+
+
 
 export {
   FUNCTIONS

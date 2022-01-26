@@ -1,7 +1,7 @@
 //antiCheat
 const coasts = {
   buildings: {
-    road:5000,
+    road:50,
     bridge:7500,
     sawmill:19500,
     waterStation:12000,
