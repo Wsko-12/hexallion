@@ -358,7 +358,9 @@ function init() {
 
     //происходит, когда кто-то продает ресурс в город
     MAIN.socket.on('GAME_city_updateOne',(data)=>{
+      console.log(data)
       for(let prod in data.storage){
+
         MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
       };
 

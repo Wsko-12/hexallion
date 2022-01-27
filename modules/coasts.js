@@ -1,16 +1,18 @@
 //antiCheat
 const coasts = {
   buildings: {
-    road:50,
+    road:5000,
     bridge:7500,
-    sawmill:19500,
-    waterStation:12000,
-    sandMine:7500,
-    steelMill:34500,
-    goldMill:73500,
 
-    oilWell:7500,
-    oilRefinery:7500,
+    sandMine:5900,
+    waterStation:11600,
+    sawmill:26100,
+    steelMill:39000,
+    oilWell:31500,
+    goldMill:89300,
+
+
+    oilRefinery:64100,
   },
 
   trucks : {
@@ -25,45 +27,49 @@ const coasts = {
 
   products:{
     sand:{
-      price:8000,
-      sailSpeed:5,
-      productionPrice:3000,
+      price:3900,
+      sailSpeed:3,
+      productionPrice:1700,
       raw:null,
     },
     water:{
-      price:15000,
+      price:9700,
       sailSpeed:6,
-      productionPrice:7000,
+      productionPrice:4400,
       raw:null,
     },
     wood:{
-      price:24000,
+      price:17400,
       sailSpeed:7,
-      productionPrice:11000,
+      productionPrice:8000,
       raw:null,
     },
     steel:{
-      price:43000,
+      price:27300,
       sailSpeed:8,
-      productionPrice:20000,
-      raw:null,
-    },
-    gold:{
-      price:89000,
-      sailSpeed:9,
-      productionPrice:40000,
-      raw:null,
-    },
-    oil:{
-      price:8000,
-      sailSpeed:5,
-      productionPrice:3000,
+      productionPrice:12700,
       raw:null,
     },
 
+    oil:{
+      price:21000,
+      sailSpeed:7,
+      productionPrice:9300,
+      raw:null,
+    },
+
+
+    gold:{
+      price:59500,
+      sailSpeed:11,
+      productionPrice:28000,
+      raw:null,
+    },
+
+
     petrol:{
-      price:8000,
-      sailSpeed:5,
+      price:18600,
+      sailSpeed:3,
       raw:['oil'],
     },
 

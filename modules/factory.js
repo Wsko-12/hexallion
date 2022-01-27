@@ -3,15 +3,15 @@ const COASTS = require('./coasts.js');
 
 
 const factoriesConfig = {
-  sawmill: {
+  sandMine: {
     category:'mining',
     //минимум 4 из-за прокачки
-    speed:6,
+    speed:4,
     storage:2,
     //полная цена производства
-    price:COASTS.products.wood.productionPrice,
-    product:'wood',
-    count:10,
+    price:COASTS.products.sand.productionPrice,
+    product:'sand',
+    count:14,
   },
 
   waterStation: {
@@ -25,16 +25,18 @@ const factoriesConfig = {
     count:12,
   },
 
-  sandMine: {
+
+  sawmill: {
     category:'mining',
     //минимум 4 из-за прокачки
-    speed:4,
+    speed:6,
     storage:2,
     //полная цена производства
-    price:COASTS.products.sand.productionPrice,
-    product:'sand',
-    count:14,
+    price:COASTS.products.wood.productionPrice,
+    product:'wood',
+    count:10,
   },
+
 
   steelMill: {
     category:'mining',
@@ -45,17 +47,6 @@ const factoriesConfig = {
     price:COASTS.products.steel.productionPrice,
     product:'steel',
     count:8,
-  },
-
-  goldMill: {
-    category:'mining',
-    //минимум 4 из-за прокачки
-    speed:8,
-    storage:2,
-    //полная цена производства
-    price:COASTS.products.gold.productionPrice,
-    product:'gold',
-    count:4,
   },
 
   oilWell:{
@@ -69,6 +60,19 @@ const factoriesConfig = {
     count:14,
   },
 
+  goldMill: {
+    category:'mining',
+    //минимум 4 из-за прокачки
+    speed:8,
+    storage:2,
+    //полная цена производства
+    price:COASTS.products.gold.productionPrice,
+    product:'gold',
+    count:4,
+  },
+
+
+
 
 
 
@@ -77,19 +81,19 @@ const factoriesConfig = {
   oilRefinery:{
     category:'factory',
     storage:2,
-    speed:9,
+    speed:5,
     products:[
       {
         name:'petrol',
         //цена всего производства
-        price:2000,
+        price:11700,
         raw:['oil'],
         //сколько приозведется ресурса за раз
         productionVolume:2,
       },
     ],
     //цена простоя
-    downtimeCost:12000,
+    downtimeCost:6000,
     count:10,
 
   },

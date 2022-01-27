@@ -724,6 +724,7 @@ class CITY {
       name: this.name,
       storage: {},
     };
+
     for (let prod in this.storage) {
       data.storage[prod] = this.storage[prod].line;
     };

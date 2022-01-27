@@ -44,7 +44,7 @@ const BUILDINGS = {
     description:'Производство досок',
     ceil:['meadow','sand','steelMine','goldMine','oilMine'],
     nearCeil:['forest'],
-    coast:19500,
+    coast:26100,
     product:'wood',
     category:'mining',
     title:{
@@ -60,7 +60,7 @@ const BUILDINGS = {
     description:'Производство чистой воды',
     ceil:['meadow','sand','steelMine','goldMine','oilMine'],
     nearCeil:['sea'],
-    coast:12000,
+    coast:11600,
     product:'water',
     category:'mining',
     title:{
@@ -75,7 +75,7 @@ const BUILDINGS = {
     description:'Добыча песка',
     ceil:['sand'],
     nearCeil:['all'],
-    coast:7500,
+    coast:5900,
     product:'sand',
     category:'mining',
     title:{
@@ -90,7 +90,7 @@ const BUILDINGS = {
     description:'Добыча и производство стали',
     ceil:['steelMine'],
     nearCeil:['all'],
-    coast:34500,
+    coast:39000,
     product:'steel',
     category:'mining',
     title:{
@@ -105,7 +105,7 @@ const BUILDINGS = {
     description:'Добыча и производство золота',
     ceil:['goldMine'],
     nearCeil:['all'],
-    coast:73500,
+    coast:89300,
     product:'gold',
     category:'mining',
     title:{
@@ -120,7 +120,7 @@ const BUILDINGS = {
     description:'Добыча нефти',
     ceil:['oilMine'],
     nearCeil:['all'],
-    coast:7500,
+    coast:31500,
     product:'oil',
     category:'mining',
     title:{
@@ -137,7 +137,7 @@ const BUILDINGS = {
     description:'Переработка нефти',
     ceil:['meadow','sand','steelMine','goldMine','oilMine'],
     nearCeil:['all'],
-    coast:7500,
+    coast:64100,
     product:['petrol'],
     raw:['oil'],
     category:'factory',

@@ -21,8 +21,8 @@ import {
 
 const PRODUCTS = {
   sand:{
-    price:8000,
-    sailSpeed:5,
+    price:3900,
+    sailSpeed:3,
     category:'raw',
     manufacture:['sandMine'],
     //где является ингредиентом
@@ -38,7 +38,7 @@ const PRODUCTS = {
   },
 
   water:{
-    price:15000,
+    price:9700,
     sailSpeed:6,
     category:'raw',
 
@@ -54,7 +54,7 @@ const PRODUCTS = {
   },
 
   wood:{
-    price:24000,
+    price:17400,
     sailSpeed:7,
     category:'raw',
 
@@ -71,7 +71,7 @@ const PRODUCTS = {
   },
 
   steel:{
-    price:43000,
+    price:27300,
     sailSpeed:8,
     category:'raw',
 
@@ -85,24 +85,9 @@ const PRODUCTS = {
     },
   },
 
-  gold:{
-    price:89000,
-    sailSpeed:9,
-    category:'raw',
-
-    manufacture:['goldMill'],
-    ingrediend:['electricalComponents','jewelry'],
-    raws: null,
-
-    lang:{
-      ru:'золото',
-      eng:'gold',
-    },
-  },
-
   oil:{
-    price:8000,
-    sailSpeed:5,
+    price:21000,
+    sailSpeed:6,
     category:'raw',
     manufacture:['oilWell'],
     //где является ингредиентом
@@ -117,9 +102,24 @@ const PRODUCTS = {
 
   },
 
+  gold:{
+    price:59500,
+    sailSpeed:11,
+    category:'raw',
+
+    manufacture:['goldMill'],
+    ingrediend:['electricalComponents','jewelry'],
+    raws: null,
+
+    lang:{
+      ru:'золото',
+      eng:'gold',
+    },
+  },
+
   petrol:{
-    price:8000,
-    sailSpeed:5,
+    price:18600,
+    sailSpeed:3,
     category:'hardware',
     manufacture:['oilRefinery'],
     //где является ингредиентом
@@ -133,6 +133,8 @@ const PRODUCTS = {
     },
 
   },
+
+
 
 
 };
