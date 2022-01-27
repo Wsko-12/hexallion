@@ -7,12 +7,7 @@
 .icon-truck{
   background-image: url(../img/icons/truck.png);
 }
-.icon-delivery{
-  background-image: url(../img/icons/delivery.png);
-}
-.icon-money{
-  background-image: url(../img/icons/money.png);
-}
+
 .icon-table{
   background-image: url(../img/icons/table.png);
 }
@@ -20,4 +15,17 @@
 
 .icon-move{
   background-image: url(../img/icons/move.png);
+}
+.icon-delivery{
+  background-image: url(../img/icons/delivery.png);
+}
+.icon-money{
+  background-image: url(../img/icons/money.png);
+}
+
+.icon-bestPrice{
+  background-image: url(../img/icons/bestPrice.png);
+}
+.icon-findRoute{
+  background-image: url(../img/icons/findRoute.png);
 }

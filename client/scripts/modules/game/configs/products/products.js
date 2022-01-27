@@ -134,6 +134,39 @@ const PRODUCTS = {
 
   },
 
+  plastic:{
+    price:18600,
+    sailSpeed:3,
+    category:'hardware',
+    manufacture:['oilRefinery'],
+    //где является ингредиентом
+    ingrediend:null,
+    //из чего производится
+    raws: ['oil'],
+
+    lang:{
+      ru:'бензин',
+      eng:'petrol',
+    },
+
+  },
+
+  paints:{
+    price:18600,
+    sailSpeed:3,
+    category:'hardware',
+    manufacture:['oilRefinery'],
+    //где является ингредиентом
+    ingrediend:null,
+    //из чего производится
+    raws: ['oil'],
+
+    lang:{
+      ru:'бензин',
+      eng:'petrol',
+    },
+
+  },
 
 
 

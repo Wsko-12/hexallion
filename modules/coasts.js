@@ -73,6 +73,17 @@ const coasts = {
       raw:['oil'],
     },
 
+    plastic:{
+      price:18600,
+      sailSpeed:3,
+      raw:['oil'],
+    },
+    paints:{
+      price:18600,
+      sailSpeed:3,
+      raw:['oil'],
+    },
+
 
   },
 };

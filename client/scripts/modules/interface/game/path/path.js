@@ -493,6 +493,119 @@ function moveWhereProductIsNeeded(){
 };
 
 
+function showWhereCanSendProduct(data){
+  // console.log(data)
+  document.querySelector('#factoryMenuClicker').style.pointerEvents = 'none';
+  document.querySelector('#factoryMenuClicker').style.opacity = 0.3;
+  document.querySelector('#factoryCard').style.pointerEvents = 'none';
+ const container = document.querySelector('#pathSection_neadersContainer');
+ container.innerHTML = '';
+ PATH.truck = data.truck;
+ let contant = '';
+   for(let factory in MAIN.game.data.playerData.factories){
+     const thatFactory = MAIN.game.data.playerData.factories[factory];
+     if(thatFactory.category === 'factory'){
+       if(thatFactory.settingsSetted){
+         if(thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]){
+           const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${thatFactory.id}">
+                           <div class="pathSection_neadersContainer-iconBox">
+                               <div class="pathSection_neadersContainer-icon product-${data.product}"></div>
+                           </div>
+                         </div>`;
+           contant+=line;
+           const neaderData = {
+             boxId:`#pathSection_neader_${thatFactory.id}`,
+             object3DPosition:thatFactory.position,
+           };
+           PATH.whereCanSendProduct.push(neaderData);
+         };
+       };
+     };
+   };
+
+ for(let city in MAIN.game.data.cities){
+   const thatCity = MAIN.game.data.cities[city];
+   const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${city}">
+                   <div class="pathSection_neadersContainer-iconBox">
+                       <div class="pathSection_neadersContainer-icon product-${data.product}"></div>
+                   </div>
+                 </div>`;
+
+   contant+=line;
+   const neaderData = {
+     boxId:`#pathSection_neader_${city}`,
+     object3DPosition:thatCity.position,
+   };
+
+   PATH.whereCanSendProduct.push(neaderData);
+ };
+ container.insertAdjacentHTML('beforeEnd',contant);
+
+ function applyFunctions(){
+   for(let factory in MAIN.game.data.playerData.factories){
+     const thatFactory = MAIN.game.data.playerData.factories[factory];
+     if(thatFactory.category === 'factory'){
+       if(thatFactory.settingsSetted){
+         if(thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]){
+           MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${thatFactory.id}`));
+           document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = ()=>{
+             hideWhereCanSendProduct();
+             const autosendData = {
+               mode:'route',
+               factory:data.factory,
+               product:data.product,
+               final:thatFactory.fieldCeil,
+               finalObject:thatFactory,
+             };
+             MAIN.game.functions.autosending.addFactory(autosendData);
+             MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
+           };
+         };
+       };
+     };
+   };
+
+
+   for(let city in MAIN.game.data.cities){
+     const thatCity = MAIN.game.data.cities[city];
+     MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
+     document.querySelector(`#pathSection_neader_${city}`).onclick = ()=>{
+       hideWhereCanSendProduct();
+       const autosendData = {
+         mode:'route',
+         factory:data.factory,
+         product:data.product,
+         final:thatCity.fieldCeil,
+         finalObject:thatCity,
+       };
+       MAIN.game.functions.autosending.addFactory(autosendData);
+       MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
+     };
+   };
+
+ };
+
+ applyFunctions();
+
+
+
+};
+function hideWhereCanSendProduct(data){
+  PATH.whereCanSendProduct.length = 0;
+  document.querySelector('#factoryMenuClicker').style.pointerEvents = 'auto';
+  document.querySelector('#factoryMenuClicker').style.opacity = 1;
+  document.querySelector('#pathSection_neadersContainer').innerHTML = '';
+  document.querySelector('#factoryCard').style.pointerEvents = 'auto';
+};
+function moveWhereCanSendProduct(){
+  PATH.whereCanSendProduct.forEach((neader, i) => {
+    const tempV = new Vector3(neader.object3DPosition.x, 0.7, neader.object3DPosition.z);
+    tempV.project(MAIN.renderer.camera);
+    const x = (tempV.x * .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
+    const y = (tempV.y * -.5 + .5) * MAIN.renderer.renderer.domElement.clientHeight;
+    document.querySelector(neader.boxId).style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+  });
+};
 
 
 const PATH = {
@@ -524,6 +637,12 @@ const PATH = {
   finalObject:null,
 
 
+
+
+
+  showWhereCanSendProduct,
+  whereCanSendProduct:[],
+  moveWhereCanSendProduct,
 
 };
 export {

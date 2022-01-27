@@ -49,6 +49,9 @@ class Factory {
     if(!this.settingsSetted){
       this.createNotification();
     };
+
+
+    this.autosend = {};
   };
 
   onClick(){

@@ -91,6 +91,22 @@ const factoriesConfig = {
         //сколько приозведется ресурса за раз
         productionVolume:2,
       },
+      {
+        name:'plastic',
+        //цена всего производства
+        price:11700,
+        raw:['oil'],
+        //сколько приозведется ресурса за раз
+        productionVolume:2,
+      },
+      {
+        name:'paints',
+        //цена всего производства
+        price:11700,
+        raw:['oil'],
+        //сколько приозведется ресурса за раз
+        productionVolume:2,
+      },
     ],
     //цена простоя
     downtimeCost:6000,

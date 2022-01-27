@@ -902,6 +902,31 @@ const FUNCTIONS = {
 
   },
 
+
+
+  autosending:{
+    trucks:{},
+    lastTruckId:0,
+
+    factories:{},
+    lastFactoryId:0,
+
+
+
+    addFactory:function(data){
+      const autosendID = generateId('autosend',5);
+      this.factories[autosendID] = data;
+      this.factories[autosendID].id = autosendID;
+
+      data.factory.autosend[autosendID] = data;
+      data.factory.autosend[autosendID].id = autosendID;
+    },
+    removeFactory:function(autosendID){
+      delete this.factories[autosendID].factory.autosend[autosendID];
+      delete this.factories[autosendID];
+    },
+  },
+
 };
 
 
