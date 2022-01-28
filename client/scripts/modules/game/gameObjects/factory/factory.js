@@ -201,11 +201,31 @@ class Factory {
         MAIN.interface.game.factory.closeMenu();
         MAIN.socket.emit('GAME_factory_sendProduct',data);
       };
+    }else{
+      // auto = {
+      //   fullPath:fullPath,
+      //   mode:'route',
+      //   truck:send.freeTruck,
+      // }
+      if(MAIN.game.data.commonData.turnBasedGame){
+        if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+          return;
+        };
+      };
+
+
+
+      const data = {
+        gameID:MAIN.game.data.commonData.id,
+        player:MAIN.game.data.playerData.login,
+        factoryID:this.id,
+        truckID:auto.truck.id,
+        storageIndex:index,
+      };
+      delete auto.truck;
+      data.auto = auto;
+      MAIN.socket.emit('GAME_factory_sendProduct',data);
     };
-
-
-
-
   };
 
   sendRawProduct(product){

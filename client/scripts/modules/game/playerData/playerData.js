@@ -27,15 +27,20 @@ class PLAYER_DATA{
       const thisTruck =  this.trucks[truck];
       thisTruck.ready = true;
       thisTruck.sended = false;
-
-      if(thisTruck.onMap){
-        if(!thisTruck.cardOpened){
-          thisTruck.createNotification();
-        }else{
-          thisTruck.hitBoxMesh.userData.onClick();
+      if(thisTruck.autosend){
+        thisTruck.autosendTurn();
+      }else{
+        if(thisTruck.onMap){
+          if(!thisTruck.cardOpened){
+            thisTruck.createNotification();
+          }else{
+            thisTruck.hitBoxMesh.userData.onClick();
+          };
         };
       };
     };
+
+    MAIN.game.functions.autosending.turn();
   };
 };
 

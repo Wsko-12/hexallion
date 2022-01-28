@@ -1495,7 +1495,6 @@ class TRUCK {
     this.product = product;
     product.truck = this;
     this.autosend = data.auto;
-
     this.placeTruck(data);
 
 
@@ -1526,48 +1525,15 @@ class TRUCK {
     this.game.transportMap[data.factory.ceilIndex.z][data.factory.ceilIndex.x] = 1;
     this.positionIndexes.x = data.factory.ceilIndex.x;
     this.positionIndexes.z = data.factory.ceilIndex.z;
-
+    if(data.auto){
+      this.autosend = data.auto;
+    };
     this.game.sendToAll('GAME_truck_place', this.getData());
+
   };
 
   send(data) {
-    // //если игрок направляется в город
-    // const lastPoin = data.path[data.path.length - 1];
-    // let city = null;
-    // if (this.game.cityMapNames[lastPoin.z][lastPoin.x] != 0) {
-    //   city = this.game.cityMapNames[lastPoin.z][lastPoin.x];
-    // };
-    //
-    // //здесь можно делать проверку на фабрику
-    // const sendData = {
-    //   truckID: this.id,
-    //
-    //   path: data.path,
-    //
-    //   selling:data.selling,
-    //   city:data.city,//only if selling == true;
-    // };
-    //
-    //
-    // //если вдруг игрок занял
-    // if (this.game.transportMap[lastPoin.z][lastPoin.x] === 1) {
-    //   return;
-    // };
-    //
-    // //bug fix не знаю, как он вылетел, но было что когда оттправил грузовик, не отключилось path меню у игрока
-    // if (this.positionIndexes.z != undefined && this.positionIndexes.x != undefined) {
-    //   this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
-    //   this.positionIndexes.x = lastPoin.x;
-    //   this.positionIndexes.z = lastPoin.z;
-    //   //если едет не в город, то обновляем позиции
-    //   if (city === null) {
-    //     this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
-    //   };
-    //   this.game.sendToAll('GAME_truck_sending', sendData);
-    // };
-
-
-
+    console.log(data)
     // data = {
     //   game: 'Game_nxwqNu',
     //   player: 'p_dFUXZK',
@@ -1579,9 +1545,28 @@ class TRUCK {
     //   finalObject: 'oilRefinery_uGeDnF'
     // }
 
-
     //грузовик в той же клетке, значит можно сразу разружать
     if(data.path.length === 1){
+      if(data.autosend){
+        if(data.autosend.sell){
+          data.city = data.autosend.finalObject;
+          if (this.game.cities[data.city]) {
+            const city = this.game.cities[data.city];
+            if (this.product.id === data.product) {
+              city.unloadTruck(this);
+            };
+          };
+        };
+        if(data.autosend.delivery){
+          const factory = this.player.factoryList.list[data.autosend.finalObject];
+          if (factory) {
+            if (this.product.id === data.product) {
+              factory.unloadTruck(this);
+            };
+          };
+        };
+
+      };
       if(data.sell){
         data.city = data.finalObject;
         if (this.game.cities[data.city]) {
@@ -1603,9 +1588,7 @@ class TRUCK {
     }else{
       //если на разгрузку, то последнюю точку занимать не надо
       if(data.delivery || data.sell){
-
         this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
-
       }else{
           //если вдруг игрок занял
           const lastPoin = data.path[data.path.length - 1];
@@ -1621,7 +1604,7 @@ class TRUCK {
       };
 
       const sendData = {
-        autosend:false,
+        autosend:data.autosend,
         truck: this.id,
         path: data.path,
         sell:data.sell,

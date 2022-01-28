@@ -263,27 +263,6 @@ function init() {
 
     MAIN.socket.on('GAME_truck_place',(data)=>{
       //происходит, когда игрок загружает грузовик, и он размещается на карте
-      /*
-      const data = {
-        player:this.player.login,
-        truckID:this.id,
-        place:factory.ceilIndex,
-      };
-      */
-
-      // if(MAIN.game.data.commonData.trucks.all[data.truckID]){
-      //   const thisTruck = MAIN.game.data.commonData.trucks.all[data.truckID];
-      //   thisTruck.placeOnMap(data.place);
-      //
-      //   //ход грузовика сразу после загрузки
-      //   if(thisTruck.player === MAIN.game.data.playerData.login){
-      //     thisTruck.turn();
-      //   };
-      // };
-
-
-
-
 
       // const data = {
       //   autosend: false
@@ -358,7 +337,6 @@ function init() {
 
     //происходит, когда кто-то продает ресурс в город
     MAIN.socket.on('GAME_city_updateOne',(data)=>{
-      console.log(data)
       for(let prod in data.storage){
 
         MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
