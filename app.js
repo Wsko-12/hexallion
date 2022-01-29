@@ -215,7 +215,7 @@ if(DEV_GAMEPLAY){
         started: false,
         turnBasedGame: true,
         turnTime: 180000,
-        tickTime:45000,});
+        tickTime:15000,});
 };
 
 function sendToAllRoomsData() {
@@ -1533,7 +1533,6 @@ class TRUCK {
   };
 
   send(data) {
-    console.log(data)
     // data = {
     //   game: 'Game_nxwqNu',
     //   player: 'p_dFUXZK',
@@ -1592,14 +1591,19 @@ class TRUCK {
       }else{
           //если вдруг игрок занял
           const lastPoin = data.path[data.path.length - 1];
-          if (this.game.transportMap[lastPoin.z][lastPoin.x] === 1) {
-            return;
+          if (this.game.transportMap[lastPoin.z][lastPoin.x]) {
+            const truckOnMap = this.game.transportMap[lastPoin.z][lastPoin.x];
+            if(truckOnMap.positionIndexes.x === lastPoin.x && truckOnMap.positionIndexes.z === lastPoin.z){
+                return;
+            }else{
+              this.game.transportMap[lastPoin.z][lastPoin.x] = 0;
+            };
           };
           if (this.positionIndexes.z != undefined && this.positionIndexes.x != undefined) {
             this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
             this.positionIndexes.x = lastPoin.x;
             this.positionIndexes.z = lastPoin.z;
-            this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 1;
+            this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = this;
           };
       };
 
@@ -1624,11 +1628,15 @@ class TRUCK {
     //if player destroy truck
     if (this.game.transportMap[this.positionIndexes.z]) {
       if (this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x]) {
-        this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+        if(this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] === this){
+          this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
+        };
       };
     };
-    this.positionIndexes = {};
-
+    this.positionIndexes = {
+      x:null,
+      y:null,
+    };
 
     this.game.sendToAll('GAME_truck_clear', this.id);
 
@@ -2313,9 +2321,10 @@ io.on('connection', function(socket) {
               return;
             };
           };
-
-          if(truck.product.id === data.product){
-            truck.send(data);
+          if(truck.product){
+            if(truck.product.id === data.product){
+              truck.send(data);
+            };
           };
         };
       };
@@ -2367,8 +2376,10 @@ io.on('connection', function(socket) {
             const truck = game.trucks.all[data.truck];
             if (game.cities[data.city]) {
               const city = game.cities[data.city];
-              if (truck.product.id === data.product) {
-                city.unloadTruck(truck);
+              if(truck.product){
+                if (truck.product.id === data.product) {
+                  city.unloadTruck(truck);
+                };
               };
             };
           };

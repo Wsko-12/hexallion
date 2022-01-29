@@ -924,6 +924,7 @@ const FUNCTIONS = {
 
       data.factory.autosend[autosendID] = data;
       data.factory.autosend[autosendID].id = autosendID;
+      MAIN.game.functions.autosending.turn();
     },
     removeFactory: function(autosendID) {
       delete this.factories[autosendID].factory.autosend[autosendID];
@@ -940,7 +941,6 @@ const FUNCTIONS = {
         route: null,
         mode: null,
       }
-
 
 
 
@@ -1121,15 +1121,14 @@ const FUNCTIONS = {
               autosendDataForTruck.delivery = true;
               autosendDataForTruck.finalObject = send.data.finalObject.id;
             };
+
             if(send.freeTruck.product === null){
-              send.data.factory.sendProduct(send.productIndex, autosendDataForTruck);
+                send.freeTruck.product = 1;
+                send.data.factory.sendProduct(send.productIndex, autosendDataForTruck);
             };
           };
         };
       };
-    },
-    clear: function() {
-
     },
   },
 

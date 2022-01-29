@@ -30,6 +30,7 @@ class PLAYER_DATA{
       if(thisTruck.autosend){
         thisTruck.autosendTurn();
       }else{
+        thisTruck.inAutosend = false;
         if(thisTruck.onMap){
           if(!thisTruck.cardOpened){
             thisTruck.createNotification();
@@ -37,6 +38,9 @@ class PLAYER_DATA{
             thisTruck.hitBoxMesh.userData.onClick();
           };
         };
+      };
+      if(thisTruck.product === 1){
+       thisTruck.clear();
       };
     };
 

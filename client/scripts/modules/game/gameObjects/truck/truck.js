@@ -68,7 +68,7 @@ class Truck {
 
     this.object3D.position.set(position.x, position.y, position.z);
     MAIN.game.scene.trucksGroup.add(this.object3D);
-    MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = true;
+    MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = this;
     this.object3D.castShadow = true;
     this.object3D.receiveShadow = true;
 
@@ -218,6 +218,7 @@ class Truck {
 
     this.object3D = null;
     this.hitBoxMesh = null;
+    MAIN.game.functions.autosending.turn();
   };
 
   destroyRequest(){
@@ -331,7 +332,7 @@ class Truck {
     //если грузовик ЕДЕТ на последнюю точку
     if(!data.sell && !data.delivery){
       if(!MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil){
-        MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = true;
+        MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = this;
       };
     };
 

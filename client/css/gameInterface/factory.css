@@ -448,7 +448,7 @@
   overflow: hidden;
   position: fixed;
   display: flex;
-  top:78%;
+  top:82%;
   left:50%;
   -webkit-transform:translate(-150%,-50%) scale(1.5) rotateY(10deg);
   transform:translate(-150%,-50%) scale(1.5) rotateY(10deg);

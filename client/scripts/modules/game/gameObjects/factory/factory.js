@@ -171,8 +171,11 @@ class Factory {
 
 
       if(this.fieldCeil.roadEmpty){
-        MAIN.interface.game.factory.showFactoryError('roadEmpty');
-        return;
+        const truckOnMap = this.fieldCeil.roadEmpty;
+        if(truckOnMap.place.x === this.fieldCeil.indexes.x && truckOnMap.place.z === this.fieldCeil.indexes.z){
+          MAIN.interface.game.factory.showFactoryError('roadEmpty');
+          return;
+        };
       };
       const truckList = MAIN.game.data.playerData.trucks;
       if(Object.keys(truckList).length === 0){
