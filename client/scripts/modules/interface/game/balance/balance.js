@@ -92,20 +92,50 @@ function calculateProductsWorth(){
 };
 
 function addBalanceMessage(message,amount){
+  const statistics = MAIN.game.data.playerData.statistics;
+  // thisStepProfit:0,
+  // thisStepLose:0,
+  //
+  // lastStepProfit:0,
+  // lastStepLose:0,
+  // allGameProfit:0,
+  // allGameLose:0,
+
+  // maxProfit:0,
+  // maxLose:0,
   if(message === null){
+    //значит,что следующий ход
     const div = `
       <div class="balanceMenu_balanceList-item" style="border:none">
       </div>
     `;
     document.querySelector('#balanceMenu_balanceList').insertAdjacentHTML('afterBegin',div);
     updatePayPerStep();
+
+    statistics.lastStepProfit = statistics.thisStepProfit;
+    statistics.lastStepLose = statistics.thisStepLose;
+    statistics.thisStepProfit = 0;
+    statistics.thisStepLose = 0;
+    if(statistics.lastStepProfit > statistics.maxProfit){
+      statistics.maxProfit = statistics.lastStepProfit;
+    };
+    if(statistics.lastStepLose > statistics.maxLose){
+      statistics.maxLose = statistics.lastStepLose;
+    };
+    console.log(statistics);
     return;
+
+
   };
   updatePayPerStep();
   let color;
   if(amount > 0){
     color = '#00a01e';
+    statistics.thisStepProfit += amount;
+    statistics.allGameProfit += amount;
   }else{
+    statistics.thisStepLose += Math.abs(amount);
+    statistics.allGameLose += Math.abs(amount);
     color = 'red';
   };
   if(amount === 0){
@@ -117,7 +147,7 @@ function addBalanceMessage(message,amount){
   const language = MAIN.interface.lang.balanceMessages;
 
   if(MAIN.interface.lang.flag === 'ru'){
-    if(message.startsWith('Tax payment')) {message = language.tax.ru};
+    if(message.startsWith('Tax payment')) {message = language.tax.ru + ' ' +MAIN.game.data.playerData.tax.procent + '%'};
 
     if(message.startsWith('Sale of ')){
       const strPart = message.substr(8);
@@ -134,7 +164,9 @@ function addBalanceMessage(message,amount){
     };
 
 
-  };
+  }else{
+    if(message.startsWith('Tax payment')) {message = massage + ' ' + MAIN.game.data.playerData.tax.procent + '%'};
+  }
 
   if(message.startsWith('Production on')){
     const strPart = message.substr(14);

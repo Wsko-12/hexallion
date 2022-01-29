@@ -1482,12 +1482,16 @@ class PLAYER {
     this.trucks = {};
     this.gameOver =false;
     this.productsWorth = 0;
+    this.lastStepProfit = 0;
   };
   sendBalanceMessage(message, amount) {
     this.balanceHistory.push({
       message,
       amount
     });
+    if(amount > 0){
+      this.lastStepProfit += amount;
+    };
     this.emit('GAME_BalanceMessage', {
       message,
       amount,
@@ -1543,34 +1547,8 @@ class PLAYER {
       this.factoryList.sendUpdates();
       //ресурсы в грузовиках считаются там же
       this.productsWorth = this.factoryList.calculateProductsWorth(data.averagePrices);
+      this.taxPay();
     };
-
-    // //tax
-    //
-    // // let taxProcent;
-    // // if(this.game.turnBasedGame){
-    // //   taxProcent  = Math.floor(this.game.circle/10);
-    // // }else{
-    // //   taxProcent = Math.floor(this.game.tickNumber/10);
-    // // };
-    //
-    //
-    // const clearEarn = this.factoryList.calculateClearEarnings();
-    //
-    // const taxValue = Math.floor(clearEarn * (taxProcent/100));
-    // this.balance -= taxValue;
-    // this.emit('GAME_taxValue',{
-    //   value:taxValue,
-    //   procent:taxProcent,
-    //   earn:clearEarn,
-    // });
-    //
-    //
-    // this.sendBalanceMessage('Tax payment', (-taxValue));
-
-    //налог будет считаться от прибыли в прошлом шагу
-
-
 
 
     this.emit('GAME_changeBalance', this.balance);
@@ -1594,6 +1572,28 @@ class PLAYER {
 
 
   };
+
+  taxPay(){
+    // //tax
+    //
+    let taxProcent;
+    if(this.game.turnBasedGame){
+      taxProcent  = Math.floor(this.game.circle/10);
+    }else{
+      taxProcent = Math.floor(this.game.tickNumber/10);
+    };
+    const taxValue = Math.floor(this.lastStepProfit * (taxProcent/100));
+    this.lastStepProfit = 0;
+    this.balance -= taxValue;
+    this.emit('GAME_taxValue',{
+      value:taxValue,
+      procent:taxProcent,
+    });
+
+    this.sendBalanceMessage('Tax payment', (-taxValue));
+
+  };
+
   emit(message, data) {
     if (USERS[this.login]) {
       if (USERS[this.login].inGame) {

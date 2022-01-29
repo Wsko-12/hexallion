@@ -18,7 +18,18 @@ class PLAYER_DATA{
       procent:0,
       earn:0,
     };
+    this.statistics = {
+      thisStepProfit:0,
+      thisStepLose:0,
 
+      lastStepProfit:0,
+      lastStepLose:0,
+      allGameProfit:0,
+      allGameLose:0,
+
+      maxProfit:0,
+      maxLose:0,
+    };
   };
 
   turnAction(){
