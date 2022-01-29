@@ -185,7 +185,7 @@ class Factory {
 
       const freeTrucks = [];
       for(let truck in truckList){
-        if(truckList[truck].product === null){
+        if(truckList[truck].product === null || truckList[truck].product === 1){
           freeTrucks.push(truckList[truck]);
         };
       };
@@ -212,10 +212,10 @@ class Factory {
       // }
       if(MAIN.game.data.commonData.turnBasedGame){
         if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+          auto.truck.product = null;
           return;
         };
       };
-
 
 
       const data = {

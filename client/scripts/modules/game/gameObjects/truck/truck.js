@@ -52,7 +52,6 @@ class Truck {
     //           }
     //   truckNumber: 26
     // }
-
     this.onMap = true;
     this.sended = false;
     this.place = data.positionIndexes;
@@ -126,8 +125,9 @@ class Truck {
       this.autosend.fullPath = this.autosend.fullPath.slice(this.autosend.cuttedPath.length - 1);
 
       MAIN.socket.emit('GAME_truck_send',sendData);
+    }else{
+      MAIN.game.functions.autosending.turn();
     };
-
   };
 
   createNotification() {

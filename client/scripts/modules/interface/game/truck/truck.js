@@ -93,6 +93,10 @@ function openMenu(factory){
       const thisTruck = MAIN.game.data.playerData.trucks[truck];
       let product = '';
 
+      if(thisTruck.product === 1){
+        thisTruck.clear();
+        continue;
+      };
       if(!thisTruck.product){
         product = `
           <div class="trucksMenu-card-resource resource-hole"></div>

@@ -1522,7 +1522,7 @@ class TRUCK {
     //   storageIndex:index,
     //   factory:FACTORY,
     // };
-    this.game.transportMap[data.factory.ceilIndex.z][data.factory.ceilIndex.x] = 1;
+    this.game.transportMap[data.factory.ceilIndex.z][data.factory.ceilIndex.x] = this;
     this.positionIndexes.x = data.factory.ceilIndex.x;
     this.positionIndexes.z = data.factory.ceilIndex.z;
     if(data.auto){
@@ -1590,19 +1590,28 @@ class TRUCK {
         this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
       }else{
           //если вдруг игрок занял
-          const lastPoin = data.path[data.path.length - 1];
-          if (this.game.transportMap[lastPoin.z][lastPoin.x]) {
-            const truckOnMap = this.game.transportMap[lastPoin.z][lastPoin.x];
-            if(truckOnMap.positionIndexes.x === lastPoin.x && truckOnMap.positionIndexes.z === lastPoin.z){
-                return;
+          const lastPoint = data.path[data.path.length - 1];
+          if (this.game.transportMap[lastPoint.z][lastPoint.x]) {
+            const truckOnMap = this.game.transportMap[lastPoint.z][lastPoint.x];
+            if(this.game.transportMap[lastPoint.z][lastPoint.x] === 0){
+              // continue
             }else{
-              this.game.transportMap[lastPoin.z][lastPoin.x] = 0;
+              const truckOnMap = this.game.transportMap[lastPoint.z][lastPoint.x];
+              if(truckOnMap.positionIndexes.x === null && truckOnMap.positionIndexes.z === null){
+                this.game.transportMap[lastPoint.z][lastPoint.x] = 0;
+                // continue
+              }else if(truckOnMap.positionIndexes.x === lastPoint.x && truckOnMap.positionIndexes.z === lastPoint.z){
+                return;
+              }else{
+                this.game.transportMap[lastPoint.z][lastPoint.x] = 0;
+                // continue
+              };
             };
           };
-          if (this.positionIndexes.z != undefined && this.positionIndexes.x != undefined) {
+          if (this.positionIndexes.z != null && this.positionIndexes.x != null) {
             this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = 0;
-            this.positionIndexes.x = lastPoin.x;
-            this.positionIndexes.z = lastPoin.z;
+            this.positionIndexes.x = lastPoint.x;
+            this.positionIndexes.z = lastPoint.z;
             this.game.transportMap[this.positionIndexes.z][this.positionIndexes.x] = this;
           };
       };
@@ -2132,6 +2141,17 @@ io.on('connection', function(socket) {
 
           if(GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0){
             factory.sendProduct(data);
+          }else{
+            const truckOnMap = GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x];
+            if(truckOnMap.positionIndexes.x === null && truckOnMap.positionIndexes.z === null){
+              GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] = 0;
+              factory.sendProduct(data);
+            }else if(truckOnMap.positionIndexes.x === factory.ceilIndex.x && truckOnMap.positionIndexes.z === factory.ceilIndex.z){
+              return;
+            }else{
+              GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] = 0;
+              factory.sendProduct(data);
+            };
           };
         };
       };
@@ -2171,6 +2191,8 @@ io.on('connection', function(socket) {
           if(GAMES[data.gameID].transportMap[factory.ceilIndex.z][factory.ceilIndex.x] === 0){
             factory.sendRawProduct(data);
           };
+
+
         };
       };
     };
@@ -2277,6 +2299,8 @@ io.on('connection', function(socket) {
                 };
                 factory.loadProductToTruck(nData);
               } else {
+
+
                 //если клетка на карте занята другим транспортом
                 const indexes = {
                   z: factory.ceilIndex.z,

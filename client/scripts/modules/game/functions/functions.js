@@ -781,17 +781,20 @@ const FUNCTIONS = {
                   };
                   if (path.length > 0) {
                     searcher(path[path.length - 1]);
+                    return;
                   } else {
                     // MAIN.interface.game.path.showNotification(fieldCeil.position);
                     //bugFix
                     //если мы ищем дополнительный, то точно уже есть основной финишный
                     findMorePaths();
+                    return;
                   };
                 } else {
                   // MAIN.interface.game.path.showNotification(fieldCeil.position);
                   //bugFix
                   //если мы ищем дополнительный, то точно уже есть основной финишный
                   findMorePaths();
+                  return;
                 };
               } else {
                 //если все же нашли следующую подходящую клетку
@@ -806,6 +809,7 @@ const FUNCTIONS = {
                     //если есть еще дороги, то чекаем еще раз
                     if (anotherWayIsPossible) {
                       findMorePaths();
+                      return;
                     } else {
                       //Нашли все возможные пути
                       resOtherPath(paths);
@@ -815,13 +819,16 @@ const FUNCTIONS = {
                   //кидаем в алгоритм следующую клетку
                   // setTimeout(() => {
                   searcher(minDistanceToFinish.neighbour);
+                  return;
                   // });
                 };
               };
-
-
             };
-            searcher(data.start);
+            setTimeout(()=>{
+              //Maximum call stack size resolve
+              searcher(data.start);
+
+            })
           });
           return otherPathPromise;
         };
@@ -1067,6 +1074,7 @@ const FUNCTIONS = {
                   start: thisSend.factory.fieldCeil,
                   factory: thisSend.factory,
                   value: null,
+                  dontCheckTrafficJam:false,
                 };
                 const route = await MAIN.game.functions.pathFinder(pathData);
                 if (route) {

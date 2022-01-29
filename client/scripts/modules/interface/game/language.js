@@ -1,5 +1,5 @@
 const LANG = {
-  flag:'eng',
+  flag:'ru',
 
   credit:{
     menuTitle:{
