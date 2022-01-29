@@ -93,6 +93,7 @@ const ROOMS = {
   //   turnBasedGame: true,
   //   turnTime: 180000,
   //   tickTime:45000,
+  //   cityEconomy:true,
   // },
 };
 
@@ -111,6 +112,8 @@ class ROOM {
     this.turnBasedGame = properties.turnBasedGame;
     this.turnTime = properties.turnTime;
     this.tickTime = properties.tickTime;
+    this.cityEconomy = properties.cityEconomy;
+
 
     this.members = [];
     this.gameStarted = false;
@@ -128,6 +131,7 @@ class ROOM {
       turnBasedGame: this.turnBasedGame,
       tickTime: this.tickTime / 1000,
       turnTime: this.turnTime / 1000,
+      cityEconomy:this.cityEconomy,
       ready: this.ready,
       started: false,
     };
@@ -215,7 +219,9 @@ if(DEV_GAMEPLAY){
         started: false,
         turnBasedGame: true,
         turnTime: 180000,
-        tickTime:15000,});
+        tickTime:15000,
+        cityEconomy:true,
+      });
 };
 
 function sendToAllRoomsData() {
@@ -326,8 +332,8 @@ class GAME {
     this.turnBasedGame = properties.turnBasedGame;
     this.turnTime = properties.turnTime;
     this.tickTime = properties.tickTime;
+    this.cityEconomy = properties.cityEconomy;
     this.turnsPaused = false;
-
 
     this.queue = [];
     this.queueNum = -1;
@@ -344,7 +350,7 @@ class GAME {
     for (let cityName of MAP_CONFIGS.cities) {
       const city = new CITY({
         name: cityName,
-        game: this
+        game: this,
       });
       this.cities[cityName] = city;
     };
@@ -405,6 +411,23 @@ class GAME {
     };
   };
 
+  payFromCities(value){
+    const averageValue = Math.floor(value/3);
+    for(let city in this.cities){
+      const thisCity = this.cities[city];
+      thisCity.balance -= averageValue;
+      thisCity.sendUpdate();
+    };
+  };
+  payToCities(value){
+    const averageValue = Math.floor(value/3);
+    for(let city in this.cities){
+      const thisCity = this.cities[city];
+      thisCity.balance += averageValue;
+      thisCity.sendUpdate();
+    };
+  };
+
   generateMap() {
     const map = [];
     for (let ceilType in MAP_CONFIGS.ceils) {
@@ -433,6 +456,8 @@ class GAME {
         trucks: this.trucks,
         tickTime: this.tickTime,
         members: this.members,
+        cityEconomy:this.cityEconomy,
+        cityEconomyPrice:this.cities.Westown.balance,
         //#bfbfbf серый для скринов
         //#fc4a4a красный для игрока
         playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
@@ -637,6 +662,7 @@ class GAME {
       for (let prod in thisCity.storage) {
         data[city][prod] = thisCity.storage[prod].line
       };
+      data[city].balance = thisCity.balance;
     };
     this.sendToAll('GAME_city_update', data);
   };
@@ -646,6 +672,7 @@ class CITY {
   constructor(properties) {
     this.name = properties.name;
     this.game = properties.game;
+    this.balance = properties.game.cityEconomy ? 2000000 : null,
 
     this.storage = this.createStorage();
 
@@ -697,39 +724,30 @@ class CITY {
     } else {
       price = this.storage[product.name].prices[firstFullCeilIndex - 1];
     };
+    if(this.balance != null){
+      if(price >= this.balance){
+        return this.balance;
+      };
+    };
     return price;
   };
-  sellProduct(product) {
-    const price = this.getProductPrice(product);
-
-    this.storage[product.name].line[0] = 1;
-
-    const newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
-    product.player.changeBalance(newPrice);
-    product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
-
-
-
-    this.sendUpdate();
-    product.truck.clear();
-  };
-
 
   unloadTruck(truck){
-    let price = 0;
-    const product = truck.product;
-    const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
-    if (firstFullCeilIndex === -1) {
-      price = this.storage[product.name].prices[this.storage[product.name].prices.length - 1];
-    } else if (firstFullCeilIndex === 0) {
-      price = 0;
-    } else {
-      price = this.storage[product.name].prices[firstFullCeilIndex - 1];
-    };
+   const product = truck.product;
+    let price = this.getProductPrice(product);
 
     this.storage[product.name].line[0] = 1;
 
-    const newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+    let newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+
+    if(this.balance != null){
+      if(newPrice >= this.balance){
+        newPrice = this.balance;
+      };
+      this.balance -= newPrice;
+    };
+
+
     product.player.changeBalance(newPrice);
     product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
 
@@ -751,6 +769,7 @@ class CITY {
     const data = {
       name: this.name,
       storage: {},
+      balance: this.balance,
     };
 
     for (let prod in this.storage) {
@@ -1440,7 +1459,11 @@ class CREDIT {
   constructor(properties) {
     this.player = properties.player;
     const creditName = properties.name;
+    this.game = properties.game;
     this.amount = CREDITS[creditName].amount;
+    if(this.game.cityEconomy){
+      this.game.payFromCities(this.amount);
+    };
     this.paysParts = CREDITS[creditName].pays;
     this.pays = CREDITS[creditName].pays;
     this.deferment = CREDITS[creditName].deferment;
@@ -1500,6 +1523,7 @@ class PLAYER {
   applyCredit(creditName) {
     const credit = {
       name:creditName,
+      game:this.game,
     };
     credit.player = this;
 
@@ -1589,6 +1613,9 @@ class PLAYER {
       value:taxValue,
       procent:taxProcent,
     });
+    if(this.game.cityEconomy){
+      this.game.payToCities(taxValue);
+    };
 
     this.sendBalanceMessage('Tax payment', (-taxValue));
 
@@ -1692,24 +1719,25 @@ class TRUCK {
     //грузовик в той же клетке, значит можно сразу разружать
     if(data.path.length === 1){
       if(data.autosend){
-        if(data.autosend.sell){
-          data.city = data.autosend.finalObject;
-          if (this.game.cities[data.city]) {
-            const city = this.game.cities[data.city];
-            if (this.product.id === data.product) {
-              city.unloadTruck(this);
+        if(data.autosend.finished){
+          if(data.autosend.sell){
+            data.city = data.autosend.finalObject;
+            if (this.game.cities[data.city]) {
+              const city = this.game.cities[data.city];
+              if (this.product.id === data.product) {
+                city.unloadTruck(this);
+              };
+            };
+          };
+          if(data.autosend.delivery){
+            const factory = this.player.factoryList.list[data.autosend.finalObject];
+            if (factory) {
+              if (this.product.id === data.product) {
+                factory.unloadTruck(this);
+              };
             };
           };
         };
-        if(data.autosend.delivery){
-          const factory = this.player.factoryList.list[data.autosend.finalObject];
-          if (factory) {
-            if (this.product.id === data.product) {
-              factory.unloadTruck(this);
-            };
-          };
-        };
-
       };
       if(data.sell){
         data.city = data.finalObject;
@@ -2171,6 +2199,9 @@ io.on('connection', function(socket) {
                   game.factoriesCount[data.build.building] -= 1;
                   const cost = COASTS.buildings[data.build.building] * (-1);
                   player.changeBalance(cost);
+                  if(game.cityEconomy){
+                    game.payToCities(cost*(-1));
+                  };
                   player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
                   game.playerBuilding(data);
                 };
@@ -2178,14 +2209,15 @@ io.on('connection', function(socket) {
               }else{
                 //если это дорога и тд, чему счет не ведется
                 const cost = COASTS.buildings[data.build.building] * (-1);
+                if(game.cityEconomy){
+                  game.payToCities(cost*(-1));
+                };
                 player.changeBalance(cost);
                 player.sendBalanceMessage(`Сonstruction of the ${data.build.building}`, cost);
                 game.playerBuilding(data);
               };
-
             };
           };
-
         };
       };
     };
@@ -2370,6 +2402,9 @@ io.on('connection', function(socket) {
         if (player.balance >= COASTS.trucks.coast && !player.gameOver) {
           if (game.trucks.count > 0) {
             game.trucks.count -= 1;
+            if(game.cityEconomy){
+              game.payToCities(COASTS.trucks.coast);
+            };
             player.changeBalance(-COASTS.trucks.coast);
             player.sendBalanceMessage('Buying a truck', -COASTS.trucks.coast);
 
@@ -2380,6 +2415,7 @@ io.on('connection', function(socket) {
             };
 
             const truck = new TRUCK(properties);
+
             game.trucks.all[truck.id] = truck;
             player.trucks[truck.id] = truck;
 

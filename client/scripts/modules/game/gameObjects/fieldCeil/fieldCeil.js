@@ -37,6 +37,7 @@ class FieldCeil {
         name: this.type,
         position: properties.position,
         fieldCeil:this,
+        balance:MAIN.game.data.commonData.cityEconomy ? MAIN.game.data.commonData.cityEconomyPrice : null,
       });
       this.city = city;
       MAIN.game.data.cities[this.type] = city;
@@ -142,9 +143,9 @@ class FieldCeil {
   };
   onClick(intersectCoords) {
     //для режима пошагового меню не показывается если не ход игрока
-
     if (this.cityCeil) {
       MAIN.interface.game.city.openMenu(MAIN.game.data.cities[this.type]);
+      console.log(MAIN.game.data.cities[this.type].balance);
     };
 
 

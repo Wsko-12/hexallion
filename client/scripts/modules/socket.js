@@ -323,6 +323,7 @@ function init() {
         for(let prod in thisCity.storage){
           thisCity.storage[prod].line = data[city][prod];
         };
+        thisCity.balance = data[city].balance;
       };
 
       if(MAIN.interface.game.city.cardOpened){
@@ -338,9 +339,10 @@ function init() {
     //происходит, когда кто-то продает ресурс в город
     MAIN.socket.on('GAME_city_updateOne',(data)=>{
       for(let prod in data.storage){
-
         MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
       };
+
+      MAIN.game.data.cities[data.name].balance = data.balance;
 
       if(MAIN.interface.game.city.cardOpened){
         MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);

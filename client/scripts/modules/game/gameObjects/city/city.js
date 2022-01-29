@@ -11,7 +11,7 @@ class City{
     this.category = 'city';
     this.storage = this.createStorage();
     this.priceNotification = null;
-
+    this.balance = properties.balance;
     this.fieldCeil = properties.fieldCeil;
   };
   createStorage(){
