@@ -282,6 +282,57 @@ class Factory {
 
 
   };
+
+
+  getAllProducts(){
+    const products = [];
+    if(this.settingsSetted){
+      if(this.settings.productInProcess){
+        products.push({
+          name:this.settings.productInProcess.name,
+          quality:this.settings.productInProcess.quality,
+        });
+      };
+
+      this.settings.storage.forEach((prod, i) => {
+        if(prod){
+          products.push({
+            name:prod.name,
+            quality:prod.quality,
+          });
+        };
+      });
+
+      if(this.category ==='factory'){
+        if(this.settings.productInProcess){
+          //тк на перерабатывающих может производится сразу несколько ресурсов
+          const productSettings = this.settings.products.find((prod)=>{
+            if(prod.name === this.settings.productInProcess.name){
+              return prod;
+            };
+          });
+          for(let i = 0; i<((productSettings.productionVolume + this.settings.volumePoints)- 1);i++){
+            products.push({
+              name:this.settings.productInProcess.name,
+              quality:this.settings.productInProcess.quality,
+            });
+          };
+        };
+        for(let prod in this.settings.rawStorage){
+          const thisProd = this.settings.rawStorage[prod];
+          if(thisProd){
+            products.push({
+              name:thisProd.name,
+              quality:thisProd.quality,
+            });
+          };
+        };
+      };
+      return products;
+    }else{
+      return [];
+    };
+  };
 };
 
 export {

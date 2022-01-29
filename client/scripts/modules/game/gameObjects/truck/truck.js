@@ -602,6 +602,19 @@ class Truck {
 
   };
 
+
+  getProductPriceData(){
+    if(this.product){
+      if(this.product != 1){
+        return [{
+          name:this.product.name,
+          quality:this.product.quality,
+        }];
+      };
+    };
+    return [];
+  };
+
 };
 export {
   Truck

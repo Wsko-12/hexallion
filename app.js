@@ -500,8 +500,28 @@ class GAME {
 
     this.sendToAll('GAME_applyBuilding', data);
   };
-
+  getAveragePrices(){
+    const prices = {};
+    for(let product in COASTS.products){
+      let averagePrice = 0;
+      for(let city in this.cities){
+        const thisCity = this.cities[city];
+        //так работает getProductPrice
+        const prod = {
+          name:product,
+        };
+        averagePrice+=thisCity.getProductPrice(prod);
+      };
+      prices[product] = Math.round(averagePrice/Object.keys(this.cities).length);
+    };
+    return prices;
+  };
   nextTurn() {
+    //для подсчета объема продукции у игрока
+    const averagePrices = this.getAveragePrices();
+
+
+
     //сохраняем значение, с которого запустили функцию
     let startedTurnIndex = this.queueNum;
     const random = generateId('Turn_', 4);
@@ -509,7 +529,6 @@ class GAME {
     const that = this;
     //понадобится для автоматического перехода хода и если игрок сам скипнет ход
     let lastTurn;
-
     //ищет следующего подходящего игрока
     findTurn();
 
@@ -550,7 +569,9 @@ class GAME {
 
         // отправляем ему все функции для хода(кредит, фермы и тд)
 
-        nextPlayer.turnAction();
+        nextPlayer.turnAction({
+          averagePrices:averagePrices,
+        });
         //обновляем города
         that.updateCities();
 
@@ -580,6 +601,9 @@ class GAME {
     };
   };
   tick() {
+    const averagePrices = this.getAveragePrices();
+
+
     const that = this;
     let allPlayersOff = true;
     for (let player in this.players) {
@@ -589,7 +613,9 @@ class GAME {
 
       const thisPlayer = this.players[player];
       if(!thisPlayer.gameOver){
-        thisPlayer.turnAction();
+        thisPlayer.turnAction({
+          averagePrices:averagePrices,
+        });
       };
     };
     this.tickNumber += 1;
@@ -661,9 +687,7 @@ class CITY {
     return storage;
   };
 
-
-
-  sellProduct(product) {
+  getProductPrice(product){
     let price = 0;
     const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
     if (firstFullCeilIndex === -1) {
@@ -673,6 +697,10 @@ class CITY {
     } else {
       price = this.storage[product.name].prices[firstFullCeilIndex - 1];
     };
+    return price;
+  };
+  sellProduct(product) {
+    const price = this.getProductPrice(product);
 
     this.storage[product.name].line[0] = 1;
 
@@ -784,6 +812,38 @@ class FACTORY_LIST {
       };
     };
     return earnings;
+  };
+
+  calculateProductsWorth(averagePrices){
+    // averagePrices:{
+    //   sand: 3900,
+    //   water: 9700,
+    //   wood: 17400,
+    //   steel: 27300,
+    //   oil: 21000,
+    //   gold: 59500,
+    //   petrol: 18600,
+    //   plastic: 18600,
+    //   paints: 18600
+    // },
+    let products = [];
+    for(let factory in this.list){
+      const thisFactory = this.list[factory];
+      products = products.concat(thisFactory.getAllProducts());
+    };
+
+    for(let truck in this.player.trucks){
+      const thisTruck = this.player.trucks[truck];
+      products = products.concat(thisTruck.getProductPriceData());
+    };
+
+
+    let sum = 0;
+    products.forEach((prod, i) => {
+      const price = averagePrices[prod.name];
+      sum += price + Math.round(price*0.15*prod.quality);
+    });
+    return sum;
   };
 
 };
@@ -1321,7 +1381,55 @@ class FACTORY {
 
   };
 
+  getAllProducts(){
+    if(this.settingsSetted){
+      const products = [];
+      if(this.productInProcess){
+        products.push({
+          name:this.productInProcess.name,
+          quality:this.productInProcess.quality,
+        });
+      };
+      this.storage.forEach((prod, i) => {
+        if(prod){
+          products.push({
+            name:prod.name,
+            quality:prod.quality,
+          });
+        };
+      });
+      if(this.category === 'factory'){
+        if(this.productInProcess){
+          //тк на перерабатывающих может производится сразу несколько ресурсов
+          const productSettings = this.products.find((prod)=>{
+            if(prod.name === this.productInProcess.name){
+              return prod;
+            };
+          });
+          for(let i = 0; i<((productSettings.productionVolume + this.volumePoints)- 1);i++){
+            products.push({
+              name:this.productInProcess.name,
+              quality:this.productInProcess.quality,
+            });
+          };
+        };
 
+        for(let prodName in this.rawStorage){
+          const thisProduct = this.rawStorage[prodName];
+          if(thisProduct){
+            products.push({
+              name:thisProduct.name,
+              quality:thisProduct.quality,
+            });
+          };
+        };
+      };
+      return products;
+    }else{
+      return [];
+    };
+
+  };
 
 
 
@@ -1373,6 +1481,7 @@ class PLAYER {
     this.factoryList = new FACTORY_LIST(this);
     this.trucks = {};
     this.gameOver =false;
+    this.productsWorth = 0;
   };
   sendBalanceMessage(message, amount) {
     this.balanceHistory.push({
@@ -1406,49 +1515,76 @@ class PLAYER {
 
     this.emit('GAME_changeBalance', this.balance);
   };
-  turnAction() {
+  turnAction(data) {
+    /*
+    data = {
+      averagePrices:{
+        sand: 3900,
+        water: 9700,
+        wood: 17400,
+        steel: 27300,
+        oil: 21000,
+        gold: 59500,
+        petrol: 18600,
+        plastic: 18600,
+        paints: 18600
+      },
+    };
+
+
+
+    */
     //отправляем пустое сообщения для balanceHistory
     this.sendBalanceMessage(null);
     //credit
     if (this.credit) {
       this.credit.turn();
-
       this.factoryList.turn();
       this.factoryList.sendUpdates();
+      //ресурсы в грузовиках считаются там же
+      this.productsWorth = this.factoryList.calculateProductsWorth(data.averagePrices);
     };
 
-    //tax
+    // //tax
+    //
+    // // let taxProcent;
+    // // if(this.game.turnBasedGame){
+    // //   taxProcent  = Math.floor(this.game.circle/10);
+    // // }else{
+    // //   taxProcent = Math.floor(this.game.tickNumber/10);
+    // // };
+    //
+    //
+    // const clearEarn = this.factoryList.calculateClearEarnings();
+    //
+    // const taxValue = Math.floor(clearEarn * (taxProcent/100));
+    // this.balance -= taxValue;
+    // this.emit('GAME_taxValue',{
+    //   value:taxValue,
+    //   procent:taxProcent,
+    //   earn:clearEarn,
+    // });
+    //
+    //
+    // this.sendBalanceMessage('Tax payment', (-taxValue));
 
-    let taxProcent;
-    if(this.game.turnBasedGame){
-      taxProcent  = Math.floor(this.game.circle/10);
-    }else{
-      taxProcent = Math.floor(this.game.tickNumber/10);
-    };
+    //налог будет считаться от прибыли в прошлом шагу
 
 
-    const clearEarn = this.factoryList.calculateClearEarnings();
 
-    const taxValue = Math.floor(clearEarn * (taxProcent/100));
-    this.balance -= taxValue;
-    this.emit('GAME_taxValue',{
-      value:taxValue,
-      procent:taxProcent,
-      earn:clearEarn,
-    });
-
-
-    this.sendBalanceMessage('Tax payment', (-taxValue));
 
     this.emit('GAME_changeBalance', this.balance);
 
-    if(this.balance + clearEarn < 0){
+    if(this.balance + this.productsWorth < 0){
       this.gameOver = true;
       this.emit('GAME_over');
       for(let truck in this.trucks){
         this.trucks[truck].clear();
       };
-      return
+      if(this.game.turnBasedGame){
+        this.game.nextTurn();
+      };
+      return;
     };
 
 
@@ -1480,7 +1616,16 @@ class TRUCK {
     this.positionIndexes = {};
     this.autosend = false;
   };
-
+  getProductPriceData(){
+    if(this.product){
+      return [{
+        name:this.product.name,
+        quality:this.product.quality,
+      }];
+    }else{
+      return [];
+    };
+  };
 
   loadProduct(product, data) {
     // const data = {

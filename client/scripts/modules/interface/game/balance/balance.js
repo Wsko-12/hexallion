@@ -51,6 +51,44 @@ function updateCreditHistory(){
   document.querySelector('#balanceMenu_Container_Payments_Container').innerHTML = paymentsLine;
 
 
+
+
+  document.querySelector('#balanceHistory_productsInCirculation').innerHTML = calculateProductsWorth();
+
+};
+
+function calculateProductsWorth(){
+  const player = MAIN.game.data.playerData;
+  const cities = MAIN.game.data.cities;
+  const prices = {};
+  for(let product in MAIN.game.configs.products){
+    let averagePrice = 0;
+    for(let city in cities){
+      const thisCity = cities[city];
+      averagePrice += thisCity.getCurrentProductPrice(product);
+    };
+    prices[product] = Math.round(averagePrice/Object.keys(cities).length);
+  };
+
+
+  let products = [];
+  for(let factory in player.factories){
+    const thisFactory = player.factories[factory];
+    products = products.concat(thisFactory.getAllProducts());
+  };
+
+  for(let truck in player.trucks){
+    const thisTruck = player.trucks[truck];
+    products = products.concat(thisTruck.getProductPriceData());
+  };
+
+  let sum = 0;
+  products.forEach((prod, i) => {
+    const price = prices[prod.name];
+    sum += price + Math.round(price*0.15*prod.quality);
+  });
+  return sum;
+
 };
 
 function addBalanceMessage(message,amount){
@@ -143,6 +181,7 @@ function addBalanceMessage(message,amount){
     </div>
   `;
   document.querySelector('#balanceMenu_balanceList').insertAdjacentHTML('afterBegin',div);
+  document.querySelector('#balanceHistory_productsInCirculation').innerHTML = calculateProductsWorth();
 };
 function init(amount){
   const interfaceSection = document.querySelector('#gameInterface')
@@ -219,7 +258,7 @@ function init(amount){
               <span style="font-size:12px">${language.debt[langFlag]}: $<span id="creditHistory_allCount">130000</span></span>
             </div>
             <div class="balanceMenu_balanceHeader_Titles">
-              ${language.possibleEarnings[langFlag]}: $<span id='balanceHistory_earn'></span>
+              ${language.productsInCirculation[langFlag]}: $<span id='balanceHistory_productsInCirculation'></span>
             </div>
             <div style="color:#C73636" class="balanceMenu_balanceHeader_Titles">
               ${language.stepPay[langFlag]}: $<span id="balanceHistory_payPerStep"></span>
@@ -313,7 +352,6 @@ function updatePayPerStep(){
   div.innerHTML = pay;
 
   document.querySelector('#balanceHistory_tax').innerHTML = MAIN.game.data.playerData.tax.procent;
-  document.querySelector('#balanceHistory_earn').innerHTML = MAIN.game.data.playerData.tax.earn;
 
 };
 

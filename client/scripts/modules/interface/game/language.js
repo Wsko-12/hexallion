@@ -142,10 +142,14 @@ const LANG = {
       eng:'debt',
     },
 
-    possibleEarnings:{
-      ru:'Возможная прибыль',
-      eng:'Possible earnings',
+    productsInCirculation:{
+      ru:'Продукции в обороте',
+      eng:'Products in circulation',
     },
+    // possibleEarnings:{
+    //   ru:'Возможная прибыль',
+    //   eng:'Possible earnings',
+    // },
 
     stepPay:{
       ru:'Плата за ход',
