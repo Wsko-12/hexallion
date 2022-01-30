@@ -1421,7 +1421,9 @@ class FACTORY {
       };
 
       truck.clear();
-      this.turn(true);
+      if(this.productInProcess === null){
+        this.turn(true);
+      };
       this.sendUpdates();
     };
     // let price = 0;

@@ -199,7 +199,6 @@ const LANG = {
       ru: 'нефтеперерабат. заводе',
       eng: 'Oil refinery',
     },
-
     petrochemicalPlant: {
       ru: 'нефтехим заводе',
       eng: 'Petrochemical plant',
@@ -238,6 +237,18 @@ const LANG = {
     petrol: {
       ru: 'бензина',
     },
+    glue: {
+      ru: 'клея',
+    },
+    plastic: {
+      ru: 'пластика',
+    },
+    rubber: {
+      ru: 'резины',
+    },
+    dye: {
+      ru: 'красителей',
+    },
 
     truckBuying: {
       ru: 'Покупка грузовика',
@@ -272,6 +283,10 @@ const LANG = {
     OilRefinery: {
       eng: 'Oil refinery',
       ru: 'нпз',
+    },
+    PetrochemicalPlant: {
+      ru: 'нефтехим заводе',
+      eng: 'Petrochemical plant',
     },
 
     creditPayment: {
