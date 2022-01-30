@@ -890,7 +890,7 @@ class FACTORY {
 
     this.storage = FACTORIES[properties.building].storage;
     this.stockSpeed = FACTORIES[properties.building].speed;
-
+    this.paused = false;
 
 
 
@@ -919,6 +919,7 @@ class FACTORY {
   setSettings(settings) {
     const points = 4
     if(this.category === 'mining'){
+
       //проверяем на читы хотя вроде все внутри функции и область видимости не пробьешь
       //anticheat
       let pointsCounter = 0;
@@ -970,6 +971,11 @@ class FACTORY {
         this.storage.push(null);
       };
       this.storagePoints = settings.storage;
+
+
+      //надо для переназначения настроек фабрики
+      this.productInProcess = null;
+      this.productSelected = FACTORIES[this.name].product;
 
       this.sendNewSettings();
 
@@ -1030,6 +1036,18 @@ class FACTORY {
 
 
       this.volumePoints = settings.volume;
+
+
+      //надо для переназначения настроек фабрики
+      this.productInProcess = null;
+      this.productSelected = null;
+      this.rawStorage = {};
+      this.products.forEach((product) => {
+        product.raw.forEach((raw) => {
+          this.rawStorage[raw] = null;
+        });
+      });
+
       this.sendNewSettings();
 
     };
@@ -1093,6 +1111,7 @@ class FACTORY {
       productInProcess:this.productInProcess?this.productInProcess.getData():null,
       productLine:this.productLine,
       storage:[],
+      paused:this.paused,
     };
 
     for(let i = 0;i<this.storage.length;i++){
@@ -1128,7 +1147,19 @@ class FACTORY {
     //auto значит, что был загружен в фабрику ресурс и если не все ресурсы собратны, то не надо еще раз
     //с игрока снимать деньги за содержание фабрики
     if(this.category === 'mining'){
+
       if (this.settingsSetted) {
+        if(this.paused){
+          if(this.game.cityEconomy){
+            this.game.payToCities(Math.floor(this.stepPrice/2));
+          };
+          this.player.balance -= Math.floor(this.stepPrice/2);
+          this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -Math.floor(this.stepPrice/2));
+          this.productLine.forEach((item, i) => {
+            this.productLine[i] = 0;
+          });
+          return;
+        };
         //если в storage есть место
         if (this.storage.includes(null)) {
           if (!this.productLine.includes(1)) {
@@ -1194,8 +1225,20 @@ class FACTORY {
 
 
     if(this.category === 'factory'){
+
       //если продукт выбран
       if(this.productSelected){
+        if(this.paused){
+          if(this.game.cityEconomy){
+            this.game.payToCities(this.downtimeCost);
+          };
+          this.player.balance -= this.downtimeCost;
+          this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, - this.downtimeCost);
+          this.productLine.forEach((item, i) => {
+            this.productLine[i] = 0;
+          });
+          return;
+        };
         //если уже какой-то продукт производится
         if(this.productInProcess){
           //1. если это последний этап производства
@@ -2236,6 +2279,7 @@ io.on('connection', function(socket) {
       };
     };
   });
+
   socket.on('GAME_factory_applySettings', (data) => {
     //происходит, когда игрок настраивает фабрику
     //trigger game - interface - factory.js applySettings();
@@ -2255,9 +2299,7 @@ io.on('connection', function(socket) {
       if (GAMES[data.gameID].players[data.player]) {
         if(!GAMES[data.gameID].players[data.player].gameOver){
           if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory]) {
-            if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory].settingsSetted === false) {
-              GAMES[data.gameID].players[data.player].factoryList.list[data.factory].setSettings(data.settings);
-            };
+            GAMES[data.gameID].players[data.player].factoryList.list[data.factory].setSettings(data.settings);
           };
         };
       };
@@ -2265,6 +2307,35 @@ io.on('connection', function(socket) {
 
   });
 
+  socket.on('GAME_factory_stop', (data) => {
+    //происходит, когда игрок останавливает или запускает фабрику
+    /*const data = {
+      player:MAIN.game.playerData.login,
+      gameID:MAIN.game.commonData.id,
+      factory:factory.id,
+    };*/
+
+
+    if (GAMES[data.gameID]) {
+      if (GAMES[data.gameID].players[data.player]) {
+        if(!GAMES[data.gameID].players[data.player].gameOver){
+          if (GAMES[data.gameID].players[data.player].factoryList.list[data.factory]) {
+            const thisFactory = GAMES[data.gameID].players[data.player].factoryList.list[data.factory];
+            if(thisFactory.paused){
+              thisFactory.paused = false;
+            }else{
+              thisFactory.productLine.forEach((item, i) => {
+                thisFactory.productLine[i] = 0;
+              });
+              thisFactory.paused = true;
+            };
+            thisFactory.sendUpdates();
+          };
+        };
+      };
+    };
+
+  });
 
   socket.on('GAME_factory_setProductSelected',(data)=>{
 

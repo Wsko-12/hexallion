@@ -132,6 +132,7 @@ class Factory {
   };
 
   applyUpdates(updates){
+    this.settings.paused = updates.paused;
     this.settings.productLine = updates.productLine;
     this.settings.storage = updates.storage;
     this.settings.productSelected = updates.productSelected;

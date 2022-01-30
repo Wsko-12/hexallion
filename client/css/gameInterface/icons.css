@@ -29,3 +29,18 @@
 .icon-findRoute{
   background-image: url(../img/icons/findRoute.png);
 }
+
+
+
+.icon-play{
+  background-image: url(../img/icons/play.png);
+}
+.icon-pause{
+  background-image: url(../img/icons/pause.png);
+}
+.icon-settings{
+  background-image: url(../img/icons/settings.png);
+}
+.icon-cancel{
+  background-image: url(../img/icons/cancel.png);
+}

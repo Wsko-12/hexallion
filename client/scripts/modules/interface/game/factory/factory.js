@@ -115,7 +115,17 @@ function showSettingsSetMenu(factory) {
     <div class="factory_card">
       <div class="factory_header factory_header_bg-oilWell">
         <div class="factory_header_header">
-          ${name} <span class="factory_header_header-span">| ${factory.number}</span>
+          <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
+          ${factory.settingsSetted ? `
+            <div class="factory_header_header-buttonsContainer">
+                      <div class="factory_header_header-button">
+
+                      </div>
+                      <div id="factory_cancelButton" class="factory_header_header-button icon-cancel">
+
+                      </div>
+            </div>`:''}
+
         </div>
         <div class="factory_header_body">
           <div class="factory_header_body-left">
@@ -174,6 +184,11 @@ function showSettingsSetMenu(factory) {
   document.querySelector('#factoryMenu_Button').onclick = applySettings;
   document.querySelector('#factoryMenu_Button').ontouchstart = applySettings;
 
+  if(document.querySelector('#factory_cancelButton')){
+    document.querySelector('#factory_cancelButton').onclick = ()=>{
+      showFactoryMenu(factory);
+    };
+  };
   function applySettings() {
     closeMenu();
     const data = {
@@ -611,7 +626,15 @@ function showFactoryMenu(factory) {
           <div class="factory_card" id='factoryCard'>
              <div class="factory_header factory_header_bg-oilWell">
                <div class="factory_header_header">
-                 ${name} <span class="factory_header_header-span">| ${factory.number}</span>
+                 <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
+                 <div class="factory_header_header-buttonsContainer">
+                   <div id="factory_settingsButton" class="factory_header_header-button icon-settings">
+
+                   </div>
+                   <div id="factory_playButton" class="factory_header_header-button ${factory.settings.paused ? 'icon-play':'icon-pause'}">
+
+                   </div>
+                 </div>
                </div>
              </div>
 
@@ -689,6 +712,24 @@ function showFactoryMenu(factory) {
         factory.setProductSelected(thisProduct.name)}
     };
   };
+
+  document.querySelector('#factory_playButton').onclick = ()=>{
+    const data = {
+      player: MAIN.game.data.playerData.login,
+      gameID: MAIN.game.data.commonData.id,
+      factory: factory.id,
+    };
+
+    if (!MAIN.game.data.playerData.gameOver) {
+      MAIN.socket.emit('GAME_factory_stop', data);
+    };
+  };
+
+  document.querySelector('#factory_settingsButton').onclick = ()=>{
+    showSettingsSetMenu(factory)
+  };
+
+
 
 
 };
