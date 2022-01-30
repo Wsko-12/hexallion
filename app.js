@@ -672,7 +672,7 @@ class CITY {
   constructor(properties) {
     this.name = properties.name;
     this.game = properties.game;
-    this.balance = properties.game.cityEconomy ? 2000000 : null,
+    this.balance = properties.game.cityEconomy ? 300000 : null,
 
     this.storage = this.createStorage();
 
@@ -1143,6 +1143,9 @@ class FACTORY {
                 quality:this.qualityPoints,
               });
             };
+            if(this.game.cityEconomy){
+              this.game.payToCities(this.stepPrice);
+            };
             this.player.balance -= this.stepPrice;
             this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
             this.productLine[0] = 1;
@@ -1165,6 +1168,9 @@ class FACTORY {
 
               this.turn();
             } else {
+              if(this.game.cityEconomy){
+                this.game.payToCities(this.stepPrice);
+              };
               this.player.balance -= this.stepPrice;
               this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -this.stepPrice);
               this.productLine.unshift(this.productLine.pop());
@@ -1172,6 +1178,9 @@ class FACTORY {
           };
         } else {
           //в хранилище нет места
+          if(this.game.cityEconomy){
+            this.game.payToCities(Math.floor(this.stepPrice/2));
+          };
           this.player.balance -= Math.floor(this.stepPrice/2);
           this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -Math.floor(this.stepPrice/2));
           this.productLine.forEach((item, i) => {
@@ -1229,7 +1238,11 @@ class FACTORY {
                     return product;
                 };
             });
+
             const productionPrice = Math.round(productConfigs.price - (productConfigs.price * (0.15 * this.salaryPoints)));
+            if(this.game.cityEconomy){
+              this.game.payToCities(Math.floor(productionPrice/(this.stockSpeed - this.speedPoints)));
+            };
             this.player.balance -= Math.floor(productionPrice/(this.stockSpeed - this.speedPoints));
             this.player.sendBalanceMessage(`Production on ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, -Math.floor(productionPrice/(this.stockSpeed - this.speedPoints)));
           };
@@ -1304,10 +1317,11 @@ class FACTORY {
         };
 
       }else{
-        if(!auto){
-          this.player.balance -= this.downtimeCost;
-          this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, - this.downtimeCost);
+        if(this.game.cityEconomy){
+          this.game.payToCities(this.downtimeCost);
         };
+        this.player.balance -= this.downtimeCost;
+        this.player.sendBalanceMessage(`Maintenance ${this.name.charAt(0).toUpperCase() + this.name.slice(1)}`, - this.downtimeCost);
       };
     };
   };

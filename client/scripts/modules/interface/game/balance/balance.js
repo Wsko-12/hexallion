@@ -451,5 +451,7 @@ const BALANCE = {
   change,
   updateCreditHistory,
   addBalanceMessage,
+  calculateProductsWorth,
+  
 };
 export {BALANCE};

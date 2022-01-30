@@ -7,7 +7,6 @@ class City{
   constructor(properties){
     this.name = properties.name;
     this.position = properties.position;
-
     this.category = 'city';
     this.storage = this.createStorage();
     this.priceNotification = null;
@@ -54,14 +53,21 @@ class City{
   };
 
   getCurrentProductPrice(product){
+    let price = 0;
     const firstFullCeilIndex = this.storage[product].line.indexOf(1);
     if(firstFullCeilIndex === -1){
-      return this.storage[product].prices[this.storage[product].prices.length - 1];
+      price = this.storage[product].prices[this.storage[product].prices.length - 1];
     }else if(firstFullCeilIndex === 0){
       return 0;
     }else{
-      return this.storage[product].prices[firstFullCeilIndex - 1];
+      price = this.storage[product].prices[firstFullCeilIndex - 1];
     };
+    if(this.balance != null){
+      if(price >= this.balance){
+        price = this.balance;
+      };
+    };
+    return price;
   };
 
 
@@ -74,29 +80,29 @@ class City{
   };
 
 
-  showPrice(product){
-    this.priceNotification = document.querySelector(`#${this.name}_priceNotification`);
-    const price = this.getCurrentProductPrice(product.name);
-    const qualityPrice = Math.round(price + price*((product.quality*15)*0.01));
+  // showPrice(product){
+  //   this.priceNotification = document.querySelector(`#${this.name}_priceNotification`);
+  //   const price = this.getCurrentProductPrice(product.name);
+  //   const qualityPrice = Math.round(price + price*((product.quality*15)*0.01));
+  //
+  //   this.priceNotification.innerHTML = '$'+qualityPrice;
+  // };
 
-    this.priceNotification.innerHTML = '$'+qualityPrice;
-  };
 
-
-  updatePricePosition(){
-    const priceDiv = this.priceNotification;
-
-    const tempV = new THREE.Vector3(this.position.x, 0.5, this.position.z);
-
-    tempV.project(MAIN.renderer.camera);
-
-    // convert the normalized position to CSS coordinates
-    const x = (tempV.x * .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
-    const y = (tempV.y * -.5 + .5) * MAIN.renderer.renderer.domElement.clientHeight;
-
-    // move the elem to that position
-    priceDiv.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
-  };
+  // updatePricePosition(){
+  //   const priceDiv = this.priceNotification;
+  //
+  //   const tempV = new THREE.Vector3(this.position.x, 0.5, this.position.z);
+  //
+  //   tempV.project(MAIN.renderer.camera);
+  //
+  //   // convert the normalized position to CSS coordinates
+  //   const x = (tempV.x * .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
+  //   const y = (tempV.y * -.5 + .5) * MAIN.renderer.renderer.domElement.clientHeight;
+  //
+  //   // move the elem to that position
+  //   priceDiv.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+  // };
 
 };
 
