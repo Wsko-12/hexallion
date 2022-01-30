@@ -84,7 +84,7 @@ const PRODUCTS = {
     category: 'raw',
     manufacture: ['oilWell'],
     //где является ингредиентом
-    ingrediend: ['plastic', 'petrol', 'rubber', 'glue'],
+    ingrediend: ['plastic', 'petrol', 'rubber', 'glue','dye'],
     //из чего производится
     raws: null,
 
@@ -124,7 +124,70 @@ const PRODUCTS = {
       ru: 'бензин',
       eng: 'petrol',
     },
+  },
 
+  glue: {
+    price: 15800,
+    sailSpeed: 4,
+    category: 'hardware',
+    manufacture: ['petrochemicalPlant'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['oil'],
+
+    lang: {
+      ru: 'клей',
+      eng: 'glue',
+    },
+  },
+
+  dye: {
+    price: 15300,
+    sailSpeed: 4,
+    category: 'hardware',
+    manufacture: ['petrochemicalPlant'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['oil'],
+
+    lang: {
+      ru: 'краситель',
+      eng: 'dye',
+    },
+  },
+
+  rubber: {
+    price: 14800,
+    sailSpeed: 4,
+    category: 'hardware',
+    manufacture: ['petrochemicalPlant'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['oil'],
+
+    lang: {
+      ru: 'резина',
+      eng: 'rubber',
+    },
+  },
+
+  plastic: {
+    price: 16300,
+    sailSpeed: 6,
+    category: 'hardware',
+    manufacture: ['petrochemicalPlant'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['oil'],
+
+    lang: {
+      ru: 'пластик',
+      eng: 'plastic',
+    },
   },
 
 

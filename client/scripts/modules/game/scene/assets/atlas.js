@@ -251,6 +251,21 @@ ATLAS.models = [
     file:'factoryBottom.glb',
   },
 
+
+
+
+  { name:'petrochemicalPlant',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
+
+
+
+
+
+
+
   { name:'sawmill',
     folder:'buildings/',
     file:'sawmill.glb',

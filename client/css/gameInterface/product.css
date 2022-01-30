@@ -49,8 +49,8 @@
   background-image: url(../img/product/plastic.png);
 }
 
-.product-paints {
-  background-image: url(../img/product/paints.png);
+.product-dye {
+  background-image: url(../img/product/dye.png);
 }
 
 .product-rubber {
@@ -58,5 +58,5 @@
 }
 
 .product-glue {
-  background-image: url(../img/product/rubber.png);
+  background-image: url(../img/product/glue.png);
 }

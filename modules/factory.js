@@ -96,6 +96,51 @@ const factoriesConfig = {
   },
 
 
+  petrochemicalPlant: {
+    category: 'factory',
+    storage: 2,
+    speed: 5,
+    products: [
+      {
+        name: 'plastic',
+        //цена всего производства
+        price: 9300,
+        raw: ['oil'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+      {
+        name: 'glue',
+        //цена всего производства
+        price: 8900,
+        raw: ['oil'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+      {
+        name: 'dye',
+        //цена всего производства
+        price: 8500,
+        raw: ['oil'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+      {
+        name: 'rubber',
+        //цена всего производства
+        price: 8100,
+        raw: ['oil'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 6000,
+    count: 10,
+
+  },
+
+
 
 
 

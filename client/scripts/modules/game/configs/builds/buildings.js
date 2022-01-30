@@ -145,6 +145,24 @@ const BUILDINGS = {
     },
     buttonColor: '#454758',
   },
+
+
+
+  petrochemicalPlant: {
+    name: 'Petrochemical plant',
+    description: 'Нефтехим завод',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 55875,
+    product: ['glue','dye','rubber','plastic'],
+    raw: ['oil'],
+    category: 'factory',
+    title: {
+      eng: 'petrochemical plant',
+      ru: 'Нефтехим завод',
+    },
+    buttonColor: '#454758',
+  },
 };
 export {
   BUILDINGS

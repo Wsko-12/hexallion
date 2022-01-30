@@ -196,9 +196,15 @@ const LANG = {
       eng: 'Oil mill',
     },
     oilRefinery: {
-      ru: 'нпз',
+      ru: 'нефтеперерабат. заводе',
       eng: 'Oil refinery',
     },
+
+    petrochemicalPlant: {
+      ru: 'нефтехим заводе',
+      eng: 'Petrochemical plant',
+    },
+
     road: {
       ru: 'дороги',
       eng: 'Road',
