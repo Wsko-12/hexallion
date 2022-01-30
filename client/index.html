@@ -6,29 +6,29 @@
   <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
 
   <title>hexallion</title>
-    <link rel="stylesheet" href="./css/master.css">
-    <link rel="stylesheet" href="./css/gameInterface/rooms.css">
+  <link rel="stylesheet" href="./css/master.css">
+  <link rel="stylesheet" href="./css/gameInterface/rooms.css">
 
 
 
-    <link rel="stylesheet" href="./css/gameInterface/gameScreen.css">
-    <link rel="stylesheet" href="./css/gameInterface/auth.css">
+  <link rel="stylesheet" href="./css/gameInterface/gameScreen.css">
+  <link rel="stylesheet" href="./css/gameInterface/auth.css">
 
-    <link rel="stylesheet" href="./css/gameInterface/icons.css">
+  <link rel="stylesheet" href="./css/gameInterface/icons.css">
 
-    <link rel="stylesheet" href="./css/gameInterface/product.css">
+  <link rel="stylesheet" href="./css/gameInterface/product.css">
 
-    <link rel="stylesheet" href="./css/gameInterface/ceilMenu.css">
-    <link rel="stylesheet" href="./css/gameInterface/balance.css">
-    <link rel="stylesheet" href="./css/gameInterface/turn.css">
-    <link rel="stylesheet" href="./css/gameInterface/factory.css">
-    <link rel="stylesheet" href="./css/gameInterface/trucksMenu.css">
-    <link rel="stylesheet" href="./css/gameInterface/path.css">
-    <link rel="stylesheet" href="./css/gameInterface/gameNotifications.css">
-    <link rel="stylesheet" href="./css/gameInterface/creditMenu.css">
-    <link rel="stylesheet" href="./css/gameInterface/city.css">
-    <link rel="stylesheet" href="./css/gameInterface/card.css">
-    <link rel="stylesheet" href="./css/gameInterface/resource.css">
+  <link rel="stylesheet" href="./css/gameInterface/ceilMenu.css">
+  <link rel="stylesheet" href="./css/gameInterface/balance.css">
+  <link rel="stylesheet" href="./css/gameInterface/turn.css">
+  <link rel="stylesheet" href="./css/gameInterface/factory.css">
+  <link rel="stylesheet" href="./css/gameInterface/trucksMenu.css">
+  <link rel="stylesheet" href="./css/gameInterface/path.css">
+  <link rel="stylesheet" href="./css/gameInterface/gameNotifications.css">
+  <link rel="stylesheet" href="./css/gameInterface/creditMenu.css">
+  <link rel="stylesheet" href="./css/gameInterface/city.css">
+  <link rel="stylesheet" href="./css/gameInterface/card.css">
+  <link rel="stylesheet" href="./css/gameInterface/resource.css">
 
 
 
@@ -54,75 +54,73 @@
 
 </body>
 <script>
-  function  generateId(type,x){
-      if(type === undefined){
-        type = 'u'
-      }
-      if(x === undefined){
-        x = 5;
-      }
-      let letters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnPpQqRrSsTtUuVvWwXxYyZz';
+  function generateId(type, x) {
+    if (type === undefined) {
+      type = 'u'
+    }
+    if (x === undefined) {
+      x = 5;
+    }
+    let letters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnPpQqRrSsTtUuVvWwXxYyZz';
 
-      let numbers = '0123456789';
-      let lettersMix,numbersMix;
-      for(let i=0; i<10;i++){
-        lettersMix += letters;
-        numbersMix += numbers;
-      }
+    let numbers = '0123456789';
+    let lettersMix, numbersMix;
+    for (let i = 0; i < 10; i++) {
+      lettersMix += letters;
+      numbersMix += numbers;
+    }
 
-      let mainArr = lettersMix.split('').concat(numbersMix.split(''));
-      let shuffledArr = mainArr.sort(function(){
-                          return Math.random() - 0.5;
-                      });
-      let id = type +'_';
-      for(let i=0; i<=x;i++){
-          id += shuffledArr[i];
-      };
-      return id;
+    let mainArr = lettersMix.split('').concat(numbersMix.split(''));
+    let shuffledArr = mainArr.sort(function() {
+      return Math.random() - 0.5;
+    });
+    let id = type + '_';
+    for (let i = 0; i <= x; i++) {
+      id += shuffledArr[i];
+    };
+    return id;
   };
-
 </script>
 <script type="module">
-    import {
-      MAIN
-    } from './scripts/main.js';
-    import {
-      MODULES
-    } from './scripts/modules.js';
+  import {
+    MAIN
+  } from './scripts/main.js';
+  import {
+    MODULES
+  } from './scripts/modules.js';
 
-    document.addEventListener("DOMContentLoaded", function() {
-      /*
-      * Сразу, как страница у пользователя загрузится, точнее socket.io,
-      * происходит подключение всех модулей
-      *
-      * ну и сразу показываем страницу регистрации
-      * MAIN.interface.auth.showAuthPage();
-      *
-      */
-      MAIN.socket = io();
+  document.addEventListener("DOMContentLoaded", function() {
+    /*
+     * Сразу, как страница у пользователя загрузится, точнее socket.io,
+     * происходит подключение всех модулей
+     *
+     * ну и сразу показываем страницу регистрации
+     * MAIN.interface.auth.showAuthPage();
+     *
+     */
+    MAIN.socket = io();
 
-      if(MAIN.socket){
-        MODULES.init();
-        MAIN.pages.auth.showPage();
+    if (MAIN.socket) {
+      MODULES.init();
+      MAIN.pages.auth.showPage();
 
 
-        /*ДЛЯ ОДНОГО ИГРОКА*/
-       // чтобы быстро перейти к созданию сцены
-        // const data = {
-        //   login:generateId('p',5)
-        // };
-        // MAIN.userData = {
-        //   login:data.login,
-        // };
-        // MAIN.socket.emit('auth',data);
+      /*ДЛЯ ОДНОГО ИГРОКА*/
+      // чтобы быстро перейти к созданию сцены
+      // const data = {
+      //   login:generateId('p',5)
+      // };
+      // MAIN.userData = {
+      //   login:data.login,
+      // };
+      // MAIN.socket.emit('auth',data);
 
-        /*ДЛЯ ОДНОГО ИГРОКА*/
+      /*ДЛЯ ОДНОГО ИГРОКА*/
 
-      }else{
-        console.log('Socket error');
-      };
-    });
-
+    } else {
+      console.log('Socket error');
+    };
+  });
 </script>
 
 </html>

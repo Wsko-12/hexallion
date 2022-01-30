@@ -1,44 +1,44 @@
 const credits = {
-  basic:{
-    title:'basic',
+  basic: {
+    title: 'basic',
     //сколько дадут денег
-    amount:120000,
+    amount: 120000,
 
     //какое кол-во платежей будет
-    pays:25,
+    pays: 25,
     //какое кол-во шагов отсрочка
-    deferment:15,
+    deferment: 15,
     //под какой процент кредит
-    procent:12,
+    procent: 12,
 
   },
 
-  longPause:{
-    title:'long pause',
+  longPause: {
+    title: 'long pause',
 
     //сколько дадут денег
-    amount:120000,
+    amount: 120000,
 
     //какое кол-во платежей будет
-    pays:15,
+    pays: 15,
     //какое кол-во шагов отсрочка
-    deferment:25,
+    deferment: 25,
     //под какой процент кредит
-    procent:18,
+    procent: 18,
 
   },
-  huge:{
-    title:'huge',
+  huge: {
+    title: 'huge',
 
     //сколько дадут денег
-    amount:200000,
+    amount: 200000,
 
     //какое кол-во платежей будет
-    pays:20,
+    pays: 20,
     //какое кол-во шагов отсрочка
-    deferment:18,
+    deferment: 18,
     //под какой процент кредит
-    procent:25,
+    procent: 25,
 
   },
 };

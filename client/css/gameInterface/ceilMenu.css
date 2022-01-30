@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 /* #sectorMenu{
   width: 200px;
   height: 200px;
@@ -117,8 +118,7 @@
 
 
  */
-
- /* #center{
+/* #center{
    z-index: 10;
    width: 20px;
    height: 20px;
@@ -128,93 +128,76 @@
    left: 50%;
    transform: translate(-50%, -50%);
  } */
-
-
-
-#onCeilDoubleClick{
+#onCeilDoubleClick {
   width: 100vw;
   height: 100vh;
   position: fixed;
   pointer-events: none;
   display: block;
   perspective: 500px;
-  -webkit-perspective:500px;
+  -webkit-perspective: 500px;
   display: flex;
 }
 
-
-
-
-
-#sectorMenu{
-
+#sectorMenu {
   display: none;
   z-index: 2;
   margin: auto;
   width: 400px;
   height: 255px;
-
-  -webkit-transform:translateX(25%) rotateX(5deg);
-  transform:translateX(25%) rotateX(5deg);
-
+  -webkit-transform: translateX(25%) rotateX(5deg);
+  transform: translateX(25%) rotateX(5deg);
 }
 
-
-
-.sectorMenu_Left{
+.sectorMenu_Left {
   width: 200px;
   height: 255px;
   display: flex;
-
 }
-.sectorMenu_Top_CentralButton{
+
+.sectorMenu_Top_CentralButton {
   width: 60px;
   height: 60px;
   margin: auto;
   pointer-events: auto;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 60px;
 }
 
-.sectorMenu_Right{
+.sectorMenu_Right {
   width: 170px;
   height: 255px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
 }
-.sectorMenu_button{
+
+.sectorMenu_button {
   pointer-events: auto;
   width: 80px;
   height: 80px;
   flex: 0 0 auto;
   margin: 2px;
   padding: 2px;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  color:white;
+  color: white;
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 14px;
-
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
-.sectorMenu_button_title{
+
+.sectorMenu_button_title {
   width: 100%;
 }
-.sectorMenu_button_price{
+
+.sectorMenu_button_price {
   width: 100%;
   text-align: right;
-
-
 }
 
-
-
-#buildingMenu{
+#buildingMenu {
   pointer-events: auto;
   display: none;
   justify-content: space-around;
@@ -222,56 +205,51 @@
   margin: auto;
   width: 290px;
   height: 90px;
-  -webkit-transform:translateX(30%) rotateX(5deg);
-  transform:translateX(30%) rotateX(5deg);
+  -webkit-transform: translateX(30%) rotateX(5deg);
+  transform: translateX(30%) rotateX(5deg);
   align-items: center;
 }
 
-.buildingMenu_card{
+.buildingMenu_card {
   height: 90px;
   width: 90px;
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-
-
-    color:white;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-size: 13px;
-
-      padding: 2px;
-
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 13px;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.buildingMenu_button{
+
+.buildingMenu_button {
   width: 80px;
   height: 40px;
   flex: 0 0 auto;
   background-color: #EAEAEA;
   display: flex;
-
-  color:#303030;
+  color: #303030;
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 14px;
-
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
   text-transform: uppercase;
 }
-.buildingMenu_button:hover{
-  background-color: #303030;
-  color:white;
 
+.buildingMenu_button:hover {
+  background-color: #303030;
+  color: white;
 }
-.buildingMenu_button-span{
+
+.buildingMenu_button-span {
   margin: auto;
 }
 
-.buildingMenu_card_title{
+.buildingMenu_card_title {
   width: 100%;
 }
-.buildingMenu_card_price{
+
+.buildingMenu_card_price {
   width: 100%;
   text-align: right;
 }

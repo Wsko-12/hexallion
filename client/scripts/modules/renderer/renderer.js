@@ -27,7 +27,9 @@ import {
 import {
   BokehPass
 } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/BokehPass.js';
-import { UnrealBloomPass } from '../../libs/ThreeJsLib/examples/jsm/postprocessing/UnrealBloomPass.js';
+import {
+  UnrealBloomPass
+} from '../../libs/ThreeJsLib/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 
 let clock = new THREE.Clock();
@@ -55,8 +57,8 @@ function init() {
 
   RENDERER.camera = new THREE.PerspectiveCamera(10, 2, 0.2, 500);
   const cameraGUI = MAIN.GUI.addFolder('camera');
-  cameraGUI.add(RENDERER.camera, 'fov', 0, 100).step(1).name('fov').onChange(()=>{
-      RENDERER.camera.updateProjectionMatrix();
+  cameraGUI.add(RENDERER.camera, 'fov', 0, 100).step(1).name('fov').onChange(() => {
+    RENDERER.camera.updateProjectionMatrix();
   });
   RENDERER.camera.position.set(30, 30, 0);
   RENDERER.camera.lookAt(0, 0, 0);
@@ -237,34 +239,34 @@ function init() {
   // RENDERER.composer.addPass(   RENDERER.postrocessors.bokehPass );
 
   const paramsBloom = {
-  				bloomStrength: 1.5,
-  				bloomThreshold: 0.95,
-  				bloomRadius: 1,
-  			};
-  RENDERER.postrocessors.bloomPass = new UnrealBloomPass( RENDERER.uResolution.value );
+    bloomStrength: 1.5,
+    bloomThreshold: 0.95,
+    bloomRadius: 1,
+  };
+  RENDERER.postrocessors.bloomPass = new UnrealBloomPass(RENDERER.uResolution.value);
   RENDERER.postrocessors.threshold = paramsBloom.bloomThreshold;
-	RENDERER.postrocessors.strength = paramsBloom.bloomStrength;
-	RENDERER.postrocessors.radius = paramsBloom.bloomRadius;
-  RENDERER.postrocessors.bloomPass.strength = paramsBloom.bloomStrength ;
+  RENDERER.postrocessors.strength = paramsBloom.bloomStrength;
+  RENDERER.postrocessors.radius = paramsBloom.bloomRadius;
+  RENDERER.postrocessors.bloomPass.strength = paramsBloom.bloomStrength;
   RENDERER.postrocessors.bloomPass.threshold = paramsBloom.bloomThreshold;
   RENDERER.postrocessors.bloomPass.radius = paramsBloom.bloomRadius;
-  RENDERER.composer.addPass( RENDERER.postrocessors.bloomPass );
+  RENDERER.composer.addPass(RENDERER.postrocessors.bloomPass);
 
 
   const bloomPassGUI = postrocessorsGUI.addFolder('bloomPass');
 
 
 
-    bloomPassGUI.add( paramsBloom, 'bloomStrength', 0.0, 3.0 ).onChange( function ( value ) {
-      RENDERER.postrocessors.bloomPass.strength = Number( value );
-    } );
-    bloomPassGUI.add( paramsBloom, 'bloomThreshold', 0.0, 1.0 ).onChange( function ( value ) {
-      RENDERER.postrocessors.bloomPass.threshold = Number( value );
-    } );
+  bloomPassGUI.add(paramsBloom, 'bloomStrength', 0.0, 3.0).onChange(function(value) {
+    RENDERER.postrocessors.bloomPass.strength = Number(value);
+  });
+  bloomPassGUI.add(paramsBloom, 'bloomThreshold', 0.0, 1.0).onChange(function(value) {
+    RENDERER.postrocessors.bloomPass.threshold = Number(value);
+  });
 
-    bloomPassGUI.add( paramsBloom, 'bloomRadius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value ) {
-      RENDERER.postrocessors.bloomPass.radius = Number( value );
-    } );
+  bloomPassGUI.add(paramsBloom, 'bloomRadius', 0.0, 1.0).step(0.01).onChange(function(value) {
+    RENDERER.postrocessors.bloomPass.radius = Number(value);
+  });
 
 
   const postrocessorMerged = {
@@ -307,7 +309,7 @@ function init() {
       uBlue: {
         value: null
       },
-      uShadowWhite:{
+      uShadowWhite: {
         value: null
       }
     },
@@ -443,7 +445,7 @@ function init() {
   //Filter
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0.05;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0.02;
-    RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.1;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.1;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue.value = 0.015;
@@ -504,18 +506,19 @@ function setSize() {
     RENDERER.postrocessors.FXAA.material.uniforms['resolution'].value.y = 1 / (windowHeight * Math.min(window.devicePixelRatio, 2));
   };
   //mobile bug fix
-  MAIN.interface.mouse.x = window.innerWidth/2;
-  MAIN.interface.mouse.y = window.innerHeight/2;
+  MAIN.interface.mouse.x = window.innerWidth / 2;
+  MAIN.interface.mouse.y = window.innerHeight / 2;
 
 };
 let renderShadow = 0;
+
 function render() {
   RENDERER.time = clock.getElapsedTime();
   renderShadow++;
 
-  if(renderShadow === 10){
-      RENDERER.renderer.shadowMap.needsUpdate = true;
-      renderShadow = 0;
+  if (renderShadow === 10) {
+    RENDERER.renderer.shadowMap.needsUpdate = true;
+    renderShadow = 0;
   };
 
   if (MAIN.game.scene) {
@@ -532,33 +535,33 @@ function render() {
   RENDERER.composer.render();
 
   //события должны начать проверяться после того, как все будет готово
-  if(  MAIN.interface.startedCheckEvents){
-     MAIN.interface.checkEvents();
-     MAIN.interface.game.camera.update();
+  if (MAIN.interface.startedCheckEvents) {
+    MAIN.interface.checkEvents();
+    MAIN.interface.game.camera.update();
 
-     if(MAIN.interface.game.city.priceShow){
-       MAIN.interface.game.city.updatePricePosition();
-     };
+    if (MAIN.interface.game.city.priceShow) {
+      MAIN.interface.game.city.updatePricePosition();
+    };
 
-     if(MAIN.interface.game.path.buttonsShowed){
-       MAIN.interface.game.path.moveButtons();
-     };
+    if (MAIN.interface.game.path.buttonsShowed) {
+      MAIN.interface.game.path.moveButtons();
+    };
 
-     if(MAIN.interface.game.path.neederOfProduct.length > 0){
-       MAIN.interface.game.path.moveWhereProductIsNeeded();
-     };
-     if(MAIN.interface.game.path.whereCanSendProduct.length > 0){
-        MAIN.interface.game.path.moveWhereCanSendProduct();
-     };
+    if (MAIN.interface.game.path.neederOfProduct.length > 0) {
+      MAIN.interface.game.path.moveWhereProductIsNeeded();
+    };
+    if (MAIN.interface.game.path.whereCanSendProduct.length > 0) {
+      MAIN.interface.game.path.moveWhereCanSendProduct();
+    };
   };
 
-  if(MAIN.game.data.playerData){
-    for(let factory in MAIN.game.data.playerData.factories){
+  if (MAIN.game.data.playerData) {
+    for (let factory in MAIN.game.data.playerData.factories) {
       const thisFactory = MAIN.game.data.playerData.factories[factory]
       thisFactory.updateNotificationPosition();
     };
-    for(let truck in MAIN.game.data.playerData.trucks){
-      const thisTruck= MAIN.game.data.playerData.trucks[truck]
+    for (let truck in MAIN.game.data.playerData.trucks) {
+      const thisTruck = MAIN.game.data.playerData.trucks[truck]
       thisTruck.updateNotificationPosition();
     };
   };

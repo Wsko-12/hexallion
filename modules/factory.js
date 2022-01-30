@@ -1,74 +1,73 @@
-
 const COASTS = require('./coasts.js');
 
 
 const factoriesConfig = {
   sandMine: {
-    category:'mining',
+    category: 'mining',
     //минимум 4 из-за прокачки
-    speed:4,
-    storage:2,
+    speed: 4,
+    storage: 2,
     //полная цена производства
-    price:COASTS.products.sand.productionPrice,
-    product:'sand',
-    count:14,
+    price: COASTS.products.sand.productionPrice,
+    product: 'sand',
+    count: 14,
   },
 
   waterStation: {
-    category:'mining',
+    category: 'mining',
     //минимум 4 из-за прокачки
-    speed:5,
-    storage:2,
+    speed: 5,
+    storage: 2,
     //полная цена производства
-    price:COASTS.products.water.productionPrice,
-    product:'water',
-    count:12,
+    price: COASTS.products.water.productionPrice,
+    product: 'water',
+    count: 12,
   },
 
 
   sawmill: {
-    category:'mining',
+    category: 'mining',
     //минимум 4 из-за прокачки
-    speed:6,
-    storage:2,
+    speed: 6,
+    storage: 2,
     //полная цена производства
-    price:COASTS.products.wood.productionPrice,
-    product:'wood',
-    count:10,
+    price: COASTS.products.wood.productionPrice,
+    product: 'wood',
+    count: 10,
   },
 
 
   steelMill: {
-    category:'mining',
+    category: 'mining',
     //минимум 4 из-за прокачки
-    speed:7,
-    storage:2,
+    speed: 7,
+    storage: 2,
     //полная цена производства
-    price:COASTS.products.steel.productionPrice,
-    product:'steel',
-    count:8,
+    price: COASTS.products.steel.productionPrice,
+    product: 'steel',
+    count: 8,
   },
 
-  oilWell:{
-    category:'mining',
+  oilWell: {
+    category: 'mining',
     //минимум 4 из-за прокачки
-    speed:4,
-    storage:2,
+    speed: 4,
+    storage: 2,
     //полная цена производства
-    price:COASTS.products.oil.productionPrice,
-    product:'oil',
-    count:14,
+    price: COASTS.products.oil.productionPrice,
+    product: 'oil',
+    count: 14,
   },
 
   goldMill: {
-    category:'mining',
+    category: 'mining',
     //минимум 4 из-за прокачки
-    speed:8,
-    storage:2,
+    speed: 8,
+    storage: 2,
     //полная цена производства
-    price:COASTS.products.gold.productionPrice,
-    product:'gold',
-    count:4,
+    price: COASTS.products.gold.productionPrice,
+    product: 'gold',
+    count: 4,
   },
 
 
@@ -78,39 +77,21 @@ const factoriesConfig = {
 
 
 
-  oilRefinery:{
-    category:'factory',
-    storage:2,
-    speed:5,
-    products:[
-      {
-        name:'petrol',
-        //цена всего производства
-        price:11700,
-        raw:['oil'],
-        //сколько приозведется ресурса за раз
-        productionVolume:2,
-      },
-      {
-        name:'plastic',
-        //цена всего производства
-        price:11700,
-        raw:['oil'],
-        //сколько приозведется ресурса за раз
-        productionVolume:2,
-      },
-      {
-        name:'paints',
-        //цена всего производства
-        price:11700,
-        raw:['oil'],
-        //сколько приозведется ресурса за раз
-        productionVolume:2,
-      },
-    ],
+  oilRefinery: {
+    category: 'factory',
+    storage: 2,
+    speed: 5,
+    products: [{
+      name: 'petrol',
+      //цена всего производства
+      price: 11700,
+      raw: ['oil'],
+      //сколько приозведется ресурса за раз
+      productionVolume: 2,
+    }, ],
     //цена простоя
-    downtimeCost:6000,
-    count:10,
+    downtimeCost: 6000,
+    count: 10,
 
   },
 

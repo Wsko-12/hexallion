@@ -1,14 +1,15 @@
-.product-icon{
+.product-icon {
   background-size: cover;
   width: 20px;
   height: 20px;
 }
-.product-qualityContainer{
+
+.product-qualityContainer {
   display: flex;
   align-items: center;
-
 }
-.product-quality{
+
+.product-quality {
   width: 3px;
   height: 3px;
   border-radius: 3px;
@@ -16,44 +17,46 @@
   margin: 0px 1px;
 }
 
-
-.product-sand{
+.product-sand {
   background-image: url(../img/product/sand.png);
 }
-.product-water{
+
+.product-water {
   background-image: url(../img/product/water.png);
 }
-.product-wood{
+
+.product-wood {
   background-image: url(../img/product/wood.png);
 }
-.product-steel{
+
+.product-steel {
   background-image: url(../img/product/steel.png);
 }
-.product-gold{
+
+.product-gold {
   background-image: url(../img/product/gold.png);
 }
-.product-oil{
+
+.product-oil {
   background-image: url(../img/product/oil.png);
 }
 
-
-
-.product-petrol{
+.product-petrol {
   background-image: url(../img/product/petrol.png);
 }
 
-
-
-
-.product-plastic{
+.product-plastic {
   background-image: url(../img/product/plastic.png);
 }
-.product-paints{
+
+.product-paints {
   background-image: url(../img/product/paints.png);
 }
-.product-rubber{
+
+.product-rubber {
   background-image: url(../img/product/rubber.png);
 }
-.product-glue{
+
+.product-glue {
   background-image: url(../img/product/rubber.png);
 }

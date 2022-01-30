@@ -7,14 +7,14 @@ import {
 
 const ROOMS = {
 
-  showPage(){
+  showPage() {
     MAIN.pages.screen.innerHTML = '';
 
     const room = {
-      maxMembers:1,
-      turnBasedGame:true,
-      turnTime:30,
-      tickTime:30,
+      maxMembers: 1,
+      turnBasedGame: true,
+      turnTime: 30,
+      tickTime: 30,
     };
 
 
@@ -65,219 +65,271 @@ const ROOMS = {
       </div>
     `
 
-      MAIN.pages.screen.insertAdjacentHTML('beforeEnd',page);
+    MAIN.pages.screen.insertAdjacentHTML('beforeEnd', page);
 
 
-      function changePlayers(plus){
-        if(plus){
-          if(room.maxMembers < 4){
-            room.maxMembers++;
-          }
-        }else{
-          if(room.maxMembers > 1){
-            room.maxMembers--;
-          };
-        };
-        document.querySelector('#roomCard-players-value').innerHTML = '0'+room.maxMembers;
-      };
-
-      MAIN.interface.deleteTouches(document.querySelector('#roomCard-players-plus'));
-      MAIN.interface.deleteTouches(document.querySelector('#roomCard-players-minus'));
-
-      document.querySelector('#roomCard-players-plus').onclick = () => {changePlayers(true)};
-      document.querySelector('#roomCard-players-minus').onclick = () => {changePlayers(false)};
-      document.querySelector('#roomCard-players-plus').ontouchstart = () => {changePlayers(true)};
-      document.querySelector('#roomCard-players-minus').ontouchstart = () => {changePlayers(false)};
-
-
-
-      MAIN.interface.deleteTouches(document.querySelector('#roomCard-turn-plus'));
-      MAIN.interface.deleteTouches(document.querySelector('#roomCard-turn-minus'));
-
-
-      function changeTurnTime(plus){
-        if(plus){
-          if(room.turnTime < 90){
-            room.turnTime+= 10;
-          }
-        }else{
-          if(room.turnTime > 30){
-            room.turnTime -= 10;
-          };
-        };
-        document.querySelector('#roomCard-turn-value').innerHTML = room.turnTime + 's';
-      };
-
-      function changeTickTime(plus){
-        if(plus){
-          if(room.tickTime < 90){
-            room.tickTime+= 10;
-          }
-        }else{
-          if(room.tickTime > 30){
-            room.tickTime -= 10;
-          };
-        };
-        document.querySelector('#roomCard-turn-value').innerHTML = room.tickTime + 's';
-      };
-
-      document.querySelector('#roomCard-turns-value').onchange = (e)=>{
-        document.querySelector('#roomCard-turn-plus').onclick = null;
-        document.querySelector('#roomCard-turn-minus').onclick = null;
-        document.querySelector('#roomCard-turn-plus').ontouchstart = null;
-        document.querySelector('#roomCard-turn-minus').ontouchstart = null;
-
-        if(e.target.checked){
-          room.turnBasedGame = true;
-          document.querySelector('#roomCard-turn-title').innerHTML = 'Turns time:';
-
-          document.querySelector('#roomCard-turn-plus').onclick = () => {changeTurnTime(true)};
-          document.querySelector('#roomCard-turn-minus').onclick = () => {changeTurnTime(false)};
-          document.querySelector('#roomCard-turn-plus').ontouchstart = () => {changeTurnTime(true)};
-          document.querySelector('#roomCard-turn-minus').ontouchstart = () => {changeTurnTime(false)};
-
-
-          document.querySelector('#roomCard-turn-value').innerHTML = room.turnTime + 's';
-
-
-        }else{
-          room.turnBasedGame = false;
-          document.querySelector('#roomCard-turn-title').innerHTML = 'Tick time:';
-
-
-          document.querySelector('#roomCard-turn-plus').onclick = () => {changeTickTime(true)};
-          document.querySelector('#roomCard-turn-minus').onclick = () => {changeTickTime(false)};
-          document.querySelector('#roomCard-turn-plus').ontouchstart = () => {changeTickTime(true)};
-          document.querySelector('#roomCard-turn-minus').ontouchstart = () => {changeTickTime(false)};
-
-
-          document.querySelector('#roomCard-turn-value').innerHTML = room.tickTime + 's';
+    function changePlayers(plus) {
+      if (plus) {
+        if (room.maxMembers < 4) {
+          room.maxMembers++;
+        }
+      } else {
+        if (room.maxMembers > 1) {
+          room.maxMembers--;
         };
       };
+      document.querySelector('#roomCard-players-value').innerHTML = '0' + room.maxMembers;
+    };
+
+    MAIN.interface.deleteTouches(document.querySelector('#roomCard-players-plus'));
+    MAIN.interface.deleteTouches(document.querySelector('#roomCard-players-minus'));
+
+    document.querySelector('#roomCard-players-plus').onclick = () => {
+      changePlayers(true)
+    };
+    document.querySelector('#roomCard-players-minus').onclick = () => {
+      changePlayers(false)
+    };
+    document.querySelector('#roomCard-players-plus').ontouchstart = () => {
+      changePlayers(true)
+    };
+    document.querySelector('#roomCard-players-minus').ontouchstart = () => {
+      changePlayers(false)
+    };
 
 
 
-      //сразу вешаем на time plus и minus
-      if(room.turnBasedGame){
+    MAIN.interface.deleteTouches(document.querySelector('#roomCard-turn-plus'));
+    MAIN.interface.deleteTouches(document.querySelector('#roomCard-turn-minus'));
+
+
+    function changeTurnTime(plus) {
+      if (plus) {
+        if (room.turnTime < 90) {
+          room.turnTime += 10;
+        }
+      } else {
+        if (room.turnTime > 30) {
+          room.turnTime -= 10;
+        };
+      };
+      document.querySelector('#roomCard-turn-value').innerHTML = room.turnTime + 's';
+    };
+
+    function changeTickTime(plus) {
+      if (plus) {
+        if (room.tickTime < 90) {
+          room.tickTime += 10;
+        }
+      } else {
+        if (room.tickTime > 30) {
+          room.tickTime -= 10;
+        };
+      };
+      document.querySelector('#roomCard-turn-value').innerHTML = room.tickTime + 's';
+    };
+
+    document.querySelector('#roomCard-turns-value').onchange = (e) => {
+      document.querySelector('#roomCard-turn-plus').onclick = null;
+      document.querySelector('#roomCard-turn-minus').onclick = null;
+      document.querySelector('#roomCard-turn-plus').ontouchstart = null;
+      document.querySelector('#roomCard-turn-minus').ontouchstart = null;
+
+      if (e.target.checked) {
+        room.turnBasedGame = true;
         document.querySelector('#roomCard-turn-title').innerHTML = 'Turns time:';
 
-        document.querySelector('#roomCard-turn-plus').onclick = () => {changeTurnTime(true)};
-        document.querySelector('#roomCard-turn-minus').onclick = () => {changeTurnTime(false)};
-        document.querySelector('#roomCard-turn-plus').ontouchstart = () => {changeTurnTime(true)};
-        document.querySelector('#roomCard-turn-minus').ontouchstart = () => {changeTurnTime(false)};
+        document.querySelector('#roomCard-turn-plus').onclick = () => {
+          changeTurnTime(true)
+        };
+        document.querySelector('#roomCard-turn-minus').onclick = () => {
+          changeTurnTime(false)
+        };
+        document.querySelector('#roomCard-turn-plus').ontouchstart = () => {
+          changeTurnTime(true)
+        };
+        document.querySelector('#roomCard-turn-minus').ontouchstart = () => {
+          changeTurnTime(false)
+        };
 
 
         document.querySelector('#roomCard-turn-value').innerHTML = room.turnTime + 's';
 
 
-      }else{
+      } else {
+        room.turnBasedGame = false;
         document.querySelector('#roomCard-turn-title').innerHTML = 'Tick time:';
 
 
-        document.querySelector('#roomCard-turn-plus').onclick = () => {changeTickTime(true)};
-        document.querySelector('#roomCard-turn-minus').onclick = () => {changeTickTime(false)};
-        document.querySelector('#roomCard-turn-plus').ontouchstart = () => {changeTickTime(true)};
-        document.querySelector('#roomCard-turn-minus').ontouchstart = () => {changeTickTime(false)};
+        document.querySelector('#roomCard-turn-plus').onclick = () => {
+          changeTickTime(true)
+        };
+        document.querySelector('#roomCard-turn-minus').onclick = () => {
+          changeTickTime(false)
+        };
+        document.querySelector('#roomCard-turn-plus').ontouchstart = () => {
+          changeTickTime(true)
+        };
+        document.querySelector('#roomCard-turn-minus').ontouchstart = () => {
+          changeTickTime(false)
+        };
 
 
         document.querySelector('#roomCard-turn-value').innerHTML = room.tickTime + 's';
       };
+    };
 
 
-      function createRoom(){
-        document.querySelector('#createRoomCard').style.display = 'none';
-        room.owner = MAIN.userData.login;
-        MAIN.socket.emit('LOBBY_room_create',room);
+
+    //сразу вешаем на time plus и minus
+    if (room.turnBasedGame) {
+      document.querySelector('#roomCard-turn-title').innerHTML = 'Turns time:';
+
+      document.querySelector('#roomCard-turn-plus').onclick = () => {
+        changeTurnTime(true)
+      };
+      document.querySelector('#roomCard-turn-minus').onclick = () => {
+        changeTurnTime(false)
+      };
+      document.querySelector('#roomCard-turn-plus').ontouchstart = () => {
+        changeTurnTime(true)
+      };
+      document.querySelector('#roomCard-turn-minus').ontouchstart = () => {
+        changeTurnTime(false)
       };
 
 
-      document.querySelector('#createRoomButton').onclick = () => {createRoom()};
-      document.querySelector('#createRoomButton').ontouchstart = () => {createRoom()};
+      document.querySelector('#roomCard-turn-value').innerHTML = room.turnTime + 's';
+
+
+    } else {
+      document.querySelector('#roomCard-turn-title').innerHTML = 'Tick time:';
+
+
+      document.querySelector('#roomCard-turn-plus').onclick = () => {
+        changeTickTime(true)
+      };
+      document.querySelector('#roomCard-turn-minus').onclick = () => {
+        changeTickTime(false)
+      };
+      document.querySelector('#roomCard-turn-plus').ontouchstart = () => {
+        changeTickTime(true)
+      };
+      document.querySelector('#roomCard-turn-minus').ontouchstart = () => {
+        changeTickTime(false)
+      };
+
+
+      document.querySelector('#roomCard-turn-value').innerHTML = room.tickTime + 's';
+    };
+
+
+    function createRoom() {
+      document.querySelector('#createRoomCard').style.display = 'none';
+      room.owner = MAIN.userData.login;
+      MAIN.socket.emit('LOBBY_room_create', room);
+    };
+
+
+    document.querySelector('#createRoomButton').onclick = () => {
+      createRoom()
+    };
+    document.querySelector('#createRoomButton').ontouchstart = () => {
+      createRoom()
+    };
   },
 
-  showedRooms:{
+  showedRooms: {
 
   },
 
-  deleteRoom(id){
-    if(document.querySelector(`#${id}`)){
+  deleteRoom(id) {
+    if (document.querySelector(`#${id}`)) {
       document.querySelector(`#${id}`).remove();
     };
     delete this.showedRooms[id];
   },
 
-  updateRoom(data){
-    if(MAIN.userData.inRoom){
+  updateRoom(data) {
+    if (MAIN.userData.inRoom) {
       document.querySelector('#createRoomCard').style.display = 'none';
-    }else{
+    } else {
       document.querySelector('#createRoomCard').style.display = 'block';
     };
 
     let players = '';
     data.members.forEach((item, i) => {
       let color = '#303030';
-      if(item === MAIN.userData.login){
+      if (item === MAIN.userData.login) {
         color = '#ff3939';
       };
       players += `<div class='room-card-players-list-item' style = 'color:${color}'>${item}</div>`;
     });
 
     let button = '';
-    if(MAIN.userData.inRoom === data.id){
+    if (MAIN.userData.inRoom === data.id) {
       button = `<span style='margin:auto'>Leave</span>`;
-    }else{
+    } else {
       button = `<span style='margin:auto'>Join</span>`;
     };
 
-    if(document.querySelector(`#${data.id}_players`)){
-        document.querySelector(`#${data.id}_players`).innerHTML = players;
-        document.querySelector(`#${data.id}_button`).innerHTML = button;
+    if (document.querySelector(`#${data.id}_players`)) {
+      document.querySelector(`#${data.id}_players`).innerHTML = players;
+      document.querySelector(`#${data.id}_button`).innerHTML = button;
     };
 
-    function leaveRoom(){
+    function leaveRoom() {
       const data = {
-        player:MAIN.userData.login,
-        room:MAIN.userData.inRoom,
+        player: MAIN.userData.login,
+        room: MAIN.userData.inRoom,
       };
-      MAIN.socket.emit('LOBBY_userLeaveRoom',data);
+      MAIN.socket.emit('LOBBY_userLeaveRoom', data);
     };
 
-    function joinRoom(){
-      if(MAIN.userData.inRoom){
+    function joinRoom() {
+      if (MAIN.userData.inRoom) {
         leaveRoom();
       };
-      setTimeout(()=>{
+      setTimeout(() => {
         const sendData = {
-          player:MAIN.userData.login,
-          room:data.id,
+          player: MAIN.userData.login,
+          room: data.id,
         };
         console.log(sendData)
-        MAIN.socket.emit('LOBBY_userJoinRoom',sendData);
-      },100);
+        MAIN.socket.emit('LOBBY_userJoinRoom', sendData);
+      }, 100);
     };
 
-    if(MAIN.userData.inRoom === data.id){
-      if(document.querySelector(`#${data.id}_button`)){
-        document.querySelector(`#${data.id}_button`).onclick = ()=>{leaveRoom()};
-        document.querySelector(`#${data.id}_button`).ontouchstart = ()=>{leaveRoom()};
+    if (MAIN.userData.inRoom === data.id) {
+      if (document.querySelector(`#${data.id}_button`)) {
+        document.querySelector(`#${data.id}_button`).onclick = () => {
+          leaveRoom()
+        };
+        document.querySelector(`#${data.id}_button`).ontouchstart = () => {
+          leaveRoom()
+        };
       };
-    }else{
-      if(document.querySelector(`#${data.id}_button`)){
-        document.querySelector(`#${data.id}_button`).onclick = ()=>{joinRoom()};
-        document.querySelector(`#${data.id}_button`).ontouchstart = ()=>{joinRoom()};
+    } else {
+      if (document.querySelector(`#${data.id}_button`)) {
+        document.querySelector(`#${data.id}_button`).onclick = () => {
+          joinRoom()
+        };
+        document.querySelector(`#${data.id}_button`).ontouchstart = () => {
+          joinRoom()
+        };
       };
     };
 
 
   },
 
-  createRoom(data){
+  createRoom(data) {
     this.showedRooms[data.id] = data;
 
     let players = '';
     data.members.forEach((item, i) => {
       let color = '#303030';
-      if(item === MAIN.userData.login){
+      if (item === MAIN.userData.login) {
         color = '#ff3939';
       };
       players += `<div class='room-card-players-list-item' style = 'color:${color}'>${item}</div>`;
@@ -286,9 +338,9 @@ const ROOMS = {
 
     let button = '';
 
-    if(MAIN.userData.inRoom === data.id){
+    if (MAIN.userData.inRoom === data.id) {
       button = `<div id="${data.id}_button" class="room-card-button"><span style='margin:auto'>Leave</span></div>`;
-    }else{
+    } else {
       button = `<div id="${data.id}_button" class="room-card-button"><span style='margin:auto'>Join</span></div>`;
     };
     const room = `
@@ -303,46 +355,54 @@ const ROOMS = {
     `
 
 
-    document.querySelector('#roomsList').insertAdjacentHTML('beforeEnd',room);
+    document.querySelector('#roomsList').insertAdjacentHTML('beforeEnd', room);
 
 
-    function leaveRoom(){
+    function leaveRoom() {
       const data = {
-        player:MAIN.userData.login,
-        room:MAIN.userData.inRoom,
+        player: MAIN.userData.login,
+        room: MAIN.userData.inRoom,
       };
-      MAIN.socket.emit('LOBBY_userLeaveRoom',data);
+      MAIN.socket.emit('LOBBY_userLeaveRoom', data);
     };
 
-    function joinRoom(){
-      if(MAIN.userData.inRoom){
+    function joinRoom() {
+      if (MAIN.userData.inRoom) {
         leaveRoom();
       };
-      setTimeout(()=>{
+      setTimeout(() => {
         const sendData = {
-          player:MAIN.userData.login,
-          room:data.id,
+          player: MAIN.userData.login,
+          room: data.id,
         };
-        MAIN.socket.emit('LOBBY_userJoinRoom',sendData);
-      },100);
+        MAIN.socket.emit('LOBBY_userJoinRoom', sendData);
+      }, 100);
     };
 
-    if(MAIN.userData.inRoom === data.id){
-      document.querySelector(`#${data.id}_button`).onclick = ()=>{leaveRoom()};
-      document.querySelector(`#${data.id}_button`).ontouchstart = ()=>{leaveRoom()};
+    if (MAIN.userData.inRoom === data.id) {
+      document.querySelector(`#${data.id}_button`).onclick = () => {
+        leaveRoom()
+      };
+      document.querySelector(`#${data.id}_button`).ontouchstart = () => {
+        leaveRoom()
+      };
 
-    }else{
-      document.querySelector(`#${data.id}_button`).onclick = ()=>{joinRoom()};
-      document.querySelector(`#${data.id}_button`).ontouchstart = ()=>{joinRoom()};
+    } else {
+      document.querySelector(`#${data.id}_button`).onclick = () => {
+        joinRoom()
+      };
+      document.querySelector(`#${data.id}_button`).ontouchstart = () => {
+        joinRoom()
+      };
     };
   },
 
-  updatePage(data){
-    for(let room in this.showedRooms){
+  updatePage(data) {
+    for (let room in this.showedRooms) {
       const index = data.indexOf(room);
-      if(index === -1){
+      if (index === -1) {
         this.deleteRoom(room);
-      }else{
+      } else {
         this.updateRoom(data[index]);
       };
     };
@@ -350,7 +410,7 @@ const ROOMS = {
 
 
     data.forEach((item, i) => {
-      if(!this.showedRooms[item.id]){
+      if (!this.showedRooms[item.id]) {
         this.createRoom(item);
       };
     });

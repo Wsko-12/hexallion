@@ -1,46 +1,50 @@
-.icon{
+.icon {
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.icon-truck{
+
+.icon-truck {
   background-image: url(../img/icons/truck.png);
 }
 
-.icon-table{
+.icon-table {
   background-image: url(../img/icons/table.png);
 }
 
-
-.icon-move{
+.icon-move {
   background-image: url(../img/icons/move.png);
 }
-.icon-delivery{
+
+.icon-delivery {
   background-image: url(../img/icons/delivery.png);
 }
-.icon-money{
+
+.icon-money {
   background-image: url(../img/icons/money.png);
 }
 
-.icon-bestPrice{
+.icon-bestPrice {
   background-image: url(../img/icons/bestPrice.png);
 }
-.icon-findRoute{
+
+.icon-findRoute {
   background-image: url(../img/icons/findRoute.png);
 }
 
-
-
-.icon-play{
+.icon-play {
   background-image: url(../img/icons/play.png);
 }
-.icon-pause{
+
+.icon-pause {
   background-image: url(../img/icons/pause.png);
 }
-.icon-settings{
+
+.icon-settings {
   background-image: url(../img/icons/settings.png);
 }
-.icon-cancel{
+
+.icon-cancel {
   background-image: url(../img/icons/cancel.png);
 }

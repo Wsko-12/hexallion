@@ -16,75 +16,80 @@ import {
 //плавающая функция, которая можно включать и она будет вызываться при даблклике на экране
 //передается в нее объект который попал под raycaster
 const dobleClickFunction = {
-  standard:true,
-  function:null,
+  standard: true,
+  function: null,
 }
 
-function pushRaycast(click){
-  const mouse = {x:0,y:0};
-  mouse.x = ( INTERFACE.mouse.x / window.innerWidth ) * 2 - 1;
-  mouse.y = - ( INTERFACE.mouse.y / window.innerHeight ) * 2 + 1;
+function pushRaycast(click) {
+  const mouse = {
+    x: 0,
+    y: 0
+  };
+  mouse.x = (INTERFACE.mouse.x / window.innerWidth) * 2 - 1;
+  mouse.y = -(INTERFACE.mouse.y / window.innerHeight) * 2 + 1;
   MAIN.renderer.raycaster.setFromCamera(mouse, MAIN.renderer.camera);
-  const intersects = MAIN.renderer.raycaster.intersectObjects( MAIN.game.scene.hitBoxGroup.children  );
-  if(intersects[0]){
-      if(dobleClickFunction.standard){
-        INTERFACE.game.camera.moveCameraTo(  intersects[0].object.userData.position);
-        intersects[0].object.userData.onClick(intersects[0].point);
-      }else{
-        dobleClickFunction.function(intersects[0].object)
-      };
+  const intersects = MAIN.renderer.raycaster.intersectObjects(MAIN.game.scene.hitBoxGroup.children);
+  if (intersects[0]) {
+    if (dobleClickFunction.standard) {
+      INTERFACE.game.camera.moveCameraTo(intersects[0].object.userData.position);
+      intersects[0].object.userData.onClick(intersects[0].point);
+    } else {
+      dobleClickFunction.function(intersects[0].object)
+    };
   };
 };
-function returnTouches(elem){
-  elem.addEventListener('wheel',(event) => {
+
+function returnTouches(elem) {
+  elem.addEventListener('wheel', (event) => {
     event.stopPropagation();
 
   });
 
-  elem.addEventListener('mousedown',(event)=>{
+  elem.addEventListener('mousedown', (event) => {
     event.stopPropagation();
 
   });
 
-  elem.addEventListener('contextmenu',(event)=>{
+  elem.addEventListener('contextmenu', (event) => {
     event.stopPropagation();
 
   });
 
-  elem.addEventListener('dblclick',(event)=>{
+  elem.addEventListener('dblclick', (event) => {
     event.stopPropagation();
 
   });
-  elem.addEventListener('touchstart',(event)=>{
+  elem.addEventListener('touchstart', (event) => {
     event.stopPropagation();
 
   });
 
-  elem.addEventListener('touchmove',(event)=>{
+  elem.addEventListener('touchmove', (event) => {
     event.stopPropagation();
   });
 };
-function deleteTouches(elem){
-  elem.addEventListener('wheel',(event) => {
+
+function deleteTouches(elem) {
+  elem.addEventListener('wheel', (event) => {
     event.preventDefault();
   });
 
-  elem.addEventListener('mousedown',(event)=>{
+  elem.addEventListener('mousedown', (event) => {
     event.preventDefault();
   });
 
-  elem.addEventListener('contextmenu',(event)=>{
+  elem.addEventListener('contextmenu', (event) => {
     event.preventDefault();
   });
 
-  elem.addEventListener('dblclick',(event)=>{
+  elem.addEventListener('dblclick', (event) => {
     event.preventDefault();
   });
-  elem.addEventListener('touchstart',(event)=>{
+  elem.addEventListener('touchstart', (event) => {
     event.preventDefault();
   });
 
-  elem.addEventListener('touchmove',(event)=>{
+  elem.addEventListener('touchmove', (event) => {
     event.preventDefault();
   });
 };
@@ -107,12 +112,12 @@ function init() {
   });
   target.addEventListener('mousedown', function(event) {
     INTERFACE.game.ceilMenu.hideSectorMenu();
-    if(MAIN.game.scene.temporaryHexMesh){
+    if (MAIN.game.scene.temporaryHexMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
       MAIN.game.scene.temporaryHexMesh.geometry.dispose();
       MAIN.game.scene.temporaryHexMesh.material.dispose();
     };
-    if(MAIN.game.scene.temporarySectorMesh){
+    if (MAIN.game.scene.temporarySectorMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
       MAIN.game.scene.temporarySectorMesh.geometry.dispose();
       MAIN.game.scene.temporarySectorMesh.material.dispose();
@@ -139,7 +144,7 @@ function init() {
       INTERFACE.mouse.context = false;
     };
   });
-  target.addEventListener('dblclick',function(event){
+  target.addEventListener('dblclick', function(event) {
     INTERFACE.game.ceilMenu.hideSectorMenu();
     event.preventDefault();
     pushRaycast();
@@ -157,12 +162,12 @@ function init() {
 
   target.addEventListener('touchstart', function(event) {
     INTERFACE.game.ceilMenu.hideSectorMenu();
-    if(MAIN.game.scene.temporaryHexMesh){
+    if (MAIN.game.scene.temporaryHexMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
       MAIN.game.scene.temporaryHexMesh.geometry.dispose();
       MAIN.game.scene.temporaryHexMesh.material.dispose();
     };
-    if(MAIN.game.scene.temporarySectorMesh){
+    if (MAIN.game.scene.temporarySectorMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
       MAIN.game.scene.temporarySectorMesh.geometry.dispose();
       MAIN.game.scene.temporarySectorMesh.material.dispose();
@@ -186,14 +191,13 @@ function init() {
       INTERFACE.touch.shift.x = event.targetTouches[0].pageX;
       INTERFACE.touch.shift.y = event.targetTouches[0].pageY;
 
-      if((Date.now() - INTERFACE.touch.lastTime) < 250){
-        target.dispatchEvent(new CustomEvent("touchDoubleClick", {
-        }));
+      if ((Date.now() - INTERFACE.touch.lastTime) < 250) {
+        target.dispatchEvent(new CustomEvent("touchDoubleClick", {}));
       };
       INTERFACE.touch.lastTime = Date.now();
     };
   });
-  target.addEventListener('touchDoubleClick',function(event){
+  target.addEventListener('touchDoubleClick', function(event) {
     event.preventDefault();
     pushRaycast();
   });
@@ -211,7 +215,7 @@ function init() {
       INTERFACE.touch.length = length;
 
       if (deltaLength >= INTERFACE.touch.maxDivergence * (-1) && deltaLength <= INTERFACE.touch.maxDivergence) {
-        if(!INTERFACE.touch.zooming ){
+        if (!INTERFACE.touch.zooming) {
 
 
           const valueX = event.targetTouches[0].pageX - INTERFACE.touch.shift.x;
@@ -219,18 +223,18 @@ function init() {
 
           //баг скачков
           if (valueX > -100 && valueX < 100) {
-            if(valueX <-3 || valueX > 3){
+            if (valueX < -3 || valueX > 3) {
               INTERFACE.game.camera.rotate(-valueX * 0.5);
             };
           };
           if (valueY > -100 && valueY < 100) {
-            if(valueY <-3 || valueY > 3){
+            if (valueY < -3 || valueY > 3) {
               INTERFACE.game.camera.shifts.z = -valueY * 0.01;
-            }else{
+            } else {
               //чтобы не поднималос когда 2 пальца не отпущены
               INTERFACE.game.camera.shifts.z = 0;
             };
-          }else{
+          } else {
             INTERFACE.game.camera.shifts.z = 0;
           };
 
@@ -327,7 +331,7 @@ function checkEvents() {
 
 
 const INTERFACE = {
-  lang:LANG,
+  lang: LANG,
   deleteTouches,
   returnTouches,
   init,
@@ -350,10 +354,10 @@ const INTERFACE = {
   touch: {
     single: false,
     double: false,
-    zooming:false,
+    zooming: false,
     length: 0,
     maxDivergence: 15,
-    lastTime:Date.now(),
+    lastTime: Date.now(),
     shift: {
       x: 0,
       y: 0,
@@ -368,7 +372,7 @@ const INTERFACE = {
     },
   },
 
-  sectorMenuIsDisplayed:{
+  sectorMenuIsDisplayed: {
 
   },
 

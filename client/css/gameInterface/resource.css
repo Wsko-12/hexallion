@@ -1,31 +1,29 @@
-
-.resource-hole{
+.resource-hole {
   width: 24px;
   height: 24px;
   background-color: #E1E1E1;
   box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
-  flex:0 0 auto;
+  flex: 0 0 auto;
   margin-right: 4px;
 }
 
-.resource-gag{
+.resource-gag {
   width: 24px;
   height: 24px;
   padding: 2px;
-  color:white;
+  color: white;
   flex: 0 0 auto;
   font-weight: normal;
   margin-right: 4px;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25);
-
 }
 
-.resource-gag-title{
+.resource-gag-title {
   width: 100%;
   font-size: 5px;
 }
 
-.resource-gag-quality{
+.resource-gag-quality {
   position: relative;
   width: 100%;
   text-align: right;
@@ -33,7 +31,7 @@
   font-size: 5px;
 }
 
-.quality-hole{
+.quality-hole {
   width: 24px;
   height: 24px;
   border-radius: 24px;
@@ -42,7 +40,8 @@
   margin: 2px;
   flex: 0 0 auto;
 }
-.quality-gag{
+
+.quality-gag {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
@@ -52,63 +51,58 @@
   margin: 2px;
 }
 
-
-.resource-bg-color-wood{
+.resource-bg-color-wood {
   background-color: #887265;
 }
 
-.resource-color-wood{
+.resource-color-wood {
   color: #887265;
 }
 
-
-.resource-bg-color-water{
+.resource-bg-color-water {
   background-color: #ADCCD0;
 }
 
-.resource-color-water{
+.resource-color-water {
   color: #ADCCD0;
 }
 
-
-
-.resource-bg-color-sand{
+.resource-bg-color-sand {
   background-color: #E3DAB9;
 }
 
-.resource-color-sand{
+.resource-color-sand {
   color: #E3DAB9;
 }
 
-.resource-bg-color-steel{
+.resource-bg-color-steel {
   background-color: #AEACAA;
 }
 
-.resource-color-steel{
+.resource-color-steel {
   color: #AEACAA;
 }
 
-
-.resource-bg-color-gold{
+.resource-bg-color-gold {
   background-color: #F9D761;
 }
 
-.resource-color-gold{
+.resource-color-gold {
   color: #F9D761;
 }
 
-.resource-bg-color-oil{
+.resource-bg-color-oil {
   background-color: #454758;
 }
 
-.resource-color-oil{
+.resource-color-oil {
   color: #454758;
 }
 
-
-.resource-bg-color-petrol{
+.resource-bg-color-petrol {
   background-color: #AC3E32;
 }
-.resource-color-petrol{
+
+.resource-color-petrol {
   color: #AC3E32;
 }

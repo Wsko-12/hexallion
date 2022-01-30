@@ -1,7 +1,12 @@
-const { MongoClient } = require('mongodb');
+const {
+  MongoClient
+} = require('mongodb');
 const uri = "mongodb+srv://wskodev:79sx2kG1zk3Pltdl@hexallion.fg65r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 
 
@@ -10,25 +15,27 @@ const DB = {};
 
 
 
-DB.connectToDB = async function(){
+DB.connectToDB = async function() {
   const prom = new Promise(function(resolve, reject) {
-     client.connect().then((connection)=>{
-       DB.connection = connection;
-       if(DB.connection){
-         resolve('mongoDB connected');
-         // DB.connection.db('hexallion').collection('users').remove();
-       };
-     }).catch((error)=>{
-       console.log("mongoDB not connected");
-       console.log(error);
-     });
- });
- return prom;
+    client.connect().then((connection) => {
+      DB.connection = connection;
+      if (DB.connection) {
+        resolve('mongoDB connected');
+        // DB.connection.db('hexallion').collection('users').remove();
+      };
+    }).catch((error) => {
+      console.log("mongoDB not connected");
+      console.log(error);
+    });
+  });
+  return prom;
 };
 
-DB.checkLogin = async function(login){
-  const prom =  new Promise(function(resolve, reject) {
-    DB.connection.db('hexallion').collection('users').findOne({login}).then((result) =>{
+DB.checkLogin = async function(login) {
+  const prom = new Promise(function(resolve, reject) {
+    DB.connection.db('hexallion').collection('users').findOne({
+      login
+    }).then((result) => {
       resolve(result);
     });
   });
@@ -36,9 +43,9 @@ DB.checkLogin = async function(login){
 };
 
 
-DB.createUser = async function(user){
-  const prom =  new Promise((resolve, reject) => {
-    DB.connection.db('hexallion').collection('users').insertOne(user).then((result) =>{
+DB.createUser = async function(user) {
+  const prom = new Promise((resolve, reject) => {
+    DB.connection.db('hexallion').collection('users').insertOne(user).then((result) => {
       resolve(result);
     });
   });

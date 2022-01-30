@@ -1,4 +1,4 @@
-#pathSection{
+#pathSection {
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -7,8 +7,7 @@
   z-index: 4;
 }
 
-
-#pathSection_notification{
+#pathSection_notification {
   text-align: center;
   font-weight: bold;
   color: #d30024;
@@ -18,40 +17,40 @@
   font-family: sans-serif;
 }
 
-
-#pathSection_ButtonsContainer{
+#pathSection_ButtonsContainer {
   pointer-events: auto;
   transition-duration: 0.05s;
   display: none;
   width: 160px;
   position: fixed;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   height: 50px;
   z-index: 10;
-
 }
-.pathSection_buttons-spaceHolder-city{
+
+.pathSection_buttons-spaceHolder-city {
   width: 55px;
   height: 50px;
   margin-right: 10px;
-  flex:0 0 auto;
+  flex: 0 0 auto;
 }
-.pathSection_buttons-spaceHolder-factory{
+
+.pathSection_buttons-spaceHolder-factory {
   width: 25px;
   height: 50px;
   margin-right: 10px;
-  flex:0 0 auto;
-}
-.pathSection_buttons-spaceHolder-none{
-  width: 0px;
-  height: 50px;
-  /* margin-right: 10px; */
-  flex:0 0 auto;
+  flex: 0 0 auto;
 }
 
-.pathSection_buttons{
+.pathSection_buttons-spaceHolder-none {
+  width: 0px;
+  height: 50px;
+  flex: 0 0 auto;
+}
+
+.pathSection_buttons {
   width: 50px;
-  flex:0 0 auto;
+  flex: 0 0 auto;
   height: 50px;
   background-color: #FAF9F8;
   border-radius: 50px;
@@ -60,26 +59,25 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0px 0px 5px black;
-  /* transform: rotateX(15deg); */
 }
-.pathSection_buttons:hover{
+
+.pathSection_buttons:hover {
   background-color: #A3D735;
 }
-.pathSection_buttons-noSpaceHolder{
+
+.pathSection_buttons-noSpaceHolder {
   position: relative;
   left: -25px;
 }
-.pathSection_buttons_icon{
+
+.pathSection_buttons_icon {
   width: 100%;
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-
-
-
-#pathSection_neadersContainer{
+#pathSection_neadersContainer {
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -87,8 +85,7 @@
   display: block;
 }
 
-
-.pathSection_neadersContainer-item{
+.pathSection_neadersContainer-item {
   width: 50px;
   height: 60px;
   position: fixed;
@@ -97,7 +94,8 @@
   align-items: center;
   transition-duration: 0.05s;
 }
-.pathSection_neadersContainer-item-city{
+
+.pathSection_neadersContainer-item-city {
   width: 110px;
   height: 60px;
   position: fixed;
@@ -106,7 +104,8 @@
   align-items: center;
   transition-duration: 0.05s;
 }
-.pathSection_neadersContainer-iconBox{
+
+.pathSection_neadersContainer-iconBox {
   width: 50px;
   height: 50px;
   border-radius: 50px;
@@ -114,32 +113,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* border: 2px solid #303030; */
   pointer-events: auto;
   border-radius: 50px 50px 0px 50px;
   transform: rotate(45deg);
   box-shadow: 0px 0px 5px black;
 }
-.pathSection_neadersContainer-iconBox-city{
+
+.pathSection_neadersContainer-iconBox-city {
   width: 50px;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.pathSection_neadersContainer-icon-city{
+
+.pathSection_neadersContainer-icon-city {
   width: 80%;
   height: 80%;
   background-size: cover;
-  /* transform: rotate(-45deg); */
 }
-.pathSection_neadersContainer-icon{
+
+.pathSection_neadersContainer-icon {
   width: 80%;
   height: 80%;
   background-size: cover;
   transform: rotate(-45deg);
 }
-.pathSection_neadersContainer-item::after{
+
+.pathSection_neadersContainer-item::after {
   content: '';
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
@@ -149,7 +150,8 @@
   z-index: -1;
   top: -3px;
 }
-.pathSection_neadersContainer-item-city::after{
+
+.pathSection_neadersContainer-item-city::after {
   content: '';
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
@@ -159,18 +161,18 @@
   top: -1px;
 }
 
-.pathSection_neadersContainer-cityContainer{
+.pathSection_neadersContainer-cityContainer {
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: auto;
   border-radius: 50px;
-  /* border: 1px solid #D7355C; */
   overflow: hidden;
   box-shadow: 0px 0px 5px black;
   background-color: #FAF9F8;
 }
-.pathSection_neadersContainer-price{
+
+.pathSection_neadersContainer-price {
   width: 60px;
   height: 100%;
   display: flex;
@@ -179,5 +181,4 @@
   font-size: 16px;
   font-family: 'Roboto Condensed';
   justify-content: center;
-  /* text-shadow: 0px 0px 4px black; */
-};
+}

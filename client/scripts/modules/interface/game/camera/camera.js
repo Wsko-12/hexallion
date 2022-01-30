@@ -4,18 +4,19 @@ import {
 } from '../../../../main.js';
 
 
-function moveCameraTo(position){
+function moveCameraTo(position) {
   let smoothValue = 1;
-  function smoot(){
-    smoothValue -= 0.05;
-    if(smoothValue > 0){
-      const x = CAMERA.configs.target.point.x*(1-smoothValue);
-      const x_ = position.x*smoothValue;
-      const z = CAMERA.configs.target.point.z*smoothValue;
-      const z_ = position.z*(1-smoothValue);
 
-      CAMERA.configs.target.point.x =  x+x_;
-      CAMERA.configs.target.point.z =  z+z_;
+  function smoot() {
+    smoothValue -= 0.05;
+    if (smoothValue > 0) {
+      const x = CAMERA.configs.target.point.x * (1 - smoothValue);
+      const x_ = position.x * smoothValue;
+      const z = CAMERA.configs.target.point.z * smoothValue;
+      const z_ = position.z * (1 - smoothValue);
+
+      CAMERA.configs.target.point.x = x + x_;
+      CAMERA.configs.target.point.z = z + z_;
       requestAnimationFrame(smoot);
     };
   };
@@ -53,7 +54,7 @@ function changeCameraAngleByValue(value) {
     CAMERA.configs.rail.yAngle.current = CAMERA.configs.rail.yAngle.min;
   };
   //postprocessors update
-  MAIN.renderer.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = CAMERA.configs.rail.yAngle.current/(CAMERA.configs.rail.yAngle.max-1);
+  MAIN.renderer.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = CAMERA.configs.rail.yAngle.current / (CAMERA.configs.rail.yAngle.max - 1);
 };
 
 function changeCameraAngle() {
@@ -67,7 +68,7 @@ function changeCameraAngle() {
 
 
   //postprocessors update
-  MAIN.renderer.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = CAMERA.configs.rail.yAngle.current/(CAMERA.configs.rail.yAngle.max-1)
+  MAIN.renderer.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = CAMERA.configs.rail.yAngle.current / (CAMERA.configs.rail.yAngle.max - 1)
 };
 
 function changeTargetPosition(position) {

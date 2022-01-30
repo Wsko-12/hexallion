@@ -1,101 +1,84 @@
-#cityMenuSection{
+#cityMenuSection {
   width: 100vw;
   height: 100vh;
   position: fixed;
   overflow: hidden;
   z-index: 3;
   perspective: 1000px;
-  -webkit-perspective:1000px;
-
+  -webkit-perspective: 1000px;
   display: flex;
 }
 
-
-#cityCard{
+#cityCard {
   width: 320px;
   height: 320px;
   overflow: hidden;
   display: none;
   margin: auto;
-
 }
 
-.cityCard-title{
+.cityCard-title {
   width: 100%;
   font-weight: bold;
   font-size: 50px;
   margin-bottom: 8px;
   text-align: right;
-
-  /* background-color: #303030;
-  color:#EAEAEA; */
 }
 
-
-.cityCard-list{
+.cityCard-list {
   background-color: #EAEAEA;
-  color:#EAEAEA;
+  color: #EAEAEA;
   overflow-y: scroll;
   width: 100%;
   height: 220px;
-
 }
 
-.cityCard-list-item{
+.cityCard-list-item {
   width: 100%;
-  /* background-color: #303030; */
   height: 45px;
   margin-top: 8px;
   margin-bottom: 24px;
   display: flex;
 }
 
-
-
-.cityCard-resource-image{
+.cityCard-resource-image {
   width: 45px;
   height: 45px;
   padding: 4px;
 }
-.cityCard-resource-image-name{
+
+.cityCard-resource-image-name {
   color: white;
   font-size: 9px;
 }
 
-.cityCard-resource-info{
+.cityCard-resource-info {
   width: 235px;
   height: 45px;
 }
 
-
-
-.cityCard-resource-info-price{
+.cityCard-resource-info-price {
   height: 21px;
   width: 100%;
-
   font-weight: 200;
-
   padding-left: 4px;
-  color:#303030;
-  /* text-align: right; */
+  color: #303030;
 }
 
-.cityCard-resource-info-holes{
+.cityCard-resource-info-holes {
   height: 24px;
   width: 100%;
   display: flex;
 }
-.cityCard-resource-info-holes-price{
+
+.cityCard-resource-info-holes-price {
   width: 100%;
   font-size: 6px;
   text-align: right;
-  color:#707070
+  color: #707070
 }
 
-
-
-
-#cityPriceSection{
+#cityPriceSection {
   display: none;
   width: 100vw;
   height: 100vh;
@@ -105,11 +88,11 @@
   pointer-events: none;
 }
 
-.cityPriceNotification{
+.cityPriceNotification {
   position: absolute;
   color: #74ff6c;
   text-align: center;
   font-size: 1em;
-  font-family: 'Roboto',sans-serif;
+  font-family: 'Roboto', sans-serif;
   text-shadow: 0px 0px 1px black;
 }

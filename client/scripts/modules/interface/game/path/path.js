@@ -92,90 +92,90 @@ function closeAll() {
 
 
 
-  // function action(selling) {
-  //   MAIN.interface.game.trucks.turningInterfase = false;
-  //   MAIN.interface.game.city.hideCityPrices();
-  //   // button.style.display = 'none';
-  //   MAIN.interface.dobleClickFunction.standard = true;
-  //   MAIN.interface.dobleClickFunction.function = null;
-  //   document.querySelector('#truckCancelButton').style.display = 'none';
-  //   document.querySelector('#truckDice').style.display = 'none';
-  //   MAIN.game.scene.path.clear();
-  //   hideButtons();
-  //
-  //
-  //   const pathServerData = [];
-  //   data.path.forEach((ceil, i) => {
-  //     pathServerData.push(ceil.indexes);
-  //   });
-  //
-  //   const serverData = {
-  //     gameID: MAIN.game.data.commonData.id,
-  //     truckID: data.truck.id,
-  //     path: pathServerData,
-  //     selling:selling,
-  //   };
-  //   if(selling){
-  //     serverData.city = data.path[data.path.length-1].type;
-  //   };
-  //
-  //   //bug fix не знаю откуда взялся, но после высылки грузовика не закрылось path меню
-  //   if (!data.truck.sended) {
-  //     data.truck.sended = true;
-  //     if (data.truck.product) {
-  //       if (data.truck.place.x != null && data.truck.place.z != null) {
-  //         data.truck.clearNotification();
-  //         if(!MAIN.game.data.playerData.gameOver){
-  //           MAIN.socket.emit('GAME_truck_send', serverData);
-  //         };
-  //       };
-  //     };
-  //   } else {
-  //     // баг происходит, если пришел тик, а игрок все еще не отправил грузовик.
-  //     // тик возвращает ему sended = false, а тут сбивается опять
-  //     //два пути решения:
-  //     // 1.создавать апдейтовый ид
-  //     // 2.просто отключить send на карточке грузовика и почистить notifications что я и сделаю, потому что иначе выглядит так, будто ходы "скапливаются"
-  //     //  а так будет, что если игрок в данный тик не отправил груз, то просрал тик.
-  //     closeAll();
-  //   };
-  // };
-
-  // function immediatelySell(){
-  //   //если грузовик сразу стоит в городе
-  //
-  //   MAIN.interface.game.trucks.turningInterfase = false;
-  //   MAIN.interface.game.city.hideCityPrices();
-  //   MAIN.interface.dobleClickFunction.standard = true;
-  //   MAIN.interface.dobleClickFunction.function = null;
-  //   document.querySelector('#truckCancelButton').style.display = 'none';
-  //   document.querySelector('#truckDice').style.display = 'none';
-  //   MAIN.game.scene.path.clear();
-  //   hideButtons();
-  //
-  //
-  //
-  //   const sendData = {
-  //     gameID: MAIN.game.data.commonData.id,
-  //     player: MAIN.game.data.playerData.login,
-  //     truckID: data.truck.id,
-  //     city: data.city,
-  //   };
-  //   if(!MAIN.game.data.playerData.gameOver){
-  //       MAIN.socket.emit('GAME_product_sell', sendData);
-  //   };
-  //
-  // };
+// function action(selling) {
+//   MAIN.interface.game.trucks.turningInterfase = false;
+//   MAIN.interface.game.city.hideCityPrices();
+//   // button.style.display = 'none';
+//   MAIN.interface.dobleClickFunction.standard = true;
+//   MAIN.interface.dobleClickFunction.function = null;
+//   document.querySelector('#truckCancelButton').style.display = 'none';
+//   document.querySelector('#truckDice').style.display = 'none';
+//   MAIN.game.scene.path.clear();
+//   hideButtons();
+//
+//
+//   const pathServerData = [];
+//   data.path.forEach((ceil, i) => {
+//     pathServerData.push(ceil.indexes);
+//   });
+//
+//   const serverData = {
+//     gameID: MAIN.game.data.commonData.id,
+//     truckID: data.truck.id,
+//     path: pathServerData,
+//     selling:selling,
+//   };
+//   if(selling){
+//     serverData.city = data.path[data.path.length-1].type;
+//   };
+//
+//   //bug fix не знаю откуда взялся, но после высылки грузовика не закрылось path меню
+//   if (!data.truck.sended) {
+//     data.truck.sended = true;
+//     if (data.truck.product) {
+//       if (data.truck.place.x != null && data.truck.place.z != null) {
+//         data.truck.clearNotification();
+//         if(!MAIN.game.data.playerData.gameOver){
+//           MAIN.socket.emit('GAME_truck_send', serverData);
+//         };
+//       };
+//     };
+//   } else {
+//     // баг происходит, если пришел тик, а игрок все еще не отправил грузовик.
+//     // тик возвращает ему sended = false, а тут сбивается опять
+//     //два пути решения:
+//     // 1.создавать апдейтовый ид
+//     // 2.просто отключить send на карточке грузовика и почистить notifications что я и сделаю, потому что иначе выглядит так, будто ходы "скапливаются"
+//     //  а так будет, что если игрок в данный тик не отправил груз, то просрал тик.
+//     closeAll();
+//   };
 // };
 
-function hideButtons(){
+// function immediatelySell(){
+//   //если грузовик сразу стоит в городе
+//
+//   MAIN.interface.game.trucks.turningInterfase = false;
+//   MAIN.interface.game.city.hideCityPrices();
+//   MAIN.interface.dobleClickFunction.standard = true;
+//   MAIN.interface.dobleClickFunction.function = null;
+//   document.querySelector('#truckCancelButton').style.display = 'none';
+//   document.querySelector('#truckDice').style.display = 'none';
+//   MAIN.game.scene.path.clear();
+//   hideButtons();
+//
+//
+//
+//   const sendData = {
+//     gameID: MAIN.game.data.commonData.id,
+//     player: MAIN.game.data.playerData.login,
+//     truckID: data.truck.id,
+//     city: data.city,
+//   };
+//   if(!MAIN.game.data.playerData.gameOver){
+//       MAIN.socket.emit('GAME_product_sell', sendData);
+//   };
+//
+// };
+// };
+
+function hideButtons() {
   PATH.buttonsDOM = document.querySelector('#pathSection_ButtonsContainer');
   PATH.buttonsDOM.innerHTML = '';
   PATH.buttonsShowed = false;
   PATH.buttonsDOM.style.display = 'none';
 };
 
-function moveButtons(){
+function moveButtons() {
   const tempV = new Vector3(PATH.finalObject.position.x, 0.7, PATH.finalObject.position.z);
   tempV.project(MAIN.renderer.camera);
 
@@ -196,11 +196,11 @@ function moveButtons(){
 
 };
 
-function showActionsButton(data){
+function showActionsButton(data) {
 
-  if(data.finalObject){
+  if (data.finalObject) {
     PATH.finalObject = data.finalObject;
-  }else{
+  } else {
     PATH.finalObject = data.path[data.path.length - 1];
   }
 
@@ -209,40 +209,40 @@ function showActionsButton(data){
   container.style.display = 'flex';
   PATH.buttonsShowed = true;
   let buttons = '';
-  const lastPoint = data.path[data.path.length -1];
+  const lastPoint = data.path[data.path.length - 1];
 
-  if(data.path.length != data.cuttedPath.length){
+  if (data.path.length != data.cuttedPath.length) {
     // это значит, что грузовик не доедет до последней точки, скидываем только кнопку move
-    if(data.finalObject){
-      if(data.finalObject.category === 'city'){
-        buttons +=`
+    if (data.finalObject) {
+      if (data.finalObject.category === 'city') {
+        buttons += `
           <div class="pathSection_buttons-spaceHolder-city"></div>
           <div class="pathSection_buttons" id="pathSection_buttons_move">
             <div class="pathSection_buttons_icon icon-move"></div>
           </div>
         `;
       };
-      if(data.finalObject.category === 'factory'){
-        buttons +=`
+      if (data.finalObject.category === 'factory') {
+        buttons += `
           <div class="pathSection_buttons-spaceHolder-factory"></div>
           <div class="pathSection_buttons" id="pathSection_buttons_move">
             <div class="pathSection_buttons_icon icon-move"></div>
           </div>
         `;
       };
-    }else{
-      buttons +=`
+    } else {
+      buttons += `
         <div class="pathSection_buttons-spaceHolder-none"></div>
         <div class="pathSection_buttons pathSection_buttons-noSpaceHolder" id="pathSection_buttons_move">
           <div class="pathSection_buttons_icon icon-move"></div>
         </div>
       `;
     };
-  }else{
+  } else {
     // это значит, что грузовик доедет до последней точки
-    if(data.finalObject){
-      if(data.finalObject.category === 'city'){
-        buttons +=`
+    if (data.finalObject) {
+      if (data.finalObject.category === 'city') {
+        buttons += `
           <div class="pathSection_buttons-spaceHolder-city"></div>
           <div class="pathSection_buttons" id="pathSection_buttons_sell">
             <div class="pathSection_buttons_icon icon-money"></div>
@@ -252,8 +252,8 @@ function showActionsButton(data){
           </div>
         `;
       };
-      if(data.finalObject.category === 'factory'){
-        buttons +=`
+      if (data.finalObject.category === 'factory') {
+        buttons += `
           <div class="pathSection_buttons-spaceHolder-factory"></div>
           <div class="pathSection_buttons" id="pathSection_buttons_delivery">
             <div class="pathSection_buttons_icon icon-delivery"></div>
@@ -263,8 +263,8 @@ function showActionsButton(data){
           </div>
         `;
       };
-    }else{
-      buttons +=`
+    } else {
+      buttons += `
         <div class="pathSection_buttons-spaceHolder-none"></div>
         <div class="pathSection_buttons pathSection_buttons-noSpaceHolder" id="pathSection_buttons_move">
           <div class="pathSection_buttons_icon icon-move"></div>
@@ -274,57 +274,63 @@ function showActionsButton(data){
 
   }
 
-  container.insertAdjacentHTML('beforeEnd',buttons);
+  container.insertAdjacentHTML('beforeEnd', buttons);
 
 
-  function applyFunctions(){
+  function applyFunctions() {
     const move = document.querySelector('#pathSection_buttons_move');
     const delivery = document.querySelector('#pathSection_buttons_delivery');
     const sell = document.querySelector('#pathSection_buttons_sell');
 
-    if(move){
+    if (move) {
       MAIN.interface.deleteTouches(move);
-      move.onclick = ()=>{action()};
+      move.onclick = () => {
+        action()
+      };
     };
-    if(delivery){
+    if (delivery) {
       MAIN.interface.deleteTouches(delivery);
-      delivery.onclick = ()=>{action('delivery')};
+      delivery.onclick = () => {
+        action('delivery')
+      };
     };
-    if(sell){
+    if (sell) {
       MAIN.interface.deleteTouches(sell);
-      sell.onclick = ()=>{action('sell')};
+      sell.onclick = () => {
+        action('sell')
+      };
     };
 
 
 
 
 
-    function action(act){
+    function action(act) {
 
       const sendData = {
-        game:MAIN.game.data.commonData.id,
-        player:MAIN.game.data.playerData.login,
-        truck:data.truck.id,
-        product:data.truck.product.id,
-        path:[],
-        autosend:false,
+        game: MAIN.game.data.commonData.id,
+        player: MAIN.game.data.playerData.login,
+        truck: data.truck.id,
+        product: data.truck.product.id,
+        path: [],
+        autosend: false,
       };
       data.cuttedPath.forEach((ceil, i) => {
         sendData.path.push(ceil.indexes);
       });
 
 
-      if(act === 'delivery'){
+      if (act === 'delivery') {
         sendData.delivery = true;
         sendData.finalObject = data.finalObject.id;
       };
-      if(act === 'sell'){
+      if (act === 'sell') {
         sendData.sell = true;
         sendData.finalObject = data.finalObject.name;
       };
 
 
-      MAIN.socket.emit('GAME_truck_send',sendData);
+      MAIN.socket.emit('GAME_truck_send', sendData);
 
       MAIN.interface.game.path.closeAll();
       MAIN.game.scene.path.clear();
@@ -336,7 +342,7 @@ function showActionsButton(data){
 
 };
 
-function showOnlySellButton(data){
+function showOnlySellButton(data) {
   PATH.buttonsDOM = document.querySelector('#pathSection_ButtonsContainer');
   PATH.buttonsDOM.style.display = 'flex';
   PATH.buttonsShowed = true;
@@ -344,31 +350,31 @@ function showOnlySellButton(data){
   PATH.point3D.x = data.truck.object3D.position.x;
   PATH.point3D.z = data.truck.object3D.position.z;
 
-  showButtons(0,data);
+  showButtons(0, data);
 };
 
 
 
 
-function showWhereProductIsNeeded(data){
+function showWhereProductIsNeeded(data) {
   const container = document.querySelector('#pathSection_neadersContainer');
   container.innerHTML = '';
   PATH.truck = data.truck;
   let contant = '';
-  for(let factory in MAIN.game.data.playerData.factories){
+  for (let factory in MAIN.game.data.playerData.factories) {
     const thatFactory = MAIN.game.data.playerData.factories[factory];
-    if(thatFactory.category === 'factory'){
-      if(thatFactory.settingsSetted){
-        if(thatFactory.settings.rawStorage[data.truck.product.name] === null){
+    if (thatFactory.category === 'factory') {
+      if (thatFactory.settingsSetted) {
+        if (thatFactory.settings.rawStorage[data.truck.product.name] === null) {
           const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${thatFactory.id}">
                           <div class="pathSection_neadersContainer-iconBox">
                               <div class="pathSection_neadersContainer-icon product-${data.truck.product.name}"></div>
                           </div>
                         </div>`;
-          contant+=line;
+          contant += line;
           const neaderData = {
-            boxId:`#pathSection_neader_${thatFactory.id}`,
-            object3DPosition:thatFactory.position,
+            boxId: `#pathSection_neader_${thatFactory.id}`,
+            object3DPosition: thatFactory.position,
           };
           PATH.neederOfProduct.push(neaderData);
         };
@@ -378,10 +384,10 @@ function showWhereProductIsNeeded(data){
 
 
 
-  for(let city in MAIN.game.data.cities){
+  for (let city in MAIN.game.data.cities) {
     const thatCity = MAIN.game.data.cities[city];
     let price = thatCity.getCurrentProductPrice(data.truck.product.name);
-    price = Math.floor(price+(price*(0.15*data.truck.product.quality)));
+    price = Math.floor(price + (price * (0.15 * data.truck.product.quality)));
     const line = `<div class="pathSection_neadersContainer-item-city" id="pathSection_neader_${city}">
                     <div class="pathSection_neadersContainer-cityContainer">
                       <div class="pathSection_neadersContainer-iconBox-city">
@@ -394,10 +400,10 @@ function showWhereProductIsNeeded(data){
 
                   </div>`;
 
-    contant+=line;
+    contant += line;
     const neaderData = {
-      boxId:`#pathSection_neader_${city}`,
-      object3DPosition:thatCity.position,
+      boxId: `#pathSection_neader_${city}`,
+      object3DPosition: thatCity.position,
     };
     PATH.neederOfProduct.push(neaderData);
 
@@ -405,27 +411,27 @@ function showWhereProductIsNeeded(data){
 
 
 
-  container.insertAdjacentHTML('beforeEnd',contant);
+  container.insertAdjacentHTML('beforeEnd', contant);
 
 
-  async function findPath(finalObject){
+  async function findPath(finalObject) {
     const pathData = {
-      start:MAIN.game.data.map[data.truck.place.z][data.truck.place.x],
-      finish:finalObject.fieldCeil,
-      value:data.value,
-      autosend:false,
-      finalObject:finalObject,
-      truck:data.truck,
+      start: MAIN.game.data.map[data.truck.place.z][data.truck.place.x],
+      finish: finalObject.fieldCeil,
+      value: data.value,
+      autosend: false,
+      finalObject: finalObject,
+      truck: data.truck,
     };
     MAIN.interface.game.path.hideButtons();
-    MAIN.game.functions.pathFinder(pathData).then((result) =>{
-      if(result){
+    MAIN.game.functions.pathFinder(pathData).then((result) => {
+      if (result) {
         pathData.path = result;
-        MAIN.game.scene.path.show(pathData).then((data)=>{
-          data.cuttedPath = MAIN.game.functions.cutPath(data.path,data.value);
+        MAIN.game.scene.path.show(pathData).then((data) => {
+          data.cuttedPath = MAIN.game.functions.cutPath(data.path, data.value);
           MAIN.interface.game.path.showActionsButton(data);
         });
-      }else{
+      } else {
 
         MAIN.game.scene.path.clear(pathData);
       };
@@ -435,24 +441,28 @@ function showWhereProductIsNeeded(data){
 
 
 
-  function applyFunctions(){
-    for(let factory in MAIN.game.data.playerData.factories){
+  function applyFunctions() {
+    for (let factory in MAIN.game.data.playerData.factories) {
       const thatFactory = MAIN.game.data.playerData.factories[factory];
-      if(thatFactory.category === 'factory'){
-        if(thatFactory.settingsSetted){
-          if(thatFactory.settings.rawStorage[data.truck.product.name] === null){
+      if (thatFactory.category === 'factory') {
+        if (thatFactory.settingsSetted) {
+          if (thatFactory.settings.rawStorage[data.truck.product.name] === null) {
             MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${thatFactory.id}`));
-            document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = ()=>{findPath(thatFactory)};
+            document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = () => {
+              findPath(thatFactory)
+            };
           };
         };
       };
     };
 
 
-    for(let city in MAIN.game.data.cities){
+    for (let city in MAIN.game.data.cities) {
       const thatCity = MAIN.game.data.cities[city];
-      MAIN.interface.deleteTouches(  document.querySelector(`#pathSection_neader_${city}`));
-      document.querySelector(`#pathSection_neader_${city}`).onclick = ()=>{findPath(thatCity)};
+      MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
+      document.querySelector(`#pathSection_neader_${city}`).onclick = () => {
+        findPath(thatCity)
+      };
     };
 
   };
@@ -462,25 +472,25 @@ function showWhereProductIsNeeded(data){
 };
 
 
-function updateCityPrise(){
-    if(MAIN.interface.game.path.neederOfProduct.length > 0){
-      for(let city in MAIN.game.data.cities){
-        const thatCity = MAIN.game.data.cities[city];
-        const price = thatCity.getCurrentProductPrice(PATH.truck.product.name);
-        const el = document.querySelector(`#pathSection_neader_${city}-price`)
-        if(el){
-          el.innerHTML = `$${price}`
-        }
-      };
+function updateCityPrise() {
+  if (MAIN.interface.game.path.neederOfProduct.length > 0) {
+    for (let city in MAIN.game.data.cities) {
+      const thatCity = MAIN.game.data.cities[city];
+      const price = thatCity.getCurrentProductPrice(PATH.truck.product.name);
+      const el = document.querySelector(`#pathSection_neader_${city}-price`)
+      if (el) {
+        el.innerHTML = `$${price}`
+      }
     };
+  };
 };
 
-function hideWhereProductIsNeeded(){
+function hideWhereProductIsNeeded() {
   PATH.neederOfProduct.length = 0;
   document.querySelector('#pathSection_neadersContainer').innerHTML = '';
 };
 
-function moveWhereProductIsNeeded(){
+function moveWhereProductIsNeeded() {
   PATH.neederOfProduct.forEach((neader, i) => {
     const tempV = new Vector3(neader.object3DPosition.x, 0.7, neader.object3DPosition.z);
     tempV.project(MAIN.renderer.camera);
@@ -493,111 +503,113 @@ function moveWhereProductIsNeeded(){
 };
 
 
-function showWhereCanSendProduct(data){
+function showWhereCanSendProduct(data) {
   // console.log(data)
   document.querySelector('#factoryMenuClicker').style.pointerEvents = 'none';
   document.querySelector('#factoryMenuClicker').style.opacity = 0.3;
   document.querySelector('#factoryCard').style.pointerEvents = 'none';
- const container = document.querySelector('#pathSection_neadersContainer');
- container.innerHTML = '';
- PATH.truck = data.truck;
- let contant = '';
-   for(let factory in MAIN.game.data.playerData.factories){
-     const thatFactory = MAIN.game.data.playerData.factories[factory];
-     if(thatFactory.category === 'factory'){
-       if(thatFactory.settingsSetted){
-         if(thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]){
-           const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${thatFactory.id}">
+  const container = document.querySelector('#pathSection_neadersContainer');
+  container.innerHTML = '';
+  PATH.truck = data.truck;
+  let contant = '';
+  for (let factory in MAIN.game.data.playerData.factories) {
+    const thatFactory = MAIN.game.data.playerData.factories[factory];
+    if (thatFactory.category === 'factory') {
+      if (thatFactory.settingsSetted) {
+        if (thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]) {
+          const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${thatFactory.id}">
                            <div class="pathSection_neadersContainer-iconBox">
                                <div class="pathSection_neadersContainer-icon product-${data.product}"></div>
                            </div>
                          </div>`;
-           contant+=line;
-           const neaderData = {
-             boxId:`#pathSection_neader_${thatFactory.id}`,
-             object3DPosition:thatFactory.position,
-           };
-           PATH.whereCanSendProduct.push(neaderData);
-         };
-       };
-     };
-   };
+          contant += line;
+          const neaderData = {
+            boxId: `#pathSection_neader_${thatFactory.id}`,
+            object3DPosition: thatFactory.position,
+          };
+          PATH.whereCanSendProduct.push(neaderData);
+        };
+      };
+    };
+  };
 
- for(let city in MAIN.game.data.cities){
-   const thatCity = MAIN.game.data.cities[city];
-   const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${city}">
+  for (let city in MAIN.game.data.cities) {
+    const thatCity = MAIN.game.data.cities[city];
+    const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${city}">
                    <div class="pathSection_neadersContainer-iconBox">
                        <div class="pathSection_neadersContainer-icon product-${data.product}"></div>
                    </div>
                  </div>`;
 
-   contant+=line;
-   const neaderData = {
-     boxId:`#pathSection_neader_${city}`,
-     object3DPosition:thatCity.position,
-   };
+    contant += line;
+    const neaderData = {
+      boxId: `#pathSection_neader_${city}`,
+      object3DPosition: thatCity.position,
+    };
 
-   PATH.whereCanSendProduct.push(neaderData);
- };
- container.insertAdjacentHTML('beforeEnd',contant);
+    PATH.whereCanSendProduct.push(neaderData);
+  };
+  container.insertAdjacentHTML('beforeEnd', contant);
 
- function applyFunctions(){
-   for(let factory in MAIN.game.data.playerData.factories){
-     const thatFactory = MAIN.game.data.playerData.factories[factory];
-     if(thatFactory.category === 'factory'){
-       if(thatFactory.settingsSetted){
-         if(thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]){
-           MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${thatFactory.id}`));
-           document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = ()=>{
-             hideWhereCanSendProduct();
-             const autosendData = {
-               mode:'route',
-               factory:data.factory,
-               product:data.product,
-               final:thatFactory.fieldCeil,
-               finalObject:thatFactory,
-             };
-             MAIN.game.functions.autosending.addFactory(autosendData);
-             MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
-           };
-         };
-       };
-     };
-   };
+  function applyFunctions() {
+    for (let factory in MAIN.game.data.playerData.factories) {
+      const thatFactory = MAIN.game.data.playerData.factories[factory];
+      if (thatFactory.category === 'factory') {
+        if (thatFactory.settingsSetted) {
+          if (thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]) {
+            MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${thatFactory.id}`));
+            document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = () => {
+              hideWhereCanSendProduct();
+              const autosendData = {
+                mode: 'route',
+                factory: data.factory,
+                product: data.product,
+                final: thatFactory.fieldCeil,
+                finalObject: thatFactory,
+              };
+              MAIN.game.functions.autosending.addFactory(autosendData);
+              MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
+            };
+          };
+        };
+      };
+    };
 
 
-   for(let city in MAIN.game.data.cities){
-     const thatCity = MAIN.game.data.cities[city];
-     MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
-     document.querySelector(`#pathSection_neader_${city}`).onclick = ()=>{
-       hideWhereCanSendProduct();
-       const autosendData = {
-         mode:'route',
-         factory:data.factory,
-         product:data.product,
-         final:thatCity.fieldCeil,
-         finalObject:thatCity,
-       };
-       MAIN.game.functions.autosending.addFactory(autosendData);
-       MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
-     };
-   };
+    for (let city in MAIN.game.data.cities) {
+      const thatCity = MAIN.game.data.cities[city];
+      MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
+      document.querySelector(`#pathSection_neader_${city}`).onclick = () => {
+        hideWhereCanSendProduct();
+        const autosendData = {
+          mode: 'route',
+          factory: data.factory,
+          product: data.product,
+          final: thatCity.fieldCeil,
+          finalObject: thatCity,
+        };
+        MAIN.game.functions.autosending.addFactory(autosendData);
+        MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
+      };
+    };
 
- };
+  };
 
- applyFunctions();
+  applyFunctions();
 
 
 
 };
-function hideWhereCanSendProduct(data){
+
+function hideWhereCanSendProduct(data) {
   PATH.whereCanSendProduct.length = 0;
   document.querySelector('#factoryMenuClicker').style.pointerEvents = 'auto';
   document.querySelector('#factoryMenuClicker').style.opacity = 1;
   document.querySelector('#pathSection_neadersContainer').innerHTML = '';
   document.querySelector('#factoryCard').style.pointerEvents = 'auto';
 };
-function moveWhereCanSendProduct(){
+
+function moveWhereCanSendProduct() {
   PATH.whereCanSendProduct.forEach((neader, i) => {
     const tempV = new Vector3(neader.object3DPosition.x, 0.7, neader.object3DPosition.z);
     tempV.project(MAIN.renderer.camera);
@@ -609,12 +621,12 @@ function moveWhereCanSendProduct(){
 
 
 const PATH = {
-  point3D:{
-    x:0,
-    z:0,
+  point3D: {
+    x: 0,
+    z: 0,
   },
-  buttonsDOM:null,
-  buttonsShowed:false,
+  buttonsDOM: null,
+  buttonsShowed: false,
 
   showActionsButton,
   showOnlySellButton,
@@ -630,18 +642,18 @@ const PATH = {
   showWhereProductIsNeeded,
   updateCityPrise,
 
-  neederOfProduct:[],
+  neederOfProduct: [],
   moveWhereProductIsNeeded,
   updateCityPrise,
-  truck:null,
-  finalObject:null,
+  truck: null,
+  finalObject: null,
 
 
 
 
 
   showWhereCanSendProduct,
-  whereCanSendProduct:[],
+  whereCanSendProduct: [],
   moveWhereCanSendProduct,
 
 };

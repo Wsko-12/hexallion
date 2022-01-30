@@ -3,10 +3,10 @@ import {
 } from '../../../main.js';
 
 //динаммически подключаем стили этой страницы
-const elem = document.createElement( 'link' );
+const elem = document.createElement('link');
 elem.rel = 'stylesheet';
 elem.type = 'text/css';
-document.body.appendChild( elem );
+document.body.appendChild(elem);
 elem.href = 'scripts/modules/pages/auth/authPage.css';
 
 
@@ -15,17 +15,17 @@ const AUTH = {
 
 };
 
-function checkLogin(login){
+function checkLogin(login) {
   const reg = /^[a-z][a-z0-9_]{3,15}/;
   const found = login.match(reg);
-  if(found){
-      if(found[0] === found.input){
-        return true;
-      }else{
-        return false;
-      };
-  }else{
+  if (found) {
+    if (found[0] === found.input) {
+      return true;
+    } else {
       return false;
+    };
+  } else {
+    return false;
   };
 };
 
@@ -61,18 +61,18 @@ AUTH.showPage = () => {
   let login = true;
   const errorDiv = document.querySelector('#login_error');
   const errorMesages = {
-    badLogin:'Логин должен начинаться с латинской буквы(a-z), может содержать цифры(0-9) и символ нижнего подчеркивания (_)',
-    loginExist:'Такой логин уже существует',
+    badLogin: 'Логин должен начинаться с латинской буквы(a-z), может содержать цифры(0-9) и символ нижнего подчеркивания (_)',
+    loginExist: 'Такой логин уже существует',
   };
 
-  document.querySelector('#auth_switchButton').onclick = function(){
-    const mainButton= document.querySelector('#auth_mainButton');
+  document.querySelector('#auth_switchButton').onclick = function() {
+    const mainButton = document.querySelector('#auth_mainButton');
     const switchButton = document.querySelector('#auth_switchButton');
-    if(login){
+    if (login) {
       login = false;
       mainButton.innerHTML = 'создать';
       switchButton.innerHTML = 'вход';
-    }else{
+    } else {
       login = true;
       mainButton.innerHTML = 'войти';
       switchButton.innerHTML = 'регистрация';
@@ -80,38 +80,38 @@ AUTH.showPage = () => {
   };
 
 
-  document.querySelector('#login').addEventListener('input', function(){
+  document.querySelector('#login').addEventListener('input', function() {
     this.value = this.value.toLowerCase();
-    if(this.value.length>3){
-      if(checkLogin(this.value)){
+    if (this.value.length > 3) {
+      if (checkLogin(this.value)) {
 
         errorDiv.style.display = 'none';
 
         this.style.color = 'white'
-      }else{
+      } else {
         errorDiv.innerHTML = errorMesages.badLogin;
         errorDiv.style.display = 'block';
         this.style.color = '#ff5858';
       };
-    }else{
+    } else {
       errorDiv.style.display = 'none';
 
       this.style.color = 'white'
     };
   });
-  document.querySelector('#login').addEventListener('change', function(){
+  document.querySelector('#login').addEventListener('change', function() {
     this.value = this.value.toLowerCase();
-      if(checkLogin(this.value)){
-        errorDiv.style.display = 'none';
+    if (checkLogin(this.value)) {
+      errorDiv.style.display = 'none';
 
-        this.style.color = 'white'
-      }else{
-        showError('badLogin');
-        this.style.color = '#ff5858';
-      };
+      this.style.color = 'white'
+    } else {
+      showError('badLogin');
+      this.style.color = '#ff5858';
+    };
   });
 
-  document.querySelector('#password').addEventListener('input', function(){
+  document.querySelector('#password').addEventListener('input', function() {
     document.querySelector('#password_error').style.display = 'none';
   });
 
@@ -120,24 +120,24 @@ AUTH.showPage = () => {
 
   const form = document.querySelector('#auth');
 
-  form.addEventListener('submit',(e)=>{
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     const loginInp = document.querySelector('#login');
-    if(checkLogin(loginInp.value)){
+    if (checkLogin(loginInp.value)) {
       document.querySelector('#login_error').style.display = 'none';
       loginInp.style.color = 'white';
-    }else{
+    } else {
       showError('badLogin');
       return;
     };
 
     const passwordInp = document.querySelector('#password');
-    if(passwordInp.value.length < 8){
-      showError('badPassword',true);
+    if (passwordInp.value.length < 8) {
+      showError('badPassword', true);
       return;
     };
 
-    if(login){
+    if (login) {
       // MAIN.socket.emit('auth',data);
       // return;
 
@@ -162,30 +162,31 @@ AUTH.showPage = () => {
       //   inRoom:false,
       // };
       const data = {
-        login:loginInp.value,
-        password:password.value,
-        registration:false,
+        login: loginInp.value,
+        password: password.value,
+        registration: false,
       };
-      MAIN.socket.emit('AUTH',data);
+      MAIN.socket.emit('AUTH', data);
 
 
-    }else{
+    } else {
       //registration
       const data = {
-        login:loginInp.value,
-        password:password.value,
-        registration:true,
+        login: loginInp.value,
+        password: password.value,
+        registration: true,
       };
-      MAIN.socket.emit('AUTH',data);
+      MAIN.socket.emit('AUTH', data);
     };
   });
 
 };
-function showError(code,password){
-  if(password){
+
+function showError(code, password) {
+  if (password) {
     const errorDiv = document.querySelector('#password_error');
     const errorMesages = {
-      badPassword:'Пароль должен содержать минимум 8 символов',
+      badPassword: 'Пароль должен содержать минимум 8 символов',
     };
     errorDiv.innerHTML = errorMesages[code];
     errorDiv.style.display = 'block';
@@ -193,11 +194,11 @@ function showError(code,password){
   }
   const errorDiv = document.querySelector('#login_error');
   const errorMesages = {
-    badLogin:'Логин должен начинаться с латинской буквы(a-z), может содержать цифры(0-9) и символ нижнего подчеркивания (_) и быть длиннее 3 символов',
-    loginExist:'Такой логин уже существует',
-    unexpected:'Произошла ошибка, попробуйте позже',
-    loginPasswordFalse:'Неверный логин или пароль',
-    userOnline:'Данный пользователь уже в игре',
+    badLogin: 'Логин должен начинаться с латинской буквы(a-z), может содержать цифры(0-9) и символ нижнего подчеркивания (_) и быть длиннее 3 символов',
+    loginExist: 'Такой логин уже существует',
+    unexpected: 'Произошла ошибка, попробуйте позже',
+    loginPasswordFalse: 'Неверный логин или пароль',
+    userOnline: 'Данный пользователь уже в игре',
   };
   errorDiv.innerHTML = errorMesages[code];
   errorDiv.style.display = 'block';

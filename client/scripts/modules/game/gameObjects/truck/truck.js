@@ -74,7 +74,7 @@ class Truck {
     this.ready = true;
     if (this.player === MAIN.game.data.playerData.login) {
       this.hitBoxMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.truckHitBox.clone(), MAIN.game.scene.hitBoxMaterial);
-      this.hitBoxMesh.name = this.id+'_hitBox';
+      this.hitBoxMesh.name = this.id + '_hitBox';
       this.hitBoxMesh.position.set(position.x, position.y, position.z);
       MAIN.game.scene.hitBoxGroup.add(this.hitBoxMesh);
       this.hitBoxMesh.userData.position = this.hitBoxMesh.position;
@@ -82,17 +82,17 @@ class Truck {
       this.hitBoxMesh.userData.onClick = function() {
         that.showCard();
       };
-      if(!this.autosend){
+      if (!this.autosend) {
         this.createNotification();
       };
     };
 
 
 
-    if(data.player === MAIN.game.data.playerData.login){
-      if(!this.autosend){
+    if (data.player === MAIN.game.data.playerData.login) {
+      if (!this.autosend) {
         this.turn();
-      }else{
+      } else {
         this.autosendTurn();
       };
     };
@@ -104,28 +104,28 @@ class Truck {
     MAIN.interface.game.camera.moveCameraTo(this.hitBoxMesh.position);
   };
 
-  autosendTurn(){
+  autosendTurn() {
     this.ready = false;
     MAIN.game.functions.autosending.turn();
     const sendData = {
-      game:MAIN.game.data.commonData.id,
-      player:MAIN.game.data.playerData.login,
-      truck:this.id,
-      product:this.product.id,
-      autosend:this.autosend,
+      game: MAIN.game.data.commonData.id,
+      player: MAIN.game.data.playerData.login,
+      truck: this.id,
+      product: this.product.id,
+      autosend: this.autosend,
     };
     const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
     this.autosend.lastValue = value;
-    if(value < 6){
-      this.autosend.cuttedPath = MAIN.game.functions.cutPath(this.autosend.fullPath,value);
+    if (value < 6) {
+      this.autosend.cuttedPath = MAIN.game.functions.cutPath(this.autosend.fullPath, value);
       sendData.path = this.autosend.cuttedPath;
-      if(sendData.autosend.fullPath.length === this.autosend.cuttedPath.length){
+      if (sendData.autosend.fullPath.length === this.autosend.cuttedPath.length) {
         sendData.autosend.finished = true;
       };
       this.autosend.fullPath = this.autosend.fullPath.slice(this.autosend.cuttedPath.length - 1);
 
-      MAIN.socket.emit('GAME_truck_send',sendData);
-    }else{
+      MAIN.socket.emit('GAME_truck_send', sendData);
+    } else {
       MAIN.game.functions.autosending.turn();
     };
   };
@@ -141,8 +141,8 @@ class Truck {
     document.querySelector('#sceneNotifications').insertAdjacentHTML('beforeEnd', notification);
     this.notification = document.querySelector(`#${id}`);
     const that = this;
-    const onclickFunction = function(){
-      if(!MAIN.interface.game.trucks.turningInterfase){
+    const onclickFunction = function() {
+      if (!MAIN.interface.game.trucks.turningInterfase) {
         that.showCard();
       };
     };
@@ -181,14 +181,14 @@ class Truck {
     };
   };
 
-  clear(){
+  clear() {
     this.clearNotification();
     this.onMap = false;
     this.product = null;
     this.autosend = null;
     //clear map for  destroy truck button
-    if(MAIN.game.data.map[this.place.z]){
-      if(MAIN.game.data.map[this.place.z][this.place.x]){
+    if (MAIN.game.data.map[this.place.z]) {
+      if (MAIN.game.data.map[this.place.z][this.place.x]) {
         MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = false;
       };
     };
@@ -206,12 +206,12 @@ class Truck {
 
 
     //bug fix
-    if(this.object3D){
+    if (this.object3D) {
       this.object3D.removeFromParent();
       this.object3D.geometry.dispose();
     };
 
-    if(this.hitBoxMesh){
+    if (this.hitBoxMesh) {
       this.hitBoxMesh.removeFromParent();
       this.hitBoxMesh.geometry.dispose();
     };
@@ -221,17 +221,17 @@ class Truck {
     MAIN.game.functions.autosending.turn();
   };
 
-  destroyRequest(){
+  destroyRequest() {
     const data = {
-      gameID:MAIN.game.data.commonData.id,
-      player:this.player,
-      truckID:this.id,
+      gameID: MAIN.game.data.commonData.id,
+      player: this.player,
+      truckID: this.id,
     };
-    MAIN.socket.emit('GAME_truck_destroy',data);
+    MAIN.socket.emit('GAME_truck_destroy', data);
   };
 
   turn() {
-    if(this.ready ){
+    if (this.ready) {
       this.ready = false;
       MAIN.interface.game.trucks.turningInterfase = true;
       this.cardOpened = true;
@@ -261,16 +261,11 @@ class Truck {
               diceDiv.style.transitionDuration = '2s';
               diceDiv.style.opacity = 0.3;
             }, 100);
-            // setTimeout(function(){
-            //   document.querySelector('#truckDice').style.display = 'none';
-            // },2000);
 
             if (value < 6) {
-
-              // MAIN.interface.game.city.showCityPrices(that.product);
               const data = {
-                truck:that,
-                value:value,
+                truck: that,
+                value: value,
               };
               MAIN.interface.game.path.showWhereProductIsNeeded(data);
               document.querySelector('#truckCancelButton').style.display = 'flex';
@@ -278,23 +273,23 @@ class Truck {
               MAIN.interface.dobleClickFunction.standard = false;
               MAIN.interface.dobleClickFunction.function = async function(object3D) {
                 const pathData = {
-                  start:MAIN.game.data.map[that.place.z][that.place.x],
-                  finish:object3D.userData,
-                  value:value,
-                  autosend:false,
-                  finalObject:object3D.userData.cityCeil?object3D.userData.city:null,
-                  truck:that,
+                  start: MAIN.game.data.map[that.place.z][that.place.x],
+                  finish: object3D.userData,
+                  value: value,
+                  autosend: false,
+                  finalObject: object3D.userData.cityCeil ? object3D.userData.city : null,
+                  truck: that,
                 };
                 MAIN.interface.game.path.hideButtons();
 
-                MAIN.game.functions.pathFinder(pathData).then((result) =>{
-                  if(result){
+                MAIN.game.functions.pathFinder(pathData).then((result) => {
+                  if (result) {
                     pathData.path = result;
-                    MAIN.game.scene.path.show(pathData).then((data)=>{
-                      data.cuttedPath = MAIN.game.functions.cutPath(data.path,data.value);
+                    MAIN.game.scene.path.show(pathData).then((data) => {
+                      data.cuttedPath = MAIN.game.functions.cutPath(data.path, data.value);
                       MAIN.interface.game.path.showActionsButton(data);
                     });
-                  }else{
+                  } else {
                     MAIN.game.scene.path.clear();
                   };
                 });
@@ -330,8 +325,8 @@ class Truck {
     //занимаем финальную точку
     const lastPoint = data.path[data.path.length - 1];
     //если грузовик ЕДЕТ на последнюю точку
-    if(!data.sell && !data.delivery){
-      if(!MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil){
+    if (!data.sell && !data.delivery) {
+      if (!MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil) {
         MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = this;
       };
     };
@@ -418,7 +413,7 @@ class Truck {
               const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
               const angle = angleIndex * -60;
               that.object3D.rotation.y = angle * (Math.PI / 180);
-              if(that.hitBoxMesh){
+              if (that.hitBoxMesh) {
                 that.hitBoxMesh.rotation.y = angle * (Math.PI / 180);
               };
             }
@@ -431,7 +426,7 @@ class Truck {
               const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
               const angle = angleIndex * -60;
               that.object3D.rotation.y = angle * (Math.PI / 180);
-              if(that.hitBoxMesh){
+              if (that.hitBoxMesh) {
                 that.hitBoxMesh.rotation.y = angle * (Math.PI / 180);
               };
 
@@ -509,10 +504,10 @@ class Truck {
           //в принципе, наклон когда движется под горку можно не писать, так как его все равно не видно
 
 
-          if(that.object3D){
+          if (that.object3D) {
             that.object3D.position.set(position.x, position.y, position.z);
           };
-          if(that.hitBoxMesh){
+          if (that.hitBoxMesh) {
             that.hitBoxMesh.position.set(position.x, position.y, position.z);
           };
 
@@ -523,11 +518,11 @@ class Truck {
             pathIndex++;
           };
           setTimeout(() => {
-            if(that.object3D){
+            if (that.object3D) {
               move();
             };
           }, 25);
-        }else{
+        } else {
 
           // if(data.selling){
           //   if(that.player === MAIN.game.data.playerData.login){
@@ -540,51 +535,51 @@ class Truck {
           //     MAIN.socket.emit('GAME_product_sell',sendData)
           //   };
           // };
-          if(that.player === MAIN.game.data.playerData.login){
-            if(that.autosend){
-              if(that.autosend.finished){
-                if(that.autosend.sell){
+          if (that.player === MAIN.game.data.playerData.login) {
+            if (that.autosend) {
+              if (that.autosend.finished) {
+                if (that.autosend.sell) {
                   const sendData = {
-                    game:MAIN.game.data.commonData.id,
-                    player:that.player,
-                    truck:that.id,
-                    city:that.autosend.finalObject,
-                    product:that.product.id,
+                    game: MAIN.game.data.commonData.id,
+                    player: that.player,
+                    truck: that.id,
+                    city: that.autosend.finalObject,
+                    product: that.product.id,
                   };
-                  MAIN.socket.emit('GAME_product_sell',sendData);
+                  MAIN.socket.emit('GAME_product_sell', sendData);
                 };
-                if(that.autosend.delivery){
+                if (that.autosend.delivery) {
                   const sendData = {
-                    game:MAIN.game.data.commonData.id,
-                    player:that.player,
-                    truck:that.id,
-                    factory:that.autosend.finalObject,
-                    product:that.product.id,
+                    game: MAIN.game.data.commonData.id,
+                    player: that.player,
+                    truck: that.id,
+                    factory: that.autosend.finalObject,
+                    product: that.product.id,
                   };
-                  MAIN.socket.emit('GAME_product_delivery',sendData);
+                  MAIN.socket.emit('GAME_product_delivery', sendData);
                 };
               };
               return;
             };
-            if(data.sell){
+            if (data.sell) {
               const sendData = {
-                game:MAIN.game.data.commonData.id,
-                player:that.player,
-                truck:that.id,
-                city:data.finalObject,
-                product:that.product.id,
+                game: MAIN.game.data.commonData.id,
+                player: that.player,
+                truck: that.id,
+                city: data.finalObject,
+                product: that.product.id,
               };
-              MAIN.socket.emit('GAME_product_sell',sendData);
+              MAIN.socket.emit('GAME_product_sell', sendData);
             };
-            if(data.delivery){
+            if (data.delivery) {
               const sendData = {
-                game:MAIN.game.data.commonData.id,
-                player:that.player,
-                truck:that.id,
-                factory:data.finalObject,
-                product:that.product.id,
+                game: MAIN.game.data.commonData.id,
+                player: that.player,
+                truck: that.id,
+                factory: data.finalObject,
+                product: that.product.id,
               };
-              MAIN.socket.emit('GAME_product_delivery',sendData);
+              MAIN.socket.emit('GAME_product_delivery', sendData);
             };
 
           };
@@ -602,13 +597,12 @@ class Truck {
 
   };
 
-
-  getProductPriceData(){
-    if(this.product){
-      if(this.product != 1){
+  getProductPriceData() {
+    if (this.product) {
+      if (this.product != 1) {
         return [{
-          name:this.product.name,
-          quality:this.product.quality,
+          name: this.product.name,
+          quality: this.product.quality,
         }];
       };
     };

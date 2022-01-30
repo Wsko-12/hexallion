@@ -36,8 +36,8 @@ class FieldCeil {
       const city = new City({
         name: this.type,
         position: properties.position,
-        fieldCeil:this,
-        balance:MAIN.game.data.commonData.cityEconomy ? MAIN.game.data.commonData.cityEconomyPrice : null,
+        fieldCeil: this,
+        balance: MAIN.game.data.commonData.cityEconomy ? MAIN.game.data.commonData.cityEconomyPrice : null,
       });
       this.city = city;
       MAIN.game.data.cities[this.type] = city;
@@ -182,9 +182,6 @@ class FieldCeil {
     };
 
   };
-
-
-
 
   calculateSectorMenuButtons(sector) {
     //Ищем что можно построить на этом секторе;
@@ -536,15 +533,11 @@ class FieldCeil {
     // MAIN.game.scene.testMesh.position.set(position.x,position.y,position.z);
   };
 
-
-
-
   getDistanceToCeil(ceil) {
     const thisVector = new THREE.Vector3(this.position.x, this.position.y, this.position.z);
     const ceilVector = new THREE.Vector3(ceil.position.x, ceil.position.y, ceil.position.z);
     return thisVector.distanceTo(ceilVector);
   };
-
 
   showCeilFullByTruck() {
     const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.roadCenter.clone(), new THREE.MeshBasicMaterial({
@@ -585,14 +578,6 @@ class FieldCeil {
 
 
   };
-
-
-
-
-
-
-
-
 
 };
 

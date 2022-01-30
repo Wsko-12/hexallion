@@ -16,9 +16,9 @@ import {
 } from './products/products.js';
 
 const CONFIGS = {
-  buildings:BUILDINGS,
-  credits:CREDITS,
-  products:PRODUCTS,
+  buildings: BUILDINGS,
+  credits: CREDITS,
+  products: PRODUCTS,
 };
 
 export {
