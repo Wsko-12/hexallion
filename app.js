@@ -461,7 +461,7 @@ class GAME {
         cityEconomyPrice: this.cities.Westown.balance,
         //#bfbfbf серый для скринов
         //#fc4a4a красный для игрока
-        playerColors: ['#bfbfbf', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
+        playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
         factoriesCount: this.factoriesCount,
       },
     };

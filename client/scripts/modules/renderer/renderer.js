@@ -422,7 +422,7 @@ function init() {
 
 
 
-          gl_FragColor = vec4(Color*4.0);
+          gl_FragColor = vec4(Color*4.5);
 
         /*Filter*/
 
@@ -439,7 +439,7 @@ function init() {
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 // 15 / Math.min(window.devicePixelRatio, 2) + 0.2;
   //blur
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uResolution = RENDERER.uResolution;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 3;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 2;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = 0.5;
 
   //Filter
