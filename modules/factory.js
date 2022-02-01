@@ -140,6 +140,33 @@ const factoriesConfig = {
 
   },
 
+  paperFactory: {
+    category: 'factory',
+    storage: 2,
+    speed: 5,
+    products: [
+      {
+        name: 'paper',
+        //цена всего производства
+        price: 5400,
+        raw: ['wood'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+      {
+        name: 'cardboard',
+        //цена всего производства
+        price: 3500,
+        raw: ['wood','glue'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 2500,
+    count: 10,
+  },
+
 
 
 

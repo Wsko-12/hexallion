@@ -192,16 +192,21 @@ const LANG = {
       eng: 'Gold mill',
     },
     oilWell: {
-      ru: 'нефтяной вышке',
+      ru: 'нефтяной вышка',
       eng: 'Oil mill',
     },
     oilRefinery: {
-      ru: 'нефтеперерабат. заводе',
+      ru: 'нефтеперерабат. завода',
       eng: 'Oil refinery',
     },
     petrochemicalPlant: {
-      ru: 'нефтехим заводе',
+      ru: 'нефтехим завода',
       eng: 'Petrochemical plant',
+    },
+
+    paperFactory: {
+      ru: 'картонажной фабрики',
+      eng: 'Paper factory',
     },
 
     road: {
@@ -249,6 +254,12 @@ const LANG = {
     dye: {
       ru: 'красителей',
     },
+    paper:{
+      ru:'бумаги'
+    },
+    cardboard:{
+      ru:'картона'
+    },
 
     truckBuying: {
       ru: 'Покупка грузовика',
@@ -287,6 +298,11 @@ const LANG = {
     PetrochemicalPlant: {
       ru: 'нефтехим заводе',
       eng: 'Petrochemical plant',
+    },
+
+    PaperFactory: {
+      ru: 'картонажной фабрике',
+      eng: 'Paper factory',
     },
 
     creditPayment: {

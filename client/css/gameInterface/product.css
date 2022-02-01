@@ -41,9 +41,13 @@
   background-image: url(../img/product/oil.png);
 }
 
+
+
 .product-petrol {
   background-image: url(../img/product/petrol.png);
 }
+
+
 
 .product-plastic {
   background-image: url(../img/product/plastic.png);
@@ -59,4 +63,12 @@
 
 .product-glue {
   background-image: url(../img/product/glue.png);
+}
+
+
+.product-paper {
+  background-image: url(../img/product/paper.png);
+}
+.product-cardboard {
+  background-image: url(../img/product/cardboard.png);
 }

@@ -158,10 +158,26 @@ const BUILDINGS = {
     raw: ['oil'],
     category: 'factory',
     title: {
-      eng: 'petrochemical plant',
+      eng: 'Petrochemical plant',
       ru: 'Нефтехим завод',
     },
     buttonColor: '#454758',
+  },
+
+  paperFactory: {
+    name: 'Paper factory',
+    description: 'Бумажный завод',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 47950,
+    product: ['paper','cardboard'],
+    raw: ['wood','glue'],
+    category: 'factory',
+    title: {
+      eng: 'Paper factory',
+      ru: 'Картонажная фабрика',
+    },
+    buttonColor: '#cbbab3',
   },
 };
 export {

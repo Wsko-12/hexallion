@@ -191,6 +191,39 @@ const PRODUCTS = {
   },
 
 
+  paper: {
+    price: 15400,
+    sailSpeed: 6,
+    category: 'hardware',
+    manufacture: ['paperFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['wood'],
+
+    lang: {
+      ru: 'бумага',
+      eng: 'paper',
+    },
+  },
+
+  cardboard: {
+    price: 21000,
+    sailSpeed: 6,
+    category: 'hardware',
+    manufacture: ['paperFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['wood','glue'],
+
+    lang: {
+      ru: 'картон',
+      eng: 'cardboard',
+    },
+  },
+
+
 };
 export {
   PRODUCTS

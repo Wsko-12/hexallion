@@ -259,6 +259,11 @@ ATLAS.models = [
     file:'factory_test.glb',
   },
 
+  { name:'paperFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
 
 
 

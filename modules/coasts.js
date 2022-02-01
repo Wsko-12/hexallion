@@ -14,6 +14,7 @@ const coasts = {
 
     oilRefinery: 64100,
     petrochemicalPlant:55875,
+    paperFactory:47950,
   },
 
   trucks: {
@@ -93,6 +94,19 @@ const coasts = {
       sailSpeed:6,
       raw:['oil']
     },
+
+    paper:{
+      price:15400,
+      sailSpeed:6,
+      raw:['wood']
+    },
+
+    cardboard:{
+      price:21000,
+      sailSpeed:6,
+      raw:['glue']
+    },
+
 
 
   },

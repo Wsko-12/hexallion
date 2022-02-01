@@ -56,6 +56,9 @@
 .factory_header_bg-oilWell {
   background-image: url(../img/factoryCards/oilWell.png);
 }
+.factory_header_bg-sandmine {
+  background-image: url(../img/factoryCards/sandmine.png);
+}
 
 .factory_header_header {
   font-size: 10px;

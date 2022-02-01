@@ -113,7 +113,7 @@ function showSettingsSetMenu(factory) {
 
   const section = `
     <div class="factory_card">
-      <div class="factory_header factory_header_bg-oilWell">
+      <div class="factory_header factory_header_bg-sandmine">
         <div class="factory_header_header">
           <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
           ${factory.settingsSetted ? `
@@ -445,13 +445,14 @@ function showFactoryMenu(factory) {
                  </div>`
 
       }else{
+
         line = `<div class="factory_product-hole factory_product-hole-rawStorage">
                    <div class="product-icon product-${product}"></div>
                 </div>`
       };
+      rawStorage += line;
 
     };
-    rawStorage += line;
   };
   rawStorage += `</div>`;
 
@@ -624,7 +625,7 @@ function showFactoryMenu(factory) {
 
   const card = `
           <div class="factory_card" id='factoryCard'>
-             <div class="factory_header factory_header_bg-oilWell">
+             <div class="factory_header factory_header_bg-sandmine">
                <div class="factory_header_header">
                  <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
                  <div class="factory_header_header-buttonsContainer">
