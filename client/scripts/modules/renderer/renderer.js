@@ -64,7 +64,7 @@ function init() {
   RENDERER.camera.lookAt(0, 0, 0);
   RENDERER.scene = new THREE.Scene();
   // RENDERER.controls = new OrbitControls(RENDERER.camera, RENDERER.renderer.domElement);
-  // RENDERER.stats = new Stats();
+  RENDERER.stats = new Stats();
 
 
 
@@ -238,6 +238,12 @@ function init() {
   //      } );
   // RENDERER.composer.addPass(   RENDERER.postrocessors.bokehPass );
 
+
+
+
+
+
+  //Bloom
   const paramsBloom = {
     bloomStrength: 1.5,
     bloomThreshold: 0.95,
@@ -250,7 +256,7 @@ function init() {
   RENDERER.postrocessors.bloomPass.strength = paramsBloom.bloomStrength;
   RENDERER.postrocessors.bloomPass.threshold = paramsBloom.bloomThreshold;
   RENDERER.postrocessors.bloomPass.radius = paramsBloom.bloomRadius;
-  RENDERER.composer.addPass(RENDERER.postrocessors.bloomPass);
+  // RENDERER.composer.addPass(RENDERER.postrocessors.bloomPass);
 
 
   const bloomPassGUI = postrocessorsGUI.addFolder('bloomPass');
@@ -361,32 +367,36 @@ function init() {
 
 
         vec4 shadowNoiseColor = vec4( color );
+
         /*Shadow Noise*/
 
 
         /*Blur*/
-        float Directions = 16.0;
-        float Quality = 3.0;
-       //получаем число от 0 до 1, где 0 в центре;
-        float uvShift = abs(vUv.y - 0.5)*2.0;
+          float Directions = 16.0;
+          float Quality = 3.0;
+         //получаем число от 0 до 1, где 0 в центре;
+          float uvShift = abs(vUv.y - 0.5)*2.0;
 
-        //насколько широкая средняя полоса
-        uvShift = max(uvShift - uFocus,0.0);
+          //насколько широкая средняя полоса
+          uvShift = max(uvShift - uFocus,0.0);
 
-        //сила размытия, чем дальше от центра, тем больше
-        float Size = (uvShift*2.0)*uStrength;
+          //сила размытия, чем дальше от центра, тем больше
+          float Size = (uvShift*2.0)*uStrength;
 
 
-        vec2 Radius = Size/uResolution.xy;
+          vec2 Radius = Size/uResolution.xy;
 
-        vec4 Color = shadowNoiseColor;
-         for( float d=0.0; d<3.0; d+=1.0){
-           for(float i = 0.0;i<3.0;i+=1.0){
-               vec2 cords = vec2(cos(d),sin(d))*Radius*i;
-               Color += texture2D( tDiffuse, vUv+cords );
+          vec4 Color = shadowNoiseColor;
+           for( float d=0.0; d<3.0; d+=1.0){
+             for(float i = 0.0;i<3.0;i+=1.0){
+                 vec2 cords = vec2(cos(d),sin(d))*Radius*i;
+                 Color += texture2D( tDiffuse, vUv+cords );
+             }
            }
-         }
-         Color /= Quality * Directions - 15.0;
+           Color /= Quality * Directions - 15.0;
+
+
+
 
         /*Blur*/
 
@@ -434,7 +444,7 @@ function init() {
   RENDERER.postrocessors.postrocessorMerged = new ShaderPass(postrocessorMerged);
 
   //shadowNoise
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.5;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.7;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright.value = 0.04;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize.value = 15 // 15 / Math.min(window.devicePixelRatio, 2) + 0.2;
   //blur
@@ -443,12 +453,12 @@ function init() {
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus.value = 0.5;
 
   //Filter
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0.05;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0.02;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.1;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.05;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen.value = 0;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue.value = 0.015;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue.value = 0;
 
   RENDERER.composer.addPass(RENDERER.postrocessors.postrocessorMerged);
 
@@ -471,9 +481,41 @@ function init() {
 
 
 
-  // document.body.appendChild(RENDERER.stats.dom);
+  document.body.appendChild(RENDERER.stats.dom);
   window.addEventListener("resize", setSize);
   setSize();
+
+
+
+
+  const graficsSetings = {
+    brighteningShadows:true,
+    noise:true,
+    blur:true,
+  }
+  const graficsGUI = MAIN.GUI.addFolder('grafics');
+  graficsGUI.add(graficsSetings, 'brighteningShadows').onChange((value)=>{
+    if(value){
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.05;
+    }else{
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0;
+    };
+  });
+  graficsGUI.add(graficsSetings, 'noise').onChange((value)=>{
+    if(value){
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.7;
+    }else{
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0;
+    };
+  });
+  graficsGUI.add(graficsSetings, 'blur').onChange((value)=>{
+    if(value){
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 2;
+    }else{
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 0;
+    };
+  });
+
 };
 
 
@@ -518,8 +560,11 @@ function render() {
 
   if (renderShadow === 10) {
     RENDERER.renderer.shadowMap.needsUpdate = true;
+
     renderShadow = 0;
   };
+
+
 
   if (MAIN.game.scene) {
     if (MAIN.game.scene.uTime) {
@@ -530,7 +575,7 @@ function render() {
 
 
   // RENDERER.controls.update();
-  // RENDERER.stats.update();
+  RENDERER.stats.update();
   // RENDERER.renderer.render(RENDERER.scene, RENDERER.camera);
   RENDERER.composer.render();
 
@@ -539,30 +584,34 @@ function render() {
     MAIN.interface.checkEvents();
     MAIN.interface.game.camera.update();
 
-    if (MAIN.interface.game.city.priceShow) {
-      MAIN.interface.game.city.updatePricePosition();
-    };
+    // if (MAIN.interface.game.city.priceShow) {
+    //   MAIN.interface.game.city.updatePricePosition();
+    // };
 
     if (MAIN.interface.game.path.buttonsShowed) {
       MAIN.interface.game.path.moveButtons();
     };
 
     if (MAIN.interface.game.path.neederOfProduct.length > 0) {
-      MAIN.interface.game.path.moveWhereProductIsNeeded();
+        MAIN.interface.game.path.moveWhereProductIsNeeded();
     };
     if (MAIN.interface.game.path.whereCanSendProduct.length > 0) {
-      MAIN.interface.game.path.moveWhereCanSendProduct();
+        MAIN.interface.game.path.moveWhereCanSendProduct();
     };
   };
 
   if (MAIN.game.data.playerData) {
     for (let factory in MAIN.game.data.playerData.factories) {
       const thisFactory = MAIN.game.data.playerData.factories[factory]
-      thisFactory.updateNotificationPosition();
+      if(renderShadow % 4 === 0){
+        thisFactory.updateNotificationPosition();
+      };
     };
     for (let truck in MAIN.game.data.playerData.trucks) {
       const thisTruck = MAIN.game.data.playerData.trucks[truck]
-      thisTruck.updateNotificationPosition();
+      if(renderShadow % 4 === 0){
+        thisTruck.updateNotificationPosition();
+      };
     };
   };
 

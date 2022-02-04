@@ -40,11 +40,11 @@ ATLAS.models = [
   },
 
   { name:'forestCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'forestCeil.glb',
   },
   { name:'meadowCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'meadowCeil.glb',
   },
   { name:'meadowDecor_0',
@@ -80,23 +80,27 @@ ATLAS.models = [
     file:'steelMineCeil.glb',
   },
   { name:'sandCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'sandCeil.glb',
   },
   { name:'waterCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'waterCeil.glb',
   },
   { name:'waterBottom',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'waterBottom.glb',
   },
   { name:'mountainCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'mountainCeil.glb',
   },
+
+
+
+
   { name:'westownCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'westownCeil.glb',
   },
   { name:'westownLight',
@@ -142,11 +146,11 @@ ATLAS.models = [
 
 
   { name:'roadCenter',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'roadCenter.glb',
   },
   { name:'road',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'road.glb',
   },
 
@@ -247,7 +251,7 @@ ATLAS.models = [
 
 
   { name:'factoryBottom',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'factoryBottom.glb',
   },
 
@@ -272,7 +276,7 @@ ATLAS.models = [
 
 
   { name:'sawmill',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'sawmill.glb',
   },
   { name:'sawmillLight',
@@ -357,7 +361,7 @@ ATLAS.textures = [
   },
   { name:'ceils_256',
     folder:'ceils/',
-    file:'ceils_256.png',
+    file:'roi.png',
   },
 
 ];

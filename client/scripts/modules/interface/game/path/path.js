@@ -183,15 +183,6 @@ function moveButtons() {
   const x = (tempV.x * .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
   const y = (tempV.y * -.5 + .5) * MAIN.renderer.renderer.domElement.clientHeight;
 
-  // pseudo3d
-  // const cameraAngle = 4-MAIN.interface.game.camera.configs.rail.yAngle.current;
-  // PATH.buttonsDOM.style.transform = `translate(-50%, -50%) translate(${x}px,${y-cameraAngle*2}px)`;
-  // PATH.buttonsDOM.childNodes.forEach((item) => {
-  //   if(item.nodeType === 1){
-  //     item.style.transform = `rotateX(${cameraAngle*15}deg)`;
-  //   };
-  // });
-
   PATH.buttonsDOM.style.transform = `translate(0px, -50%) translate(0px, -5px) translate(${x}px,${y}px)`;
 
 };

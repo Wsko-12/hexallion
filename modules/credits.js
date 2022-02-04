@@ -2,7 +2,7 @@ const credits = {
   basic: {
     title: 'basic',
     //сколько дадут денег
-    amount: 120000,
+    amount: 120000000,
 
     //какое кол-во платежей будет
     pays: 25,

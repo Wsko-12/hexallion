@@ -176,31 +176,31 @@ FIELD.create = () => {
 
 
 
-          if(map[z][x] === 'meadow'){
-            for(let i = 0; i<3;i++){
-              if(Math.random()>0.3){
-                const decorElemntNumber = Math.floor(Math.random() * 5);
-                const decorGeometry = MAIN.game.scene.assets.geometries[`meadowDecor_${decorElemntNumber}`].clone();
-                decorGeometry.rotateY(getRandomDeg());
-
-                const decorPosition = {
-                  x:position.x,
-                  y:0,
-                  z:position.z,
-                };
-
-                const decorDegShift = 60 * Math.floor(Math.random()*7);
-                const radius = 0.25 + Math.random()*0.7;
-                decorPosition.x += Math.sin(decorDegShift*Math.PI/180)* radius;
-                decorPosition.z += Math.cos(decorDegShift*Math.PI/180)*radius;
-
-
-                decorGeometry.translate(decorPosition.x,0,decorPosition.z);
-
-                geometriesArray.push(decorGeometry);
-              };
-            };
-          };
+          // if(map[z][x] === 'meadow'){
+          //   for(let i = 0; i<3;i++){
+          //     if(Math.random()>0.3){
+          //       const decorElemntNumber = Math.floor(Math.random() * 5);
+          //       const decorGeometry = MAIN.game.scene.assets.geometries[`meadowDecor_${decorElemntNumber}`].clone();
+          //       decorGeometry.rotateY(getRandomDeg());
+          //
+          //       const decorPosition = {
+          //         x:position.x,
+          //         y:0,
+          //         z:position.z,
+          //       };
+          //
+          //       const decorDegShift = 60 * Math.floor(Math.random()*7);
+          //       const radius = 0.25 + Math.random()*0.7;
+          //       decorPosition.x += Math.sin(decorDegShift*Math.PI/180)* radius;
+          //       decorPosition.z += Math.cos(decorDegShift*Math.PI/180)*radius;
+          //
+          //
+          //       decorGeometry.translate(decorPosition.x,0,decorPosition.z);
+          //
+          //       geometriesArray.push(decorGeometry);
+          //     };
+          //   };
+          // };
 
 
 

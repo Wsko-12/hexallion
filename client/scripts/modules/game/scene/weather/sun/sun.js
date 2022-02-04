@@ -89,39 +89,93 @@ function changeColor(){
   MAIN.game.scene.lights.sky.material.color.set(`rgb(${sunColor})`);
   MAIN.renderer.postrocessors.bloomPass.threshold =  interpolateBloom(bloomTrashhold[currentPart][0],bloomTrashhold[nextPart][0],intValue);
   MAIN.game.scene.lights.moonlight.intensity = 1-MAIN.renderer.postrocessors.bloomPass.threshold;
-  if(currentPart === 11){
-    MAIN.game.scene.lights.buildingLights.visible = true;
-    MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
-      item.visible = true;
-    });
-  };
+  // if(currentPart === 11){
+  //   MAIN.game.scene.lights.buildingLights.visible = true;
+  //   MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
+  //     item.visible = true;
+  //   });
+  // };
   //currentPart === 0 чтобы вырубить в самом начале
-  if(currentPart === 5){
+  // if(currentPart === 5){
     MAIN.game.scene.lights.buildingLights.visible = false;
     MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
       item.visible = false;
     });
-  };
+  // };
+
 };
 
 function update(){
-  const sunDistance = 10;
-  const time = MAIN.game.scene.time;
+  // const sunDistance = 10;
+  // const time = MAIN.game.scene.time;
+
+  // const deg = ((180/12)* time.h + (180/12/60)* time.m);
+  // const p = {
+  //   x:Math.sin((deg + 110)*Math.PI/180)*sunDistance,
+  //   y:Math.cos((deg + 110)*Math.PI/180)*sunDistance,
+  // }
+  // sun.position.set(0,p.y,p.x);
+  // sun.lookAt(0,0,0);
+  // lightAdditional.position.set(0,p.y,-p.x);
+  // lightAdditional.lookAt(0,0,0);
+  //
+  // changeColor();
+
+
+
+  let deg;
+  let sunColor = 'rgb(255, 255, 255)';
+  let sunIntens = 1;
+
+  let skyColor = 'rgb(255, 255, 255)';
+  switch (MAIN.game.scene.time.time) {
+    case 'morning':
+      deg = 180;
+      sunColor = 'rgb(254, 190, 131)';
+
+      skyColor = 'rgb(171, 56, 101)';
+      sunIntens = 1;
+      break;
+    case 'day':
+      sunColor = 'rgb(249, 243, 164)';
+      skyColor = 'rgb(56, 154, 171)';
+      sunIntens = 0.5;
+      deg = 290;
+      break;
+
+    case 'evening':
+      sunColor = 'rgb(241, 74, 45)';
+      skyColor = 'rgb(250, 63, 4)';
+      sunIntens = 1;
+      deg = 320;
+      break;
+
+  };
   const sun = MAIN.game.scene.lights.lightMain;
+  sun.color.set(sunColor);
+  MAIN.game.scene.lights.sky.material.color.set(skyColor);
+
+    sun.intensity = sunIntens;
+
+
   const lightAdditional = MAIN.game.scene.lights.lightAdditional;
-  const deg = ((180/12)* time.h + (180/12/60)* time.m);
+  const sunDistance = 10;
   const p = {
     x:Math.sin((deg + 110)*Math.PI/180)*sunDistance,
     y:Math.cos((deg + 110)*Math.PI/180)*sunDistance,
-  }
+  };
   sun.position.set(0,p.y,p.x);
   sun.lookAt(0,0,0);
   lightAdditional.position.set(0,p.y,-p.x);
   lightAdditional.lookAt(0,0,0);
 
-  changeColor();
+  MAIN.game.scene.lights.buildingLights.visible = false;
+  MAIN.game.scene.lights.buildingPointLights.forEach((item, i) => {
+    item.visible = false;
+  });
 
-  // console.log(sun)
+
+
 };
 
 
