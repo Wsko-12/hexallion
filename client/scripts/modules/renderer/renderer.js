@@ -610,6 +610,7 @@ function init() {
     brighteningShadows:true,
     noise:true,
     blur:true,
+    shadowQuality:2048,
   }
   const graficsGUI = MAIN.GUI.addFolder('grafics');
   graficsGUI.add(graficsSetings, 'brighteningShadows').onChange((value)=>{
@@ -632,6 +633,14 @@ function init() {
     }else{
       RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 0;
     };
+  });
+  graficsGUI.add(graficsSetings, 'shadowQuality', { low:512, middle: 1024, high:2048 , ultra: 4096 } ).onChange((value)=>{
+    const light = MAIN.game.scene.lights.lightMain;
+    light.shadow.mapSize.width = value;
+    light.shadow.mapSize.height = value;
+    light.shadow.map.dispose(); // important
+    light.shadow.map = null;
+
   });
 
 };
@@ -678,7 +687,6 @@ function render() {
 
   if (renderShadow === 10) {
     RENDERER.renderer.shadowMap.needsUpdate = true;
-
     renderShadow = 0;
   };
 
