@@ -29,14 +29,13 @@ function init(){
   update();
 
   const timeGUI = MAIN.GUI.addFolder('time');
-  timeGUI.add(TIME, 'h', 0, 23).step(1).onChange(function(value) {
-    TIME.h = Number(value);
-    MAIN.game.scene.sun.update();
-  });
 
   timeGUI.add(TIME, 'time', { morning: 'morning', day: 'day', evening: 'evening' } ).onChange((value)=>{
     TIME.time = value;
     MAIN.game.scene.sun.update();
+    MAIN.renderer.renderer.shadowMap.needsUpdate = true;
+
+
   });
 
 };

@@ -137,7 +137,9 @@ function update(){
       sunIntens = 1;
       break;
     case 'day':
-      sunColor = 'rgb(249, 243, 164)';
+      // sunColor = 'rgb(249, 243, 164)';
+      sunColor = 'rgb(252, 239, 183)';
+
       skyColor = 'rgb(56, 154, 171)';
       sunIntens = 0.5;
       deg = 290;
