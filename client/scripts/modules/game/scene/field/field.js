@@ -265,15 +265,15 @@ FIELD.create = () => {
   // const ceilsMaterial = new THREE.MeshPhongMaterial({envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.7,map:MAIN.game.scene.assets.textures.ceils_color,shininess:10});
   const ceilsMaterial = MAIN.game.scene.mainMaterial;
 
-  const ceilsMaterialGUI = MAIN.GUI.addFolder(' ceilsMaterial');
-  const ceilsMaterialConfig = {
-    color:'#ffffff',
-  }
-  ceilsMaterialGUI.addColor(ceilsMaterialConfig, 'color').onChange(()=>{
-    ceilsMaterial.color.set(ceilsMaterialConfig.color)
-  });
-  ceilsMaterialGUI.add(ceilsMaterial, 'reflectivity',0,1).step(0.05).name('reflectivity');
-  ceilsMaterialGUI.add(ceilsMaterial, 'shininess',0,500).step(5).name('shininess');
+  // const ceilsMaterialGUI = MAIN.GUI.addFolder(' ceilsMaterial');
+  // const ceilsMaterialConfig = {
+  //   color:'#ffffff',
+  // }
+  // ceilsMaterialGUI.addColor(ceilsMaterialConfig, 'color').onChange(()=>{
+  //   ceilsMaterial.color.set(ceilsMaterialConfig.color)
+  // });
+  // ceilsMaterialGUI.add(ceilsMaterial, 'reflectivity',0,1).step(0.05).name('reflectivity');
+  // ceilsMaterialGUI.add(ceilsMaterial, 'shininess',0,500).step(5).name('shininess');
 
   const ceilsMesh = new THREE.Mesh(mergedGeometry,ceilsMaterial);
   ceilsMesh.name = 'ceilsMesh';

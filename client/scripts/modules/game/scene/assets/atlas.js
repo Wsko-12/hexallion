@@ -304,7 +304,7 @@ ATLAS.models = [
 
 
   { name:'waterStation',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'waterStation.glb',
   },
 
