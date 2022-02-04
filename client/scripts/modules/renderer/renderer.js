@@ -326,118 +326,236 @@ function init() {
        vUv = uv;
        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
      }`,
-    fragmentShader: /* glsl */ `
-      #include <common>
-      uniform sampler2D tDiffuse;
-      uniform float uIntensity;
-      uniform float uBright;
-      uniform float uSize;
-      uniform float uTime;
+    // fragmentShader: /* glsl */ `
+    //   #include <common>
+    //   uniform sampler2D tDiffuse;
+    //   uniform float uIntensity;
+    //   uniform float uBright;
+    //   uniform float uSize;
+    //   uniform float uTime;
+    //
+    //   uniform vec2 uResolution;
+    //   uniform float uStrength;
+    //   uniform float uFocus;
+    //
+    //
+    //   uniform float uContrast;
+    //   uniform float uBlackWhite;
+    //   uniform float uShadowWhite;
+    //   uniform float uRed;
+    //   uniform float uGreen;
+    //   uniform float uBlue;
+    //
+    //   varying vec2 vUv;
+    //   void main() {
+    //     /*Shadow Noise*/
+    //     vec4 renderColor = texture2D( tDiffuse, vUv );
+    //
+    //     //рандомное число и размер пикселя шума
+    //     float noise = rand( floor(vUv*100.0*uSize)/100.0*uSize );
+    //
+    //     // Яркость цвета
+    //     float Cmax = max(renderColor.r, renderColor.g);
+    //     Cmax = 1.0 - max(Cmax, renderColor.b);
+    //
+    //     // Рисуем шум только там, где маленькая яркость
+    //     float bright = Cmax+uBright;
+    //     float value = clamp(bright, 0.0, 1.0);
+    //
+    //     //Где маленькая яркость и попадает на пиксель шума -- затемняется текстура
+    //     vec4 color = renderColor - (noise*uIntensity)*(value);
+    //
+    //
+    //     vec4 shadowNoiseColor = vec4( color );
+    //
+    //     /*Shadow Noise*/
+    //
+    //
+    //     /*Blur*/
+    //       float Directions = 16.0;
+    //       float Quality = 3.0;
+    //      //получаем число от 0 до 1, где 0 в центре;
+    //       float uvShift = abs(vUv.y - 0.5)*2.0;
+    //
+    //       //насколько широкая средняя полоса
+    //       uvShift = max(uvShift - uFocus,0.0);
+    //
+    //       //сила размытия, чем дальше от центра, тем больше
+    //       float Size = (uvShift*2.0)*uStrength;
+    //
+    //
+    //       vec2 Radius = Size/uResolution.xy;
+    //
+    //       vec4 Color = shadowNoiseColor;
+    //        for( float d=0.0; d<3.0; d+=1.0){
+    //          for(float i = 0.0;i<3.0;i+=1.0){
+    //              vec2 cords = vec2(cos(d),sin(d))*Radius*i;
+    //              Color += texture2D( tDiffuse, vUv+cords );
+    //          }
+    //        }
+    //        Color /= Quality * Directions - 15.0;
+    //
+    //
+    //
+    //
+    //     /*Blur*/
+    //
+    //
+    //
+    //
+    //     /*Filter*/
+    //       // Яркость цвета
+    //       Cmax = max(Color.r, Color.g);
+    //       Cmax = 1.0 - max(Cmax, Color.b);
+    //       Cmax = pow(Cmax,10.0);
+    //
+    //       //Обесцвечивание всего
+    //       float blackWhite = (Color.r+Color.g+Color.b)/3.0;
+    //
+    //       vec4 blackWhiteValues = vec4(vec3(blackWhite),1.0);
+    //
+    //       Color = mix(Color,blackWhiteValues,uBlackWhite);
+    //
+    //
+    //       // Делаем котрасттный
+    //       Color = Color -  vec4( Cmax* uContrast );
+    //
+    //       //Обесцвечивание теней
+    //       // Color =  Color +  vec4(Cmax * uShadowWhite);
+    //
+    //
+    //       //Цветной фильтр
+    //       Color.r +=  uRed;
+    //       Color.g +=  uGreen;
+    //       Color.b +=  uBlue;
+    //
+    //
+    //
+    //
+    //       gl_FragColor = vec4(Color*4.5);
+    //
+    //     /*Filter*/
+    //
+    //
+    //   }`,
 
-      uniform vec2 uResolution;
-      uniform float uStrength;
-      uniform float uFocus;
+
+    //optimization
+      fragmentShader: /* glsl */ `
+        #include <common>
+        uniform sampler2D tDiffuse;
+        uniform float uIntensity;
+        uniform float uBright;
+        uniform float uSize;
+        uniform float uTime;
+
+        uniform vec2 uResolution;
+        uniform float uStrength;
+        uniform float uFocus;
 
 
-      uniform float uContrast;
-      uniform float uBlackWhite;
-      uniform float uShadowWhite;
-      uniform float uRed;
-      uniform float uGreen;
-      uniform float uBlue;
+        uniform float uContrast;
+        uniform float uBlackWhite;
+        uniform float uShadowWhite;
+        uniform float uRed;
+        uniform float uGreen;
+        uniform float uBlue;
 
-      varying vec2 vUv;
-      void main() {
-        /*Shadow Noise*/
-        vec4 renderColor = texture2D( tDiffuse, vUv );
+        varying vec2 vUv;
+        void main() {
+          vec4 renderColor = texture2D( tDiffuse, vUv );
+          vec4 Color = renderColor;
 
-        //рандомное число и размер пикселя шума
-        float noise = rand( floor(vUv*100.0*uSize)/100.0*uSize );
-
-        // Яркость цвета
-        float Cmax = max(renderColor.r, renderColor.g);
-        Cmax = 1.0 - max(Cmax, renderColor.b);
-
-        // Рисуем шум только там, где маленькая яркость
-        float bright = Cmax+uBright;
-        float value = clamp(bright, 0.0, 1.0);
-
-        //Где маленькая яркость и попадает на пиксель шума -- затемняется текстура
-        vec4 color = renderColor - (noise*uIntensity)*(value);
+          vec4 noiseColor = Color;
 
 
-        vec4 shadowNoiseColor = vec4( color );
+          /*Shadow Noise*/
+          if(uIntensity > 0.0){
+            //рандомное число и размер пикселя шума
+            float noise = rand( floor(vUv*100.0*uSize)/100.0*uSize );
 
-        /*Shadow Noise*/
+            // Яркость цвета
+            float Cmax = max(renderColor.r, renderColor.g);
+            Cmax = 1.0 - max(Cmax, renderColor.b);
 
+            // Рисуем шум только там, где маленькая яркость
+            float bright = Cmax-0.5;
+            float value = clamp(bright, 0.0, 1.0);
 
-        /*Blur*/
-          float Directions = 16.0;
-          float Quality = 3.0;
-         //получаем число от 0 до 1, где 0 в центре;
-          float uvShift = abs(vUv.y - 0.5)*2.0;
-
-          //насколько широкая средняя полоса
-          uvShift = max(uvShift - uFocus,0.0);
-
-          //сила размытия, чем дальше от центра, тем больше
-          float Size = (uvShift*2.0)*uStrength;
-
-
-          vec2 Radius = Size/uResolution.xy;
-
-          vec4 Color = shadowNoiseColor;
-           for( float d=0.0; d<3.0; d+=1.0){
-             for(float i = 0.0;i<3.0;i+=1.0){
-                 vec2 cords = vec2(cos(d),sin(d))*Radius*i;
-                 Color += texture2D( tDiffuse, vUv+cords );
-             }
-           }
-           Color /= Quality * Directions - 15.0;
+            //Где маленькая яркость и попадает на пиксель шума -- затемняется текстура
+            noiseColor = Color - (noise*0.25)*(value);
+          }
 
 
+          /*Shadow Noise*/
 
 
-        /*Blur*/
+          /*Blur*/
+            if(uStrength > 0.0){
+              float Directions = 16.0;
+              float Quality = 3.0;
+             //получаем число от 0 до 1, где 0 в центре;
+              float uvShift = abs(vUv.y - 0.5)*2.0;
+
+              //насколько широкая средняя полоса
+              uvShift = max(uvShift - uFocus,0.0);
+
+              //сила размытия, чем дальше от центра, тем больше
+              float Size = (uvShift*2.0)*uStrength;
 
 
+              vec2 Radius = Size/uResolution.xy;
 
-
-        /*Filter*/
-          // Яркость цвета
-          Cmax = max(Color.r, Color.g);
-          Cmax = 1.0 - max(Cmax, Color.b);
-          Cmax = pow(Cmax,10.0);
-
-          //Обесцвечивание всего
-          float blackWhite = (Color.r+Color.g+Color.b)/3.0;
-
-          vec4 blackWhiteValues = vec4(vec3(blackWhite),1.0);
-
-          Color = mix(Color,blackWhiteValues,uBlackWhite);
-
-
-          // Делаем котрасттный
-          Color = Color -  vec4( Cmax* uContrast );
-
-          //Обесцвечивание теней
-          Color =  Color +  vec4(Cmax * uShadowWhite);
-
-
-          //Цветной фильтр
-          Color.r +=  uRed;
-          Color.g +=  uGreen;
-          Color.b +=  uBlue;
+               for( float d=0.0; d<3.0; d+=1.0){
+                 for(float i = 0.0;i<3.0;i+=1.0){
+                     vec2 cords = vec2(cos(d),sin(d))*Radius*i;
+                     Color = (Color + texture2D( tDiffuse, vUv+cords )+ noiseColor)/3.0 ;
+                 }
+               }
+            }else{
+              Color = (Color+noiseColor)/2.0;
+            }
+          /*Blur*/
 
 
 
 
-          gl_FragColor = vec4(Color*4.5);
+          /*Filter*/
+            // Яркость цвета
+            float Cmax_1 = max(Color.r, Color.g);
+            Cmax_1 = 1.0 - max(Cmax_1, Color.b);
+            Cmax_1 = pow(Cmax_1,10.0);
 
-        /*Filter*/
+            //Обесцвечивание всего
+            float blackWhite = (Color.r+Color.g+Color.b)/3.0;
+
+            vec4 blackWhiteValues = vec4(vec3(blackWhite),1.0);
+
+            Color = mix(Color,blackWhiteValues,uBlackWhite);
 
 
-      }`
+            // Делаем котрасттный
+            // Color = Color -  vec4( Cmax_1* uContrast );
+
+            //Обесцвечивание теней
+            Color =  Color +  vec4((Cmax_1/2.0+0.20) * uShadowWhite);
+
+
+            //Цветной фильтр
+            // Color.r +=  uRed;
+            // Color.g +=  uGreen;
+            // Color.b +=  uBlue;
+
+
+
+
+            gl_FragColor = vec4(Color);
+
+          /*Filter*/
+
+
+        }`,
+
 
   };
 
@@ -455,7 +573,7 @@ function init() {
   //Filter
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite.value = 0;
-  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.05;
+  RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.25;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen.value = 0;
   RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue.value = 0;
@@ -496,7 +614,7 @@ function init() {
   const graficsGUI = MAIN.GUI.addFolder('grafics');
   graficsGUI.add(graficsSetings, 'brighteningShadows').onChange((value)=>{
     if(value){
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.05;
+      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.25;
     }else{
       RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0;
     };
