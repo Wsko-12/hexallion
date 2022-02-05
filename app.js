@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 
 //сразу делает игру
-const DEV_GAMEPLAY = true;
+const DEV_GAMEPLAY = false;
 
 if (DEV_GAMEPLAY) {
   http.listen(PORT, '0.0.0.0', () => {
@@ -673,9 +673,9 @@ class CITY {
   constructor(properties) {
     this.name = properties.name;
     this.game = properties.game;
-    this.balance = properties.game.cityEconomy ? 300000 : null,
+    this.balance = properties.game.cityEconomy ? 1000000 : null,
 
-      this.storage = this.createStorage();
+    this.storage = this.createStorage();
 
   };
   createStorage() {
@@ -1685,7 +1685,7 @@ class PLAYER {
 
   emit(message, data) {
     if (USERS[this.login]) {
-      if (USERS[this.login].inGame) {
+      if (USERS[this.login].inGame === this.game) {
         USERS[this.login].emit(message, data);
       };
     };
@@ -2135,6 +2135,8 @@ io.on('connection', function(socket) {
       turnBasedGame: roomData.turnBasedGame,
       turnTime: roomData.turnTime * 1000,
       tickTime: roomData.tickTime * 1000,
+      cityEconomy:true,
+
     });
 
     ROOMS[room.id] = room;
@@ -2266,6 +2268,7 @@ io.on('connection', function(socket) {
               return;
             };
           };
+          console.log(game.)
 
           if (game.players[data.player]) {
             const player = game.players[data.player];

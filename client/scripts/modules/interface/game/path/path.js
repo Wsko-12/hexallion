@@ -278,16 +278,25 @@ function showActionsButton(data) {
       move.onclick = () => {
         action()
       };
+      move.ontouchstart = () => {
+        action()
+      };
     };
     if (delivery) {
       MAIN.interface.deleteTouches(delivery);
       delivery.onclick = () => {
         action('delivery')
       };
+      delivery.ontouchstart = () => {
+        action('delivery')
+      };
     };
     if (sell) {
       MAIN.interface.deleteTouches(sell);
       sell.onclick = () => {
+        action('sell')
+      };
+      sell.ontouchstart = () => {
         action('sell')
       };
     };
@@ -442,6 +451,9 @@ function showWhereProductIsNeeded(data) {
             document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = () => {
               findPath(thatFactory)
             };
+            document.querySelector(`#pathSection_neader_${thatFactory.id}`).ontouchstart = () => {
+              findPath(thatFactory)
+            };
           };
         };
       };
@@ -452,6 +464,9 @@ function showWhereProductIsNeeded(data) {
       const thatCity = MAIN.game.data.cities[city];
       MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
       document.querySelector(`#pathSection_neader_${city}`).onclick = () => {
+        findPath(thatCity)
+      };
+      document.querySelector(`#pathSection_neader_${city}`).ontouchstart = () => {
         findPath(thatCity)
       };
     };
@@ -561,6 +576,18 @@ function showWhereCanSendProduct(data) {
               MAIN.game.functions.autosending.addFactory(autosendData);
               MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
             };
+            document.querySelector(`#pathSection_neader_${thatFactory.id}`).ontouchstart = () => {
+              hideWhereCanSendProduct();
+              const autosendData = {
+                mode: 'route',
+                factory: data.factory,
+                product: data.product,
+                final: thatFactory.fieldCeil,
+                finalObject: thatFactory,
+              };
+              MAIN.game.functions.autosending.addFactory(autosendData);
+              MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
+            };
           };
         };
       };
@@ -571,6 +598,18 @@ function showWhereCanSendProduct(data) {
       const thatCity = MAIN.game.data.cities[city];
       MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
       document.querySelector(`#pathSection_neader_${city}`).onclick = () => {
+        hideWhereCanSendProduct();
+        const autosendData = {
+          mode: 'route',
+          factory: data.factory,
+          product: data.product,
+          final: thatCity.fieldCeil,
+          finalObject: thatCity,
+        };
+        MAIN.game.functions.autosending.addFactory(autosendData);
+        MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
+      };
+      document.querySelector(`#pathSection_neader_${city}`).ontouchstart = () => {
         hideWhereCanSendProduct();
         const autosendData = {
           mode: 'route',

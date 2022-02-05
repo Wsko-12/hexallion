@@ -109,7 +109,7 @@ const ROOMS = {
           room.turnTime += 10;
         }
       } else {
-        if (room.turnTime > 30) {
+        if (room.turnTime > 10) {
           room.turnTime -= 10;
         };
       };
@@ -122,7 +122,7 @@ const ROOMS = {
           room.tickTime += 10;
         }
       } else {
-        if (room.tickTime > 30) {
+        if (room.tickTime > 15) {
           room.tickTime -= 10;
         };
       };

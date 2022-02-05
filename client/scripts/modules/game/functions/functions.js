@@ -559,6 +559,7 @@ const FUNCTIONS = {
 
 
     turn: async function() {
+
       //сначала должны проверятся грузовики, но пока их нет
       const send = {
         freeTruck: null,
@@ -569,6 +570,9 @@ const FUNCTIONS = {
       };
 
       const playerData = MAIN.game.data.playerData;
+      if(playerData.gameOver){
+        return
+      };
       for (let truck in playerData.trucks) {
         const thisTruck = playerData.trucks[truck];
         if (thisTruck.product === null) {

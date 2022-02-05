@@ -160,7 +160,8 @@
   height: 60px;
   margin: auto;
   pointer-events: auto;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(250, 249, 247,0.1);
+  box-shadow: 0px 0px 5px black;
   border-radius: 60px;
 }
 

@@ -101,7 +101,7 @@ function openMenu(city){
   const card = `
 
     <div class="card-header">
-      city <span class="card-header-span"> | ${city.name} </span>
+      city <span class="card-header-span"> | ${city.name} <span>$${city.balance}</span> </span>
     </div>
     <div class="cityCard-title">
       ${city.name}

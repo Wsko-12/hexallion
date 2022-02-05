@@ -188,6 +188,9 @@ function showSettingsSetMenu(factory) {
     document.querySelector('#factory_cancelButton').onclick = ()=>{
       showFactoryMenu(factory);
     };
+    document.querySelector('#factory_cancelButton').ontouchstart = ()=>{
+      showFactoryMenu(factory);
+    };
   };
   function applySettings() {
     closeMenu();
@@ -360,7 +363,6 @@ function updateFactoryAutosendBody(factory){
   if(factory.category === 'mining'){
     const price = document.querySelector(`#factory_autosend_${factory.product}_price`);
     const route = document.querySelector(`#factory_autosend_${factory.product}_route`);
-
     //если есть price то есть и route
     if(price){
       price.onclick = function(){
@@ -371,11 +373,27 @@ function updateFactoryAutosendBody(factory){
         });
         updateFactoryAutosendBody(factory);
       };
+      price.ontouchstart = function(){
+        MAIN.game.functions.autosending.addFactory({
+          factory:factory,
+          product:factory.product,
+          mode:'price',
+        });
+        updateFactoryAutosendBody(factory);
+      };
+
       route.onclick = function(){
         const data = {
           factory:factory,
           product:factory.product,
-        }
+        };
+        MAIN.interface.game.path.showWhereCanSendProduct(data);
+      };
+      route.ontouchstart = function(){
+        const data = {
+          factory:factory,
+          product:factory.product,
+        };
         MAIN.interface.game.path.showWhereCanSendProduct(data);
       };
     };
@@ -394,6 +412,15 @@ function updateFactoryAutosendBody(factory){
 
           updateFactoryAutosendBody(factory);
         };
+        price.ontouchstart = function(){
+          MAIN.game.functions.autosending.addFactory({
+            factory:factory,
+            product:product.name,
+            mode:'price',
+          });
+
+          updateFactoryAutosendBody(factory);
+        };
         route.onclick = function(){
           const data = {
             factory:factory,
@@ -402,6 +429,13 @@ function updateFactoryAutosendBody(factory){
           MAIN.interface.game.path.showWhereCanSendProduct(data);
         };
 
+        route.ontouchstart = function(){
+          const data = {
+            factory:factory,
+            product:product.name,
+          }
+          MAIN.interface.game.path.showWhereCanSendProduct(data);
+        };
       };
     });
   };
@@ -410,6 +444,10 @@ function updateFactoryAutosendBody(factory){
     const div = document.querySelector(`#factory_autosend_cancel_${autosend_ID}`);
     if(div){
       div.onclick = function(){
+        MAIN.game.functions.autosending.removeFactory(autosend_ID);
+        updateFactoryAutosendBody(factory);
+      };
+      div.ontouchstart = function(){
         MAIN.game.functions.autosending.removeFactory(autosend_ID);
         updateFactoryAutosendBody(factory);
       };
@@ -622,7 +660,6 @@ function showFactoryMenu(factory) {
 
 
   storagePart += `</div>`;
-
   const card = `
           <div class="factory_card" id='factoryCard'>
              <div class="factory_header factory_header_bg-sandmine">
@@ -668,8 +705,8 @@ function showFactoryMenu(factory) {
              </div>
 
 
-             <div class="factory_footer">
-               <div class="factory_footer_header">
+             <div class="factory_footer" id="factory_footer">
+               <div class="factory_footer_header" id="autosend_header">
                  <span>${MAIN.interface.lang.factory.autosend[MAIN.interface.lang.flag]}</span>
                </div>
                <div class="factory_footer_body" id="factory_autosend_body_${factory.id}">
@@ -688,19 +725,35 @@ function showFactoryMenu(factory) {
 
   document.querySelector(`#factory_card_error`).style.display = 'none';
 
-
+  const autosendFlag = {
+    flag:false,
+  }
+  function showAutosend(){
+    if(!autosendFlag.flag){
+      document.querySelector('#factory_footer').style.top = '-79%';
+      autosendFlag.flag = true;
+    }else{
+      document.querySelector('#factory_footer').style.top = '-12.5%';
+      autosendFlag.flag = false;
+    };
+  };
+  document.querySelector('#autosend_header').onclick = showAutosend;
+  document.querySelector('#autosend_header').ontouchstart =  showAutosend;
 
   updateFactoryAutosendBody(factory);
 
   factory.settings.storage.forEach((product, i) => {
     if(product){
       document.querySelector(`#factory_storage_${i}`).onclick = ()=>{factory.sendProduct(i)};
+      document.querySelector(`#factory_storage_${i}`).ontouchstart = ()=>{factory.sendProduct(i)};
     };
   });
 
   for(let product in factory.settings.rawStorage){
     if(factory.settings.rawStorage[product]){
       document.querySelector(`#factory_rawProduct_${product}`).onclick = ()=>{factory.sendRawProduct(product)};
+      document.querySelector(`#factory_rawProduct_${product}`).ontouchstart = ()=>{factory.sendRawProduct(product)};
+
     };
   };
 
@@ -710,7 +763,9 @@ function showFactoryMenu(factory) {
 
       const thisProduct = factory.settings.products[i];
       document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).onclick = ()=>{
-        factory.setProductSelected(thisProduct.name)}
+        factory.setProductSelected(thisProduct.name)};
+        document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).ontouchstart = ()=>{
+          factory.setProductSelected(thisProduct.name)}
     };
   };
 
@@ -725,11 +780,24 @@ function showFactoryMenu(factory) {
       MAIN.socket.emit('GAME_factory_stop', data);
     };
   };
+  document.querySelector('#factory_playButton').ontouchstart = ()=>{
+    const data = {
+      player: MAIN.game.data.playerData.login,
+      gameID: MAIN.game.data.commonData.id,
+      factory: factory.id,
+    };
+
+    if (!MAIN.game.data.playerData.gameOver) {
+      MAIN.socket.emit('GAME_factory_stop', data);
+    };
+  };
 
   document.querySelector('#factory_settingsButton').onclick = ()=>{
     showSettingsSetMenu(factory)
   };
-
+  document.querySelector('#factory_settingsButton').ontouchstart = ()=>{
+    showSettingsSetMenu(factory)
+  };
 
 
 
