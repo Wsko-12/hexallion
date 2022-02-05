@@ -239,6 +239,22 @@ const PRODUCTS = {
     },
   },
 
+  cement: {
+    price: 13000,
+    sailSpeed: 6,
+    category: 'hardware',
+    manufacture: ['cementFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['sand','water'],
+
+    lang: {
+      ru: 'цемент',
+      eng: 'cement',
+    },
+  },
+
 
 };
 export {

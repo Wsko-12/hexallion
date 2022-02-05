@@ -214,6 +214,11 @@ const LANG = {
       eng: 'Glass factory',
     },
 
+    cementFactory: {
+      ru: 'цементного завода',
+      eng: 'Cement factory',
+    },
+
     road: {
       ru: 'дороги',
       eng: 'Road',
@@ -268,6 +273,9 @@ const LANG = {
     glass:{
       ru:'стекла'
     },
+    cement:{
+      ru:'цемента'
+    },
 
     truckBuying: {
       ru: 'Покупка грузовика',
@@ -316,6 +324,11 @@ const LANG = {
     GlassFactory: {
       ru: 'стекольном заводе',
       eng: 'Glass factory',
+    },
+
+    CementFactory: {
+      ru: 'цементном заводе',
+      eng: 'Cement factory',
     },
 
     creditPayment: {

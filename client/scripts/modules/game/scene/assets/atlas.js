@@ -273,6 +273,11 @@ ATLAS.models = [
     file:'factory_test.glb',
   },
 
+  { name:'cementFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
 
 
 

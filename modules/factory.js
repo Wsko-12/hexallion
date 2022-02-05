@@ -186,6 +186,25 @@ const factoriesConfig = {
     count: 10,
   },
 
+  cementFactory: {
+    category: 'factory',
+    storage: 2,
+    speed: 4,
+    products: [
+      {
+        name: 'cement',
+        //цена всего производства
+        price: 5300,
+        raw: ['sand','water'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 850,
+    count: 10,
+  },
+
 
 
 

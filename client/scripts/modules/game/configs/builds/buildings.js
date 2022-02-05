@@ -195,6 +195,22 @@ const BUILDINGS = {
     },
     buttonColor: '#b2c9cb',
   },
+
+  cementFactory: {
+    name: 'Cement factory',
+    description: 'Цементный завод',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 31000,
+    product: ['cement'],
+    raw: ['sand','water'],
+    category: 'factory',
+    title: {
+      eng: 'Cement factory',
+      ru: 'Цементный завод',
+    },
+    buttonColor: '#aaaaaa',
+  },
 };
 export {
   BUILDINGS
