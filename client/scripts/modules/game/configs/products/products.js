@@ -223,6 +223,22 @@ const PRODUCTS = {
     },
   },
 
+  glass: {
+    price: 4100,
+    sailSpeed: 4,
+    category: 'hardware',
+    manufacture: ['glassFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['sand'],
+
+    lang: {
+      ru: 'стекло',
+      eng: 'glass',
+    },
+  },
+
 
 };
 export {

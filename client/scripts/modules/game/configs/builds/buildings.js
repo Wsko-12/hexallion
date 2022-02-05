@@ -179,6 +179,22 @@ const BUILDINGS = {
     },
     buttonColor: '#cbbab3',
   },
+
+  glassFactory: {
+    name: 'Glass factory',
+    description: 'Стекольный завод',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 9800,
+    product: ['glass'],
+    raw: ['sand',],
+    category: 'factory',
+    title: {
+      eng: 'Glass factory',
+      ru: 'Стекольный завод',
+    },
+    buttonColor: '#b2c9cb',
+  },
 };
 export {
   BUILDINGS

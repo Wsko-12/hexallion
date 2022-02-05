@@ -209,6 +209,11 @@ const LANG = {
       eng: 'Paper factory',
     },
 
+    glassFactory: {
+      ru: 'стекольного завода',
+      eng: 'Glass factory',
+    },
+
     road: {
       ru: 'дороги',
       eng: 'Road',
@@ -260,6 +265,9 @@ const LANG = {
     cardboard:{
       ru:'картона'
     },
+    glass:{
+      ru:'стекла'
+    },
 
     truckBuying: {
       ru: 'Покупка грузовика',
@@ -303,6 +311,11 @@ const LANG = {
     PaperFactory: {
       ru: 'картонажной фабрике',
       eng: 'Paper factory',
+    },
+
+    GlassFactory: {
+      ru: 'стекольном заводе',
+      eng: 'Glass factory',
     },
 
     creditPayment: {

@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const DB = require('./modules/db.js');
 const COASTS = require('./modules/coasts.js');
 const FACTORIES = require('./modules/factory.js');
@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 
 //сразу делает игру
-const DEV_GAMEPLAY = false;
+const DEV_GAMEPLAY = true;
 
 if (DEV_GAMEPLAY) {
   http.listen(PORT, '0.0.0.0', () => {
@@ -2268,7 +2268,6 @@ io.on('connection', function(socket) {
               return;
             };
           };
-          console.log(game.)
 
           if (game.players[data.player]) {
             const player = game.players[data.player];

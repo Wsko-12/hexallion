@@ -167,6 +167,25 @@ const factoriesConfig = {
     count: 10,
   },
 
+  glassFactory: {
+    category: 'factory',
+    storage: 2,
+    speed: 4,
+    products: [
+      {
+        name: 'glass',
+        //цена всего производства
+        price: 1700,
+        raw: ['sand'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 850,
+    count: 10,
+  },
+
 
 
 
