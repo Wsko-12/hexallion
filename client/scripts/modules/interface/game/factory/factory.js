@@ -804,8 +804,11 @@ function showFactoryMenu(factory) {
 };
 //это только меняет значения
 function updateFactoryMenu() {
+
   if (FACTORY.nowShowedFactoryMenu) {
-    showFactoryMenu(FACTORY.nowShowedFactoryMenu);
+    if(FACTORY.nowShowedFactoryMenu.settingsSetted){
+      showFactoryMenu(FACTORY.nowShowedFactoryMenu);
+    };
   };
 };
 

@@ -273,18 +273,29 @@ function openCard(truck){
   // truck.clearNotification();
   const clicker =  document.querySelector('#trucksMenuSection');
   clicker.style.pointerEvents = 'auto';
+  let product
+  if(truck.product && truck.product != 1){
+    product = `
+      <div class="trucksMenu-card-resource resource-gag resource-bg-color-${truck.product.name}">
+        <div class="resource-gag-title">
+          ${truck.product.name}
+        </div>
+        <div class="resource-gag-quality">
+          Q${truck.product.quality}
+        </div>
+      </div>
+      <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
+    `
+  }else{
+    product = `
+      <div class="trucksMenu-card-resource resource-gag>
+        <div class="resource-hole">
+        </div>
+      </div>
+      <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
+    `
+  };
 
-  const product = `
-    <div class="trucksMenu-card-resource resource-gag resource-bg-color-${truck.product.name}">
-      <div class="resource-gag-title">
-        ${truck.product.name}
-      </div>
-      <div class="resource-gag-quality">
-        Q${truck.product.quality}
-      </div>
-    </div>
-    <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
-  `
 
   const cardContent = `
       <div class="card-header">
@@ -311,6 +322,7 @@ function openCard(truck){
     function destroy(){
       TRUCK.turningInterfase = false;
       closeMenu();
+
       truck.destroyRequest();
     };
   };

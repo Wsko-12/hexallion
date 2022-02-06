@@ -15,6 +15,7 @@ const SOCKET = {
 
 function init() {
   if (MAIN.socket) {
+    
     MAIN.socket.on('DEV_GAMEPLAY',()=>{
       /*ДЛЯ ОДНОГО ИГРОКА*/
      // чтобы быстро перейти к созданию сцены

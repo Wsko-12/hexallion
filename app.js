@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 const DB = require('./modules/db.js');
 const COASTS = require('./modules/coasts.js');
 const FACTORIES = require('./modules/factory.js');
@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 
 //сразу делает игру
-const DEV_GAMEPLAY = true;
+const DEV_GAMEPLAY = false;
 
 if (DEV_GAMEPLAY) {
   http.listen(PORT, '0.0.0.0', () => {
@@ -406,6 +406,8 @@ class GAME {
       for (let x = 0; x < this.cityMapNames[z].length; x++) {
         if (this.map[map_index] === 'Westown' || this.map[map_index] === 'Northfield' || this.map[map_index] === 'Southcity') {
           this.cityMapNames[z][x] = this.map[map_index];
+        }{
+          this.cityMapNames[z][x] = [0,0,0,0,0,0];
         };
         map_index++;
       };
@@ -2252,6 +2254,7 @@ io.on('connection', function(socket) {
         },
     */
     const game = GAMES[data.gameID];
+    console.log(data)
     if (game) {
       //anticheat
       if (game.players[data.player].balance >= COASTS.buildings[data.build.building]) {
@@ -2269,9 +2272,18 @@ io.on('connection', function(socket) {
             };
           };
 
+          //блок, чтобы не построили вдвоем в одном месте
+          if(game.cityMapNames[data.build.ceilIndex.z][data.build.ceilIndex.x][data.build.sector] != 0){
+            return;
+          };
+
           if (game.players[data.player]) {
             const player = game.players[data.player];
             if (!player.gameOver) {
+              if(player.balance < COASTS.buildings[data.build.building]){
+                return;
+              };
+              game.cityMapNames[data.build.ceilIndex.z][data.build.ceilIndex.x][data.build.sector] = 1;
               //если это какая-то фабрика
               if (game.factoriesCount[data.build.building]) {
                 if (game.factoriesCount[data.build.building] > 0) {
@@ -2286,6 +2298,7 @@ io.on('connection', function(socket) {
                 };
 
               } else {
+
                 //если это дорога и тд, чему счет не ведется
                 const cost = COASTS.buildings[data.build.building] * (-1);
                 if (game.cityEconomy) {
