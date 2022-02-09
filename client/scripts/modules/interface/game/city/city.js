@@ -81,9 +81,8 @@ function openMenu(city){
 
     const prodListItem = `
       <div class="cityCard-list-item">
-        <div class="resource-bg-color-${product} cityCard-resource-image">
-          <div class="cityCard-resource-image-name">
-            ${product}
+        <div class="cityCard-resource-image">
+          <div style="background-size:cover; width:100%;height:100%" class="product-${product}">
           </div>
         </div>
         <div class="cityCard-resource-info">

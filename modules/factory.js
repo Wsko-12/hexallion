@@ -206,8 +206,78 @@ const factoriesConfig = {
   },
 
 
+  buildingProductsFactory:{
+    category: 'factory',
+    storage: 2,
+    speed: 5,
+    products: [
+      {
+        name: 'buildingComponents',
+        //цена всего производства
+        price: 11700,
+        raw: ['wood','glass','cement'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+      {
+        name: 'sheetSteel',
+        //цена всего производства
+        price: 9100,
+        raw: ['steel'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 5000,
+    count: 10,
+  },
 
+  jewelryFactory:{
+    category: 'factory',
+    storage: 2,
+    speed: 8,
+    products: [
+      {
+        name: 'jewelry',
+        //цена всего производства
+        price: 28000,
+        raw: ['gold',],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 14000,
+    count: 10,
+  },
 
+  furnitureFactory:{
+    category: 'factory',
+    storage: 2,
+    speed: 5,
+    products: [
+      {
+        name: 'furnitureWood',
+        //цена всего производства
+        price: 6700,
+        raw: ['wood'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+      {
+        name: 'furniturePlastic',
+        //цена всего производства
+        price: 11700,
+        raw: ['plastic'],
+        //сколько приозведется ресурса за раз
+        productionVolume: 2,
+      },
+    ],
+    //цена простоя
+    downtimeCost: 4100,
+    count: 10,
+  },
 
 
 

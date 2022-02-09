@@ -255,6 +255,87 @@ const PRODUCTS = {
     },
   },
 
+  buildingComponents: {
+    price: 31200,
+    sailSpeed: 4,
+    category: 'hardware',
+    manufacture: ['buildingProductsFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['glass','wood','cement'],
+
+    lang: {
+      ru: 'строй материалы',
+      eng: 'building materials',
+    },
+  },
+
+  sheetSteel: {
+    price: 24600,
+    sailSpeed: 4,
+    category: 'hardware',
+    manufacture: ['buildingProductsFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['steel'],
+
+    lang: {
+      ru: 'листовая сталь',
+      eng: 'sheet steel',
+    },
+  },
+
+  jewelry: {
+    price: 61300,
+    sailSpeed: 7,
+    category: 'hardware',
+    manufacture: ['jewelryFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['gold'],
+
+    lang: {
+      ru: 'ювелирные украшения',
+      eng: 'jewelry',
+    },
+  },
+
+  furnitureWood: {
+    price: 16700,
+    sailSpeed: 5,
+    category: 'hardware',
+    manufacture: ['furnitureFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['wood'],
+
+    lang: {
+      ru: 'Деревянная мебель',
+      eng: 'Wood furniture',
+    },
+  },
+
+  furniturePlastic: {
+    price: 22100,
+    sailSpeed: 5,
+    category: 'hardware',
+    manufacture: ['furnitureFactory'],
+    //где является ингредиентом
+    ingrediend: [],
+    //из чего производится
+    raws: ['plastic'],
+
+    lang: {
+      ru: 'Пластиковая мебель',
+      eng: 'Plastic furniture',
+    },
+  },
+
+
 
 };
 export {

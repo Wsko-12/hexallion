@@ -17,6 +17,11 @@ const coasts = {
     paperFactory:47950,
     glassFactory:9800,
     cementFactory:31000,
+    buildingProductsFactory:78150,
+    jewelryFactory:141800,
+    furnitureFactory:48900,
+
+
 
   },
 
@@ -121,6 +126,31 @@ const coasts = {
       price:13000,
       sailSpeed:6,
       raw:['water','sand']
+    },
+    sheetSteel:{
+      price:24600,
+      sailSpeed:5,
+      raw:['steel']
+    },
+    buildingComponents:{
+      price:31200,
+      sailSpeed:5,
+      raw:['wood','glass','cement'],
+    },
+    jewelry:{
+      price:61300,
+      sailSpeed:7,
+      raw:['gold'],
+    },
+    furnitureWood:{
+      price:16700,
+      sailSpeed:5,
+      raw:['wood',],
+    },
+    furniturePlastic:{
+      price:22100,
+      sailSpeed:5,
+      raw:['plastic'],
     },
 
 

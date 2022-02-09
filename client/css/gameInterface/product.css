@@ -81,3 +81,19 @@
 .product-cement {
   background-image: url(../img/product/cement.png);
 }
+
+.product-sheetSteel {
+  background-image: url(../img/product/sheetSteel.png);
+}
+.product-buildingComponents {
+  background-image: url(../img/product/buildingComponents.png);
+}
+.product-jewelry {
+  background-image: url(../img/product/jewelry.png);
+}
+.product-furnitureWood {
+  background-image: url(../img/product/furnitureWood.png);
+}
+.product-furniturePlastic {
+  background-image: url(../img/product/furniturePlastic.png);
+}

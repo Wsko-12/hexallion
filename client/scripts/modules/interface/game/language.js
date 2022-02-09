@@ -219,6 +219,21 @@ const LANG = {
       eng: 'Cement factory',
     },
 
+    buildingProductsFactory: {
+      ru: 'завода строй материалов',
+      eng: 'Building materials factory',
+    },
+
+    jewelryFactory: {
+      ru: 'ювелирного завода',
+      eng: 'jewelry factory',
+    },
+
+    furnitureFactory: {
+      ru: 'мебельного завода',
+      eng: 'furniture factory',
+    },
+
     road: {
       ru: 'дороги',
       eng: 'Road',
@@ -276,6 +291,21 @@ const LANG = {
     cement:{
       ru:'цемента'
     },
+    sheetSteel:{
+      ru:'листовой стали'
+    },
+    buildingComponents:{
+      ru:'строй материалов'
+    },
+    jewelry:{
+      ru:'ювелирных украшений'
+    },
+    furnitureWood:{
+      ru:'деревянной мебели'
+    },
+    furniturePlastic:{
+      ru:'пластиковой мебели'
+    },
 
     truckBuying: {
       ru: 'Покупка грузовика',
@@ -329,6 +359,19 @@ const LANG = {
     CementFactory: {
       ru: 'цементном заводе',
       eng: 'Cement factory',
+    },
+
+    BuildingProductsFactory: {
+      ru: 'заводе строй материалов',
+      eng: 'Building materials factory',
+    },
+    JewelryFactory: {
+      ru: 'ювелирном заводе',
+      eng: 'Jewelry factory',
+    },
+    FurnitureFactory: {
+      ru: 'мебельном заводе',
+      eng: 'Furniture factory',
     },
 
     creditPayment: {

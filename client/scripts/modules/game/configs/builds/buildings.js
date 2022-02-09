@@ -211,6 +211,54 @@ const BUILDINGS = {
     },
     buttonColor: '#aaaaaa',
   },
+
+  buildingProductsFactory: {
+    name: 'Building Products Factory',
+    description: 'Завод строй материалов',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 78150,
+    product: ['sheetSteel','buildingComponents'],
+    raw: ['wood','cement','glass','steel'],
+    category: 'factory',
+    title: {
+      eng: 'Building Products Factory',
+      ru: 'Завод строй материалов',
+    },
+    buttonColor: '#7e5a5a',
+  },
+
+  jewelryFactory: {
+    name: 'Jewelry Factory',
+    description: 'ювелирный завод',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 141800,
+    product: ['jewelry'],
+    raw: ['gold'],
+    category: 'factory',
+    title: {
+      eng: 'Jewelry Factory',
+      ru: 'Ювелирный завод',
+    },
+    buttonColor: '#f5d948',
+  },
+
+  furnitureFactory: {
+    name: 'Furniture Factory',
+    description: 'мебельный завод',
+    ceil: ['meadow', 'sand', 'steelMine', 'goldMine', 'oilMine'],
+    nearCeil: ['all'],
+    coast: 48900,
+    product: ['furnitureWood','furniturePlastic'],
+    raw: ['wood','plastic'],
+    category: 'factory',
+    title: {
+      eng: 'Furniture Factory',
+      ru: 'мебельный завод',
+    },
+    buttonColor: '#797353',
+  },
 };
 export {
   BUILDINGS
