@@ -47,8 +47,36 @@ class Factory {
       this.createNotification();
     };
 
-
-    this.autosend = {};
+    this.autosend = {
+      add:function(parameters){
+        const direction = {
+          mode:parameters.mode,
+          finalObject:parameters.finalObject || null,
+          final:parameters.final || null,
+        };
+        this.list[parameters.product].directions.push(direction);
+      },
+      remove:function(parameters){
+        // parameters ={
+        //   product:factory.product,
+        //   index:i,
+        // }
+        this.list[parameters.product].directions.splice(parameters.index,1);
+        if(this.list[parameters.product].current >= this.list[parameters.product].directions.length){
+          this.list[parameters.product].current = 0;
+        };
+        console.log(this.list[parameters.product].directions)
+      },
+      // ????
+      changeCurrent:function(parameters){
+        // parameters ={
+        //   product:factory.product,
+        //   index:i,
+        // }
+        this.list[parameters.product].current = parameters.index;
+      },
+      list:null,
+    };
   };
 
   onClick() {
@@ -126,6 +154,24 @@ class Factory {
   applySettings(settings) {
     this.settingsSetted = true;
     this.settings = settings;
+
+
+    if(this.category === 'mining'){
+      this.autosend.list = {
+        [this.product]:{
+          current:0,
+          directions:[],
+        },
+      };
+    }else if(this.category === 'factory'){
+      this.autosend.list = {};
+      this.settings.products.forEach((product, i) => {
+        this.autosend.list[product.name] = {
+          current:0,
+          directions:[],
+        };
+      });
+    };
   };
 
   applyUpdates(updates) {

@@ -601,6 +601,8 @@
     background-size: cover;
   }
   .factory_footer_body_item_directionsList_item-text{
+    /* чтобы не гасил клики */
+    pointer-events: none;
     height: 15px;
     display: flex;
     align-items: center;

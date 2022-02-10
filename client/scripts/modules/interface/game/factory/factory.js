@@ -184,14 +184,15 @@ function showSettingsSetMenu(factory) {
   document.querySelector('#factoryMenu_Button').onclick = applySettings;
   document.querySelector('#factoryMenu_Button').ontouchstart = applySettings;
 
-  if(document.querySelector('#factory_cancelButton')){
-    document.querySelector('#factory_cancelButton').onclick = ()=>{
+  if (document.querySelector('#factory_cancelButton')) {
+    document.querySelector('#factory_cancelButton').onclick = () => {
       showFactoryMenu(factory);
     };
-    document.querySelector('#factory_cancelButton').ontouchstart = ()=>{
+    document.querySelector('#factory_cancelButton').ontouchstart = () => {
       showFactoryMenu(factory);
     };
   };
+
   function applySettings() {
     closeMenu();
     const data = {
@@ -208,251 +209,232 @@ function showSettingsSetMenu(factory) {
   };
 };
 
-function updateFactoryAutosendBody(factory){
+function updateFactoryAutosendBody(factory) {
   const body = document.querySelector(`#factory_autosend_body_${factory.id}`);
-  if(!body){
+  if (!body) {
     return;
   }
   body.innerHTML = '';
   let autosend = '';
-  if(factory.category === 'mining'){
-    if(Object.keys(factory.autosend).length === 0){
-      autosend+=`
-        <div class="factory_footer_body_line">
-          <div class="factory_footer_body_line-icon  product-${factory.product}">
-          </div>
-          <div class="factory_footer_body_line_buttonsContainer">
-            <div class="factory_footer_body_line_buttonsContainer-button" id="factory_autosend_${factory.product}_price">
-              <div class="factory_footer_body_line_buttonsContainer-icon icon-bestPrice">
-              </div>
-            </div>
-            <div class="factory_footer_body_line_buttonsContainer-button" id="factory_autosend_${factory.product}_route">
-              <div class="factory_footer_body_line_buttonsContainer-icon icon-findRoute">
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }else{
-      const thisSend = factory.autosend[Object.keys(factory.autosend)[0]];
-      const mode = thisSend.mode === 'price' ? 'bestPrice' : 'findRoute';
-      let finalObject = ''
-      if(mode === 'findRoute'){
-        // finalObject =
-        if(thisSend.finalObject.category === 'city'){
-          finalObject = `<div class="factory_footer_body_line-direction">
-                               ${thisSend.finalObject.name}
-                             </div>`;
-        }else{
-          let name = MAIN.game.configs.buildings[thisSend.finalObject.type].title[MAIN.interface.lang.flag];
-          name = name[0].toUpperCase() + name.slice(1);
-          finalObject =  `<div class="factory_footer_body_line-direction">
-                                ${name} | ${thisSend.finalObject.number}
-                             </div>`
-        };
-      };
-      autosend+=`
-          <div class="factory_footer_body_line">
-            <div class="factory_footer_body_line-icon  product-${thisSend.product}">
-            </div>
-            <div class="factory_footer_body_line-body">
-              <div class="factory_footer_body_line-iconMode icon-${mode}">
-
-              </div>
-              ${finalObject}
-            </div>
-            <div class="factory_footer_body_line-cancelButton" id="factory_autosend_cancel_${thisSend.id}">
-              ✖
-            </div>
-          </div>
-      `;
-    };
-  }else if(factory.category === 'factory'){
-    if(Object.keys(factory.autosend).length === 0){
-      factory.settings.products.forEach((product, i) => {
-        autosend+=`
-          <div class="factory_footer_body_line">
-            <div class="factory_footer_body_line-icon  product-${product.name}">
-            </div>
-            <div class="factory_footer_body_line_buttonsContainer">
-              <div class="factory_footer_body_line_buttonsContainer-button" id="factory_autosend_${product.name}_price">
-                <div class="factory_footer_body_line_buttonsContainer-icon icon-bestPrice">
-                </div>
-              </div>
-              <div class="factory_footer_body_line_buttonsContainer-button" id="factory_autosend_${product.name}_route">
-                <div class="factory_footer_body_line_buttonsContainer-icon icon-findRoute">
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-    }else{
-
-      const productsInAutosend = [];
-      for(let send in factory.autosend){
-        const thisSend = factory.autosend[send];
-        productsInAutosend.push(thisSend.product);
-      };
-      factory.settings.products.forEach((product, i) => {
-        const index = productsInAutosend.indexOf(product.name);
-        if(index === -1){
-          autosend+=`
-            <div class="factory_footer_body_line">
-              <div class="factory_footer_body_line-icon  product-${product.name}">
-              </div>
-              <div class="factory_footer_body_line_buttonsContainer">
-                <div class="factory_footer_body_line_buttonsContainer-button" id="factory_autosend_${product.name}_price">
-                  <div class="factory_footer_body_line_buttonsContainer-icon icon-bestPrice">
-                  </div>
-                </div>
-                <div class="factory_footer_body_line_buttonsContainer-button" id="factory_autosend_${product.name}_route">
-                  <div class="factory_footer_body_line_buttonsContainer-icon icon-findRoute">
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-        }else{
-          const thisSend = Object.values(factory.autosend).find((obj)=>{
-            if(obj.product === product.name){
-              return obj;
-            };
-          });
-          if(thisSend){
-            const mode = thisSend.mode === 'price' ? 'bestPrice' : 'findRoute';
-            let finalObject = ''
-            if(mode === 'findRoute'){
-              // finalObject =
-              if(thisSend.finalObject.category === 'city'){
-                finalObject = `<div class="factory_footer_body_line-direction">
-                                     ${thisSend.finalObject.name}
-                                   </div>`;
-              }else{
-                let name = MAIN.game.configs.buildings[thisSend.finalObject.type].title[MAIN.interface.lang.flag];
-                name = name[0].toUpperCase() + name.slice(1);
-                finalObject =  `<div class="factory_footer_body_line-direction">
-                                      ${name} | ${thisSend.finalObject.number}
-                                   </div>`
-              };
-            };
-            autosend+=`
-              <div class="factory_footer_body_line">
-                <div class="factory_footer_body_line-icon  product-${thisSend.product}">
-                </div>
-                <div class="factory_footer_body_line-body">
-                  <div class="factory_footer_body_line-iconMode icon-${mode}">
-                  </div>
-                  ${finalObject}
-                </div>
-                <div class="factory_footer_body_line-cancelButton" id="factory_autosend_cancel_${thisSend.id}">
-                  ✖
-                </div>
-              </div>
-            `;
-          };
-        };
-      });
-    };
-  };
 
 
+  MAIN.interface.returnTouches(body);
 
-  body.insertAdjacentHTML('beforeEnd',autosend);
 
-  if(factory.category === 'mining'){
-    const price = document.querySelector(`#factory_autosend_${factory.product}_price`);
-    const route = document.querySelector(`#factory_autosend_${factory.product}_route`);
-    //если есть price то есть и route
-    if(price){
-      price.onclick = function(){
-        MAIN.game.functions.autosending.addFactory({
-          factory:factory,
-          product:factory.product,
-          mode:'price',
-        });
-        updateFactoryAutosendBody(factory);
-      };
-      price.ontouchstart = function(){
-        MAIN.game.functions.autosending.addFactory({
-          factory:factory,
-          product:factory.product,
-          mode:'price',
-        });
-        updateFactoryAutosendBody(factory);
-      };
-
-      route.onclick = function(){
-        const data = {
-          factory:factory,
-          product:factory.product,
-        };
-        MAIN.interface.game.path.showWhereCanSendProduct(data);
-      };
-      route.ontouchstart = function(){
-        const data = {
-          factory:factory,
-          product:factory.product,
-        };
-        MAIN.interface.game.path.showWhereCanSendProduct(data);
-      };
-    };
+  //собираем все, что производит фабрика
+  const products = [];
+  if (factory.category === 'mining'){
+    products.push(factory.product);
   }else if(factory.category === 'factory'){
     factory.settings.products.forEach((product, i) => {
-      const price = document.querySelector(`#factory_autosend_${product.name}_price`);
-      const route = document.querySelector(`#factory_autosend_${product.name}_route`);
-
-      if(price){
-        price.onclick = function(){
-          MAIN.game.functions.autosending.addFactory({
-            factory:factory,
-            product:product.name,
-            mode:'price',
-          });
-
-          updateFactoryAutosendBody(factory);
-        };
-        price.ontouchstart = function(){
-          MAIN.game.functions.autosending.addFactory({
-            factory:factory,
-            product:product.name,
-            mode:'price',
-          });
-
-          updateFactoryAutosendBody(factory);
-        };
-        route.onclick = function(){
-          const data = {
-            factory:factory,
-            product:product.name,
-          }
-          MAIN.interface.game.path.showWhereCanSendProduct(data);
-        };
-
-        route.ontouchstart = function(){
-          const data = {
-            factory:factory,
-            product:product.name,
-          }
-          MAIN.interface.game.path.showWhereCanSendProduct(data);
-        };
-      };
+      products.push(product.name);
     });
   };
 
-  for(let autosend_ID in factory.autosend){
-    const div = document.querySelector(`#factory_autosend_cancel_${autosend_ID}`);
-    if(div){
-      div.onclick = function(){
-        MAIN.game.functions.autosending.removeFactory(autosend_ID);
-        updateFactoryAutosendBody(factory);
-      };
-      div.ontouchstart = function(){
-        MAIN.game.functions.autosending.removeFactory(autosend_ID);
-        updateFactoryAutosendBody(factory);
+
+  products.forEach((product, i) => {
+    autosend += `
+     <div class="factory_footer_body_item">
+        <div class="factory_footer_body_item-header">
+          <div class="factory_footer_body_item-header_icon product-${product}"></div>
+
+          <div class="factory_footer_body_item-header_buttonsContainer">
+            <div class="factory_footer_body_item-header_buttonsContainer-icon icon-plus">
+            </div>
+            <div class="factory_footer_body_item-header_buttonsContainer-button" id="factoryCard_addDirection_bestPrise_${product}">
+             <div class="factory_footer_body_item-header_buttonsContainer-button-icon icon-bestPrice">
+
+             </div>
+            </div>
+            <div class="factory_footer_body_item-header_buttonsContainer-button" id="factoryCard_addDirection_findRoute_${product}">
+              <div class="factory_footer_body_item-header_buttonsContainer-button-icon icon-findRoute">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="factory_footer_body_item-header_icon icon-list" id="factoryCard_OpenDirectionsListButton_${product}"></div>
+        </div>
+
+        <!-- direction list -->
+        <div class="factory_footer_body_item_directionsList" id="factoryCard_directionsList_${product}" style="display:none">
+
+
+
+
+        </div>
+        <!-- /direction list -->
+
+      </div>
+     `;
+  });
+
+  body.insertAdjacentHTML('beforeEnd',autosend);
+
+
+
+  function updateDirectionLists(){
+    products.forEach((product, i) => {
+        const list = document.querySelector(`#factoryCard_directionsList_${product}`);
+        list.innerHTML = '';
+        for (let i = 0; i < factory.autosend.list[product].directions.length; i++) {
+          const thisDirection = factory.autosend.list[product].directions[i];
+          if(thisDirection.mode === 'price'){
+            const thisStr = `
+              <div id="factoryCard_direction_${product}_${i}"class="factory_footer_body_item_directionsList_item ${factory.autosend.list[product].current === i ?'factory_footer_body_item_directionsList_item-current':''}">
+                <div class="factory_footer_body_item_directionsList_item-icon icon-bestPrice">
+
+                </div>
+
+                <div class="factory_footer_body_item_directionsList_item-icon icon-cancel" id='factoryCard_deleteDirection_${product}_${i}'>
+
+                </div>
+              </div>
+            `;
+            list.insertAdjacentHTML('beforeEnd',thisStr);
+
+            function deleteDirection(){
+                factory.autosend.remove({
+                  product:product,
+                  index:i,
+                });
+                updateDirectionLists();
+            };
+            document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).onclick = deleteDirection;
+            document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).ontouchstart = deleteDirection;
+
+
+            function changeCurrent(e){
+              if(e.path[0] === document.querySelector(`#factoryCard_direction_${product}_${i}`)){
+                factory.autosend.changeCurrent({
+                  product:product,
+                  index:i,
+                });
+                updateDirectionLists();
+              };
+            };
+
+            document.querySelector(`#factoryCard_direction_${product}_${i}`).onclick = changeCurrent;
+            document.querySelector(`#factoryCard_direction_${product}_${i}`).ontouchstart = changeCurrent;
+          };
+          if(thisDirection.mode === 'route'){
+                let finalObject = ''
+                  if(thisDirection.finalObject.category === 'city'){
+                    finalObject =  thisDirection.finalObject.name;
+                  }else{
+                    let name = MAIN.game.configs.buildings[thisDirection.finalObject.type].title[MAIN.interface.lang.flag];
+                    name = name[0].toUpperCase() + name.slice(1);
+                    finalObject =  `${name} | ${thisDirection.finalObject.number}`
+                  };
+            const thisStr = `
+              <div id="factoryCard_direction_${product}_${i}"class="factory_footer_body_item_directionsList_item ${factory.autosend.list[product].current === i ?'factory_footer_body_item_directionsList_item-current':''}">
+                <div class="factory_footer_body_item_directionsList_item-icon icon-findRoute">
+
+                </div>
+
+                <div class="factory_footer_body_item_directionsList_item-text">
+                  ${finalObject}
+                </div>
+
+                <div id="factoryCard_deleteDirection_${product}_${i}" class="factory_footer_body_item_directionsList_item-icon icon-cancel" id='factoryCard_deleteDirection_${product}_${i}'>
+
+                </div>
+              </div>
+            `;
+            list.insertAdjacentHTML('beforeEnd',thisStr);
+          };
+
+          function deleteDirection(){
+              factory.autosend.remove({
+                product:product,
+                index:i,
+              });
+              updateDirectionLists();
+          };
+          document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).onclick = deleteDirection;
+          document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).ontouchstart = deleteDirection;
+
+
+          function changeCurrent(e){
+            if(e.path[0] === document.querySelector(`#factoryCard_direction_${product}_${i}`)){
+              factory.autosend.changeCurrent({
+                product:product,
+                index:i,
+              });
+              updateDirectionLists();
+            };
+          };
+
+          document.querySelector(`#factoryCard_direction_${product}_${i}`).onclick = changeCurrent;
+          document.querySelector(`#factoryCard_direction_${product}_${i}`).ontouchstart = changeCurrent;
+
+        };
+    });
+  };
+  updateDirectionLists();
+
+
+
+  //applyFunctions
+  products.forEach((product, i) => {
+    const directions = {};
+    directions[product] = false;
+
+    function openDirectionList(){
+      const list = document.querySelector(`#factoryCard_directionsList_${product}`);
+      if(directions[product]){
+        list.style.display = 'none';
+        directions[product] = false;
+
+      }else{
+        list.style.display = 'block';
+        directions[product] = true;
       };
     };
-  };
+    document.querySelector(`#factoryCard_OpenDirectionsListButton_${product}`).onclick = openDirectionList;
+    document.querySelector(`#factoryCard_OpenDirectionsListButton_${product}`).ontouchstart = openDirectionList;
+
+
+    function addBestPriceDirection(){
+      factory.autosend.add({
+          product:product,
+          mode:'price',
+      });
+      updateDirectionLists();
+      if(!directions[product]){
+        openDirectionList()
+      };
+    };
+
+
+    document.querySelector(`#factoryCard_addDirection_bestPrise_${product}`).onclick = addBestPriceDirection;
+    document.querySelector(`#factoryCard_addDirection_bestPrise_${product}`).ontouchstart = addBestPriceDirection;
+
+
+
+    function addRouteDirection(){
+      const params = {
+        product:product,
+        callback:function(data){
+          factory.autosend.add({
+              product:product,
+              mode:'route',
+              finalObject:data.finalObject,
+              final:data.final,
+          });
+          updateDirectionLists();
+          if(!directions[product]){
+            openDirectionList()
+          };
+        },
+
+      };
+      MAIN.interface.game.path.showWhereCanSendProduct(params);
+    };
+
+    document.querySelector(`#factoryCard_addDirection_findRoute_${product}`).onclick = addRouteDirection;
+    document.querySelector(`#factoryCard_addDirection_findRoute_${product}`).ontouchstart = addRouteDirection;
+  });
 
 };
 
@@ -465,15 +447,15 @@ function showFactoryMenu(factory) {
   let name = MAIN.game.configs.buildings[factory.type].name;
 
   let rawStorage = '<div class="factory_body_rawStorage">';
-  if(factory.category === 'factory'){
+  if (factory.category === 'factory') {
     let line = '';
-    for(let product in factory.settings.rawStorage){
+    for (let product in factory.settings.rawStorage) {
       const thisProduct = factory.settings.rawStorage[product];
       //если на склад загружен
-      if(thisProduct){
+      if (thisProduct) {
         let quality = '';
-        for(let i = 0;i < thisProduct.quality;i++){
-          quality+=`<span class="product-quality"></span>`;
+        for (let i = 0; i < thisProduct.quality; i++) {
+          quality += `<span class="product-quality"></span>`;
         };
         line = `<div class="factory_product-gap" id="factory_rawProduct_${product}">
                    <div class="product-icon product-${product}"></div>
@@ -482,7 +464,7 @@ function showFactoryMenu(factory) {
                    </div>
                  </div>`
 
-      }else{
+      } else {
 
         line = `<div class="factory_product-hole factory_product-hole-rawStorage">
                    <div class="product-icon product-${product}"></div>
@@ -497,11 +479,11 @@ function showFactoryMenu(factory) {
 
   let progressBar = `<div class="factory_body_progressBar">`;
 
-    let scaleContainer = `<div class="factory_body_progressBar_scaleContainer">`;
-    const stepScale = 82/(factory.settings.productLine.length - 1);
-    const scale = stepScale.toFixed(2);
-    for(let i = 0;i<factory.settings.productLine.length;i++){
-      const line = `
+  let scaleContainer = `<div class="factory_body_progressBar_scaleContainer">`;
+  const stepScale = 82 / (factory.settings.productLine.length - 1);
+  const scale = stepScale.toFixed(2);
+  for (let i = 0; i < factory.settings.productLine.length; i++) {
+    const line = `
         <div class="factory_body_progressBar_scale
              ${i === 0?'factory_body_progressBar_scale-first':''}
              ${i === factory.settings.productLine.length - 1?'factory_body_progressBar_scale-last':''}"
@@ -510,59 +492,59 @@ function showFactoryMenu(factory) {
           <span>${factory.settings.productLine.length - i}</span>
         </div>
       `
-      scaleContainer+=line;
-    };
-    scaleContainer+= `</div>`;
-    progressBar+=scaleContainer;
+    scaleContainer += line;
+  };
+  scaleContainer += `</div>`;
+  progressBar += scaleContainer;
 
 
-    const productIndex = factory.settings.productLine.indexOf(1);
-    let productContainer = `
+  const productIndex = factory.settings.productLine.indexOf(1);
+  let productContainer = `
           <div class="factory_body_progressBar_productContainer"
           style="left:${productIndex?productIndex*stepScale+'%':''}">`;
 
 
-    if(productIndex != -1){
-      let quality = '';
-      for(let i = 0;i < factory.settings.productInProcess.quality;i++){
-        quality+=`<span class="product-quality"></span>`;
-      };
-      productContainer += `
+  if (productIndex != -1) {
+    let quality = '';
+    for (let i = 0; i < factory.settings.productInProcess.quality; i++) {
+      quality += `<span class="product-quality"></span>`;
+    };
+    productContainer += `
                           <div class="factory_product-gap">
                              <div class="product-icon product-${factory.settings.productInProcess.name}"></div>
                              <div class="product-qualityContainer">
                                ${quality}
                              </div>
                            </div>`;
-    };
-    productContainer += `</div>`;
-    progressBar+=productContainer;
+  };
+  productContainer += `</div>`;
+  progressBar += productContainer;
 
-  progressBar+= `</div>`;
+  progressBar += `</div>`;
 
 
 
 
   let ingredientList = '';
-    if(factory.category === 'mining'){
-      ingredientList += `
+  if (factory.category === 'mining') {
+    ingredientList += `
       <div class="factory_body_body-production-left">
       <div class="factory_body_productHugeIcon product-${factory.product}"></div>`;
-    };
+  };
 
-    if(factory.category === 'factory'){
-      ingredientList += `<div class="factory_body_ingredientList">`;
-        for(let i = 0;i<factory.settings.products.length;i++){
-          const thisProduct = factory.settings.products[i];
-          let ingredients = '';
-          for(let j = 0;j<thisProduct.raw.length;j++){
-            const thisIngredient = thisProduct.raw[j];
-            ingredients+= `
+  if (factory.category === 'factory') {
+    ingredientList += `<div class="factory_body_ingredientList">`;
+    for (let i = 0; i < factory.settings.products.length; i++) {
+      const thisProduct = factory.settings.products[i];
+      let ingredients = '';
+      for (let j = 0; j < thisProduct.raw.length; j++) {
+        const thisIngredient = thisProduct.raw[j];
+        ingredients += `
               <div class=" factory_body_ingredientList-icon product-${thisIngredient}"></div>
             `;
-          };
+      };
 
-          const arrow = `
+      const arrow = `
             <div class="factory_body_ingredientList-arrow">
               <div class="factory_body_ingredientList-arrow-coast">
                 $${thisProduct.price}
@@ -572,15 +554,15 @@ function showFactoryMenu(factory) {
               </div>
             </div>
           `;
-          const product = `<div class="factory_body_ingredientList-icon product-${thisProduct.name}"></div>`
+      const product = `<div class="factory_body_ingredientList-icon product-${thisProduct.name}"></div>`
 
-          const volume = `
+      const volume = `
               <div class="factory_body_ingredientList-volume">
                 <span>x${thisProduct.productionVolume + factory.settings.volumePoints}</span>
               </div>
           `;
 
-          ingredientList+= `
+      ingredientList += `
             <div class="factory_body_ingredientList-item ${factory.settings.productSelected === thisProduct.name ? 'factory_body_ingredientList-item-selected':''}" id="factory_body_ingredientList_item_${thisProduct.name}">
               ${ingredients}
               ${arrow}
@@ -588,56 +570,56 @@ function showFactoryMenu(factory) {
               ${volume}
             </div>
           `;
-        };
     };
+  };
 
 
-  ingredientList+='</div>';
+  ingredientList += '</div>';
 
 
 
   let settingsPart = `<div class="factory_body_body-production-right">`;
-    const settings = {};
-    if(factory.category === 'mining'){
-      settings.ls = factory.settings.salaryPoints;
-      settings.q = factory.settings.qualityPoints;
-      settings.s = factory.settings.speedPoints;
-    };
-    if(factory.category === 'factory'){
-      settings.ls = factory.settings.salaryPoints;
-      settings.v = factory.settings.volumePoints;
-      settings.s = factory.settings.speedPoints;
-    };
+  const settings = {};
+  if (factory.category === 'mining') {
+    settings.ls = factory.settings.salaryPoints;
+    settings.q = factory.settings.qualityPoints;
+    settings.s = factory.settings.speedPoints;
+  };
+  if (factory.category === 'factory') {
+    settings.ls = factory.settings.salaryPoints;
+    settings.v = factory.settings.volumePoints;
+    settings.s = factory.settings.speedPoints;
+  };
 
-    for(let param in settings){
-      let line = `<div class="factory_body_body-production_settings-list">`;
+  for (let param in settings) {
+    let line = `<div class="factory_body_body-production_settings-list">`;
 
-      line += `<div class="factory_body_body-production_settings-text">
+    line += `<div class="factory_body_body-production_settings-text">
       ${MAIN.interface.lang.factory[param][MAIN.interface.lang.flag]}
       </div>`;
-      for(let i = 0;i<3;i++){
-        if(i<settings[param]){
-          line+=`<div class="factory_body_body-production_settings-gap"></div>`;
-        };
-        if(i>=settings[param]){
-          line +=`<div class="factory_body_body-production_settings-hole"></div>`;
-        }
+    for (let i = 0; i < 3; i++) {
+      if (i < settings[param]) {
+        line += `<div class="factory_body_body-production_settings-gap"></div>`;
       };
-      line += `</div>`;
-      settingsPart+= line;
+      if (i >= settings[param]) {
+        line += `<div class="factory_body_body-production_settings-hole"></div>`;
+      }
     };
+    line += `</div>`;
+    settingsPart += line;
+  };
   settingsPart += '</div>';
 
 
 
   let storagePart = ` <div class="factory_body_storage">`;
 
-  for(let i=0;i<factory.settings.storage.length;i++){
+  for (let i = 0; i < factory.settings.storage.length; i++) {
     const product = factory.settings.storage[i];
-    if(product){
+    if (product) {
       let quality = ``;
-      for(let i = 0;i < product.quality;i++){
-        quality+=`<span class="product-quality"></span>`;
+      for (let i = 0; i < product.quality; i++) {
+        quality += `<span class="product-quality"></span>`;
       };
       storagePart += `
         <div class="factory_product-gap" id="factory_storage_${i}">
@@ -646,14 +628,14 @@ function showFactoryMenu(factory) {
             ${quality}
           </div>
         </div>`;
-    }else{
+    } else {
       storagePart += `<div class="factory_product-hole"></div>`;
     };
   };
 
 
-  for(let i=0;i<5;i++){
-    if(i>=factory.settings.storage.length){
+  for (let i = 0; i < 5; i++) {
+    if (i >= factory.settings.storage.length) {
       storagePart += `<div class="factory_storage-gap"></div>`;
     };
   };
@@ -721,55 +703,66 @@ function showFactoryMenu(factory) {
   `;
 
   menu.innerHTML = '';
-  menu.insertAdjacentHTML('beforeEnd',card);
+  menu.insertAdjacentHTML('beforeEnd', card);
 
   document.querySelector(`#factory_card_error`).style.display = 'none';
 
   const autosendFlag = {
-    flag:false,
+    flag: false,
   }
-  function showAutosend(){
-    if(!autosendFlag.flag){
+
+  function showAutosend() {
+    if (!autosendFlag.flag) {
       document.querySelector('#factory_footer').style.top = '-79%';
       autosendFlag.flag = true;
-    }else{
+    } else {
       document.querySelector('#factory_footer').style.top = '-12.5%';
       autosendFlag.flag = false;
     };
   };
   document.querySelector('#autosend_header').onclick = showAutosend;
-  document.querySelector('#autosend_header').ontouchstart =  showAutosend;
+  document.querySelector('#autosend_header').ontouchstart = showAutosend;
 
   updateFactoryAutosendBody(factory);
 
   factory.settings.storage.forEach((product, i) => {
-    if(product){
-      document.querySelector(`#factory_storage_${i}`).onclick = ()=>{factory.sendProduct(i)};
-      document.querySelector(`#factory_storage_${i}`).ontouchstart = ()=>{factory.sendProduct(i)};
+    if (product) {
+      document.querySelector(`#factory_storage_${i}`).onclick = () => {
+        factory.sendProduct(i)
+      };
+      document.querySelector(`#factory_storage_${i}`).ontouchstart = () => {
+        factory.sendProduct(i)
+      };
     };
   });
 
-  for(let product in factory.settings.rawStorage){
-    if(factory.settings.rawStorage[product]){
-      document.querySelector(`#factory_rawProduct_${product}`).onclick = ()=>{factory.sendRawProduct(product)};
-      document.querySelector(`#factory_rawProduct_${product}`).ontouchstart = ()=>{factory.sendRawProduct(product)};
+  for (let product in factory.settings.rawStorage) {
+    if (factory.settings.rawStorage[product]) {
+      document.querySelector(`#factory_rawProduct_${product}`).onclick = () => {
+        factory.sendRawProduct(product)
+      };
+      document.querySelector(`#factory_rawProduct_${product}`).ontouchstart = () => {
+        factory.sendRawProduct(product)
+      };
 
     };
   };
 
 
-  if(factory.category === 'factory'){
-    for(let i = 0;i<factory.settings.products.length;i++){
+  if (factory.category === 'factory') {
+    for (let i = 0; i < factory.settings.products.length; i++) {
 
       const thisProduct = factory.settings.products[i];
-      document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).onclick = ()=>{
-        factory.setProductSelected(thisProduct.name)};
-        document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).ontouchstart = ()=>{
-          factory.setProductSelected(thisProduct.name)}
+      document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).onclick = () => {
+        factory.setProductSelected(thisProduct.name)
+      };
+      document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).ontouchstart = () => {
+        factory.setProductSelected(thisProduct.name)
+      }
     };
   };
 
-  document.querySelector('#factory_playButton').onclick = ()=>{
+  document.querySelector('#factory_playButton').onclick = () => {
     const data = {
       player: MAIN.game.data.playerData.login,
       gameID: MAIN.game.data.commonData.id,
@@ -780,7 +773,7 @@ function showFactoryMenu(factory) {
       MAIN.socket.emit('GAME_factory_stop', data);
     };
   };
-  document.querySelector('#factory_playButton').ontouchstart = ()=>{
+  document.querySelector('#factory_playButton').ontouchstart = () => {
     const data = {
       player: MAIN.game.data.playerData.login,
       gameID: MAIN.game.data.commonData.id,
@@ -792,10 +785,10 @@ function showFactoryMenu(factory) {
     };
   };
 
-  document.querySelector('#factory_settingsButton').onclick = ()=>{
+  document.querySelector('#factory_settingsButton').onclick = () => {
     showSettingsSetMenu(factory)
   };
-  document.querySelector('#factory_settingsButton').ontouchstart = ()=>{
+  document.querySelector('#factory_settingsButton').ontouchstart = () => {
     showSettingsSetMenu(factory)
   };
 
@@ -806,29 +799,29 @@ function showFactoryMenu(factory) {
 function updateFactoryMenu() {
 
   if (FACTORY.nowShowedFactoryMenu) {
-    if(FACTORY.nowShowedFactoryMenu.settingsSetted){
+    if (FACTORY.nowShowedFactoryMenu.settingsSetted) {
       showFactoryMenu(FACTORY.nowShowedFactoryMenu);
     };
   };
 };
 
-function showFactoryError(messageCode){
+function showFactoryError(messageCode) {
   const errors = {
-    roadEmpty:{
-      ru:'дорога у фабрики занята',
-      eng:'the road near the factory is occupied',
+    roadEmpty: {
+      ru: 'дорога у фабрики занята',
+      eng: 'the road near the factory is occupied',
     },
-    noTruck:{
-      ru:'сначала купите грузовик',
-      eng:'buy a truck first',
+    noTruck: {
+      ru: 'сначала купите грузовик',
+      eng: 'buy a truck first',
     },
-    noFreeTruck:{
-      ru:'нет свободных грузовиков',
-      eng:'no free trucks',
+    noFreeTruck: {
+      ru: 'нет свободных грузовиков',
+      eng: 'no free trucks',
     },
-    turn:{
-      ru:'дождитесь своего хода',
-      eng:'wait for your turn',
+    turn: {
+      ru: 'дождитесь своего хода',
+      eng: 'wait for your turn',
     },
 
   };
@@ -842,17 +835,17 @@ function showFactoryError(messageCode){
 
   const rand = Math.random().toString();
   errorDiv.dataset.rand = rand;
-  setTimeout(()=>{
+  setTimeout(() => {
     errorDiv.style.transitionDuration = '4s';
     errorDiv.style.opacity = 0;
-  },500);
-  setTimeout(()=>{
-    if(errorDiv){
-      if(errorDiv.dataset.rand === rand){
+  }, 500);
+  setTimeout(() => {
+    if (errorDiv) {
+      if (errorDiv.dataset.rand === rand) {
         errorDiv.style.display = 'none';
       };
     };
-  },4000);
+  }, 4000);
 
 };
 
@@ -862,7 +855,7 @@ const FACTORY = {
   init,
   showMenu,
   closeMenu,
-  nowShowedFactoryMenu:null,
+  nowShowedFactoryMenu: null,
   updateFactoryMenu,
   showFactoryError,
   updateFactoryAutosendBody,

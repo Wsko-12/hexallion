@@ -561,202 +561,202 @@ const FUNCTIONS = {
     turn: async function() {
 
       //сначала должны проверятся грузовики, но пока их нет
-      const send = {
-        freeTruck: null,
-        data: null,
-        productIndex: null,
-        route: null,
-        mode: null,
-      };
-
-      const playerData = MAIN.game.data.playerData;
-      if(playerData.gameOver){
-        return
-      };
-      for (let truck in playerData.trucks) {
-        const thisTruck = playerData.trucks[truck];
-        if (thisTruck.product === null) {
-          send.freeTruck = thisTruck;
-        };
-      };
-
-
-      if (send.freeTruck) {
-        for (let sendID in this.factories) {
-          const thisSend = this.factories[sendID];
-          const thisFactory = thisSend.factory;
-
-          //если на этой фабрике готов продуктж
-          const productIndex = thisFactory.settings.storage.findIndex((prod) => {
-            if (prod) {
-              if (prod.name === thisSend.product) {
-                return prod;
-              };
-            };
-          });
-
-
-
-          if (productIndex != -1) {
-            //проверяем, можно ли выслать с этой клетки грузовик
-            if (!thisFactory.fieldCeil.roadEmpty) {
-              //проверяем куда отправка
-              if (thisSend.mode === 'price') {
-                const product = thisSend.product;
-                const prices = [];
-                for (let city in MAIN.game.data.cities) {
-                  const thisCity = MAIN.game.data.cities[city];
-                  prices.push({
-                    city: thisCity,
-                    price: thisCity.getCurrentProductPrice(product),
-                  })
-                };
-
-                async function findPaths() {
-                  let index = -1;
-                  const prom = new Promise((res) => {
-                    async function check() {
-                      index++;
-                      const prom_2 = new Promise((resolve, reject) => {
-                        if (index < prices.length) {
-                          const pathData = {
-                            autosend: true,
-                            finalObject: prices[index].city,
-                            finish: prices[index].city.fieldCeil,
-                            start: thisSend.factory.fieldCeil,
-                            factory: thisSend.factory,
-                            value: null,
-                            dontCheckTrafficJam: false,
-                          };
-                          MAIN.game.functions.pathFinder(pathData).then((path) => {
-                            prices[index].path = path;
-                            check();
-                          });
-                        } else {
-                          res(true);
-                        };
-                      });
-                      return prom_2
-                    };
-                    check();
-                  });
-                  return prom;
-                };
-                findPaths().then((res) => {
-                  //сначала в конец скидываем тех, у кого нет пути
-                  prices.sort(function(a, b) {
-                    // a должно быть равным b
-                    if (a.path) return -1;
-                    return 0;
-                  });
-                  //удаляем тех, у кого нет пути
-                  prices.forEach((direction, i) => {
-                    if (!direction.path) {
-                      prices.splice(i);
-                    };
-                  });
-                  //оставшихся сортируем по цене(приоритет), а потом по пути
-
-                  if (prices.length > 0) {
-                    prices.sort(function(a, b) {
-                      if (a.price > b.price) {
-                        return -1;
-                      };
-                      if (a.price < b.price) {
-                        return 1;
-                      };
-                      // a должно быть равным b
-
-                      if (a.path.length > b.path.length) {
-                        return 1;
-                      };
-                      if (a.path.length < b.path.length) {
-                        return -1;
-                      };
-                      return 0;
-                    });
-
-                    send.data = thisSend;
-                    send.data.finalObject = prices[0].city;
-                    send.productIndex = productIndex;
-                    send.route = prices[0].path;
-                    send.mode = 'price';
-                    sendTruck();
-                  } else {
-                    return;
-                  };
-                });
-              } else if (thisSend.mode === 'route') {
-                const pathData = {
-                  autosend: true,
-                  finalObject: thisSend.finalObject,
-                  finish: thisSend.final,
-                  start: thisSend.factory.fieldCeil,
-                  factory: thisSend.factory,
-                  value: null,
-                  dontCheckTrafficJam: false,
-                };
-                const route = await MAIN.game.functions.pathFinder(pathData);
-                if (route) {
-                  //если затор хотя бы в 3 клетках отсюда, то отправляем
-                  //смотрим, забита ли дорога
-                  function checkRoute() {
-                    for (let i = 0; i < route.length; i++) {
-                      if (route.roadEmpty) {
-                        return i;
-                      };
-                      if (i === route.length - 1) {
-                        return null;
-                      };
-                    };
-                  };
-
-                  let traficJamOn = checkRoute();
-                  if (traficJamOn === null || traficJamOn >= 3) {
-                    // назначаем эту фабрику над которой будет производится вывод грузовика
-                    send.data = thisSend;
-                    send.productIndex = productIndex;
-                    send.route = route;
-                    send.mode = 'route';
-                    sendTruck();
-                    //break скидывает проход по всем остальным фабрикам
-                    break;
-                  };
-                };
-              };
-            };
-          };
-        };
-
-        function sendTruck() {
-          //если нашли фабрику
-          if (send.data) {
-            const fullPath = [];
-            send.route.forEach((ceil, i) => {
-              fullPath.push(ceil.indexes);
-            });
-            const autosendDataForTruck = {
-              fullPath: fullPath,
-              mode: 'route',
-              truck: send.freeTruck,
-            };
-
-
-            if (send.data.finalObject.category === 'city') {
-              autosendDataForTruck.sell = true;
-              autosendDataForTruck.finalObject = send.data.finalObject.name;
-            } else if (send.data.finalObject.category === 'factory') {
-              autosendDataForTruck.delivery = true;
-              autosendDataForTruck.finalObject = send.data.finalObject.id;
-            };
-
-            if (send.freeTruck.product === null) {
-              send.freeTruck.product = 1;
-              send.data.factory.sendProduct(send.productIndex, autosendDataForTruck);
-            };
-          };
-        };
-      };
+      // const send = {
+      //   freeTruck: null,
+      //   data: null,
+      //   productIndex: null,
+      //   route: null,
+      //   mode: null,
+      // };
+      //
+      // const playerData = MAIN.game.data.playerData;
+      // if(playerData.gameOver){
+      //   return
+      // };
+      // for (let truck in playerData.trucks) {
+      //   const thisTruck = playerData.trucks[truck];
+      //   if (thisTruck.product === null) {
+      //     send.freeTruck = thisTruck;
+      //   };
+      // };
+      //
+      //
+      // if (send.freeTruck) {
+      //   for (let sendID in this.factories) {
+      //     const thisSend = this.factories[sendID];
+      //     const thisFactory = thisSend.factory;
+      //
+      //     //если на этой фабрике готов продуктж
+      //     const productIndex = thisFactory.settings.storage.findIndex((prod) => {
+      //       if (prod) {
+      //         if (prod.name === thisSend.product) {
+      //           return prod;
+      //         };
+      //       };
+      //     });
+      //
+      //
+      //
+      //     if (productIndex != -1) {
+      //       //проверяем, можно ли выслать с этой клетки грузовик
+      //       if (!thisFactory.fieldCeil.roadEmpty) {
+      //         //проверяем куда отправка
+      //         if (thisSend.mode === 'price') {
+      //           const product = thisSend.product;
+      //           const prices = [];
+      //           for (let city in MAIN.game.data.cities) {
+      //             const thisCity = MAIN.game.data.cities[city];
+      //             prices.push({
+      //               city: thisCity,
+      //               price: thisCity.getCurrentProductPrice(product),
+      //             })
+      //           };
+      //
+      //           async function findPaths() {
+      //             let index = -1;
+      //             const prom = new Promise((res) => {
+      //               async function check() {
+      //                 index++;
+      //                 const prom_2 = new Promise((resolve, reject) => {
+      //                   if (index < prices.length) {
+      //                     const pathData = {
+      //                       autosend: true,
+      //                       finalObject: prices[index].city,
+      //                       finish: prices[index].city.fieldCeil,
+      //                       start: thisSend.factory.fieldCeil,
+      //                       factory: thisSend.factory,
+      //                       value: null,
+      //                       dontCheckTrafficJam: false,
+      //                     };
+      //                     MAIN.game.functions.pathFinder(pathData).then((path) => {
+      //                       prices[index].path = path;
+      //                       check();
+      //                     });
+      //                   } else {
+      //                     res(true);
+      //                   };
+      //                 });
+      //                 return prom_2
+      //               };
+      //               check();
+      //             });
+      //             return prom;
+      //           };
+      //           findPaths().then((res) => {
+      //             //сначала в конец скидываем тех, у кого нет пути
+      //             prices.sort(function(a, b) {
+      //               // a должно быть равным b
+      //               if (a.path) return -1;
+      //               return 0;
+      //             });
+      //             //удаляем тех, у кого нет пути
+      //             prices.forEach((direction, i) => {
+      //               if (!direction.path) {
+      //                 prices.splice(i);
+      //               };
+      //             });
+      //             //оставшихся сортируем по цене(приоритет), а потом по пути
+      //
+      //             if (prices.length > 0) {
+      //               prices.sort(function(a, b) {
+      //                 if (a.price > b.price) {
+      //                   return -1;
+      //                 };
+      //                 if (a.price < b.price) {
+      //                   return 1;
+      //                 };
+      //                 // a должно быть равным b
+      //
+      //                 if (a.path.length > b.path.length) {
+      //                   return 1;
+      //                 };
+      //                 if (a.path.length < b.path.length) {
+      //                   return -1;
+      //                 };
+      //                 return 0;
+      //               });
+      //
+      //               send.data = thisSend;
+      //               send.data.finalObject = prices[0].city;
+      //               send.productIndex = productIndex;
+      //               send.route = prices[0].path;
+      //               send.mode = 'price';
+      //               sendTruck();
+      //             } else {
+      //               return;
+      //             };
+      //           });
+      //         } else if (thisSend.mode === 'route') {
+      //           const pathData = {
+      //             autosend: true,
+      //             finalObject: thisSend.finalObject,
+      //             finish: thisSend.final,
+      //             start: thisSend.factory.fieldCeil,
+      //             factory: thisSend.factory,
+      //             value: null,
+      //             dontCheckTrafficJam: false,
+      //           };
+      //           const route = await MAIN.game.functions.pathFinder(pathData);
+      //           if (route) {
+      //             //если затор хотя бы в 3 клетках отсюда, то отправляем
+      //             //смотрим, забита ли дорога
+      //             function checkRoute() {
+      //               for (let i = 0; i < route.length; i++) {
+      //                 if (route.roadEmpty) {
+      //                   return i;
+      //                 };
+      //                 if (i === route.length - 1) {
+      //                   return null;
+      //                 };
+      //               };
+      //             };
+      //
+      //             let traficJamOn = checkRoute();
+      //             if (traficJamOn === null || traficJamOn >= 3) {
+      //               // назначаем эту фабрику над которой будет производится вывод грузовика
+      //               send.data = thisSend;
+      //               send.productIndex = productIndex;
+      //               send.route = route;
+      //               send.mode = 'route';
+      //               sendTruck();
+      //               //break скидывает проход по всем остальным фабрикам
+      //               break;
+      //             };
+      //           };
+      //         };
+      //       };
+      //     };
+      //   };
+      //
+      //   function sendTruck() {
+      //     //если нашли фабрику
+      //     if (send.data) {
+      //       const fullPath = [];
+      //       send.route.forEach((ceil, i) => {
+      //         fullPath.push(ceil.indexes);
+      //       });
+      //       const autosendDataForTruck = {
+      //         fullPath: fullPath,
+      //         mode: 'route',
+      //         truck: send.freeTruck,
+      //       };
+      //
+      //
+      //       if (send.data.finalObject.category === 'city') {
+      //         autosendDataForTruck.sell = true;
+      //         autosendDataForTruck.finalObject = send.data.finalObject.name;
+      //       } else if (send.data.finalObject.category === 'factory') {
+      //         autosendDataForTruck.delivery = true;
+      //         autosendDataForTruck.finalObject = send.data.finalObject.id;
+      //       };
+      //
+      //       if (send.freeTruck.product === null) {
+      //         send.freeTruck.product = 1;
+      //         send.data.factory.sendProduct(send.productIndex, autosendDataForTruck);
+      //       };
+      //     };
+      //   };
+      // };
     },
   },
 

@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 
 //сразу делает игру
-const DEV_GAMEPLAY = false;
+const DEV_GAMEPLAY = true;
 
 if (DEV_GAMEPLAY) {
   http.listen(PORT, '0.0.0.0', () => {
