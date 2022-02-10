@@ -538,8 +538,10 @@ const FUNCTIONS = {
     lastFactory:null,
     inProgress:false,
     factories:[],
+    inProgressCounter:0,
 
     turn: async function() {
+
       const that = this;
       function repeat(){
         setTimeout(()=>{
@@ -552,12 +554,16 @@ const FUNCTIONS = {
           return;
         };
       };
-
       if(this.inProgress){
+        this.inProgressCounter++;
+        if(this.inProgressCounter >= 2){
+          this.inProgress = false;
+          this.inProgressCounter = 0;
+        };
         return;
       };
+      this.inProgressCounter = 0;
       this.inProgress = true;
-
 
 
       const playerData = MAIN.game.data.playerData;
@@ -570,7 +576,6 @@ const FUNCTIONS = {
           freeTruck = thisTruck;
         };
       };
-
       if(!freeTruck){
         repeat();
         return;
@@ -579,14 +584,14 @@ const FUNCTIONS = {
 
       //ищем фабрику
       this.factories = Object.keys(playerData.factories);
-      const lastFactoryIndex = this.lastFactory ? this.factories.indexOf(this.lastFactory) : 0;
-
+      const lastFactoryIndex = this.lastFactory ? this.factories.indexOf(this.lastFactory.id) : 0;
       let factoryToSend = null;
       function checkFactory(factory){
         //смотрим, какие продукты есть на фабрике
         if(!factory.settingsSetted){
           return false;
         };
+
         for(let i = 0;i<factory.settings.storage.length;i++){
           const product = factory.settings.storage[i];
           //если есть какой-то продукт, то проверяем, есть ли для него автосенд
@@ -608,7 +613,7 @@ const FUNCTIONS = {
 
       };
       //идем по циклу от последней фабрики
-      for(let i = lastFactoryIndex;i<this.factories.length;i++){
+      for(let i = lastFactoryIndex+1;i<this.factories.length;i++){
         if(playerData.factories[this.factories[i]]){
           const result = checkFactory(playerData.factories[this.factories[i]]);
           if(result){

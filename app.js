@@ -218,9 +218,9 @@ if (DEV_GAMEPLAY) {
     maxMembers: 1,
     members: [],
     started: false,
-    turnBasedGame: true,
+    turnBasedGame: false,
     turnTime: 180000,
-    tickTime: 15000,
+    tickTime: 10000,
     cityEconomy: true,
   });
 };
