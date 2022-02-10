@@ -585,7 +585,6 @@ class FieldCeil {
       if(truck.place.x === this.indexes.x && truck.place.z === this.indexes.z){
         return true;
       }else{
-        console.log('bug')
         this.roadEmpty = false;
         return false;
       };

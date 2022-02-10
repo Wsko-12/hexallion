@@ -65,7 +65,6 @@ class Factory {
         if(this.list[parameters.product].current >= this.list[parameters.product].directions.length){
           this.list[parameters.product].current = 0;
         };
-        console.log(this.list[parameters.product].directions)
       },
       // ????
       changeCurrent:function(parameters){
@@ -210,9 +209,6 @@ class Factory {
           return;
         };
       };
-
-
-
 
       if (this.fieldCeil.checkRoadEmpty()) {
         const truckOnMap = this.fieldCeil.roadEmpty;

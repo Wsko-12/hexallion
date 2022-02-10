@@ -763,7 +763,6 @@ const FUNCTIONS = {
         repeat();
         return;
       };
-      console.log(factoryToSend)
 
       //высылаем грузовик
       const fullPath = [];

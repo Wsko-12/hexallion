@@ -284,7 +284,7 @@ function openCard(truck){
           Q${truck.product.quality}
         </div>
       </div>
-      <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
+      <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}_card">×</div>
     `
   }else{
     product = `
@@ -292,7 +292,6 @@ function openCard(truck){
         <div class="resource-hole">
         </div>
       </div>
-      <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}">×</div>
     `
   };
 
@@ -314,7 +313,7 @@ function openCard(truck){
   truckCard.insertAdjacentHTML('beforeEnd',cardContent);
   truckCard.style.display = 'block';
 
-  const destroyButton = document.querySelector(`#truckMenu_card_destroyButton_${truck.id}`);
+  const destroyButton = document.querySelector(`#truckMenu_card_destroyButton_${truck.id}_card`);
   if(destroyButton){
     destroyButton.onclick = destroy;
     destroyButton.ontouchstart = destroy;
