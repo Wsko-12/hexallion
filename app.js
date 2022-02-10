@@ -2254,7 +2254,6 @@ io.on('connection', function(socket) {
         },
     */
     const game = GAMES[data.gameID];
-    console.log(data)
     if (game) {
       //anticheat
       if (game.players[data.player].balance >= COASTS.buildings[data.build.building]) {

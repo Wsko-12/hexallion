@@ -214,7 +214,7 @@ class Factory {
 
 
 
-      if (this.fieldCeil.roadEmpty) {
+      if (this.fieldCeil.checkRoadEmpty()) {
         const truckOnMap = this.fieldCeil.roadEmpty;
         if (truckOnMap.place.x === this.fieldCeil.indexes.x && truckOnMap.place.z === this.fieldCeil.indexes.z) {
           MAIN.interface.game.factory.showFactoryError('roadEmpty');
@@ -290,7 +290,7 @@ class Factory {
 
 
 
-    if (this.fieldCeil.roadEmpty) {
+    if (this.fieldCeil.checkRoadEmpty()) {
       MAIN.interface.game.factory.showFactoryError('roadEmpty');
       return;
     };

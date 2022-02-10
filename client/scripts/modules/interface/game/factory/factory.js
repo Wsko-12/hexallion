@@ -257,7 +257,7 @@ function updateFactoryAutosendBody(factory) {
         </div>
 
         <!-- direction list -->
-        <div class="factory_footer_body_item_directionsList" id="factoryCard_directionsList_${product}" style="display:none">
+        <div class="factory_footer_body_item_directionsList" id="factoryCard_directionsList_${product}">
 
 
 
@@ -378,7 +378,7 @@ function updateFactoryAutosendBody(factory) {
   //applyFunctions
   products.forEach((product, i) => {
     const directions = {};
-    directions[product] = false;
+    directions[product] = true;
 
     function openDirectionList(){
       const list = document.querySelector(`#factoryCard_directionsList_${product}`);

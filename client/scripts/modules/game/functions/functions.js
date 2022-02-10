@@ -196,7 +196,7 @@ const FUNCTIONS = {
                     if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                       if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                         //если она не занята грузовиком
-                        if (!neighbour.roadEmpty || data.dontCheckTrafficJam) {
+                        if (!neighbour.checkRoadEmpty()|| data.dontCheckTrafficJam) {
                           if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
                             //если к соседу проложена дорога
                             const index = neighbour.neighbours.indexOf(ceil);
@@ -287,7 +287,7 @@ const FUNCTIONS = {
                   if (checked.indexOf(neighbour) === -1) {
                     if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                       if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
-                        if (!neighbour.roadEmpty || data.dontCheckTrafficJam) { //она не занята грузовиком
+                        if (!neighbour.checkRoadEmpty() || data.dontCheckTrafficJam) { //она не занята грузовиком
                           if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
                             //если к соседу проложена дорога
                             const index = neighbour.neighbours.indexOf(ceil);
@@ -341,7 +341,7 @@ const FUNCTIONS = {
                       if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
                         if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
                           //если она не занята грузовиком
-                          if (!neighbour.roadEmpty) {
+                          if (!neighbour.checkRoadEmpty()) {
                             if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
                               //если к соседу проложена дорога
                               const index = neighbour.neighbours.indexOf(ceil);
@@ -509,7 +509,7 @@ const FUNCTIONS = {
       if (i != 0) {
         //при отправке вручную
         if (path[i].type) {
-          if (path[i].roadEmpty) {
+          if (path[i].checkRoadEmpty()) {
             break;
           };
         } else {
@@ -517,7 +517,7 @@ const FUNCTIONS = {
           //при автоматической
           if (MAIN.game.data.map[indexes.z]) {
             if (MAIN.game.data.map[indexes.z][indexes.x]) {
-              if (MAIN.game.data.map[indexes.z][indexes.x].roadEmpty) {
+              if (MAIN.game.data.map[indexes.z][indexes.x].checkRoadEmpty()) {
                 break;
               };
             };
@@ -535,30 +535,272 @@ const FUNCTIONS = {
 
 
   autosending: {
-    trucks: {},
-    lastTruckId: 0,
-
-    factories: {},
-    lastFactoryId: 0,
-
-
-
-    addFactory: function(data) {
-      const autosendID = generateId('autosend', 5);
-      this.factories[autosendID] = data;
-      this.factories[autosendID].id = autosendID;
-
-      data.factory.autosend[autosendID] = data;
-      data.factory.autosend[autosendID].id = autosendID;
-      MAIN.game.functions.autosending.turn();
-    },
-    removeFactory: function(autosendID) {
-      delete this.factories[autosendID].factory.autosend[autosendID];
-      delete this.factories[autosendID];
-    },
-
+    lastFactory:null,
+    inProgress:false,
+    factories:[],
 
     turn: async function() {
+      const that = this;
+      function repeat(){
+        setTimeout(()=>{
+          that.inProgress = false;
+          that.turn();
+        },500);
+      };
+      if (MAIN.game.data.commonData.turnBasedGame) {
+        if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+          return;
+        };
+      };
+
+      if(this.inProgress){
+        return;
+      };
+      this.inProgress = true;
+
+
+
+      const playerData = MAIN.game.data.playerData;
+      //сначала смотрим есть ли свободные грузовики
+      let freeTruck = null;
+
+      for (let truck in playerData.trucks) {
+        const thisTruck = playerData.trucks[truck];
+        if (thisTruck.product === null) {
+          freeTruck = thisTruck;
+        };
+      };
+
+      if(!freeTruck){
+        repeat();
+        return;
+      };
+
+
+      //ищем фабрику
+      this.factories = Object.keys(playerData.factories);
+      const lastFactoryIndex = this.lastFactory ? this.factories.indexOf(this.lastFactory) : 0;
+
+      let factoryToSend = null;
+      function checkFactory(factory){
+        //смотрим, какие продукты есть на фабрике
+        if(!factory.settingsSetted){
+          return false;
+        };
+        for(let i = 0;i<factory.settings.storage.length;i++){
+          const product = factory.settings.storage[i];
+          //если есть какой-то продукт, то проверяем, есть ли для него автосенд
+          if(product){
+            if(factory.autosend.list[product.name].directions.length){
+              const sendData = {
+                factory:factory,
+                product:product,
+                productIndex:i,
+                direction:factory.autosend.list[product.name].directions[factory.autosend.list[product.name].current],
+                status:null,
+              };
+              return sendData;
+              break;
+            };
+          };
+        };
+
+
+      };
+      //идем по циклу от последней фабрики
+      for(let i = lastFactoryIndex;i<this.factories.length;i++){
+        if(playerData.factories[this.factories[i]]){
+          const result = checkFactory(playerData.factories[this.factories[i]]);
+          if(result){
+            this.lastFactory = playerData.factories[this.factories[i]];
+            factoryToSend = result;
+            break;
+          };
+        }else{
+          break;
+        };
+      };
+
+      // если такую фабрику не нашли, то циклим еще раз, но с нуля, потому что там цикл замнулся
+      if(!factoryToSend){
+        for(let i = 0;i<this.factories.length;i++){
+          const result = checkFactory(playerData.factories[this.factories[i]]);
+          if(result){
+            this.lastFactory = playerData.factories[this.factories[i]];
+            factoryToSend = result;
+            break;
+          };
+        };
+      };
+
+      //если и сейчас не нашли, то в репит
+      if(!factoryToSend){
+        repeat();
+        return;
+      };
+
+
+      //если дошли до сюда, значит, что фабрика найдена.
+      //Надо проверить, можно ли с нее выслать
+      if(factoryToSend.factory.fieldCeil.checkRoadEmpty()){
+        repeat();
+        return;
+      };
+
+      if (factoryToSend.direction.mode === 'price') {
+        const product = factoryToSend.product.name;
+        const prices = [];
+        for (let city in MAIN.game.data.cities) {
+          const thisCity = MAIN.game.data.cities[city];
+          prices.push({
+            city: thisCity,
+            price: thisCity.getCurrentProductPrice(product),
+          })
+        };
+
+        async function findPaths() {
+          let index = -1;
+          const prom = new Promise((res) => {
+            async function check() {
+              index++;
+              const prom_2 = new Promise((resolve, reject) => {
+                if (index < prices.length) {
+                  const pathData = {
+                    autosend: true,
+                    finalObject: prices[index].city,
+                    finish: prices[index].city.fieldCeil,
+                    start: factoryToSend.factory.fieldCeil,
+                    factory: factoryToSend.factory,
+                    value: null,
+                    dontCheckTrafficJam: true,
+                  };
+                  MAIN.game.functions.pathFinder(pathData).then((path) => {
+                    prices[index].path = path;
+                    check();
+                  });
+                } else {
+                  res(true);
+                };
+              });
+              return prom_2
+            };
+            check();
+          });
+          return prom;
+        };
+
+        const results = await findPaths();
+        if(results){
+          //сначала в конец скидываем тех, у кого нет пути
+          prices.sort(function(a, b) {
+            // a должно быть равным b
+            if (a.path) return -1;
+            return 0;
+          });
+          //удаляем тех, у кого нет пути
+          prices.forEach((direction, i) => {
+            if (!direction.path) {
+              prices.splice(i);
+            };
+          });
+
+          //оставшихся сортируем по цене(приоритет), а потом по пути
+          if (prices.length > 0) {
+            prices.sort(function(a, b) {
+              if (a.price > b.price) {
+                return -1;
+              };
+              if (a.price < b.price) {
+                return 1;
+              };
+              // a должно быть равным b
+
+              if (a.path.length > b.path.length) {
+                return 1;
+              };
+              if (a.path.length < b.path.length) {
+                return -1;
+              };
+              return 0;
+            });
+            //и так, тут мы нашли, что можно поехать
+            factoryToSend.status = {
+              path:prices[0].path,
+              mode:'price',
+              finalObject:prices[0].city,
+            };
+          } else {
+            repeat();
+            return;
+          };
+        };
+      }else if(factoryToSend.direction.mode === 'route'){
+        const pathData = {
+          autosend: true,
+          finalObject: factoryToSend.direction.finalObject,
+          finish: factoryToSend.direction.final,
+          start: factoryToSend.factory.fieldCeil,
+          factory: factoryToSend.factory,
+          value: null,
+          dontCheckTrafficJam: true,
+        };
+        const route = await MAIN.game.functions.pathFinder(pathData);
+        if(route){
+          factoryToSend.status = {
+            path:route,
+            mode:'route',
+            finalObject:factoryToSend.direction.finalObject,
+          };
+        }else{
+          repeat();
+          return;
+        };
+      };
+
+      //на этом этапе в status должны залететь данные
+      // если не залетели, то значит не найдет конечный маршрут и репит
+      if(!factoryToSend.status){
+        repeat();
+        return;
+      };
+      console.log(factoryToSend)
+
+      //высылаем грузовик
+      const fullPath = [];
+      factoryToSend.status.path.forEach((ceil, i) => {
+        fullPath.push(ceil.indexes);
+      });
+      const autosendDataForTruck = {
+        fullPath: fullPath,
+        mode: 'route',
+        truck: freeTruck,
+      };
+
+      if (factoryToSend.status.finalObject.category === 'city') {
+        autosendDataForTruck.sell = true;
+        autosendDataForTruck.finalObject = factoryToSend.status.finalObject.name;
+      } else if (factoryToSend.status.finalObject.category === 'factory') {
+        autosendDataForTruck.delivery = true;
+        autosendDataForTruck.finalObject = factoryToSend.status.finalObject.id;
+      };
+
+      if (freeTruck.product === null) {
+        factoryToSend.factory.autosend.list[factoryToSend.product.name].current++;
+        if(factoryToSend.factory.autosend.list[factoryToSend.product.name].current >= factoryToSend.factory.autosend.list[factoryToSend.product.name].directions.length){
+          factoryToSend.factory.autosend.list[factoryToSend.product.name].current = 0;
+        };
+        factoryToSend.factory.sendProduct(factoryToSend.productIndex, autosendDataForTruck);
+      };
+
+      repeat();
+
+
+
+
+
+
+
+
 
       //сначала должны проверятся грузовики, но пока их нет
       // const send = {

@@ -30,7 +30,7 @@ class Truck {
 
 
     this.autosend = false;
-    MAIN.game.functions.autosending.turn();
+    // MAIN.game.functions.autosending.turn();
   };
 
   placeOnMap(data) {
@@ -106,7 +106,7 @@ class Truck {
 
   autosendTurn() {
     this.ready = false;
-    MAIN.game.functions.autosending.turn();
+    // MAIN.game.functions.autosending.turn();
     const sendData = {
       game: MAIN.game.data.commonData.id,
       player: MAIN.game.data.playerData.login,
@@ -126,7 +126,7 @@ class Truck {
 
       MAIN.socket.emit('GAME_truck_send', sendData);
     } else {
-      MAIN.game.functions.autosending.turn();
+      // MAIN.game.functions.autosending.turn();
     };
   };
 
@@ -218,7 +218,7 @@ class Truck {
 
     this.object3D = null;
     this.hitBoxMesh = null;
-    MAIN.game.functions.autosending.turn();
+    // MAIN.game.functions.autosending.turn();
   };
 
   destroyRequest() {

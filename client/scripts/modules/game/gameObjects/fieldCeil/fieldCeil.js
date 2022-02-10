@@ -579,6 +579,20 @@ class FieldCeil {
 
   };
 
+  checkRoadEmpty(){
+    if(this.roadEmpty){
+      const truck = this.roadEmpty;
+      if(truck.place.x === this.indexes.x && truck.place.z === this.indexes.z){
+        return true;
+      }else{
+        console.log('bug')
+        this.roadEmpty = false;
+        return false;
+      };
+    }else{
+      return false;
+    }
+  };
 };
 
 export {

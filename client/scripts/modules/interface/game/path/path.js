@@ -263,7 +263,7 @@ function showActionsButton(data) {
       `;
     };
 
-  }
+  };
 
   container.insertAdjacentHTML('beforeEnd', buttons);
 
@@ -511,6 +511,13 @@ function moveWhereProductIsNeeded() {
 
 function showWhereCanSendProduct(data) {
   // console.log(data)
+  document.querySelector('#sceneNotifications').style.display = 'none';
+  document.querySelector('#leftMenu').style.display = 'none';
+  document.querySelector('#balanceSection').style.display = 'none';
+  MAIN.interface.dobleClickFunction.standard = false;
+  MAIN.interface.dobleClickFunction.function = ()=>{};
+
+
   document.querySelector('#factoryMenuClicker').style.pointerEvents = 'none';
   document.querySelector('#factoryMenuClicker').style.opacity = 0.3;
   document.querySelector('#factoryCard').style.pointerEvents = 'none';
@@ -653,6 +660,17 @@ function showWhereCanSendProduct(data) {
 };
 
 function hideWhereCanSendProduct() {
+  document.querySelector('#sceneNotifications').style.display = 'block';
+  document.querySelector('#leftMenu').style.display = 'block';
+  document.querySelector('#balanceSection').style.display = 'block';
+  MAIN.interface.dobleClickFunction.standard = true;
+  MAIN.interface.dobleClickFunction.function = null;
+
+
+
+
+
+
   PATH.whereCanSendProduct.length = 0;
   document.querySelector('#factoryMenuClicker').style.pointerEvents = 'auto';
   document.querySelector('#factoryMenuClicker').style.opacity = 1;
