@@ -104,7 +104,7 @@ class Truck {
     MAIN.interface.game.camera.moveCameraTo(this.hitBoxMesh.position);
   };
 
-  autosendTurn() {
+  async autosendTurn() {
     this.ready = false;
     // MAIN.game.functions.autosending.turn();
     const sendData = {
@@ -115,19 +115,80 @@ class Truck {
       autosend: this.autosend,
     };
     const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
-    this.autosend.lastValue = value;
-    if (value < 6) {
-      this.autosend.cuttedPath = MAIN.game.functions.cutPath(this.autosend.fullPath, value);
-      sendData.path = this.autosend.cuttedPath;
-      if (sendData.autosend.fullPath.length === this.autosend.cuttedPath.length) {
-        sendData.autosend.finished = true;
-      };
-      this.autosend.fullPath = this.autosend.fullPath.slice(this.autosend.cuttedPath.length - 1);
 
-      MAIN.socket.emit('GAME_truck_send', sendData);
-    } else {
-      // MAIN.game.functions.autosending.turn();
+    /* c объездом пробок */
+    if (value < 6) {
+      const lastPoint = this.autosend.fullPath[this.autosend.fullPath.length - 1];
+      const finalCeil = MAIN.game.data.map[lastPoint.z][lastPoint.x];
+      const startCeil = MAIN.game.data.map[this.place.z][this.place.x];
+      let finalObject;
+      if (finalCeil.cityCeil) {
+        finalObject = finalCeil.city;
+      } else {
+        finalCeil.sectorsData.forEach((sector, i) => {
+          if (sector) {
+            if (sector.id === this.autosend.finalObject) {
+              finalObject = sector;
+            };
+          };
+        });
+      };
+
+      const pathData = {
+        autosend: true,
+        finish: finalCeil,
+        start: startCeil,
+        value: null,
+        dontCheckTrafficJam: false,
+        finalObject: finalObject,
+      };
+
+
+
+
+      MAIN.game.functions.pathFinder(pathData).then((path) => {
+        if (path) {
+          const pathIndexes = [];
+          path.forEach((ceil, i) => {
+            pathIndexes.push(ceil.indexes);
+          });
+          this.autosend.lastValue = value;
+          this.autosend.cuttedPath = MAIN.game.functions.cutPath(pathIndexes, value);
+          sendData.path = this.autosend.cuttedPath;
+
+          const lastPointFullPathIndexes = sendData.autosend.fullPath[sendData.autosend.fullPath.length - 1];
+          const lastPointCuttedPathIndexes = this.autosend.cuttedPath[this.autosend.cuttedPath.length - 1];
+
+
+          if (lastPointFullPathIndexes.x === lastPointCuttedPathIndexes.x && lastPointFullPathIndexes.z === lastPointCuttedPathIndexes.z) {
+            sendData.autosend.finished = true;
+          };
+          MAIN.socket.emit('GAME_truck_send', sendData);
+        } else {
+          //тут выкинуть предупреждение, что грузовик застрял
+          console.log('truck stuck');
+        };
+      });
     };
+    /* ///c объездом пробок */
+
+
+    /* без объезда пробок */
+    // this.autosend.lastValue = value;
+    // if (value < 6) {
+    //   this.autosend.cuttedPath = MAIN.game.functions.cutPath(this.autosend.fullPath, value);
+    //   sendData.path = this.autosend.cuttedPath;
+    //   if (sendData.autosend.fullPath.length === this.autosend.cuttedPath.length) {
+    //     sendData.autosend.finished = true;
+    //   };
+    //   this.autosend.fullPath = this.autosend.fullPath.slice(this.autosend.cuttedPath.length - 1);
+    //
+    //   MAIN.socket.emit('GAME_truck_send', sendData);
+    // } else {
+    //   // MAIN.game.functions.autosending.turn();
+    // };
+
+    /* /// без объезда пробок */
   };
 
   createNotification() {
@@ -279,6 +340,7 @@ class Truck {
                   autosend: false,
                   finalObject: object3D.userData.cityCeil ? object3D.userData.city : null,
                   truck: that,
+                  dontCheckTrafficJam: false,
                 };
                 MAIN.interface.game.path.hideButtons();
 

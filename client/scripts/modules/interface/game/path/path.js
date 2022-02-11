@@ -422,6 +422,7 @@ function showWhereProductIsNeeded(data) {
       autosend: false,
       finalObject: finalObject,
       truck: data.truck,
+      dontCheckTrafficJam: false,
     };
     MAIN.interface.game.path.hideButtons();
     MAIN.game.functions.pathFinder(pathData).then((result) => {

@@ -45,6 +45,7 @@ function init() {
   RENDERER.raycaster = new THREE.Raycaster();
   RENDERER.renderer = new THREE.WebGLRenderer({
     canvas: canvasRenderer,
+    logarithmicDepthBuffer:true,
   });
   RENDERER.uResolution = {
     value: new THREE.Vector2(window.innerWidth, window.innerHeight)
