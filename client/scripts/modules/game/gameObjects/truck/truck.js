@@ -116,6 +116,104 @@ class Truck {
     };
     const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
 
+
+
+    /*  чтобы грузовик перепроверял лучшую цену  */
+
+    if (this.autosend.sell) {
+      const product = this.product.name;
+      const prices = [];
+      for (let city in MAIN.game.data.cities) {
+        const thisCity = MAIN.game.data.cities[city];
+        prices.push({
+          city: thisCity,
+          price: thisCity.getCurrentProductPrice(product),
+        })
+      };
+
+      const truck = this;
+      async function findPaths() {
+        let index = -1;
+        const prom = new Promise((res) => {
+          async function check() {
+            index++;
+            const lastPoint = truck.autosend.fullPath[truck.autosend.fullPath.length - 1];
+            const prom_2 = new Promise((resolve, reject) => {
+              if (index < prices.length) {
+                const pathData = {
+                  autosend: true,
+                  finalObject: prices[index].city,
+                  finish: prices[index].city.fieldCeil,
+                  start: MAIN.game.data.map[lastPoint.z][lastPoint.x],
+                  value: null,
+                  dontCheckTrafficJam: true,
+                };
+                MAIN.game.functions.pathFinder(pathData).then((path) => {
+                  prices[index].path = path;
+                  check();
+                });
+              } else {
+                res(true);
+              };
+            });
+            return prom_2
+          };
+          check();
+        });
+        return prom;
+      };
+
+      const results = await findPaths();
+      if (results) {
+        //сначала в конец скидываем тех, у кого нет пути
+        prices.sort(function(a, b) {
+          // a должно быть равным b
+          if (a.path) return -1;
+          return 0;
+        });
+        //удаляем тех, у кого нет пути
+        prices.forEach((direction, i) => {
+          if (!direction.path) {
+            prices.splice(i);
+          };
+        });
+
+        //оставшихся сортируем по цене(приоритет), а потом по пути
+        if (prices.length > 0) {
+          prices.sort(function(a, b) {
+            if (a.price > b.price) {
+              return -1;
+            };
+            if (a.price < b.price) {
+              return 1;
+            };
+            // a должно быть равным b
+
+            if (a.path.length > b.path.length) {
+              return 1;
+            };
+            if (a.path.length < b.path.length) {
+              return -1;
+            };
+            return 0;
+          });
+          //и так, тут мы нашли, что можно поехать
+
+          truck.autosend.fullPath = [];
+          prices[0].path.forEach((ceil, i) => {
+            truck.autosend.fullPath.push(ceil.indexes);
+          });
+        };
+      };
+    };
+    /*  чтобы грузовик перепроверял лучшую цену  */
+
+
+
+
+
+
+
     /* c объездом пробок */
     if (value < 6) {
       const lastPoint = this.autosend.fullPath[this.autosend.fullPath.length - 1];
