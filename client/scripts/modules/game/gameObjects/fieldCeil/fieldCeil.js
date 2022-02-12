@@ -145,7 +145,6 @@ class FieldCeil {
     //для режима пошагового меню не показывается если не ход игрока
     if (this.cityCeil) {
       MAIN.interface.game.city.openMenu(MAIN.game.data.cities[this.type]);
-      console.log(MAIN.game.data.cities[this.type].balance);
     };
 
 

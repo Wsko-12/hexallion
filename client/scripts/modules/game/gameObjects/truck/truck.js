@@ -144,9 +144,9 @@ class Truck {
                   autosend: true,
                   finalObject: prices[index].city,
                   finish: prices[index].city.fieldCeil,
-                  start: MAIN.game.data.map[lastPoint.z][lastPoint.x],
+                  start: MAIN.game.data.map[truck.place.z][truck.place.x],
                   value: null,
-                  dontCheckTrafficJam: true,
+                  dontCheckTrafficJam: false,
                 };
                 MAIN.game.functions.pathFinder(pathData).then((path) => {
                   prices[index].path = path;
