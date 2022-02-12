@@ -211,6 +211,8 @@ class ROOM {
 
 
 if (DEV_GAMEPLAY) {
+
+  // testroom
   ROOMS.R_0000000000 = new ROOM({
     id: 'R_0000000000',
     gameID: null,
@@ -675,7 +677,7 @@ class CITY {
   constructor(properties) {
     this.name = properties.name;
     this.game = properties.game;
-    this.balance = properties.game.cityEconomy ? 1000000 : null,
+    this.balance = properties.game.cityEconomy ? (300000*this.game.members.length) : null,
 
     this.storage = this.createStorage();
 
@@ -2358,10 +2360,12 @@ io.on('connection', function(socket) {
             if (thisFactory.paused) {
               thisFactory.paused = false;
             } else {
+              thisFactory.paused = true;
+
               thisFactory.productLine.forEach((item, i) => {
                 thisFactory.productLine[i] = 0;
               });
-              thisFactory.paused = true;
+              thisFactory.productInProcess = null;
             };
             thisFactory.sendUpdates();
           };
