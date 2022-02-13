@@ -145,7 +145,7 @@ function openMenu(city){
           ${city.name}
         </div>
         <div class="cityCard_header-balance">
-          $${city.balance ? city.balance:''}
+          ${city.balance ? '$'+city.balance:''}
         </div>
       </div>
     </div>

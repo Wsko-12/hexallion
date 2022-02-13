@@ -324,6 +324,14 @@ function init() {
         thisCity.applyUpdates(data[city]);
       };
 
+      //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
+      if(MAIN.interface.game.path.neederOfProduct.length > 0){
+        MAIN.interface.game.path.updateCityPrise();
+      };
+      if(document.querySelector('#balanceHistory_productsInCirculation')){
+        document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
+      };
+
       // for(let city in MAIN.game.data.cities){
       //   const thisCity = MAIN.game.data.cities[city];
       //   for(let prod in thisCity.storage){
@@ -350,6 +358,14 @@ function init() {
       const thisCity = MAIN.game.data.cities[data.name];
       thisCity.applyUpdates(data);
 
+      //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
+      if(MAIN.interface.game.city.priceShow){
+        MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
+      };
+
+      if(document.querySelector('#balanceHistory_productsInCirculation')){
+        document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
+      };
 
       // for(let prod in data.storage){
       //   MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];

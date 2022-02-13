@@ -801,7 +801,7 @@ class CITY {
 
   unloadTruck(truck) {
     const product = truck.product;
-    const price = this.getProductPrice(product);
+    let price = this.getProductPrice(product);
     this.storage[product.name].fullness = 100;
 
     if (this.balance != null) {
