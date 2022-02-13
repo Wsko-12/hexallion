@@ -10,16 +10,14 @@
 }
 
 .cityCard{
-  width: 420px;
-  height: 390px;
-  background-color: #b6b6b6;
+  min-width: 420px;
+  height: 360px;
   margin: auto;
   overflow: hidden;
   border-radius: 10px;
   font-family: 'Roboto';
-  box-shadow: 0px 0px 10px black;
-
-
+  /* box-shadow: 0px 0px 10px black; */
+  filter: drop-shadow(0px 0px 10px black);
 }
 .cityCard_header{
   width: 100%;
@@ -73,20 +71,23 @@
 .cityCard_body{
   width: 100%;
   position: relative;
-  top: -40px;
-  padding-top: 5px;
-  filter: drop-shadow(0px 0px 10px black);
-}
-.cityCard_body-header{
-  width: 100%;
+  top: -30px;
   display: flex;
-  height: 35px;
-}
-.cityCard_body-header-item{
-  height: 35px;
-  width: 100px;
-  background-color: #bebebe;
   border-radius: 15px 15px 0px 0px;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px #000000;
+}
+.cityCard_body-menu{
+  width: 35px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.cityCard_body-menu-item{
+  height: 35px;
+  width: 35px;
+  background-color: #bebebe;
+  border-radius: 10px 0px 0px 10px;
   padding: 5px;
   font-family: 'Roboto Condensed';
   font-size: 12px;
@@ -95,7 +96,12 @@
   align-items: center;
   justify-content: center;
 }
-.cityCard_body-header-item-selected{
+.cityCard_body-menu-item-icon{
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+}
+.cityCard_body-menu-item-selected{
   background-color: #FAF9F8;
   box-shadow: 0px 0px 10px #000000;
   z-index: 1;
@@ -105,9 +111,9 @@
   position: relative;
   width: 100%;
   height: 260px;
-  padding: 10px;
   z-index: 2;
   background-color: #FAF9F8;
+
 }
 .cityCard_body_list{
   width: 100%;
@@ -118,9 +124,8 @@
 }
 .cityCard_body_list-item{
   width: 50px;
-  margin:5px;
+  margin: 5px;
   height: 230px;
-
 }
 .cityCard_body_list-item-price{
   font-family: 'Roboto Condensed';
@@ -160,6 +165,24 @@
   justify-content: center;
   color: #606060;
   font-size: 7px;
+}
+.cityCard_body_list-item-progressBar-color{
+  width: 28px;
+  height: 188px;
+  position: absolute;
+  top:0px;
+  border-radius: 8px;
+  overflow: hidden;
+  /* red #D7355C
+  green #A3D735 */
+}
+.cityCard_body_list-item-progressBar-color-red{
+  background-color: rgba(215, 53, 92,0.35);
+  width: 100%;
+}
+.cityCard_body_list-item-progressBar-color-green{
+  background-color: rgba(163, 215, 53,0.35);
+  width: 100%;
 }
 .cityCard_body_list-item-progressBar-product{
   width: 28px;

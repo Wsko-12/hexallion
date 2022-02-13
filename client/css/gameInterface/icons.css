@@ -56,3 +56,22 @@
 .icon-plus {
   background-image: url(../img/icons/plus.png);
 }
+
+.icon-shop-raw {
+  background-image: url(../img/shops/raw.png);
+}
+.icon-shop-auto {
+  background-image: url(../img/shops/auto.png);
+}
+.icon-shop-construction {
+  background-image: url(../img/shops/construction.png);
+}
+.icon-shop-fashion {
+  background-image: url(../img/shops/fashion.png);
+}
+.icon-shop-homeAccessories {
+  background-image: url(../img/shops/homeAccessories.png);
+}
+.icon-shop-stationery {
+  background-image: url(../img/shops/stationery.png);
+}

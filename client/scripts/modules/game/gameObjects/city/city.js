@@ -103,8 +103,10 @@ class City {
   };
 
   applyUpdates(data){
-    this.storage = data.storage,
-    this.balance = data.balance,
+    this.storage = data.storage;
+    this.balance = data.balance;
+    MAIN.interface.game.city.openMenu();
+
   };
 
 };

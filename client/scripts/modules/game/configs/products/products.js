@@ -9,10 +9,14 @@ import {
 /*
   raw - сырье
   construction - стройматериалы
-  hardware - хоз товары
-*/
+  auto - авто товары
+  stationery - канцелярия
+  fashion - одежда,ювелирка
+  homeAccessories - аксессуары для дома
 
+*/
 const PRODUCTS = {
+
   sand: {
     price: 8400,
     sailSpeed: 75,
@@ -49,7 +53,7 @@ const PRODUCTS = {
   wood: {
     price: 17800,
     sailSpeed: 40,
-    category: 'raw',
+    category: 'construction',
 
 
     manufacture: ['sawmill'],
@@ -113,7 +117,7 @@ const PRODUCTS = {
   petrol: {
     price: 18600,
     sailSpeed: 3,
-    category: 'hardware',
+    category: 'auto',
     manufacture: ['oilRefinery'],
     //где является ингредиентом
     ingrediend: null,
@@ -129,7 +133,7 @@ const PRODUCTS = {
   glue: {
     price: 15800,
     sailSpeed: 4,
-    category: 'hardware',
+    category: 'stationery',
     manufacture: ['petrochemicalPlant'],
     //где является ингредиентом
     ingrediend: [],
@@ -145,7 +149,7 @@ const PRODUCTS = {
   dye: {
     price: 15300,
     sailSpeed: 4,
-    category: 'hardware',
+    category: 'stationery',
     manufacture: ['petrochemicalPlant'],
     //где является ингредиентом
     ingrediend: [],
@@ -161,7 +165,7 @@ const PRODUCTS = {
   rubber: {
     price: 14800,
     sailSpeed: 4,
-    category: 'hardware',
+    category: 'construction',
     manufacture: ['petrochemicalPlant'],
     //где является ингредиентом
     ingrediend: [],
@@ -177,7 +181,7 @@ const PRODUCTS = {
   plastic: {
     price: 16300,
     sailSpeed: 6,
-    category: 'hardware',
+    category: 'raw',
     manufacture: ['petrochemicalPlant'],
     //где является ингредиентом
     ingrediend: [],
@@ -194,7 +198,7 @@ const PRODUCTS = {
   paper: {
     price: 15400,
     sailSpeed: 6,
-    category: 'hardware',
+    category: 'stationery',
     manufacture: ['paperFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -210,7 +214,7 @@ const PRODUCTS = {
   cardboard: {
     price: 21000,
     sailSpeed: 6,
-    category: 'hardware',
+    category: 'stationery',
     manufacture: ['paperFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -226,7 +230,7 @@ const PRODUCTS = {
   glass: {
     price: 4100,
     sailSpeed: 4,
-    category: 'hardware',
+    category: 'construction',
     manufacture: ['glassFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -242,7 +246,7 @@ const PRODUCTS = {
   cement: {
     price: 13000,
     sailSpeed: 6,
-    category: 'hardware',
+    category: 'construction',
     manufacture: ['cementFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -258,7 +262,7 @@ const PRODUCTS = {
   buildingComponents: {
     price: 31200,
     sailSpeed: 4,
-    category: 'hardware',
+    category: 'construction',
     manufacture: ['buildingProductsFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -274,7 +278,7 @@ const PRODUCTS = {
   sheetSteel: {
     price: 24600,
     sailSpeed: 4,
-    category: 'hardware',
+    category: 'construction',
     manufacture: ['buildingProductsFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -290,7 +294,7 @@ const PRODUCTS = {
   jewelry: {
     price: 61300,
     sailSpeed: 7,
-    category: 'hardware',
+    category: 'fashion',
     manufacture: ['jewelryFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -306,7 +310,7 @@ const PRODUCTS = {
   furnitureWood: {
     price: 16700,
     sailSpeed: 5,
-    category: 'hardware',
+    category: 'homeAccessories',
     manufacture: ['furnitureFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -322,7 +326,7 @@ const PRODUCTS = {
   furniturePlastic: {
     price: 22100,
     sailSpeed: 5,
-    category: 'hardware',
+    category: 'homeAccessories',
     manufacture: ['furnitureFactory'],
     //где является ингредиентом
     ingrediend: [],
@@ -338,6 +342,12 @@ const PRODUCTS = {
 
 
 };
+Object.defineProperty(PRODUCTS, 'categories', {
+  enumerable: false,
+  configurable: false,
+  writable: false,
+  value: ['raw','construction','homeAccessories','stationery','fashion','auto'],
+});
 export {
   PRODUCTS
 };
