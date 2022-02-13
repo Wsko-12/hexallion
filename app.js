@@ -421,16 +421,16 @@ class GAME {
     for (let city in this.cities) {
       const thisCity = this.cities[city];
       thisCity.balance -= averageValue;
-      thisCity.sendUpdate();
     };
+    this.sendUpdateCitiesData();
   };
   payToCities(value) {
     const averageValue = Math.floor(value / 3);
     for (let city in this.cities) {
       const thisCity = this.cities[city];
       thisCity.balance += averageValue;
-      thisCity.sendUpdate();
     };
+    this.sendUpdateCitiesData();
   };
 
   generateMap() {
@@ -658,16 +658,52 @@ class GAME {
     };
   };
   updateCities() {
+    //делает шаг на городе
     const data = {};
     for (let city in this.cities) {
       const thisCity = this.cities[city];
       thisCity.update();
 
-      data[city] = {};
-      for (let prod in thisCity.storage) {
-        data[city][prod] = thisCity.storage[prod].line
+      data[city] = {
+        name:city,
+        balance:thisCity.balance,
+        storage:{},
       };
-      data[city].balance = thisCity.balance;
+      for (let product in thisCity.storage) {
+        data[city].storage[product] = thisCity.storage[product];
+      };
+    };
+    this.sendToAll('GAME_city_update', data);
+
+
+
+    // const data = {};
+    // for (let city in this.cities) {
+    //   const thisCity = this.cities[city];
+    //   thisCity.update();
+    //
+    //   data[city] = {};
+    //   for (let prod in thisCity.storage) {
+    //     data[city][prod] = thisCity.storage[prod].line
+    //   };
+    //   data[city].balance = thisCity.balance;
+    // };
+    // this.sendToAll('GAME_city_update', data);
+  };
+
+  sendUpdateCitiesData(){
+    //высылает одним объектом данные всех 3 городов
+    const data = {};
+    for (let city in this.cities) {
+      const thisCity = this.cities[city];
+      data[city] = {
+        name:city,
+        balance:thisCity.balance,
+        storage:{},
+      };
+      for (let product in thisCity.storage) {
+        data[city].storage[product] = thisCity.storage[product];
+      };
     };
     this.sendToAll('GAME_city_update', data);
   };
@@ -687,87 +723,137 @@ class CITY {
     const productBase = COASTS.products;
     for (let product in productBase) {
       const thisProduct = productBase[product];
-
-      //касается только данного реесурса
-      const prodStore = {};
-
-      //его линия прогресса
-      prodStore.line = [];
-      for (let i = 0; i < thisProduct.sailSpeed; i++) {
-        prodStore.line.push(0);
+      const prodStore = {
+        price:thisProduct.price,
+        fullness:0,
+        speed:thisProduct.sailSpeed,
       };
-
-      //максимальная цена ресурса
-      prodStore.maxPrice = thisProduct.price;
-
-
-
-      //массив цен на данный этап ресурса
-      prodStore.prices = [];
-      prodStore.line.forEach((item, i) => {
-        //harder city price
-        // const discount = (1 - ((i+1)/resStore.line.length)) + (0.10 - 0.10 * (i+1)/resStore.line.length);
-        const discount = 1 - ((i + 1) / prodStore.line.length);
-        let price = Math.round(prodStore.maxPrice - prodStore.maxPrice * discount);
-        if (price < 0) {
-          price = 0
-        };
-        prodStore.prices[i] = price;
-      });
       storage[product] = prodStore;
+      // const thisProduct = productBase[product];
+
+      // //касается только данного реесурса
+      // const prodStore = {};
+      //
+      // //его линия прогресса
+      // prodStore.line = [];
+      // for (let i = 0; i < thisProduct.sailSpeed; i++) {
+      //   prodStore.line.push(0);
+      // };
+      //
+      // //максимальная цена ресурса
+      // prodStore.maxPrice = thisProduct.price;
+      //
+      //
+      //
+      // //массив цен на данный этап ресурса
+      // prodStore.prices = [];
+      // prodStore.line.forEach((item, i) => {
+      //   //harder city price
+      //   // const discount = (1 - ((i+1)/resStore.line.length)) + (0.10 - 0.10 * (i+1)/resStore.line.length);
+      //   const discount = 1 - ((i + 1) / prodStore.line.length);
+      //   let price = Math.round(prodStore.maxPrice - prodStore.maxPrice * discount);
+      //   if (price < 0) {
+      //     price = 0
+      //   };
+      //   prodStore.prices[i] = price;
+      // });
+      // storage[product] = prodStore;
     };
+    // console.log(storage)
     return storage;
   };
 
   getProductPrice(product) {
-    let price = 0;
-    const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
-    if (firstFullCeilIndex === -1) {
-      price = this.storage[product.name].prices[this.storage[product.name].prices.length - 1];
-    } else if (firstFullCeilIndex === 0) {
-      price = 0;
-    } else {
-      price = this.storage[product.name].prices[firstFullCeilIndex - 1];
-    };
+
+    const storage = this.storage[product.name];
+
+    const discount = Math.round((storage.price*storage.fullness)/100);
+    const price = storage.price - discount;
+    const qualityBonus = Math.round(price * ((product.quality * 15)/100));
+    const finalPrice = price+qualityBonus;
+
     if (this.balance != null) {
-      if (price >= this.balance) {
+      if (finalPrice >= this.balance) {
         return this.balance;
       };
     };
-    return price;
+    return finalPrice;
+
+
+
+
+    // let price = 0;
+    // const firstFullCeilIndex = this.storage[product.name].line.indexOf(1);
+    // if (firstFullCeilIndex === -1) {
+    //   price = this.storage[product.name].prices[this.storage[product.name].prices.length - 1];
+    // } else if (firstFullCeilIndex === 0) {
+    //   price = 0;
+    // } else {
+    //   price = this.storage[product.name].prices[firstFullCeilIndex - 1];
+    // };
+    // if (this.balance != null) {
+    //   if (price >= this.balance) {
+    //     return this.balance;
+    //   };
+    // };
+    // return price;
   };
 
   unloadTruck(truck) {
     const product = truck.product;
-    let price = this.getProductPrice(product);
-
-    this.storage[product.name].line[0] = 1;
-
-    let newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+    const price = this.getProductPrice(product);
+    this.storage[product.name].fullness = 100;
 
     if (this.balance != null) {
-      if (newPrice >= this.balance) {
-        newPrice = this.balance;
+      if (price >= this.balance) {
+        price = this.balance;
       };
-      this.balance -= newPrice;
+      this.balance -= price;
     };
 
-
-    product.player.changeBalance(newPrice);
-    product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
+    product.player.changeBalance(price);
+    product.player.sendBalanceMessage(`Sale of ${product.name}`, price);
 
     this.sendUpdate();
     truck.clear();
+
+    // const product = truck.product;
+    // let price = this.getProductPrice(product);
+    //
+    // this.storage[product.name].line[0] = 1;
+    //
+    // let newPrice = Math.round(price + price * ((product.quality * 15) * 0.01));
+    //
+    // if (this.balance != null) {
+    //   if (newPrice >= this.balance) {
+    //     newPrice = this.balance;
+    //   };
+    //   this.balance -= newPrice;
+    // };
+
+
+    // product.player.changeBalance(newPrice);
+    // product.player.sendBalanceMessage(`Sale of ${product.name}`, newPrice);
+    //
+    // this.sendUpdate();
+    // truck.clear();
   };
 
 
 
   update() {
     for (let productStore in this.storage) {
-      const thisProductStore = this.storage[productStore];
-      thisProductStore.line.pop();
-      thisProductStore.line.unshift(0);
+      const thisStore = this.storage[productStore];
+      thisStore.fullness -= thisStore.speed;
+      if(thisStore.fullness < 0){
+        thisStore.fullness = 0;
+      };
     };
+    // for (let productStore in this.storage) {
+    //   const thisProductStore = this.storage[productStore];
+    //   thisProductStore.line.pop();
+    //   thisProductStore.line.unshift(0);
+    // };
   };
 
   sendUpdate() {
@@ -776,11 +862,22 @@ class CITY {
       storage: {},
       balance: this.balance,
     };
-
-    for (let prod in this.storage) {
-      data.storage[prod] = this.storage[prod].line;
+    for (let product in this.storage) {
+      data.storage[product] = this.storage[product];
     };
-    this.game.sendToAll('GAME_city_updateOne', data)
+
+    this.game.sendToAll('GAME_city_updateOne', data);
+
+    // const data = {
+    //   name: this.name,
+    //   storage: {},
+    //   balance: this.balance,
+    // };
+    //
+    // for (let prod in this.storage) {
+    //   data.storage[prod] = this.storage[prod].line;
+    // };
+    // this.game.sendToAll('GAME_city_updateOne', data)
   };
 };
 

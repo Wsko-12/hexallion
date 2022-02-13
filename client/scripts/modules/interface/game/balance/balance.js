@@ -83,9 +83,9 @@ function calculateProductsWorth(){
   };
 
   let sum = 0;
-  products.forEach((prod, i) => {
-    const price = prices[prod.name];
-    sum += price + Math.round(price*0.15*prod.quality);
+  products.forEach((product, i) => {
+    const price = prices[product.name];
+    sum += price + Math.round(price*0.15*product.quality);
   });
   return sum;
 
@@ -452,6 +452,6 @@ const BALANCE = {
   updateCreditHistory,
   addBalanceMessage,
   calculateProductsWorth,
-  
+
 };
 export {BALANCE};

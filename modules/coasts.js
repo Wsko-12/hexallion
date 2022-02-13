@@ -34,32 +34,32 @@ const coasts = {
   products: {
     sand: {
       price: 8400,
-      sailSpeed: 1,
+      sailSpeed: 75,
       productionPrice: 2400,
       raw: null,
     },
     water: {
       price: 12550,
-      sailSpeed: 2,
+      sailSpeed: 55,
       productionPrice: 5000,
       raw: null,
     },
     wood: {
       price: 17800,
-      sailSpeed: 2,
+      sailSpeed: 40,
       productionPrice: 8400,
       raw: null,
     },
     steel: {
       price: 27500,
-      sailSpeed: 3,
+      sailSpeed: 30,
       productionPrice: 15900,
       raw: null,
     },
 
     oil: {
       price: 33000,
-      sailSpeed: 5,
+      sailSpeed: 20,
       productionPrice: 18900,
       raw: null,
     },
@@ -67,7 +67,7 @@ const coasts = {
 
     gold: {
       price: 43500,
-      sailSpeed: 6,
+      sailSpeed: 15,
       productionPrice: 26950,
       raw: null,
     },

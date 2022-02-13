@@ -127,7 +127,7 @@ class Truck {
         const thisCity = MAIN.game.data.cities[city];
         prices.push({
           city: thisCity,
-          price: thisCity.getCurrentProductPrice(product),
+          price: thisCity.getCurrentProductPrice(this.product),
         })
       };
 

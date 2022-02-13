@@ -15,7 +15,7 @@ const SOCKET = {
 
 function init() {
   if (MAIN.socket) {
-    
+
     MAIN.socket.on('DEV_GAMEPLAY',()=>{
       /*ДЛЯ ОДНОГО ИГРОКА*/
      // чтобы быстро перейти к созданию сцены
@@ -321,46 +321,55 @@ function init() {
     MAIN.socket.on('GAME_city_update',(data)=>{
       for(let city in MAIN.game.data.cities){
         const thisCity = MAIN.game.data.cities[city];
-        for(let prod in thisCity.storage){
-          thisCity.storage[prod].line = data[city][prod];
-        };
-        thisCity.balance = data[city].balance;
+        thisCity.applyUpdates(data[city]);
       };
 
-      if(MAIN.interface.game.city.cardOpened){
-        MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
-      };
-
-      //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
-      if(MAIN.interface.game.path.neederOfProduct.length > 0){
-        MAIN.interface.game.path.updateCityPrise();
-      };
-      if(document.querySelector('#balanceHistory_productsInCirculation')){
-        document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
-      };
+      // for(let city in MAIN.game.data.cities){
+      //   const thisCity = MAIN.game.data.cities[city];
+      //   for(let prod in thisCity.storage){
+      //     thisCity.storage[prod].line = data[city][prod];
+      //   };
+      //   thisCity.balance = data[city].balance;
+      // };
+      //
+      // if(MAIN.interface.game.city.cardOpened){
+      //   MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
+      // };
+      //
+      // //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
+      // if(MAIN.interface.game.path.neederOfProduct.length > 0){
+      //   MAIN.interface.game.path.updateCityPrise();
+      // };
+      // if(document.querySelector('#balanceHistory_productsInCirculation')){
+      //   document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
+      // };
     });
 
     //происходит, когда кто-то продает ресурс в город
     MAIN.socket.on('GAME_city_updateOne',(data)=>{
-      for(let prod in data.storage){
-        MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
-      };
-
-      MAIN.game.data.cities[data.name].balance = data.balance;
+      const thisCity = MAIN.game.data.cities[data.name];
+      thisCity.applyUpdates(data);
 
 
-      if(MAIN.interface.game.city.cardOpened){
-        MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
-      };
-
-      //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
-      if(MAIN.interface.game.city.priceShow){
-        MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
-      };
-
-      if(document.querySelector('#balanceHistory_productsInCirculation')){
-        document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
-      };
+      // for(let prod in data.storage){
+      //   MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
+      // };
+      //
+      // MAIN.game.data.cities[data.name].balance = data.balance;
+      //
+      //
+      // if(MAIN.interface.game.city.cardOpened){
+      //   MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
+      // };
+      //
+      // //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
+      // if(MAIN.interface.game.city.priceShow){
+      //   MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
+      // };
+      //
+      // if(document.querySelector('#balanceHistory_productsInCirculation')){
+      //   document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
+      // };
     });
 
 
