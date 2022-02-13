@@ -4,12 +4,12 @@ const coasts = {
     road: 5000,
     bridge: 7500,
 
-    sandMine: 5900,
-    waterStation: 11600,
-    sawmill: 26100,
-    steelMill: 39000,
-    oilWell: 31500,
-    goldMill: 89300,
+    sandMine: 12000,
+    waterStation: 15100,
+    sawmill: 14100,
+    steelMill: 34800,
+    oilWell: 49350,
+    goldMill: 66200,
 
 
     oilRefinery: 64100,
@@ -33,42 +33,42 @@ const coasts = {
 
   products: {
     sand: {
-      price: 3900,
-      sailSpeed: 3,
-      productionPrice: 1700,
+      price: 8400,
+      sailSpeed: 1,
+      productionPrice: 2400,
       raw: null,
     },
     water: {
-      price: 9700,
-      sailSpeed: 6,
-      productionPrice: 4400,
+      price: 12550,
+      sailSpeed: 2,
+      productionPrice: 5000,
       raw: null,
     },
     wood: {
-      price: 17400,
-      sailSpeed: 7,
-      productionPrice: 8000,
+      price: 17800,
+      sailSpeed: 2,
+      productionPrice: 8400,
       raw: null,
     },
     steel: {
-      price: 27300,
-      sailSpeed: 8,
-      productionPrice: 12700,
+      price: 27500,
+      sailSpeed: 3,
+      productionPrice: 15900,
       raw: null,
     },
 
     oil: {
-      price: 21000,
-      sailSpeed: 7,
-      productionPrice: 9300,
+      price: 33000,
+      sailSpeed: 5,
+      productionPrice: 18900,
       raw: null,
     },
 
 
     gold: {
-      price: 59500,
-      sailSpeed: 11,
-      productionPrice: 28000,
+      price: 43500,
+      sailSpeed: 6,
+      productionPrice: 26950,
       raw: null,
     },
 

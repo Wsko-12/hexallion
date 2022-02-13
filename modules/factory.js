@@ -40,7 +40,7 @@ const factoriesConfig = {
   steelMill: {
     category: 'mining',
     //минимум 4 из-за прокачки
-    speed: 7,
+    speed: 5,
     storage: 2,
     //полная цена производства
     price: COASTS.products.steel.productionPrice,
@@ -51,7 +51,7 @@ const factoriesConfig = {
   oilWell: {
     category: 'mining',
     //минимум 4 из-за прокачки
-    speed: 4,
+    speed: 6,
     storage: 2,
     //полная цена производства
     price: COASTS.products.oil.productionPrice,
@@ -62,7 +62,7 @@ const factoriesConfig = {
   goldMill: {
     category: 'mining',
     //минимум 4 из-за прокачки
-    speed: 8,
+    speed: 7,
     storage: 2,
     //полная цена производства
     price: COASTS.products.gold.productionPrice,
