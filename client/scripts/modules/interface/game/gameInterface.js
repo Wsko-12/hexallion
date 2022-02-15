@@ -47,13 +47,18 @@ function init(){
     </div>
     <section id="onCeilDoubleClick">
       <div id="sectorMenu">
-          <div class="sectorMenu_Left">
-            <div id="changeSectorButton" class="sectorMenu_Top_CentralButton">
-               <img class='sectorMenuButton_image' style="width:100%;height:100%;" src="./scripts/modules/interface/game/ceilMenu/icons/changeSectorButton.png">
-            </div>
+        <div class="sectorMenu_centralButton" id="changeSectorButton">
+          <div class="sectorMenu_centralButton-icon icon-changeSector">
           </div>
-          <div class="sectorMenu_Right" id="sectorMenu_List">
+        </div>
+        <div class="sectorMenu_menu">
+          <div class="sectorMenu_menu-header" id="sectorMenu_buttonsList">
+
           </div>
+          <div class="sectorMenu_menu-body" id="sectorMenu_cardsList">
+
+          </div>
+        </div>
       </div>
       <div id="buildingMenu">
 
@@ -66,7 +71,7 @@ function init(){
     </section>
     <section id='pathSection'>
       <div id="pathSection_ButtonsContainer">
-        
+
       </div>
       <div id="pathSection_neadersContainer">
 
@@ -86,7 +91,7 @@ function init(){
 
 
   document.body.insertAdjacentHTML('beforeEnd',section);
-  MAIN.interface.deleteTouches(document.querySelector('#sectorMenu'));
+  // MAIN.interface.deleteTouches(document.querySelector('#sectorMenu'));
   MAIN.interface.deleteTouches(document.querySelector('#buildingMenu'));
 
 

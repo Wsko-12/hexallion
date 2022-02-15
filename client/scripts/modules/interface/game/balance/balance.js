@@ -165,7 +165,7 @@ function addBalanceMessage(message,amount){
 
 
   }else{
-    if(message.startsWith('Tax payment')) {message = massage + ' ' + MAIN.game.data.playerData.tax.procent + '%'};
+    if(message.startsWith('Tax payment')) {message = message + ' ' + MAIN.game.data.playerData.tax.procent + '%'};
   }
 
   if(message.startsWith('Production on')){

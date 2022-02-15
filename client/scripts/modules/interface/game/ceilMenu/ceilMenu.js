@@ -37,7 +37,7 @@ const CEIL_MENU = {
     const section = document.querySelector('#onCeilDoubleClick');
     section.style.display = 'flex';
     const menu = document.querySelector('#sectorMenu');
-    menu.style.display = 'flex';
+    menu.style.display = 'block';
 
     // buttons.push('cancel');
     const radius = menu.clientWidth / 2;
@@ -48,6 +48,7 @@ const CEIL_MENU = {
     // menu.insertAdjacentHTML('beforeEnd', changeSectorButton);
     const changeSectorButton = document.querySelector(`#changeSectorButton`);
     const lang = MAIN.interface.lang.flag;
+
     function changeSector() {
       let newSector = sector;
       let startedSector = sector;
@@ -72,89 +73,233 @@ const CEIL_MENU = {
         ceil.showSectorMenu(newSector);
       };
     };
+
+
+    MAIN.interface.deleteTouches(changeSectorButton);
     changeSectorButton.onclick = changeSector;
     changeSectorButton.ontouchstart = changeSector;
 
-    document.querySelector('#sectorMenu_List').innerHTML = '';
-    console.log(buttons)
-    buttons.forEach((buttonName, i) => {
+    const buttonsList = document.querySelector('#sectorMenu_buttonsList');
+    const cardsList = document.querySelector('#sectorMenu_cardsList');
 
 
-      const position = {
-        x: radius * Math.sin((((360 / (buttons.length)) * i) - 90) * Math.PI / 180) + radius / 1.25,
-        y: radius * Math.cos((((360 / (buttons.length)) * i) - 90) * Math.PI / 180) + radius / 1.25,
+    buttonsList.innerHTML = '';
+    cardsList.innerHTML = '';
+
+
+    if (buttons[0] === 'road' || buttons[0] === 'bridge') {
+      const roadButton = `
+        <div class="sectorMenu_menu-header-button" id="sectorMenu_card_buildButton_${buttons[0]}">
+          <div class="sectorMenu_menu-header-button-icon icon-${buttons[0]}">
+
+          </div>
+        </div>
+      `;
+      buttonsList.insertAdjacentHTML('beforeEnd', roadButton);
+
+
+      const roadButtonElement = document.querySelector(`#sectorMenu_menu_buildButton_${buttons[0]}`);
+    };
+
+
+    let buildingsCards = '';
+
+    buttons.forEach((building, i) => {
+      if(building != 'road' && building != 'bridge'){
+        const configs = MAIN.game.configs.buildings[building];
+        const factoryCount = MAIN.game.data.commonData.factoriesCount[building];
+
+        let products = [];
+        if (configs.category === 'mining') {
+          products.push(configs.product)
+        } else if (configs.category === 'factory') {
+          const productArr = configs.product;
+          products = [...productArr];
+        };
+
+        let productsString = '';
+        products.forEach((prod, i) => {
+          productsString += `
+              <div class="sectorMenu_menu-card-description-product product-${prod}">
+              </div>
+          `;
+        });
+
+
+        const card = `
+          <div class="sectorMenu_menu-card">
+            <div class="sectorMenu_menu-card-header">
+              <span>${configs.title.eng} <span  class="sectorMenu_menu-card-header-span-bold">| ${factoryCount}</span></span>
+            </div>
+            <div class="sectorMenu_menu-card-image image-${building}_a">
+
+            </div>
+            <div class="sectorMenu_menu-card-description">
+              <div class="sectorMenu_menu-card-description-gradient">
+
+              </div>
+              <div class="sectorMenu_menu-card-description-productsList">
+                ${productsString}
+
+              </div>
+
+              <div class="sectorMenu_menu-card-description-title">
+                ${configs.title[MAIN.interface.lang.flag]}
+              </div>
+
+              <div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.game.data.playerData.balance ? '-nonActive': ''}">
+                <span>$ ${configs.coast}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+
+
+        buildingsCards += card;
       };
-      const id = generateId('button', 4);
-      const button = `
-        <div class="sectorMenu_button" id='${id}' style="background-color:${MAIN.game.configs.buildings[buttonName].buttonColor}">
-          <div class="sectorMenu_button_title">
-            ${MAIN.game.configs.buildings[buttonName].title[lang]}
-          </div>
-          <div class="sectorMenu_button_price">
-            $${MAIN.game.configs.buildings[buttonName].coast}
-          </div>
-        </div>`;
+    });
 
 
+    cardsList.insertAdjacentHTML('beforeEnd', buildingsCards);
 
+    buttons.forEach((building, i) => {
 
-
-
-
-        // `<div id='${id}' class='sectorMenuButton' style="top:${position.x}px;left:${position.y}px;">
-        //   <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/${buttonName}.png">
-        // </div>`;
-
-      document.querySelector('#sectorMenu_List').insertAdjacentHTML('beforeEnd', button);
-
-      function action() {
-        if (buttonName === 'cancel') {
-          MAIN.interface.game.ceilMenu.hideSectorMenu();
-          if (MAIN.game.scene.temporaryHexMesh) {
-            MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
-            MAIN.game.scene.temporaryHexMesh.geometry.dispose();
-            MAIN.game.scene.temporaryHexMesh.material.dispose();
-          };
-          if (MAIN.game.scene.temporarySectorMesh) {
-            MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
-            MAIN.game.scene.temporarySectorMesh.geometry.dispose();
-            MAIN.game.scene.temporarySectorMesh.material.dispose();
-          };
-        } else {
-          if (MAIN.game.data.commonData.turnBasedGame) {
-            if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
-
-              // исследование карты
-              CEIL_MENU.hideSectorMenu();
-              if (MAIN.game.scene.temporaryHexMesh) {
-                MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
-                MAIN.game.scene.temporaryHexMesh.geometry.dispose();
-                MAIN.game.scene.temporaryHexMesh.material.dispose();
-              };
-              if (MAIN.game.scene.temporarySectorMesh) {
-                MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
-                MAIN.game.scene.temporarySectorMesh.geometry.dispose();
-                MAIN.game.scene.temporarySectorMesh.material.dispose();
-              };
-            }else{
-              CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
-            };
-          }else{
-            CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
-          };
-
+      const coast = MAIN.game.configs.buildings[building].coast;
+      if(coast <= MAIN.game.data.playerData.balance){
+        const buttonElement = document.querySelector(`#sectorMenu_card_buildButton_${building}`);
+        buttonElement.onclick = () => {
+          action(building);
+        };
+        buttonElement.ontouchstart = () => {
+          action(building);
         };
       };
-      document.querySelector(`#${id}`).onclick = null;
-      document.querySelector(`#${id}`).addEventListener('click', () => {
-        action();
-      });
-      document.querySelector(`#${id}`).ontouchstart = null;
-      document.querySelector(`#${id}`).addEventListener('touchstart', () => {
-        action();
-      });
-
     });
+
+
+
+
+
+    function action(buttonName) {
+      if (buttonName === 'cancel') {
+        MAIN.interface.game.ceilMenu.hideSectorMenu();
+        if (MAIN.game.scene.temporaryHexMesh) {
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+          MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+          MAIN.game.scene.temporaryHexMesh.material.dispose();
+        };
+        if (MAIN.game.scene.temporarySectorMesh) {
+          MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+          MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+          MAIN.game.scene.temporarySectorMesh.material.dispose();
+        };
+      } else {
+        if (MAIN.game.data.commonData.turnBasedGame) {
+          if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+
+            // исследование карты
+            CEIL_MENU.hideSectorMenu();
+            if (MAIN.game.scene.temporaryHexMesh) {
+              MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+              MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+              MAIN.game.scene.temporaryHexMesh.material.dispose();
+            };
+            if (MAIN.game.scene.temporarySectorMesh) {
+              MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+              MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+              MAIN.game.scene.temporarySectorMesh.material.dispose();
+            };
+          } else {
+            CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
+          };
+        } else {
+          CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
+        };
+      };
+    };
+
+
+    // document.querySelector('#sectorMenu_List').innerHTML = '';
+    // console.log(buttons)
+    // buttons.forEach((buttonName, i) => {
+    //
+    //
+    //   const position = {
+    //     x: radius * Math.sin((((360 / (buttons.length)) * i) - 90) * Math.PI / 180) + radius / 1.25,
+    //     y: radius * Math.cos((((360 / (buttons.length)) * i) - 90) * Math.PI / 180) + radius / 1.25,
+    //   };
+    //   const id = generateId('button', 4);
+    //   const button = `
+    //     <div class="sectorMenu_button" id='${id}' style="background-color:${MAIN.game.configs.buildings[buttonName].buttonColor}">
+    //       <div class="sectorMenu_button_title">
+    //         ${MAIN.game.configs.buildings[buttonName].title[lang]}
+    //       </div>
+    //       <div class="sectorMenu_button_price">
+    //         $${MAIN.game.configs.buildings[buttonName].coast}
+    //       </div>
+    //     </div>`;
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //     // `<div id='${id}' class='sectorMenuButton' style="top:${position.x}px;left:${position.y}px;">
+    //     //   <img class='sectorMenuButton_image' src="./scripts/modules/interface/game/ceilMenu/icons/${buttonName}.png">
+    //     // </div>`;
+    //
+    //   document.querySelector('#sectorMenu_List').insertAdjacentHTML('beforeEnd', button);
+    //
+    //   function action() {
+    //     if (buttonName === 'cancel') {
+    //       MAIN.interface.game.ceilMenu.hideSectorMenu();
+    //       if (MAIN.game.scene.temporaryHexMesh) {
+    //         MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+    //         MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+    //         MAIN.game.scene.temporaryHexMesh.material.dispose();
+    //       };
+    //       if (MAIN.game.scene.temporarySectorMesh) {
+    //         MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+    //         MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+    //         MAIN.game.scene.temporarySectorMesh.material.dispose();
+    //       };
+    //     } else {
+    //       if (MAIN.game.data.commonData.turnBasedGame) {
+    //         if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+    //
+    //           // исследование карты
+    //           CEIL_MENU.hideSectorMenu();
+    //           if (MAIN.game.scene.temporaryHexMesh) {
+    //             MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+    //             MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+    //             MAIN.game.scene.temporaryHexMesh.material.dispose();
+    //           };
+    //           if (MAIN.game.scene.temporarySectorMesh) {
+    //             MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+    //             MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+    //             MAIN.game.scene.temporarySectorMesh.material.dispose();
+    //           };
+    //         }else{
+    //           CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
+    //         };
+    //       }else{
+    //         CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
+    //       };
+    //
+    //     };
+    //   };
+    //   document.querySelector(`#${id}`).onclick = null;
+    //   document.querySelector(`#${id}`).addEventListener('click', () => {
+    //     action();
+    //   });
+    //   document.querySelector(`#${id}`).ontouchstart = null;
+    //   document.querySelector(`#${id}`).addEventListener('touchstart', () => {
+    //     action();
+    //   });
+    //
+    // });
 
     // console.log(ceil,sector,buttons);
 
@@ -277,12 +422,12 @@ const CEIL_MENU = {
     if (chosenCeil.sectors[data.build.sector] === null) {
       if (MAIN.game.data.commonData.turnBasedGame) {
         if (MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login) {
-          if(!MAIN.game.data.playerData.gameOver){
+          if (!MAIN.game.data.playerData.gameOver) {
             MAIN.socket.emit('GAME_building', data);
           };
         };
       } else {
-        if(!MAIN.game.data.playerData.gameOver){
+        if (!MAIN.game.data.playerData.gameOver) {
           MAIN.socket.emit('GAME_building', data);
         };
       };

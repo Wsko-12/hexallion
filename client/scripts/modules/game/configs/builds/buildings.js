@@ -15,8 +15,8 @@ const BUILDINGS = {
 
 
     title: {
-      eng: 'road',
-      ru: 'дорога',
+      eng: 'Road',
+      ru: 'Дорога',
     },
     //для ceilMenu
     buttonColor: '#303030',
@@ -31,8 +31,8 @@ const BUILDINGS = {
     coast: 7500,
 
     title: {
-      eng: 'bridge',
-      ru: 'мост',
+      eng: 'Bridge',
+      ru: 'Мост',
     },
     buttonColor: '#303030',
 
@@ -46,8 +46,8 @@ const BUILDINGS = {
     product: 'wood',
     category: 'mining',
     title: {
-      eng: 'sawmill',
-      ru: 'лесопилка',
+      eng: 'Sawmill',
+      ru: 'Лесопилка',
     },
     buttonColor: '#887265',
   },
@@ -62,8 +62,8 @@ const BUILDINGS = {
     product: 'water',
     category: 'mining',
     title: {
-      eng: 'water station',
-      ru: 'станция водоочистки',
+      eng: 'Water station',
+      ru: 'Станция водоочистки',
     },
     buttonColor: '#ADCCD0',
   },
@@ -77,8 +77,8 @@ const BUILDINGS = {
     product: 'sand',
     category: 'mining',
     title: {
-      eng: 'sand mine',
-      ru: 'песчаный карьер',
+      eng: 'Sand mine',
+      ru: 'Песчаный карьер',
     },
     buttonColor: '#E3DAB9',
   },
@@ -92,8 +92,8 @@ const BUILDINGS = {
     product: 'steel',
     category: 'mining',
     title: {
-      eng: 'steel mill',
-      ru: 'завод стали',
+      eng: 'Steel mill',
+      ru: 'Завод стали',
     },
     buttonColor: '#AEACAA',
   },
@@ -107,8 +107,8 @@ const BUILDINGS = {
     product: 'gold',
     category: 'mining',
     title: {
-      eng: 'gold mill',
-      ru: 'завод золота',
+      eng: 'Gold mill',
+      ru: 'Золотодобывающий рудник',
     },
     buttonColor: '#F9D761',
   },
@@ -122,8 +122,8 @@ const BUILDINGS = {
     product: 'oil',
     category: 'mining',
     title: {
-      eng: 'oil well',
-      ru: 'нефтяная вышка',
+      eng: 'Oil well',
+      ru: 'Нефтяная вышка',
     },
     buttonColor: '#454758',
 
@@ -140,7 +140,7 @@ const BUILDINGS = {
     raw: ['oil'],
     category: 'factory',
     title: {
-      eng: 'oil refinery',
+      eng: 'Oil refinery',
       ru: 'Переработка нефти',
     },
     buttonColor: '#454758',
@@ -255,7 +255,7 @@ const BUILDINGS = {
     category: 'factory',
     title: {
       eng: 'Furniture Factory',
-      ru: 'мебельный завод',
+      ru: 'Мебельный завод',
     },
     buttonColor: '#797353',
   },
