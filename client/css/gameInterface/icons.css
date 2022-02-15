@@ -53,6 +53,8 @@
   background-image: url(../img/icons/list.png);
 }
 
+
+
 .icon-plus {
   background-image: url(../img/icons/plus.png);
 }
@@ -74,4 +76,14 @@
 }
 .icon-shop-stationery {
   background-image: url(../img/shops/stationery.png);
+}
+
+.icon-changeSector {
+  background-image: url(../img/icons/changeSector.png);
+}
+.icon-road {
+  background-image: url(../img/icons/road.png);
+}
+.icon-bridge {
+  background-image: url(../img/icons/bridge.png);
 }

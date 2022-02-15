@@ -76,6 +76,7 @@ const CEIL_MENU = {
     changeSectorButton.ontouchstart = changeSector;
 
     document.querySelector('#sectorMenu_List').innerHTML = '';
+    console.log(buttons)
     buttons.forEach((buttonName, i) => {
 
 
@@ -138,7 +139,6 @@ const CEIL_MENU = {
             }else{
               CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
             };
-            //!!!!ДОБАВИТЬ ВЕЗДЕ
           }else{
             CEIL_MENU.showBuildingMenu(ceil, sector, buttonName);
           };

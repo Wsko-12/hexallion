@@ -27,7 +27,6 @@ function init(){
 
   const clicker = document.querySelector('#cityMenuSection');
   MAIN.interface.deleteTouches(clicker);
-  // MAIN.interface.returnTouches(document.querySelector('#trucksMenuList'));
   clicker.style.pointerEvents = 'none';
   clicker.onclick = closeMenu;
   clicker.ontouchstart = closeMenu;
@@ -165,6 +164,8 @@ function openMenu(city){
   const cityCard = ``;
 
   document.querySelector('#cityCard').insertAdjacentHTML('beforeEnd',cityCard)
+  MAIN.interface.returnTouches(document.querySelector('#cityCard_productsList'));
+
   updateProductsList(city,CITY.categoryOpened);
 
 

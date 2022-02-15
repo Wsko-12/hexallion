@@ -220,7 +220,7 @@ if (DEV_GAMEPLAY) {
     maxMembers: 1,
     members: [],
     started: false,
-    turnBasedGame: false,
+    turnBasedGame: true,
     turnTime: 180000,
     tickTime: 10000,
     cityEconomy: true,
