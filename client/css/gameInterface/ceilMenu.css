@@ -329,6 +329,7 @@
     letter-spacing: -0.05em;
 
     justify-content: space-around;
+    flex-direction: row-reverse;
  }
  .sectorMenu_build_card{
    width: 130px;
@@ -361,6 +362,7 @@
    margin: auto;
    background-size: contain;
    margin-top: -10px;
+   background-repeat: no-repeat;
  }
  .sectorMenu_build_card-productsList{
    width: 100%;

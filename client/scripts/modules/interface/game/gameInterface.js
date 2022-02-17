@@ -60,7 +60,7 @@ function init(){
           </div>
         </div>
       </div>
-      <div id="buildingMenu">
+      <div id="buildingMenu" class="sectorMenu_build">
 
       </div>
     </section>

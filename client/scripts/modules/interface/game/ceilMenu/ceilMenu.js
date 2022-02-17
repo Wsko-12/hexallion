@@ -37,6 +37,8 @@ const CEIL_MENU = {
     const section = document.querySelector('#onCeilDoubleClick');
     section.style.display = 'flex';
     const menu = document.querySelector('#sectorMenu');
+    document.querySelector('#buildingMenu').style.display = 'none';
+
     menu.style.display = 'block';
 
     // buttons.push('cancel');
@@ -326,36 +328,73 @@ const CEIL_MENU = {
     const menu = document.querySelector('#buildingMenu');
     menu.innerHTML = '';
     menu.style.display = 'flex';
-    const lang = MAIN.interface.lang.flag;
-    const div = `
 
-          <div class="buildingMenu_card" style="background-color:${MAIN.game.configs.buildings[building].buttonColor}">
-              <div class="buildingMenu_card_title" id="buildName">
-                ${MAIN.game.configs.buildings[building].title[lang]}
-              </div>
-              <div class="buildingMenu_card_price" id="buildCoast">
-                $${MAIN.game.configs.buildings[building].coast}
-              </div>
-            </div>
-            <div class="buildingMenu_button" id="cancelBuild">
-              <span class="buildingMenu_button-span">назад</span>
-            </div>
+    const configs = MAIN.game.configs.buildings[building];
 
-            <div class="buildingMenu_button" id='aceptBuild'>
-              <span class="buildingMenu_button-span">построить</span>
-            </div>`;
+    let productDiv = '';
+    if(configs.category === 'mining'){
+      productDiv = `
+        <div class="sectorMenu_build_card-productsList-item" style="transform:scale(1.5)">
+            <div class="factory_body_ingredientList-icon product-${configs.product}"></div>
+        </div>
+      `
+    }else if (configs.category === 'factory') {
+      configs.product.forEach((product, i) => {
+        const productConfigs = MAIN.game.configs.products[product];
+        console.log(productConfigs)
+        let raws = '';
+        productConfigs.raws.forEach((raw, i) => {
+          raws+=`<div class="factory_body_ingredientList-icon product-${raw}"></div>`;
+        });
+
+        productDiv+=`
+            <div class="sectorMenu_build_card-productsList-item">
+                ${raws}
+                <div class="factory_body_ingredientList-arrow" style="flex-direction: row;">
+                  <div class="factory_body_ingredientList-arrow-symbol">
+                    →
+                  </div>
+                </div>
+                <div class="factory_body_ingredientList-icon product-${product}"></div>
+            </div>
+        `;
+      });
+    };
+
+    let div = `
+        <div class="sectorMenu_build_card">
+          <div class="sectorMenu_build_card-title">
+            ${configs.title[MAIN.interface.lang.flag]}
+          </div>
+          <div class="sectorMenu_build_card-price">
+            $${configs.coast}
+          </div>
+
+          <div class="sectorMenu_build_card-image image-${building}_a ">
+
+          </div>
+
+          <div class="sectorMenu_build_card-productsList">
+            ${productDiv}
+          </div>
+
+
+
+        </div>
+
+        <div class="sectorMenu_build_button" id="aceptBuild">
+          ${MAIN.interface.lang.buildingMenu.build[MAIN.interface.lang.flag]}
+
+        </div>
+
+        <div class="sectorMenu_build_button" id="cancelBuild">
+          ${MAIN.interface.lang.buildingMenu.cancel[MAIN.interface.lang.flag]}
+
+
+        </div>
+    `;
 
     menu.insertAdjacentHTML('beforeEnd', div);
-
-
-    // const buildName = document.querySelector('#buildName');
-    // buildName.innerHTML = MAIN.game.configs.buildings[building].name;
-    //
-    // const buildCoast = document.querySelector('#buildCoast');
-    // buildCoast.innerHTML = '$' + MAIN.game.configs.buildings[building].coast;
-    //
-    // const buildDescription = document.querySelector('#buildDescription');
-    // buildDescription.innerHTML = MAIN.game.configs.buildings[building].description;
 
     const cancelButton = document.querySelector('#cancelBuild');
     cancelButton.onclick = () => {
@@ -402,8 +441,92 @@ const CEIL_MENU = {
       } else {
         MAIN.interface.game.balance.notEnoughMoney();
       };
-
     };
+
+
+    // const sectorMenu = document.querySelector('#sectorMenu');
+    // sectorMenu.style.display = 'none';
+    // const menu = document.querySelector('#buildingMenu');
+    // menu.innerHTML = '';
+    // menu.style.display = 'flex';
+    // const lang = MAIN.interface.lang.flag;
+    // const div = `
+    //
+    //       <div class="buildingMenu_card" style="background-color:${MAIN.game.configs.buildings[building].buttonColor}">
+    //           <div class="buildingMenu_card_title" id="buildName">
+    //             ${MAIN.game.configs.buildings[building].title[lang]}
+    //           </div>
+    //           <div class="buildingMenu_card_price" id="buildCoast">
+    //             $${MAIN.game.configs.buildings[building].coast}
+    //           </div>
+    //         </div>
+    //         <div class="buildingMenu_button" id="cancelBuild">
+    //           <span class="buildingMenu_button-span">назад</span>
+    //         </div>
+    //
+    //         <div class="buildingMenu_button" id='aceptBuild'>
+    //           <span class="buildingMenu_button-span">построить</span>
+    //         </div>`;
+    //
+    // menu.insertAdjacentHTML('beforeEnd', div);
+    //
+    //
+    // // const buildName = document.querySelector('#buildName');
+    // // buildName.innerHTML = MAIN.game.configs.buildings[building].name;
+    // //
+    // // const buildCoast = document.querySelector('#buildCoast');
+    // // buildCoast.innerHTML = '$' + MAIN.game.configs.buildings[building].coast;
+    // //
+    // // const buildDescription = document.querySelector('#buildDescription');
+    // // buildDescription.innerHTML = MAIN.game.configs.buildings[building].description;
+    //
+    // const cancelButton = document.querySelector('#cancelBuild');
+    // cancelButton.onclick = () => {
+    //   CEIL_MENU.hideBuildMenu();
+    // };
+    // cancelButton.ontouchstart = () => {
+    //   CEIL_MENU.hideBuildMenu();
+    // };
+    //
+    // const buildButton = document.querySelector('#aceptBuild');
+    // buildButton.onclick = () => {
+    //   CEIL_MENU.hideSectorMenu();
+    //   if (MAIN.game.scene.temporaryHexMesh) {
+    //     MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+    //     MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+    //     MAIN.game.scene.temporaryHexMesh.material.dispose();
+    //   };
+    //   if (MAIN.game.scene.temporarySectorMesh) {
+    //     MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+    //     MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+    //     MAIN.game.scene.temporarySectorMesh.material.dispose();
+    //   };
+    //   if (MAIN.game.data.playerData.balance >= MAIN.game.configs.buildings[building].coast) {
+    //     CEIL_MENU.sendBuildRequest(ceil, sector, building);
+    //   } else {
+    //     MAIN.interface.game.balance.notEnoughMoney();
+    //   };
+    // };
+    // buildButton.ontouchstart = () => {
+    //   CEIL_MENU.hideSectorMenu();
+    //   if (MAIN.game.scene.temporaryHexMesh) {
+    //     MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
+    //     MAIN.game.scene.temporaryHexMesh.geometry.dispose();
+    //     MAIN.game.scene.temporaryHexMesh.material.dispose();
+    //   };
+    //   if (MAIN.game.scene.temporarySectorMesh) {
+    //     MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
+    //     MAIN.game.scene.temporarySectorMesh.geometry.dispose();
+    //     MAIN.game.scene.temporarySectorMesh.material.dispose();
+    //   };
+    //
+    //   if (MAIN.game.data.playerData.balance >= MAIN.game.configs.buildings[building].coast) {
+    //     CEIL_MENU.sendBuildRequest(ceil, sector, building);
+    //   } else {
+    //     MAIN.interface.game.balance.notEnoughMoney();
+    //   };
+    //
+    // };
 
 
   },

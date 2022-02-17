@@ -162,6 +162,17 @@ const LANG = {
     }
   },
 
+  buildingMenu:{
+    build:{
+      ru:'построить',
+      eng:'build',
+    },
+    cancel:{
+      ru:'назад',
+      eng:'cancel',
+    },
+
+  },
 
   balanceMessages: {
     tax: {
