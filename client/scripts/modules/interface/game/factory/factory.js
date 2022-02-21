@@ -110,10 +110,9 @@ function showSettingsSetMenu(factory) {
               </div>
             </div>`;
 
-
   const section = `
     <div class="factory_card">
-      <div class="factory_header factory_header_bg-sandmine">
+      <div class="factory_header factory_header_bg-${factory.type}">
         <div class="factory_header_header">
           <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
           ${factory.settingsSetted ? `
@@ -644,7 +643,7 @@ function showFactoryMenu(factory) {
   storagePart += `</div>`;
   const card = `
           <div class="factory_card" id='factoryCard'>
-             <div class="factory_header factory_header_bg-sandmine">
+             <div class="factory_header factory_header_bg-${factory.type}">
                <div class="factory_header_header">
                  <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
                  <div class="factory_header_header-buttonsContainer">

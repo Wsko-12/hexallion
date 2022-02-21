@@ -56,7 +56,13 @@
 .factory_header_bg-oilWell {
   background-image: url(../img/factoryCards/oilWell.png);
 }
-.factory_header_bg-sandmine {
+.factory_header_bg-waterStation {
+  background-image: url(../img/factoryCards/waterstation.png);
+}
+.factory_header_bg-sawmill {
+  background-image: url(../img/factoryCards/sawmill.png);
+}
+.factory_header_bg-sandMine {
   background-image: url(../img/factoryCards/sandmine.png);
 }
 
