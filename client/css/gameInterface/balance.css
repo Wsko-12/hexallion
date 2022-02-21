@@ -5,6 +5,8 @@
   height: 100vh;
   pointer-events: none;
   position: fixed;
+  touch-action: manipulation;
+  
 }
 
 #balanceDiv {

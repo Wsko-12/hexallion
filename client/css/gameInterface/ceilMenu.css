@@ -137,6 +137,7 @@
   perspective: 500px;
   -webkit-perspective: 500px;
   display: flex;
+  touch-action: manipulation;
 }
 
 .sectorMenu_centralButton{
@@ -165,12 +166,15 @@
   height: 200px;
   position: absolute;
   left: 50%;
-  bottom: 5%;
+  bottom: 9%;
   transform: translate(-50%);
+  touch-action: manipulation;
+
   /* filter: drop-shadow(5px 5px 10px rgba(48, 48, 48,0.5)); */
 
 }
 .sectorMenu_menu-header{
+  touch-action: manipulation;
   width: 100%;
   height: 50px;
   display: flex;
@@ -178,6 +182,7 @@
   justify-content: center;
 }
   .sectorMenu_menu-header-button{
+    touch-action: manipulation;
     pointer-events: auto;
 
     width: 50px;
@@ -196,6 +201,7 @@
   }
 
 .sectorMenu_menu-body{
+  touch-action: manipulation;
   pointer-events: auto;
   width: 100%;
   height: 160px;
@@ -204,6 +210,8 @@
   padding-top: 5px;
 }
   .sectorMenu_menu-card{
+    touch-action: manipulation;
+
     font-family: 'Roboto Condensed';
     letter-spacing: -0.05em;
     width: 120px;
@@ -233,6 +241,7 @@
     font-weight: bold;
   }
   .sectorMenu_menu-card-image{
+    
     width: 120px;
     height: 100px;
     background-size: cover;
@@ -259,6 +268,8 @@
     margin-bottom: 5px;
   }
   .sectorMenu_menu-card-description-product{
+    touch-action: manipulation;
+
     width: 20px;
     height: 20px;
     background-size: cover;
@@ -272,7 +283,6 @@
     letter-spacing: -0.05em;
     padding: 0px 5px;
     color: #303030;
-    margin-bottom: 5px;
     line-height: 80%;
   }
   .sectorMenu_menu-card-description-button{

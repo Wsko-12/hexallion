@@ -283,12 +283,14 @@ function openMenu(city){
 
 function closeMenu(event){
   const clicker =  document.querySelector('#cityMenuSection');
-  if(event.path[0] ===  clicker){
+  if(event.target ===  clicker){
     CITY.cardOpened = false;
     document.querySelector('#cityCard').style.display = 'none';
     clicker.style.pointerEvents = 'none';
   };
+
 };
+
 
 
 function showCityPrices(product){

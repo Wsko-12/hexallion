@@ -356,7 +356,7 @@ function updateFactoryAutosendBody(factory) {
 
 
           function changeCurrent(e){
-            if(e.path[0] === document.querySelector(`#factoryCard_direction_${product}_${i}`)){
+            if(e.target === document.querySelector(`#factoryCard_direction_${product}_${i}`)){
               factory.autosend.changeCurrent({
                 product:product,
                 index:i,

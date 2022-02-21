@@ -341,7 +341,6 @@ const CEIL_MENU = {
     }else if (configs.category === 'factory') {
       configs.product.forEach((product, i) => {
         const productConfigs = MAIN.game.configs.products[product];
-        console.log(productConfigs)
         let raws = '';
         productConfigs.raws.forEach((raw, i) => {
           raws+=`<div class="factory_body_ingredientList-icon product-${raw}"></div>`;
