@@ -39,7 +39,9 @@ async function create() {
 
 
     for(let i = 0;i<MAIN.game.data.commonData.members.length;i++){
-      const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.emptyGeometry.clone(),new THREE.MeshPhongMaterial({color:MAIN.game.data.commonData.playerColors[i]}))
+      const emptyGeometry = MAIN.game.scene.assets.geometries.emptyGeometry.clone();
+      emptyGeometry.translate(0,-0.5,0);
+      const mesh = new THREE.Mesh(emptyGeometry,new THREE.MeshPhongMaterial({color:MAIN.game.data.commonData.playerColors[i]}))
       mesh.name = `playerColor_${i}`
       MAIN.game.scene.colorsGeommetry.push(
         mesh
