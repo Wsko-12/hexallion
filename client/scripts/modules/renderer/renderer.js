@@ -42,6 +42,7 @@ let clock = new THREE.Clock();
 function init() {
   const canvasRenderer = document.querySelector('#renderer');
   canvasRenderer.style.display = 'block';
+  RENDERER.stopRender = false;
   RENDERER.raycaster = new THREE.Raycaster();
   RENDERER.renderer = new THREE.WebGLRenderer({
     canvas: canvasRenderer,
@@ -647,6 +648,31 @@ function init() {
 };
 
 
+function clear(){
+  RENDERER.stopRender = true;
+  function clearThree(obj){
+    while(obj.children.length > 0){
+      clearThree(obj.children[0]);
+      obj.remove(obj.children[0]);
+    }
+    if(obj.geometry) obj.geometry.dispose();
+
+    if(obj.material){
+      //in case of map, bumpMap, normalMap, envMap ...
+      Object.keys(obj.material).forEach(prop => {
+        if(!obj.material[prop])
+          return;
+        if(obj.material[prop] !== null && typeof obj.material[prop].dispose === 'function')
+          obj.material[prop].dispose();
+      })
+      obj.material.dispose();
+    }
+  }
+  clearThree(RENDERER.scene);
+
+  RENDERER.renderer.dispose();
+};
+
 function setSize() {
   //на айфонах оставляет белую полосу
   // const windowWidth = window.innerWidth;
@@ -746,8 +772,9 @@ function render() {
 
 
 
-
-  requestAnimationFrame(render);
+  if(!RENDERER.stopRender){
+    requestAnimationFrame(render);
+  };
 };
 
 
@@ -761,6 +788,8 @@ const RENDERER = {
   controls: null,
   time: null,
   render,
+  stopRender:false,
+  clear,
 };
 export {
   RENDERER

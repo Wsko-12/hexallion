@@ -51,6 +51,15 @@ ASSETS.load = async function(){
       modelIndex++;
       if(modelIndex < ATLAS.models.length){
         const modelData = ATLAS.models[modelIndex];
+
+        // перезагрузка
+        if(ASSETS.geometries[modelData.name]){
+          setTimeout(loadModels)
+          return;
+        };
+        // /перезагрузка
+
+
         const path = ATLAS.modelsPath+modelData.folder+modelData.file;
         loader.load(path,(model)=>{
           ASSETS.geometries[modelData.name] = model.scene.children[0].geometry;
@@ -72,6 +81,16 @@ ASSETS.load = async function(){
        textureIndex++;
        if(textureIndex < ATLAS.textures.length){
          const textureData = ATLAS.textures[textureIndex];
+
+         // перезагрузка
+         if(ASSETS.textures[textureData.name]){
+           setTimeout(loadTextures);
+           return;
+         };
+         // /перезагрузка
+
+
+
          const path = ATLAS.texturePath+textureData.folder+textureData.file;
          textureLoader.load(path,(texture)=>{
            ASSETS.textures[textureData.name] = texture;

@@ -75,7 +75,6 @@ function init() {
 
 
 
-
     MAIN.socket.on('ROOM_ready', function(ROOM) {
       //Происходит, когда нужное кол-во игроков собрано
       MAIN.pages.loading.changeTitle('Room is ready');
@@ -90,6 +89,99 @@ function init() {
     //   MAIN.pages.loading.changeComment('Game generation');
     //   MAIN.game.generation.start(roomData);
     // });
+
+
+
+
+    MAIN.socket.on('GAME_returnGameRequest',(data)=>{
+      const userReturn = confirm(`вернуться в игру ${data.gameID}?`)
+      if(userReturn){
+        MAIN.socket.emit('GAME_userReturnRequest',{
+          gameID:data.gameID,
+          user:MAIN.userData.login,
+        });
+      };
+    });
+    MAIN.socket.on('GAME_returnData',(data)=>{
+      console.log(data);
+      MAIN.game.data = data.commonData;
+      MAIN.game.data.cities = {};
+      MAIN.game.data.playerData = new PLAYER_DATA(MAIN.userData.login);
+
+      // console.log(MAIN.game.data)
+
+      MAIN.game.scene.assets.load().then((result) => {
+        MAIN.renderer.init();
+        MAIN.game.scene.create().then((result) => {
+          MAIN.pages.loading.close();
+          //события должны начать проверяться после того, как все будет готово. сообщаем, что все готово
+          MAIN.interface.init();
+          MAIN.interface.startedCheckEvents = true;
+          // MAIN.game.events.init();
+          if (data.commonData.commonData.turnBasedGame) {
+            MAIN.interface.game.turn.init();
+          };
+
+
+
+          //на этом этапе основная сцена подгружена
+          // теперь восстанавливаем все постройки на сцене
+          MAIN.game.scene.restoreBuildings(data.buildings).then((result)=>{
+            //далее восстанавливаем все фабрики у игрока
+            data.factoriesData.forEach((factory, i) => {
+                MAIN.game.functions.buildFactory(factory);
+
+                if(factory.settingsSetted){
+                  MAIN.game.data.playerData.factories[factory.id].applySettings(factory.settings);
+                  MAIN.game.data.playerData.factories[factory.id].applyUpdates(factory.updates);
+                };
+            });
+
+
+
+            if(data.creditData){
+              MAIN.game.data.playerData.credit = {
+                allPays: data.creditData.paysParts,
+                amount: data.creditData.amount,
+                creditName: data.creditData.creditName,
+                deferment: data.creditData.deferment,
+                pays: data.creditData.pays,
+                procent: data.creditData.procent,
+              };
+              MAIN.game.data.playerData.balance = data.playerBalance;
+              MAIN.interface.game.balance.init(MAIN.game.data.playerData.balance);
+            }else{
+                MAIN.interface.game.credit.showChooseCreditMenu();
+            };
+
+
+
+
+
+
+            MAIN.socket.emit('GAME_restored',{
+              gameID:MAIN.game.data.commonData.id,
+              player:MAIN.userData.login,
+            });
+
+
+
+
+
+
+          });
+
+
+          // MAIN.interface.game.credit.showChooseCreditMenu();
+        });
+      });
+
+    });
+
+
+
+
+
     MAIN.socket.on('GAME_over', () => {
       alert('Game over');
       MAIN.game.functions.endTurn();
@@ -116,6 +208,8 @@ function init() {
           MAIN.interface.game.credit.showChooseCreditMenu();
         });
       });
+
+
     });
 
     MAIN.socket.on('GAME_turn_action', function(balance) {

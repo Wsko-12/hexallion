@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 
 //сразу делает игру
-const DEV_GAMEPLAY = true;
+const DEV_GAMEPLAY = false;
 
 if (DEV_GAMEPLAY) {
   http.listen(PORT, '0.0.0.0', () => {
@@ -201,10 +201,8 @@ class ROOM {
         USERS[member].inGame = GAMES[game.id];
         USERS[member].emit('GAME_data', gameData);
       };
+      DB.setLastGame(member, game.id);
     });
-
-
-
     this.delete();
   };
 };
@@ -247,6 +245,7 @@ function sendToAllRoomsData() {
 function NEW_USER(data) {
   this.login = data.login;
   this.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync(10));
+  this.lastGame = null;
 };
 
 class USER {
@@ -255,6 +254,7 @@ class USER {
     this.socket = properties.socket;
     this.login = properties.login;
     this.inRoom = false;
+    this.lastGame = properties.lastGame;
   };
 
   emit(message, data) {
@@ -275,11 +275,19 @@ class USER {
   authTrue() {
     const data = {
       login: this.login,
-    }
+    };
     this.emit('AUTH_true', data);
     const that = this;
     setTimeout(function() {
       that.sendAllRoomsData();
+      if (that.lastGame) {
+        if (GAMES[that.lastGame]) {
+          if(!GAMES[that.lastGame].players[that.login].gameOver){
+
+            that.lastGameRequest();
+          };
+        };
+      };
     }, 250);
   };
 
@@ -299,20 +307,29 @@ class USER {
   };
 
   disconnect() {
-    if (this.inGame) {
-      //если его очередь ходить
-      if (this.inGame.turnBasedGame) {
-        if (this.inGame.queue[this.inGame.queueNum] === this.login) {
-          this.inGame.nextTurn();
-        };
-      };
-    };
-
+    this.exitGame();
     if (this.inRoom) {
       this.inRoom.removePlayer(this.login);
     };
-    this.inGame = false;
   };
+
+  exitGame() {
+    const game = this.inGame;
+
+    this.inGame = false;
+    // game && game.playerExit(this.login);
+    if (game) {
+      game.playerExit(this.login)
+    };
+  };
+
+  lastGameRequest() {
+    //предложение вступить в прошлую игру
+    this.emit('GAME_returnGameRequest', {
+      gameID: this.lastGame,
+    });
+  };
+
 };
 
 class GAME {
@@ -326,6 +343,7 @@ class GAME {
       const properties = {
         login: member,
         game: this,
+        online: true,
       };
       const player = new PLAYER(properties);
       this.players[player.login] = player;
@@ -375,6 +393,7 @@ class GAME {
     //в массив сохраняется вся история построек в игре
     this.buildHistory = [];
 
+    //для того, чтобы игроки вдвоем не построили в одном месте, позже забьется секторами
     this.cityMapNames = [
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0],
@@ -408,8 +427,8 @@ class GAME {
       for (let x = 0; x < this.cityMapNames[z].length; x++) {
         if (this.map[map_index] === 'Westown' || this.map[map_index] === 'Northfield' || this.map[map_index] === 'Southcity') {
           this.cityMapNames[z][x] = this.map[map_index];
-        }{
-          this.cityMapNames[z][x] = [0,0,0,0,0,0];
+        } else {
+          this.cityMapNames[z][x] = [0, 0, 0, 0, 0, 0];
         };
         map_index++;
       };
@@ -475,7 +494,9 @@ class GAME {
   sendToAll(message, data) {
     for (let player in this.players) {
       const thisPlayer = this.players[player];
-      thisPlayer.emit(message, data);
+      if (thisPlayer.online) {
+        thisPlayer.emit(message, data);
+      };
     };
   };
 
@@ -494,7 +515,7 @@ class GAME {
 
 
     const historyArray = {
-      owner: data.player,
+      player: data.player,
       build: data.build,
     };
 
@@ -509,6 +530,7 @@ class GAME {
         building: data.build.building,
         ceilIndex: data.build.ceilIndex,
         sector: data.build.sector,
+        number: this.factoriesCount[data.build.building] + 1,
       }
 
       const factory = new FACTORY(properties);
@@ -520,7 +542,7 @@ class GAME {
         building: data.build.building,
         ceilIndex: data.build.ceilIndex,
         sector: data.build.sector,
-        number: this.factoriesCount[data.build.building] + 1,
+        number: factory.number,
         product: factory.product,
         category: factory.category,
       };
@@ -547,6 +569,9 @@ class GAME {
     return prices;
   };
   nextTurn() {
+    if (this.gameEnded) {
+      return;
+    };
     //для подсчета объема продукции у игрока
     const averagePrices = this.getAveragePrices();
 
@@ -579,14 +604,14 @@ class GAME {
       //если функция зациклилась (снова вернулась на того, от кого пришла)
       if (that.queueNum === startedTurnIndex) {
         //если он банкрот или вышел из игры, то тормозим всю функцию
-        if (nextPlayer.gameOver || !USERS[nextPlayer.login]) {
+        if (nextPlayer.gameOver || !USERS[nextPlayer.login] || !nextPlayer.online) {
           that.turnsPaused = true;
         };
       };
       //сохраняем на ком был ход для setTimeout
       lastTurn = that.queueNum;
       //если у игрока все норм с балансом и он онлайн, то высылаем ход ему и ставим таймаут
-      if (!nextPlayer.gameOver && USERS[nextPlayer.login]) {
+      if (!nextPlayer.gameOver && USERS[nextPlayer.login] && nextPlayer.online) {
         const data = {
           currentTurn: that.queue[that.queueNum],
           turnTime: that.turnTime,
@@ -631,6 +656,10 @@ class GAME {
     };
   };
   tick() {
+    if (this.gameEnded) {
+      return;
+    };
+
     const averagePrices = this.getAveragePrices();
 
 
@@ -665,9 +694,9 @@ class GAME {
       thisCity.update();
 
       data[city] = {
-        name:city,
-        balance:thisCity.balance,
-        storage:{},
+        name: city,
+        balance: thisCity.balance,
+        storage: {},
       };
       for (let product in thisCity.storage) {
         data[city].storage[product] = thisCity.storage[product];
@@ -691,15 +720,15 @@ class GAME {
     // this.sendToAll('GAME_city_update', data);
   };
 
-  sendUpdateCitiesData(){
+  sendUpdateCitiesData() {
     //высылает одним объектом данные всех 3 городов
     const data = {};
     for (let city in this.cities) {
       const thisCity = this.cities[city];
       data[city] = {
-        name:city,
-        balance:thisCity.balance,
-        storage:{},
+        name: city,
+        balance: thisCity.balance,
+        storage: {},
       };
       for (let product in thisCity.storage) {
         data[city].storage[product] = thisCity.storage[product];
@@ -707,15 +736,116 @@ class GAME {
     };
     this.sendToAll('GAME_city_update', data);
   };
+
+
+
+
+  playerExit(player) {
+    this.players[player].online = false;
+    if (this.turnBasedGame) {
+      if (this.queue[this.queueNum] === player) {
+        this.nextTurn();
+      };
+    };
+
+
+
+
+
+    for (let truck in this.players[player].trucks) {
+      this.players[player].trucks[truck].clear();
+    };
+
+
+
+    let allPlayersOffline = true;
+    for (let player in this.players) {
+      const thisPlayer = this.players[player];
+
+      //если хоть один игрок онлайн, то перерубаем флаг
+      if (thisPlayer.online) {
+        allPlayersOffline = false;
+      };
+    };
+
+    //если нет игроков онлайн, то гасим игру через 5 мин
+    if (allPlayersOffline) {
+      setTimeout(() => {
+        this.endGame();
+      }, 60000 * 5);
+    };
+  };
+
+  playerReturn(player){
+    if(this.players[player]){
+      const thisPlayer = this.players[player];
+      thisPlayer.online = true;
+
+      const data = {
+        commonData:this.getData(),
+        buildings:this.buildHistory,
+        factoriesData:thisPlayer.factoryList.getRestoreData(),
+        creditData:thisPlayer.credit ? thisPlayer.credit.getData() : null,
+        playerBalance:thisPlayer.balance,
+
+      };
+
+      if(USERS[player]){
+        USERS[player].emit('GAME_returnData',data);
+      };
+    };
+  };
+
+  endGame() {
+    let allPlayersOffline = true;
+    for (let player in this.players) {
+      const thisPlayer = this.players[player];
+      //если хоть один игрок онлайн, то перерубаем флаг
+      if (thisPlayer.online) {
+        allPlayersOffline = false;
+      };
+    };
+
+    if (!allPlayersOffline) {
+      return;
+    };
+
+
+    //очищаем все
+    this.gameEnded = true;
+    delete GAMES[this.id];
+
+    for (let player in this.players) {
+      const thisPlayer = this.players[player];
+      //если хоть один игрок онлайн, то перерубаем флаг
+      thisPlayer.game = undefined;
+      delete this.players[player];
+    };
+
+    for (let city in this.cities) {
+      const thisCity = this.cities[city];
+      //если хоть один игрок онлайн, то перерубаем флаг
+      thisCity.game = undefined;
+      delete this.cities[city];
+    };
+
+    for (let truck in this.trucks.all) {
+      const thisTruck = this.trucks.all[truck];
+      thisTruck.clear();
+      thisTruck.game = undefined;
+      delete this.trucks.all[truck];
+    };
+
+  };
 };
 
 class CITY {
   constructor(properties) {
     this.name = properties.name;
     this.game = properties.game;
-    this.balance = properties.game.cityEconomy ? (300000*this.game.members.length) : null,
+    this.balance = properties.game.cityEconomy ? (300000 * this.game.members.length) : null,
 
-    this.storage = this.createStorage();
+      this.storage = this.createStorage();
 
   };
   createStorage() {
@@ -724,9 +854,9 @@ class CITY {
     for (let product in productBase) {
       const thisProduct = productBase[product];
       const prodStore = {
-        price:thisProduct.price,
-        fullness:0,
-        speed:thisProduct.sailSpeed,
+        price: thisProduct.price,
+        fullness: 0,
+        speed: thisProduct.sailSpeed,
       };
       storage[product] = prodStore;
       // const thisProduct = productBase[product];
@@ -767,10 +897,10 @@ class CITY {
 
     const storage = this.storage[product.name];
 
-    const discount = Math.round((storage.price*storage.fullness)/100);
+    const discount = Math.round((storage.price * storage.fullness) / 100);
     const price = storage.price - discount;
-    const qualityBonus = Math.round(price * ((product.quality * 15)/100));
-    const finalPrice = price+qualityBonus;
+    const qualityBonus = Math.round(price * ((product.quality * 15) / 100));
+    const finalPrice = price + qualityBonus;
 
     if (this.balance != null) {
       if (finalPrice >= this.balance) {
@@ -845,7 +975,7 @@ class CITY {
     for (let productStore in this.storage) {
       const thisStore = this.storage[productStore];
       thisStore.fullness -= thisStore.speed;
-      if(thisStore.fullness < 0){
+      if (thisStore.fullness < 0) {
         thisStore.fullness = 0;
       };
     };
@@ -967,6 +1097,15 @@ class FACTORY_LIST {
     return sum;
   };
 
+  getRestoreData(){
+    const data = [];
+    for(let factory in this.list){
+      const thisFactory = this.list[factory];
+      data.push(thisFactory.getRestoreData());
+    };
+    return data;
+  };
+
 };
 
 class FACTORY {
@@ -979,6 +1118,7 @@ class FACTORY {
 
     this.ceilIndex = properties.ceilIndex;
     this.sector = properties.sector;
+    this.number = properties.number;
 
     //этот параметр сработает, когда придет апдейт на фабрику, нужно будет установить настройки фабрики
     //ее параметры скорость, стоймость, качество
@@ -1156,14 +1296,15 @@ class FACTORY {
 
   };
 
-  sendNewSettings() {
+
+  getSettings(){
     let data = {};
     if (this.category === 'mining') {
       data = {
         id: this.id,
         name: this.name,
         product: this.product,
-        storage: this.storage,
+        storage: [],
         //надо, чтобы забить на карточке клетки
         stockStorage: this.stockStorage,
         stockSpeed: this.stockSpeed,
@@ -1173,7 +1314,7 @@ class FACTORY {
         price: this.price,
         stepPrice: this.stepPrice,
 
-        productInProcess: this.productInProcess,
+        productInProcess:null,
         speedPoints: this.speedPoints,
         salaryPoints: this.salaryPoints,
         qualityPoints: this.qualityPoints,
@@ -1184,15 +1325,14 @@ class FACTORY {
         id: this.id,
         name: this.name,
         products: this.products,
-        storage: this.storage,
+        storage: [],
         //надо, чтобы забить на карточке клетки
         productLine: this.productLine,
         stockStorage: this.stockStorage,
         stockSpeed: this.stockSpeed,
         salary: this.salaryPoints,
         productSelected: this.productSelected,
-        productInProcess: this.productInProcess,
-        rawStorage: this.rawStorage,
+        productInProcess:null,
 
 
         speedPoints: this.speedPoints,
@@ -1200,13 +1340,24 @@ class FACTORY {
         volumePoints: this.volumePoints,
         storagePoints: this.storagePoints,
       };
+
+      data.rawStorage = {};
+      data.products.forEach((product) => {
+        product.raw.forEach((raw) => {
+          data.rawStorage[raw] = null;
+        });
+      });
     };
 
-    this.player.emit('GAME_factory_newSettings', data);
+
+    return data;
+
+  };
+  sendNewSettings() {
+    this.player.emit('GAME_factory_newSettings', this.getSettings());
   };
 
   getUpdates() {
-
     const updates = {
       id: this.id,
       productSelected: this.productSelected,
@@ -1522,7 +1673,7 @@ class FACTORY {
       };
 
       truck.clear();
-      if(this.productInProcess === null){
+      if (this.productInProcess === null) {
         this.turn(true);
       };
       this.sendUpdates();
@@ -1614,7 +1765,22 @@ class FACTORY {
   };
 
 
+  getRestoreData(){
+    const data = {
+      id: this.id,
+      building: this.name,
+      ceilIndex: this.ceilIndex,
+      sector: this.sector,
+      number: this.number,
+      product: this.product,
+      category: this.category,
 
+      settingsSetted:this.settingsSetted,
+      settings:this.getSettings(),
+      updates:this.getUpdates(),
+    };
+    return data;
+  };
 };
 
 
@@ -1622,6 +1788,7 @@ class CREDIT {
   constructor(properties) {
     this.player = properties.player;
     const creditName = properties.name;
+    this.creditName = properties.name;
     this.game = properties.game;
     this.amount = CREDITS[creditName].amount;
     if (this.game.cityEconomy) {
@@ -1632,6 +1799,20 @@ class CREDIT {
     this.deferment = CREDITS[creditName].deferment;
     this.procent = CREDITS[creditName].procent;
   };
+
+  getData(){
+    const data = {
+      amount:this.amount,
+      paysParts:this.paysParts,
+      pays:this.pays,
+      deferment:this.deferment,
+      procent:this.procent,
+      creditName:this.creditName,
+    };
+    return data;
+  };
+
+
   turn() {
     const that = this;
 
@@ -1669,6 +1850,7 @@ class PLAYER {
     this.gameOver = false;
     this.productsWorth = 0;
     this.lastStepProfit = 0;
+    this.online = properties.online;
   };
   sendBalanceMessage(message, amount) {
     this.balanceHistory.push({
@@ -2062,10 +2244,9 @@ io.on('connection', function(socket) {
     // AUTH.checkUser(data).then((result)=>{
     //   console.log(result)
     // });
-
     const user = new USER({
       socket,
-      login: data.login
+      login: data.login,
     });
 
     SOCKETS[socket.id].user = user;
@@ -2182,24 +2363,23 @@ io.on('connection', function(socket) {
     };
 
     function login() {
-      DB.checkLogin(data.login).then((user) => {
+      DB.checkLogin(data.login).then((userDB) => {
         if (USERS[data.login]) {
           socket.emit('AUTH_false', {
             reason: 'userOnline'
           });
           return;
         };
-        if (user) {
-          if (bcrypt.compareSync(data.password, user.password)) {
-
+        if (userDB) {
+          if (bcrypt.compareSync(data.password, userDB.password)) {
             const user = new USER({
               socket,
               login: data.login,
-            })
+              lastGame: userDB.lastGame,
+            });
             SOCKETS[socket.id].user = user;
             USERS[user.login] = user;
             user.authTrue();
-
           } else {
             socket.emit('AUTH_false', {
               reason: 'loginPasswordFalse'
@@ -2225,7 +2405,7 @@ io.on('connection', function(socket) {
       delete SOCKETS[socket.id].user;
     };
     delete SOCKETS[socket.id];
-    console.log('disconnect');
+
   });
 
 
@@ -2236,7 +2416,7 @@ io.on('connection', function(socket) {
       turnBasedGame: roomData.turnBasedGame,
       turnTime: roomData.turnTime * 1000,
       tickTime: roomData.tickTime * 1000,
-      cityEconomy:true,
+      cityEconomy: true,
 
     });
 
@@ -2295,6 +2475,38 @@ io.on('connection', function(socket) {
   //   // });
   // });
 
+
+  socket.on('GAME_userReturnRequest', (data) => {
+    // data = {
+    //   gameID: data.gameID,
+    //   user: MAIN.userData.login,
+    // };
+    if(GAMES[data.gameID]){
+      GAMES[data.gameID].playerReturn(data.user);
+    };
+  });
+
+  socket.on('GAME_restored',(data)=>{
+    if(GAMES[data.gameID]){
+      if(USERS[data.player]){
+        USERS[data.player].inGame = GAMES[data.gameID];
+
+        if(GAMES[data.gameID].turnBasedGame){
+          if(GAMES[data.gameID].turnsPaused){
+            GAMES[data.gameID].turnsPaused = false;
+            GAMES[data.gameID].nextTurn();
+          };
+        }else{
+          if(GAMES[data.gameID].tickPaused){
+            GAMES[data.gameID].tickPaused = false;
+            GAMES[data.gameID].tick();
+          };
+        };
+
+
+      };
+    };
+  });
 
 
   socket.on('GAME_choseCredit', (data) => {
@@ -2371,14 +2583,14 @@ io.on('connection', function(socket) {
           };
 
           //блок, чтобы не построили вдвоем в одном месте
-          if(game.cityMapNames[data.build.ceilIndex.z][data.build.ceilIndex.x][data.build.sector] != 0){
+          if (game.cityMapNames[data.build.ceilIndex.z][data.build.ceilIndex.x][data.build.sector] != 0) {
             return;
           };
 
           if (game.players[data.player]) {
             const player = game.players[data.player];
             if (!player.gameOver) {
-              if(player.balance < COASTS.buildings[data.build.building]){
+              if (player.balance < COASTS.buildings[data.build.building]) {
                 return;
               };
               game.cityMapNames[data.build.ceilIndex.z][data.build.ceilIndex.x][data.build.sector] = 1;

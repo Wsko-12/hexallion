@@ -20,6 +20,7 @@ DB.connectToDB = async function() {
     client.connect().then((connection) => {
       DB.connection = connection;
       if (DB.connection) {
+        // DB.connection.db('hexallion').collection('users').updateMany( {}, {$set: { lastGame: null } });
         resolve('mongoDB connected');
         // DB.connection.db('hexallion').collection('users').remove();
       };
@@ -48,6 +49,13 @@ DB.createUser = async function(user) {
     DB.connection.db('hexallion').collection('users').insertOne(user).then((result) => {
       resolve(result);
     });
+  });
+  return prom;
+};
+
+DB.setLastGame = async function(login, lastGame) {
+  const prom = new Promise((resolve, reject) => {
+    DB.connection.db('hexallion').collection('users').updateOne({login:login},{$set:{lastGame:lastGame}});
   });
   return prom;
 };
