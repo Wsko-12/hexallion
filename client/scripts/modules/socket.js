@@ -154,7 +154,29 @@ function init() {
                 MAIN.interface.game.credit.showChooseCreditMenu();
             };
 
+            //распаковываем грузовики;
+            MAIN.game.data.commonData.trucks.count = data.commonData.commonData.trucks.count;
+            data.trucksData.forEach((truck, i) => {
+              const thisTruckObj = MAIN.game.functions.applyTruckPurchase(truck);
 
+
+              if(truck.positionIndexes.x && truck.positionIndexes.z){
+                thisTruckObj.placeOnMap(truck);
+              };
+            });
+
+
+            //показывать меню шага
+            MAIN.game.data.commonData.turnsPaused = data.commonData.commonData.turnsPaused;
+            if (MAIN.game.data.commonData.turnBasedGame) {
+              MAIN.game.data.commonData.queue = data.commonData.commonData.queue;
+              if (MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login) {
+                if (MAIN.game.data.playerData.gameOver) {
+                  MAIN.game.functions.endTurn();
+                };
+              };
+              MAIN.interface.game.turn.makeTimer(data.commonData.commonData.tickTime / 1000, {currentTurn:data.commonData.commonData.queue});
+            };
 
 
 
@@ -163,11 +185,6 @@ function init() {
               gameID:MAIN.game.data.commonData.id,
               player:MAIN.userData.login,
             });
-
-
-
-
-
 
           });
 
@@ -460,29 +477,13 @@ function init() {
       if(document.querySelector('#balanceHistory_productsInCirculation')){
         document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
       };
-
-      // for(let prod in data.storage){
-      //   MAIN.game.data.cities[data.name].storage[prod].line = data.storage[prod];
-      // };
-      //
-      // MAIN.game.data.cities[data.name].balance = data.balance;
-      //
-      //
-      // if(MAIN.interface.game.city.cardOpened){
-      //   MAIN.interface.game.city.openMenu(MAIN.interface.game.city.cardOpened);
-      // };
-      //
-      // //если во время хода грузовика приходит обнова, то обновляем уведомления цен в городе
-      // if(MAIN.interface.game.city.priceShow){
-      //   MAIN.interface.game.city.showCityPrices(MAIN.interface.game.city.priceShow);
-      // };
-      //
-      // if(document.querySelector('#balanceHistory_productsInCirculation')){
-      //   document.querySelector('#balanceHistory_productsInCirculation').innerHTML = MAIN.interface.game.balance.calculateProductsWorth();
-      // };
     });
 
+    
 
+    MAIN.socket.on('GAME_end',()=>{
+      console.log('GAME_end')
+    })
 
 
 

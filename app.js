@@ -317,10 +317,14 @@ class USER {
     const game = this.inGame;
 
     this.inGame = false;
-    // game && game.playerExit(this.login);
     if (game) {
-      game.playerExit(this.login)
+      //проверяем, не очистилась ли уже игра
+      if(game.players[this.login]){
+          game.playerExit(this.login);
+      };
     };
+    // game && game.playerExit(this.login);
+
   };
 
   lastGameRequest() {
@@ -353,6 +357,7 @@ class GAME {
     this.turnBasedGame = properties.turnBasedGame;
     this.turnTime = properties.turnTime;
     this.tickTime = properties.tickTime;
+
     this.cityEconomy = properties.cityEconomy;
     this.turnsPaused = false;
 
@@ -474,20 +479,24 @@ class GAME {
       commonData: {
         id: this.id,
         mapArray: this.map,
-        queue: '',
+        queue: this.queue[this.queueNum]||'',
         turnsPaused: false,
         turnBasedGame: this.turnBasedGame,
-        trucks: this.trucks,
+        trucks:{},
+        turnTime:this.turnTime,
         tickTime: this.tickTime,
         members: this.members,
         cityEconomy: this.cityEconomy,
-        cityEconomyPrice: this.cities.Westown.balance,
+        // cityEconomyPrice: this.cities.Westown.balance,
         //#bfbfbf серый для скринов
         //#fc4a4a красный для игрока
         playerColors: ['#fc4a4a', '#5d59ff', '#4dd14a', '#fff961', '#f366ff', '#67fff6'],
         factoriesCount: this.factoriesCount,
       },
     };
+    data.commonData.trucks.count = this.trucks.count;
+    data.commonData.trucks.coast = this.trucks.coast;
+    data.commonData.trucks.all = {};
     return data;
   };
 
@@ -684,6 +693,8 @@ class GAME {
       setTimeout(function() {
         that.tick();
       }, that.tickTime);
+    }else{
+      this.tickPaused = true;
     };
   };
   updateCities() {
@@ -740,7 +751,7 @@ class GAME {
 
 
 
-  playerExit(player) {
+  playerExit(player, endGame) {
     this.players[player].online = false;
     if (this.turnBasedGame) {
       if (this.queue[this.queueNum] === player) {
@@ -770,9 +781,12 @@ class GAME {
 
     //если нет игроков онлайн, то гасим игру через 5 мин
     if (allPlayersOffline) {
-      setTimeout(() => {
-        this.endGame();
-      }, 60000 * 5);
+      //если игрок вышел сам, а не всех выкинуло окончанием игры
+      if(!endGame){
+          setTimeout(() => {
+            this.endGame();
+          }, 60000 * 5);
+      };
     };
   };
 
@@ -787,12 +801,19 @@ class GAME {
         factoriesData:thisPlayer.factoryList.getRestoreData(),
         creditData:thisPlayer.credit ? thisPlayer.credit.getData() : null,
         playerBalance:thisPlayer.balance,
-
+        trucksData:[],
       };
+
+
+      for(let truck in this.trucks.all){
+        data.trucksData.push(this.trucks.all[truck].getData());
+      };
+
 
       if(USERS[player]){
         USERS[player].emit('GAME_returnData',data);
       };
+
     };
   };
 
@@ -806,35 +827,87 @@ class GAME {
       };
     };
 
-    if (!allPlayersOffline) {
-      return;
-    };
 
-
-    //очищаем все
-    this.gameEnded = true;
-    delete GAMES[this.id];
-
+    let allPlayersGameOver = true;
     for (let player in this.players) {
       const thisPlayer = this.players[player];
       //если хоть один игрок онлайн, то перерубаем флаг
-      thisPlayer.game = undefined;
-      delete this.players[player];
+      if (!thisPlayer.gameOver) {
+        allPlayersGameOver = false;
+      };
     };
 
-    for (let city in this.cities) {
-      const thisCity = this.cities[city];
-      //если хоть один игрок онлайн, то перерубаем флаг
-      thisCity.game = undefined;
-      delete this.cities[city];
+    if(allPlayersOffline){
+      console.log('endGame offline')
+      //очищаем все
+      this.gameEnded = true;
+      delete GAMES[this.id];
+
+      for (let player in this.players) {
+        const thisPlayer = this.players[player];
+        //если хоть один игрок онлайн, то перерубаем флаг
+        thisPlayer.game = undefined;
+        delete this.players[player];
+      };
+
+      for (let city in this.cities) {
+        const thisCity = this.cities[city];
+        //если хоть один игрок онлайн, то перерубаем флаг
+        thisCity.game = undefined;
+        delete this.cities[city];
+      };
+
+      for (let truck in this.trucks.all) {
+        const thisTruck = this.trucks.all[truck];
+        thisTruck.clear();
+        thisTruck.game = undefined;
+        delete this.trucks.all[truck];
+      };
     };
 
-    for (let truck in this.trucks.all) {
-      const thisTruck = this.trucks.all[truck];
-      thisTruck.clear();
-      thisTruck.game = undefined;
-      delete this.trucks.all[truck];
+    if(allPlayersGameOver){
+      this.gameEnded = true;
+      console.log('endGame game over');
+      this.sendToAll('GAME_end');
+      for(let player in this.players){
+        this.playerExit(player, true);
+        if(USERS[player]){
+          if(USERS[player].inGame === this.id){
+            USERS[player].inGame = false;
+          };
+        };
+      };
+
+
+      delete GAMES[this.id];
+
+      for (let player in this.players) {
+        const thisPlayer = this.players[player];
+        //если хоть один игрок онлайн, то перерубаем флаг
+        thisPlayer.game = undefined;
+        delete this.players[player];
+      };
+
+      for (let city in this.cities) {
+        const thisCity = this.cities[city];
+        //если хоть один игрок онлайн, то перерубаем флаг
+        thisCity.game = undefined;
+        delete this.cities[city];
+      };
+
+      for (let truck in this.trucks.all) {
+        const thisTruck = this.trucks.all[truck];
+        thisTruck.clear();
+        thisTruck.game = undefined;
+        delete this.trucks.all[truck];
+      };
+
+
+
+
+
     };
+
 
   };
 };
@@ -896,10 +969,12 @@ class CITY {
   getProductPrice(product) {
 
     const storage = this.storage[product.name];
-
     const discount = Math.round((storage.price * storage.fullness) / 100);
     const price = storage.price - discount;
-    const qualityBonus = Math.round(price * ((product.quality * 15) / 100));
+    let qualityBonus = 0;
+    if(product.quality){
+      qualityBonus = Math.round(price * ((product.quality * 15) / 100));
+    };
     const finalPrice = price + qualityBonus;
 
     if (this.balance != null) {
@@ -1348,6 +1423,16 @@ class FACTORY {
         });
       });
     };
+
+
+    //если на фабрике еще не установлены настройки, то на ней нет storage
+    if(this.storage.forEach){
+      this.storage.forEach((item, i) => {
+        data.storage.push(null);
+      });
+    };
+
+
 
 
     return data;
@@ -1923,14 +2008,29 @@ class PLAYER {
     this.emit('GAME_changeBalance', this.balance);
 
     if (this.balance + this.productsWorth < 0) {
+
+      //если у другого игрока не выбран кредит, то он тоже банкротится
+      for(let aPlayer in this.game.players){
+        const anotherPlayer = this.game.players[aPlayer];
+        if(!anotherPlayer.credit){
+          anotherPlayer.gameOver = true;
+          anotherPlayer.emit('GAME_over');
+        };
+      };
+
+
+
+
       this.gameOver = true;
       this.emit('GAME_over');
+
       for (let truck in this.trucks) {
         this.trucks[truck].clear();
       };
       if (this.game.turnBasedGame) {
         this.game.nextTurn();
       };
+      this.game.endGame();
       return;
     };
 
@@ -2497,6 +2597,7 @@ io.on('connection', function(socket) {
             GAMES[data.gameID].nextTurn();
           };
         }else{
+          // GAMES[data.gameID].tick();
           if(GAMES[data.gameID].tickPaused){
             GAMES[data.gameID].tickPaused = false;
             GAMES[data.gameID].tick();

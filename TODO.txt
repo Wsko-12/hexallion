@@ -4,7 +4,6 @@
 до релиза:
 таблицу лидеров
 грузовики цвета игрока
-возврат в игру;
 factories corner menu
 how to play;
 
@@ -22,3 +21,11 @@ how to play;
 
 
 апдейт трак меню когда грузятся грузовики
+
+
+
+
+выход из игры
+game over queue
+player statistic
+player exp

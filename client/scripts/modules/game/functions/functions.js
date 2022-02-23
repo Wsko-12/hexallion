@@ -73,9 +73,10 @@ const FUNCTIONS = {
     };
     */
 
+    //если это restore game, то тамм не будет truckID, а будет data.id,
     const properties = {
       player: data.player,
-      id: data.truckID,
+      id: data.truckID || data.id,
       truckNumber: data.truckNumber,
     };
 
@@ -89,9 +90,12 @@ const FUNCTIONS = {
 
 
       //подразумевается, что он все еще в меню, поэтому делаем реопен
-      MAIN.interface.game.trucks.openMenu();
+      //если это restore game, то тамм не будет truckID, а будет data.id,
+      if(data.truckID){
+        MAIN.interface.game.trucks.openMenu();
+      };
     };
-
+    return truck;
   },
 
 

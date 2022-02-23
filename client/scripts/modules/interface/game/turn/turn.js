@@ -23,7 +23,6 @@ function init() {
 let timerId = null;
 
 function makeTimer(value, data) {
-
   let timer = value;
   let random = Math.random();
   timerId = random;

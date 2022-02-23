@@ -55,6 +55,19 @@ class PLAYER_DATA {
       };
     };
 
+
+
+    //могут остаться грузовики на карте, поэтому очищаем
+    MAIN.game.scene.trucksGroup.children.forEach((truck, i) => {
+      const name = truck.name;
+      const truckObj = MAIN.game.data.commonData.trucks.all[name];
+      if(truckObj.object3D != truck){
+        truck.removeFromParent();
+        truck.geometry.dispose();
+      };
+    });
+
+
     MAIN.game.functions.autosending.turn();
   };
 };
