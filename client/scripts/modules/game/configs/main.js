@@ -11,10 +11,14 @@ import {
 import {
   CREDITS
 } from './credits/credits.js';
+import {
+  PRODUCTS
+} from './products/products.js';
 
 const CONFIGS = {
-  buildings:BUILDINGS,
-  credits:CREDITS,
+  buildings: BUILDINGS,
+  credits: CREDITS,
+  products: PRODUCTS,
 };
 
 export {

@@ -3,7 +3,9 @@ import {
 } from '../../../../main.js';
 
 import * as THREE from '../../../../libs/ThreeJsLib/build/three.module.js';
-import {BufferGeometryUtils} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
+import {
+  BufferGeometryUtils
+} from '../../../../libs/ThreeJsLib/examples/jsm/utils/BufferGeometryUtils.js';
 
 
 import {
@@ -20,140 +22,145 @@ class FieldCeil {
     this.indexes = properties.indexes;
     this.roadEmpty = false;
 
-    this.sectors = [null,null,null,null,null,null];
+    this.sectors = [null, null, null, null, null, null];
     //тут лежат объекты сектора более подробно
-    this.sectorsData = [null,null,null,null,null,null];
+    this.sectorsData = [null, null, null, null, null, null];
     this.centralRoad = false;
 
-    this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true:false;
+    this.cityCeil = properties.type === 'Northfield' || properties.type === 'Southcity' || properties.type === 'Westown' ? true : false;
     //means player can't build nothing on this ceil
-    this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' ? false:true;
+    this.blockCeil = properties.type === 'meadow' || properties.type === 'sea' || properties.type === 'sand' || properties.type === 'steelMine' || properties.type === 'goldMine' || properties.type === 'oilMine' ? false : true;
 
 
-    if(this.cityCeil){
-      const city = new City({name:this.type, position:properties.position});
+    if (this.cityCeil) {
+      const city = new City({
+        name: this.type,
+        position: properties.position,
+        fieldCeil: this,
+        balance: MAIN.game.data.commonData.cityEconomy ? MAIN.game.data.commonData.cityEconomyPrice : null,
+      });
+      this.city = city;
       MAIN.game.data.cities[this.type] = city;
     };
   };
 
-  findNeighbours(){
+  findNeighbours() {
     //MAIN.game.data.map;
-    this.neighbours = [null,null,null,null,null,null];
-    if(this.indexes.z < 5){
+    this.neighbours = [null, null, null, null, null, null];
+    if (this.indexes.z < 5) {
 
-      if(MAIN.game.data.map[this.indexes.z - 1]){
-        if(MAIN.game.data.map[this.indexes.z - 1][this.indexes.x]){
-            this.neighbours[0] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x];
+      if (MAIN.game.data.map[this.indexes.z - 1]) {
+        if (MAIN.game.data.map[this.indexes.z - 1][this.indexes.x]) {
+          this.neighbours[0] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x];
         };
       };
-      if(MAIN.game.data.map[this.indexes.z][this.indexes.x +1]){
-          this.neighbours[1] = MAIN.game.data.map[this.indexes.z][this.indexes.x + 1];
+      if (MAIN.game.data.map[this.indexes.z][this.indexes.x + 1]) {
+        this.neighbours[1] = MAIN.game.data.map[this.indexes.z][this.indexes.x + 1];
       };
-      if(MAIN.game.data.map[this.indexes.z + 1][this.indexes.x + 1]){
-          this.neighbours[2] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x + 1];
+      if (MAIN.game.data.map[this.indexes.z + 1][this.indexes.x + 1]) {
+        this.neighbours[2] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x + 1];
       };
-      if(MAIN.game.data.map[this.indexes.z + 1][this.indexes.x]){
-          this.neighbours[3] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x];
+      if (MAIN.game.data.map[this.indexes.z + 1][this.indexes.x]) {
+        this.neighbours[3] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x];
       };
-      if(MAIN.game.data.map[this.indexes.z][this.indexes.x - 1]){
+      if (MAIN.game.data.map[this.indexes.z][this.indexes.x - 1]) {
+        this.neighbours[4] = MAIN.game.data.map[this.indexes.z][this.indexes.x - 1];
+      };
+      if (MAIN.game.data.map[this.indexes.z - 1]) {
+        if (MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1]) {
+          this.neighbours[5] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1];
+        };
+      };
+    };
+    if (this.indexes.z === 5) {
+      if (MAIN.game.data.map[this.indexes.z - 1][this.indexes.x]) {
+        this.neighbours[0] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x];
+      };
+      if (MAIN.game.data.map[this.indexes.z][this.indexes.x + 1]) {
+        this.neighbours[1] = MAIN.game.data.map[this.indexes.z][this.indexes.x + 1];
+      };
+      if (MAIN.game.data.map[this.indexes.z + 1][this.indexes.x]) {
+        this.neighbours[2] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x];
+      };
+      if (MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1]) {
+        this.neighbours[3] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1];
+      };
+      if (MAIN.game.data.map[this.indexes.z][this.indexes.x - 1]) {
+        this.neighbours[4] = MAIN.game.data.map[this.indexes.z][this.indexes.x - 1];
+      };
+      if (MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1]) {
+        this.neighbours[5] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1];
+      };
+    };
+    if (this.indexes.z > 5) {
+      if (MAIN.game.data.map[this.indexes.z - 1][this.indexes.x + 1]) {
+        this.neighbours[0] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x + 1];
+      };
+
+      if (MAIN.game.data.map[this.indexes.z][this.indexes.x + 1]) {
+        this.neighbours[1] = MAIN.game.data.map[this.indexes.z][this.indexes.x + 1];
+      };
+      if (MAIN.game.data.map[this.indexes.z + 1]) {
+        if (MAIN.game.data.map[this.indexes.z + 1][this.indexes.x]) {
+          this.neighbours[2] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x];
+        };
+      };
+      if (MAIN.game.data.map[this.indexes.z + 1]) {
+        if (MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1]) {
+          this.neighbours[3] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1];
+        };
+      };
+      if (MAIN.game.data.map[this.indexes.z]) {
+        if (MAIN.game.data.map[this.indexes.z][this.indexes.x - 1]) {
           this.neighbours[4] = MAIN.game.data.map[this.indexes.z][this.indexes.x - 1];
-      };
-      if(MAIN.game.data.map[this.indexes.z-1]){
-        if(MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1]){
-            this.neighbours[5] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1];
         };
       };
-    };
-    if(this.indexes.z === 5){
-        if(MAIN.game.data.map[this.indexes.z - 1][this.indexes.x]){
-            this.neighbours[0] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x];
-        };
-        if(MAIN.game.data.map[this.indexes.z][this.indexes.x + 1]){
-            this.neighbours[1] = MAIN.game.data.map[this.indexes.z][this.indexes.x + 1];
-        };
-        if(MAIN.game.data.map[this.indexes.z + 1][this.indexes.x]){
-            this.neighbours[2] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x];
-        };
-        if(MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1]){
-            this.neighbours[3] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1];
-        };
-        if(MAIN.game.data.map[this.indexes.z][this.indexes.x - 1]){
-            this.neighbours[4] = MAIN.game.data.map[this.indexes.z][this.indexes.x - 1];
-        };
-        if(MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1]){
-            this.neighbours[5] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x - 1];
-        };
-    };
-    if(this.indexes.z > 5){
-      if(MAIN.game.data.map[this.indexes.z - 1][this.indexes.x + 1]){
-          this.neighbours[0] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x + 1];
-      };
-
-      if(MAIN.game.data.map[this.indexes.z][this.indexes.x + 1]){
-          this.neighbours[1] = MAIN.game.data.map[this.indexes.z][this.indexes.x + 1];
-      };
-      if(MAIN.game.data.map[this.indexes.z + 1]){
-        if(MAIN.game.data.map[this.indexes.z + 1][this.indexes.x]){
-            this.neighbours[2] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x];
-        };
-      };
-      if(MAIN.game.data.map[this.indexes.z + 1]){
-        if(MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1]){
-            this.neighbours[3] = MAIN.game.data.map[this.indexes.z + 1][this.indexes.x - 1];
-        };
-      };
-      if(MAIN.game.data.map[this.indexes.z]){
-        if(MAIN.game.data.map[this.indexes.z][this.indexes.x - 1]){
-            this.neighbours[4] = MAIN.game.data.map[this.indexes.z][this.indexes.x - 1];
-        };
-      };
-      if(MAIN.game.data.map[this.indexes.z - 1][this.indexes.x]){
-          this.neighbours[5] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x];
+      if (MAIN.game.data.map[this.indexes.z - 1][this.indexes.x]) {
+        this.neighbours[5] = MAIN.game.data.map[this.indexes.z - 1][this.indexes.x];
       };
     };
   };
 
-  findSectorByClick(intersectCoords){
+  findSectorByClick(intersectCoords) {
     const position = {
-      x:0,
-      y:0,
+      x: 0,
+      y: 0,
     };
     position.x = intersectCoords.x - this.position.x;
     position.z = intersectCoords.z - this.position.z;
 
-    let atan2 = Math.atan2( position.z,position.x )/Math.PI * 180;
+    let atan2 = Math.atan2(position.z, position.x) / Math.PI * 180;
     let angle = 180 - atan2;
     //подправляем под нужный нам поворот
     angle += 90;
-    if(angle>360){
-      angle = angle-360;
+    if (angle > 360) {
+      angle = angle - 360;
     }
     //делаем его по часовой стрелке
     angle = 360 - angle;
-    const sector = Math.floor(angle/60)
+    const sector = Math.floor(angle / 60)
     return sector
   };
-  onClick(intersectCoords){
+  onClick(intersectCoords) {
     //для режима пошагового меню не показывается если не ход игрока
-
-    if(this.cityCeil){
+    if (this.cityCeil) {
       MAIN.interface.game.city.openMenu(MAIN.game.data.cities[this.type]);
     };
 
 
-    if (MAIN.game.data.commonData.turnBasedGame) {
-      if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
-        return;
-      };
-    };
+    // if (MAIN.game.data.commonData.turnBasedGame) {
+    //   if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+    //     return;
+    //   };
+    // };
     if (!this.blockCeil) {
       this.addChosenTemporaryHex();
       const selectedSector = this.findSectorByClick(intersectCoords);
       if (this.sectors[selectedSector] === null) {
         this.addChosenSectorTemporaryMesh(selectedSector);
         this.showSectorMenu(selectedSector);
-      }else{
-        if(this.sectorsData[selectedSector]){
+      } else {
+        if (this.sectorsData[selectedSector]) {
           this.sectorsData[selectedSector].onClick();
         };
       }
@@ -175,28 +182,31 @@ class FieldCeil {
 
   };
 
-
-
-
-  calculateSectorMenuButtons(sector){
+  calculateSectorMenuButtons(sector) {
     //Ищем что можно построить на этом секторе;
     const buttons = [];
     const ceil = this.type;
     let nearCeil = this.neighbours[sector];
-    if(nearCeil != null){
+    if (nearCeil != null) {
       nearCeil = nearCeil.type
     };
 
     //check all builds
-    for(let building in MAIN.game.configs.buildings){
+    for (let building in MAIN.game.configs.buildings) {
       const thisBuilding = MAIN.game.configs.buildings[building];
       //check can we build this building on this ceil
       thisBuilding.ceil.forEach((buildCeil, i) => {
-        if(buildCeil === ceil){
+        if (buildCeil === ceil) {
           //nearCeil for this building
           thisBuilding.nearCeil.forEach((buildNearCeil, i) => {
-            if(buildNearCeil == nearCeil || buildNearCeil === 'all'){
-              buttons.push(building);
+            if (buildNearCeil == nearCeil || buildNearCeil === 'all') {
+              if (building === 'road' || building === 'bridge') {
+                buttons.push(building);
+              } else {
+                if (MAIN.game.data.commonData.factoriesCount[building] > 0) {
+                  buttons.push(building);
+                };
+              };
             };
           });
         };
@@ -206,62 +216,74 @@ class FieldCeil {
     return buttons;
   };
 
-  showSectorMenu(sector){
-    if(this.type === 'meadow'){
-      if(this.sectors[sector] === null){
+  showSectorMenu(sector) {
+    if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' || this.type === 'goldMine' || this.type === 'oilMine') {
+      if (this.sectors[sector] === null) {
         const that = this;
-        MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,this.calculateSectorMenuButtons(sector));
+        MAIN.interface.game.ceilMenu.showSectorMenu(that, sector, this.calculateSectorMenuButtons(sector));
       };
     };
-    if(this.type === 'sea'){
-      if(this.sectors[sector] === null){
+    if (this.type === 'sea') {
+      if (this.sectors[sector] === null) {
         let nonEmptySectors = 0;
         // чтобы нельзя было строить больше 2
         this.sectors.forEach((thisSector, i) => {
-          if(thisSector != null){
+          if (thisSector === 'bridge' || thisSector === 'bridgeStraight') {
             nonEmptySectors++;
           };
         });
-        if(nonEmptySectors < 2){
+        if (nonEmptySectors < 2) {
           const that = this;
-          MAIN.interface.game.ceilMenu.showSectorMenu(that,sector,this.calculateSectorMenuButtons(sector));
+          MAIN.interface.game.ceilMenu.showSectorMenu(that, sector, this.calculateSectorMenuButtons(sector));
         };
       };
     };
   };
 
   //добавляет меш шестиугольника
-  addChosenTemporaryHex(){
-    if(MAIN.game.scene.temporaryHexMesh){
+  addChosenTemporaryHex() {
+    if (MAIN.game.scene.temporaryHexMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
       MAIN.game.scene.temporaryHexMesh.geometry.dispose();
       MAIN.game.scene.temporaryHexMesh.material.dispose();
     };
-    const mesh = new THREE.Mesh( MAIN.game.scene.assets.geometries.hitboxCeil.clone(), new THREE.MeshBasicMaterial({color:0xc1ffbb,side:THREE.DoubleSide,transparent:true,opacity:0.5,}));
+    const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.hitboxCeil.clone(), new THREE.MeshBasicMaterial({
+      color: 0xc1ffbb,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.5,
+    }));
+    mesh.name = 'ChosenTemporaryHex';
     const position = this.position;
-    mesh.position.set(position.x,position.y+0.005,position.z);
+    mesh.position.set(position.x, position.y + 0.005, position.z);
     MAIN.game.scene.temporaryHexMesh = mesh;
     MAIN.renderer.scene.add(mesh);
   };
   //добавляет меш треугольника(сектора)
-  addChosenSectorTemporaryMesh(selectedSector){
-    if(MAIN.game.scene.temporarySectorMesh){
+  addChosenSectorTemporaryMesh(selectedSector) {
+    if (MAIN.game.scene.temporarySectorMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporarySectorMesh);
       MAIN.game.scene.temporarySectorMesh.geometry.dispose();
       MAIN.game.scene.temporarySectorMesh.material.dispose();
     };
-    const mesh = new THREE.Mesh( MAIN.game.scene.assets.geometries.hexsectorTemporaryMesh.clone(), new THREE.MeshBasicMaterial({color:0x00ff00,side:THREE.DoubleSide,transparent:true,opacity:0.5}));
-    mesh.rotation.set(0,(selectedSector*(-60) * Math.PI/180),0)
+    const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.hexsectorTemporaryMesh.clone(), new THREE.MeshBasicMaterial({
+      color: 0x00ff00,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.5
+    }));
+    mesh.name = 'ChosenSectorTemporaryMesh';
+    mesh.rotation.set(0, (selectedSector * (-60) * Math.PI / 180), 0)
     MAIN.game.scene.temporarySectorMesh = mesh;
     const position = this.position;
-    mesh.position.set(position.x,position.y,position.z);
+    mesh.position.set(position.x, position.y, position.z);
     MAIN.renderer.scene.add(mesh);
     this.getSectorPosition(selectedSector)
   };
 
   //добавляет красный меш
-  addChosenBlockTemporaryHex(){
-    if(MAIN.game.scene.temporaryHexMesh){
+  addChosenBlockTemporaryHex() {
+    if (MAIN.game.scene.temporaryHexMesh) {
       MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
       MAIN.game.scene.temporaryHexMesh.geometry.dispose();
       MAIN.game.scene.temporaryHexMesh.material.dispose();
@@ -270,23 +292,29 @@ class FieldCeil {
     const geometry = MAIN.game.scene.assets.geometries[meshName].clone();
     geometry.rotateY(this.meshRotation);
     //z conflict
-    geometry.translate(0,0.01,0);
-    const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0xff0000,side:THREE.DoubleSide,transparent:true,opacity:0.5,}));
+    geometry.translate(0, 0.01, 0);
+    const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+      color: 0xff0000,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.5,
+    }));
+    mesh.name = 'ChosenBlockTemporaryHex';
     const position = this.position;
-    mesh.position.set(position.x,position.y+0.005,position.z);
+    mesh.position.set(position.x, position.y + 0.005, position.z);
     MAIN.game.scene.temporaryHexMesh = mesh;
     MAIN.renderer.scene.add(mesh);
     let smoothValue = 0.5;
     //постепенное удаление красного меша
-    function smoothRemoveTemporaryMesh(){
+    function smoothRemoveTemporaryMesh() {
       smoothValue -= 0.01;
-      if(smoothValue > 0){
-        if(MAIN.game.scene.temporaryHexMesh === mesh){
+      if (smoothValue > 0) {
+        if (MAIN.game.scene.temporaryHexMesh === mesh) {
           mesh.material.opacity = smoothValue;
           requestAnimationFrame(smoothRemoveTemporaryMesh);
         };
-      }else{
-        if(MAIN.game.scene.temporaryHexMesh === mesh){
+      } else {
+        if (MAIN.game.scene.temporaryHexMesh === mesh) {
           MAIN.renderer.scene.remove(MAIN.game.scene.temporaryHexMesh);
           MAIN.game.scene.temporaryHexMesh.geometry.dispose();
           MAIN.game.scene.temporaryHexMesh.material.dispose();
@@ -296,47 +324,60 @@ class FieldCeil {
     smoothRemoveTemporaryMesh();
   };
 
-  buildOnSector(sector,building){
-    if(this.sectors[sector] === null){
+  buildOnSector(sector, building, player) {
+    if (this.sectors[sector] === null) {
       const newGeometryArray = [MAIN.renderer.scene.ceilsMesh.geometry];
       // const newGeometryArray = [ MAIN.game.scene.buildingsMesh.geometry];
 
 
-      if(!this.centralRoad){
+      if (!this.centralRoad) {
 
         this.centralRoad = true;
         let centralRoadGeometry
-        if(this.type === 'meadow'){
+        if (this.type === 'meadow' || this.type === 'sand' || this.type === 'steelMine' || this.type === 'goldMine' || this.type === 'oilMine') {
           centralRoadGeometry = MAIN.game.scene.assets.geometries.roadCenter.clone();
         };
-        if(this.type === 'sea'){
+        if (this.type === 'sea') {
           centralRoadGeometry = MAIN.game.scene.assets.geometries.bridgeCentral.clone();
         };
-        centralRoadGeometry.translate(this.position.x,this.position.y,this.position.z);
+        centralRoadGeometry.translate(this.position.x, this.position.y, this.position.z);
         newGeometryArray.push(centralRoadGeometry);
       };
 
       let buildGeommetry;
-      //потом убрать заглушку
-      if(building === 'road'){
-        buildGeommetry =  MAIN.game.scene.assets.geometries[building].clone();
-        buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
-        buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
-        newGeometryArray.push(buildGeommetry);
+      if (building === 'road') {
+        let cityClose = false;
+        if (this.neighbours[sector]) {
+          if (this.neighbours[sector].cityCeil) {
+            cityClose = true;
+          };
+        };
+        if (cityClose) {
+          buildGeommetry = MAIN.game.scene.assets.geometries.cityStorage.clone();
+          buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
+          buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
+          newGeometryArray.push(buildGeommetry);
+        } else {
+          buildGeommetry = MAIN.game.scene.assets.geometries[building].clone();
+          buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
+          buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
+          newGeometryArray.push(buildGeommetry);
 
-        function getRandomIntInclusive(min, max) {
+          function getRandomIntInclusive(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
-        };
-        //выбираем один из элементов декора
-        const decorRandom = getRandomIntInclusive(1,4);
-        //ставится он в 50%
-        if(Math.random() > 0.5){
-          const decorGeometry = MAIN.game.scene.assets.geometries['roadDecor' + decorRandom].clone();
-          decorGeometry.rotateY((sector*(-60) * Math.PI/180));
-          decorGeometry.translate(this.position.x,this.position.y,this.position.z);
-          newGeometryArray.push(decorGeometry);
+          };
+          //выбираем один из элементов декора
+          const decorRandom = getRandomIntInclusive(1, 7);
+          //ставится он в 50%
+          if (Math.random() > 0.5) {
+            const decorGeometry = MAIN.game.scene.assets.geometries['roadDecor' + decorRandom].clone();
+            decorGeometry.rotateY((sector * (-60) * Math.PI / 180));
+            decorGeometry.translate(this.position.x, this.position.y, this.position.z);
+            newGeometryArray.push(decorGeometry);
+
+          };
         };
 
 
@@ -352,10 +393,10 @@ class FieldCeil {
 
 
 
-        const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
+        const lightArray = [MAIN.game.scene.lights.buildingLights.geometry];
         const thisLightGeometry = MAIN.game.scene.assets.geometries.roadLight.clone()
-        thisLightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        thisLightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        thisLightGeometry.rotateY((sector * (-60) * Math.PI / 180));
+        thisLightGeometry.translate(this.position.x, this.position.y, this.position.z);
         lightArray.push(thisLightGeometry);
         const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
 
@@ -363,28 +404,26 @@ class FieldCeil {
         delete MAIN.game.scene.lights.buildingLights.geometry;
         MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
 
-      };
-
-      if(building === 'bridge'){
+      } else if (building === 'bridge') {
         let lightGeometry;
-        if(this.neighbours[sector].type === 'meadow' || this.neighbours[sector].cityCeil ){
-          buildGeommetry =  MAIN.game.scene.assets.geometries.bridge.clone();
-          buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
-          buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+        if (this.neighbours[sector].type === 'meadow' || this.neighbours[sector].type === 'sand' || this.neighbours[sector].type === 'steelMine' || this.neighbours[sector].type === 'goldMine' || this.neighbours[sector].type === 'oilMine' || this.neighbours[sector].cityCeil) {
+          buildGeommetry = MAIN.game.scene.assets.geometries.bridge.clone();
+          buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
+          buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
           newGeometryArray.push(buildGeommetry);
           this.sectors[sector] = 'bridge';
 
-          lightGeometry =  MAIN.game.scene.assets.geometries.bridgeLight.clone();
+          lightGeometry = MAIN.game.scene.assets.geometries.bridgeLight.clone();
         };
-        if(this.neighbours[sector].type === 'sea'){
-          buildGeommetry =  MAIN.game.scene.assets.geometries.bridgeStraight.clone();
-          buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
-          buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+        if (this.neighbours[sector].type === 'sea') {
+          buildGeommetry = MAIN.game.scene.assets.geometries.bridgeStraight.clone();
+          buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
+          buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
           newGeometryArray.push(buildGeommetry);
           this.sectors[sector] = 'bridgeStraight';
 
 
-          lightGeometry =  MAIN.game.scene.assets.geometries.bridgeStraightLight.clone();
+          lightGeometry = MAIN.game.scene.assets.geometries.bridgeStraightLight.clone();
         };
 
 
@@ -393,16 +432,16 @@ class FieldCeil {
         let nonEmptySectors = 0;
 
         this.sectors.forEach((thisSector, i) => {
-          if(thisSector != null){
+          if (thisSector === 'bridge' || thisSector === 'bridgeStraight') {
             nonEmptySectors++;
           };
         });
-        if(nonEmptySectors === 2){
+        if (nonEmptySectors === 2) {
           this.sectors.forEach((thisSector, i) => {
-            if(thisSector === null){
+            if (thisSector === null || thisSector === 'full') {
               const borderGeometry = MAIN.game.scene.assets.geometries.bridgeBorder.clone();
-              borderGeometry.rotateY((i*(-60) * Math.PI/180));
-              borderGeometry.translate(this.position.x,this.position.y,this.position.z);
+              borderGeometry.rotateY((i * (-60) * Math.PI / 180));
+              borderGeometry.translate(this.position.x, this.position.y, this.position.z);
               newGeometryArray.push(borderGeometry);
             };
           });
@@ -413,10 +452,10 @@ class FieldCeil {
         delete MAIN.renderer.scene.ceilsMesh.geometry;
         MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
 
-        if(lightGeometry){
-          const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-          lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-          lightGeometry.translate(this.position.x,this.position.y,this.position.z);
+        if (lightGeometry) {
+          const lightArray = [MAIN.game.scene.lights.buildingLights.geometry];
+          lightGeometry.rotateY((sector * (-60) * Math.PI / 180));
+          lightGeometry.translate(this.position.x, this.position.y, this.position.z);
           lightArray.push(lightGeometry);
 
           const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
@@ -424,13 +463,10 @@ class FieldCeil {
           delete MAIN.game.scene.lights.buildingLights.geometry;
           MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
         };
-      };
-
-
-      if(building === 'sawmill'){
-        buildGeommetry =  MAIN.game.scene.assets.geometries.sawmill.clone();
-        buildGeommetry.rotateY((sector*(-60) * Math.PI/180));
-        buildGeommetry.translate(this.position.x,this.position.y,this.position.z);
+      } else {
+        buildGeommetry = MAIN.game.scene.assets.geometries[building].clone();
+        buildGeommetry.rotateY((sector * (-60) * Math.PI / 180));
+        buildGeommetry.translate(this.position.x, this.position.y, this.position.z);
         newGeometryArray.push(buildGeommetry);
 
         const newGeometry = BufferGeometryUtils.mergeBufferGeometries(newGeometryArray);
@@ -439,43 +475,54 @@ class FieldCeil {
         MAIN.renderer.scene.ceilsMesh.geometry = newGeometry;
 
 
-        const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
-        const lightArray =  [MAIN.game.scene.lights.buildingLights.geometry];
-        lightGeometry.rotateY((sector*(-60) * Math.PI/180));
-        lightGeometry.translate(this.position.x,this.position.y,this.position.z);
-        lightArray.push(lightGeometry);
+        //   const lightGeometry = MAIN.game.scene.assets.geometries.sawmillLight.clone();
+        //   const lightArray = [MAIN.game.scene.lights.buildingLights.geometry];
+        //   lightGeometry.rotateY((sector * (-60) * Math.PI / 180));
+        //   lightGeometry.translate(this.position.x, this.position.y, this.position.z);
+        //   lightArray.push(lightGeometry);
+        //
+        //   const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
+        //   MAIN.game.scene.lights.buildingLights.geometry.dispose();
+        //   delete MAIN.game.scene.lights.buildingLights.geometry;
+        //   MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
 
-        const newLightGeometry = BufferGeometryUtils.mergeBufferGeometries(lightArray);
-        MAIN.game.scene.lights.buildingLights.geometry.dispose();
-        delete MAIN.game.scene.lights.buildingLights.geometry;
-        MAIN.game.scene.lights.buildingLights.geometry = newLightGeometry;
+        this.sectors[sector] = building;
 
-        this.sectors[sector] = 'sawmill';
+
+        if (building === 'waterStation') {
+          //также у соседнего сектора закрываем доступ к стройке тут
+          const indexInNeighbour = this.neighbours[sector].neighbours.indexOf(this);
+          this.neighbours[sector].sectors[indexInNeighbour] = 'full';
+        };
+
+        // подложка цвета игрока
+
+        const factoryBottomGeometry = MAIN.game.scene.assets.geometries.factoryBottom.clone();
+        factoryBottomGeometry.rotateY((sector * (-60) * Math.PI / 180));
+        factoryBottomGeometry.translate(this.position.x, this.position.y, this.position.z);
+
+
+        const playerIndex = MAIN.game.data.commonData.members.indexOf(player);
+        const newFactoryBottomGeometry = BufferGeometryUtils.mergeBufferGeometries([factoryBottomGeometry, MAIN.game.scene.colorsGeommetry[playerIndex].geometry]);
+        MAIN.game.scene.colorsGeommetry[playerIndex].geometry.dispose();
+        delete MAIN.game.scene.colorsGeommetry[playerIndex].geometry;
+        MAIN.game.scene.colorsGeommetry[playerIndex].geometry = newFactoryBottomGeometry;
+
+
       };
-
-
-      // let vertCount = 0;
-      //
-      // MAIN.renderer.scene.traverse((children) => {
-      //       if(children.type === 'Mesh'){
-      //         vertCount += children.geometry.attributes.position.count;
-      //       }
-      // });
-      // console.log(vertCount)
-
 
     };
   };
 
-  getSectorPosition(sector){
+  getSectorPosition(sector) {
     const zeroPoint = this.position;
-    const radius = (Math.sqrt(3)/2)/1.5;
-    const angle = (sector*(-60)+150) * Math.PI/180;
+    const radius = (Math.sqrt(3) / 2) / 1.5;
+    const angle = (sector * (-60) + 150) * Math.PI / 180;
 
     const position = {
-      x:Math.sin(angle)*radius,
-      y:0,
-      z:Math.cos(angle)*radius,
+      x: Math.sin(angle) * radius,
+      y: 0,
+      z: Math.cos(angle) * radius,
     };
     position.x += this.position.x;
     position.z += this.position.z;
@@ -485,13 +532,64 @@ class FieldCeil {
     // MAIN.game.scene.testMesh.position.set(position.x,position.y,position.z);
   };
 
-
-
-
-  getDistanceToCeil(ceil){
-    const thisVector = new THREE.Vector3(this.position.x,this.position.y,this.position.z);
-    const ceilVector = new THREE.Vector3(ceil.position.x,ceil.position.y,ceil.position.z);
+  getDistanceToCeil(ceil) {
+    const thisVector = new THREE.Vector3(this.position.x, this.position.y, this.position.z);
+    const ceilVector = new THREE.Vector3(ceil.position.x, ceil.position.y, ceil.position.z);
     return thisVector.distanceTo(ceilVector);
+  };
+
+  showCeilFullByTruck() {
+    const mesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.roadCenter.clone(), new THREE.MeshBasicMaterial({
+      color: 0xfe0019,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.9,
+    }));
+    mesh.name = 'CeilEmptyByTruck';
+    mesh.scale.set(1.05, 1.05, 1.05);
+    mesh.position.set(this.position.x, 0.01, this.position.z);
+    MAIN.renderer.scene.add(mesh);
+
+    let animationFrame = 0;
+
+    function animate() {
+      animationFrame++;
+      if (animationFrame % 2 === 0) {
+        mesh.material.visible = false;
+      } else {
+        mesh.material.visible = true;
+      }
+
+      if (animationFrame < 8) {
+        setTimeout(() => {
+          animate();
+        }, 50);
+
+      } else {
+        mesh.removeFromParent();
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+      };
+
+    };
+    animate();
+
+
+
+  };
+
+  checkRoadEmpty(){
+    if(this.roadEmpty){
+      const truck = this.roadEmpty;
+      if(truck.place.x === this.indexes.x && truck.place.z === this.indexes.z){
+        return true;
+      }else{
+        this.roadEmpty = false;
+        return false;
+      };
+    }else{
+      return false;
+    }
   };
 };
 

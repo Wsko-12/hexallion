@@ -1,0 +1,89 @@
+.icon {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.icon-truck {
+  background-image: url(../img/icons/truck.png);
+}
+
+.icon-table {
+  background-image: url(../img/icons/table.png);
+}
+
+.icon-move {
+  background-image: url(../img/icons/move.png);
+}
+
+.icon-delivery {
+  background-image: url(../img/icons/delivery.png);
+}
+
+.icon-money {
+  background-image: url(../img/icons/money.png);
+}
+
+.icon-bestPrice {
+  background-image: url(../img/icons/bestPrice.png);
+}
+
+.icon-findRoute {
+  background-image: url(../img/icons/findRoute.png);
+}
+
+.icon-play {
+  background-image: url(../img/icons/play.png);
+}
+
+.icon-pause {
+  background-image: url(../img/icons/pause.png);
+}
+
+.icon-settings {
+  background-image: url(../img/icons/settings.png);
+}
+
+.icon-cancel {
+  background-image: url(../img/icons/cancel.png);
+}
+
+.icon-list {
+  background-image: url(../img/icons/list.png);
+}
+
+
+
+.icon-plus {
+  background-image: url(../img/icons/plus.png);
+}
+
+.icon-shop-raw {
+  background-image: url(../img/shops/raw.png);
+}
+.icon-shop-auto {
+  background-image: url(../img/shops/auto.png);
+}
+.icon-shop-construction {
+  background-image: url(../img/shops/construction.png);
+}
+.icon-shop-fashion {
+  background-image: url(../img/shops/fashion.png);
+}
+.icon-shop-homeAccessories {
+  background-image: url(../img/shops/homeAccessories.png);
+}
+.icon-shop-stationery {
+  background-image: url(../img/shops/stationery.png);
+}
+
+.icon-changeSector {
+  background-image: url(../img/icons/changeSector.png);
+}
+.icon-road {
+  background-image: url(../img/icons/road.png);
+}
+.icon-bridge {
+  background-image: url(../img/icons/bridge.png);
+}

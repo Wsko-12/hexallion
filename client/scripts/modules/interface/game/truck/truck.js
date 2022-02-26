@@ -13,6 +13,7 @@ function init(){
 
     <div id="truckNotifications"></div>
     <div id="truckCard" class="card trucksMenu-card"></div>
+    <div id="truckCancelButton" > <span style="margin:auto">${MAIN.interface.lang.truck.cancel[MAIN.interface.lang.flag]}</span> </div>
     <div id="truckDice">
       <div id="truckDiceInner">
       </div>
@@ -27,21 +28,28 @@ function init(){
   clicker.style.pointerEvents = 'none';
   clicker.onclick = closeMenu;
   clicker.ontouchstart = closeMenu;
+
+  const cancelButton = document.querySelector('#truckCancelButton');
+  MAIN.interface.deleteTouches(cancelButton);
+  cancelButton.onclick = MAIN.interface.game.path.closeAll;
+  cancelButton.ontouchstart = MAIN.interface.game.path.closeAll;
+
+
+  const leftMenuButton = document.querySelector('#leftMenu_openTruck');
+  MAIN.interface.deleteTouches(leftMenuButton);
+  leftMenuButton.onclick = () => {openMenu(null)};
+  leftMenuButton.ontouchstart = () => {openMenu(null)};
+
 };
 
 let nowShowedFactory = null;
 function openMenu(factory){
 
     //это сделано для реопена меню(апдейта)
-
     if(factory){
       nowShowedFactory = factory;
     }else{
-      if(nowShowedFactory){
-        factory = nowShowedFactory;
-      }else{
-        return;
-      };
+      factory = nowShowedFactory;
     };
 
     document.querySelector('#trucksMenuContainer').style.display = 'block';
@@ -60,7 +68,7 @@ function openMenu(factory){
     if(MAIN.game.data.commonData.trucks.count > 0){
       const buyTruckCard = `
 
-      <div class="card trucksMenu-card">
+      <div class="card trucksMenu-card" id="truckMenu_card_buy">
         <div class="card-header">
           TRUCK <span class="card-header-span" id="truckMenu_card_count"> | 0${MAIN.game.data.commonData.trucks.count}</span>
         </div>
@@ -70,59 +78,65 @@ function openMenu(factory){
         </div>
 
         <div class="trucksMenu-card-button" id="truckMenu_card_buyButton">
-          <span class="trucksMenu-card-button-span">buy<span>
+          <span class="trucksMenu-card-button-span">${MAIN.interface.lang.truck.buy[MAIN.interface.lang.flag]}<span>
         </div>
       </div>
 
       `
-      // <div class="truckMenu_card">
-      //   <div class="truckMenu_card_inner">
-      //     <div id="truckMenu_card_count">
-      //       <span style="margin:auto">trucks left:${MAIN.game.data.commonData.trucks.count}</span>
-      //     </div>
-      //     <div id="truckMenu_card_buyButton">
-      //       <span style="margin:auto">Buy</span>
-      //     </div>
-      //     <div id="truckMenu_card_price">
-      //       $${MAIN.game.data.commonData.trucks.coast}
-      //     </div>
-      //   </div>
-      // </div>
-
 
       list += buyTruckCard;
     };
 
 
+
     for(let truck in MAIN.game.data.playerData.trucks){
       const thisTruck = MAIN.game.data.playerData.trucks[truck];
-      let resource = '';
+      let product = '';
 
-      if(!thisTruck.resource){
-        resource = `<div class="trucksMenu-card-resource resource-hole"></div>`;
+      if(thisTruck.product === 1){
+        thisTruck.clear();
+        continue;
+      };
+      if(!thisTruck.product){
+        product = `
+          <div class="trucksMenu-card-resource resource-hole"></div>
+        `;
       };
 
 
-      if(thisTruck.resource){
-        resource = `
-          <div class="trucksMenu-card-resource resource-gag resource-bg-color-${thisTruck.resource.name}">
+      if(thisTruck.product){
+        product = `
+          <div class="trucksMenu-card-resource resource-gag resource-bg-color-${thisTruck.product.name}">
             <div class="resource-gag-title">
-              ${thisTruck.resource.name}
+              ${thisTruck.product.name}
             </div>
             <div class="resource-gag-quality">
-              Q${thisTruck.resource.quality}
+              Q${thisTruck.product.quality}
             </div>
           </div>
+          <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${thisTruck.id}">×</div>
         `
       };
+
+      let truckButton = null;
+      //если открыли меню с кнопки интерфейса, то фабрика === null
+      if(factory){
+        truckButton = thisTruck.product?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:MAIN.interface.lang.truck.load[MAIN.interface.lang.flag]
+      }else{
+        truckButton = thisTruck.product?MAIN.interface.lang.truck.show[MAIN.interface.lang.flag]:'';
+      }
+
       const truckCard = `
-        <div class="card trucksMenu-card">
+        <div class="card trucksMenu-card" id="truckMenu_card_${thisTruck.id}">
           <div class="card-header">
             TRUCK <span class="card-header-span"> | 0${thisTruck.truckNumber}</span>
           </div>
-            ${resource}
+          <div style="display:flex">
+            ${product}
+          </div>
+
           <div class="trucksMenu-card-button" id="truckMenu_card_button_${thisTruck.id}">
-            <span class="trucksMenu-card-button-span">${thisTruck.resource?'show':'load'}<span>
+            <span class="trucksMenu-card-button-span">${truckButton}<span>
           </div>
         </div>
       `
@@ -135,20 +149,44 @@ function openMenu(factory){
 
 
     //вешаем функции
+
+    //чтобы при двойном тапе не зумилось
+    MAIN.interface.deleteTouches(document.querySelector('#truckMenu_card_buy'));
+
     const buyButton = document.querySelector('#truckMenu_card_buyButton');
     if(buyButton){
+      MAIN.interface.deleteTouches(buyButton);
       buyButton.onclick = buyTruck;
-      buyButton.onntouchstart = buyTruck;
+      buyButton.ontouchstart = buyTruck;
     };
 
     for(let truck in MAIN.game.data.playerData.trucks){
       const thisTruck = MAIN.game.data.playerData.trucks[truck];
       const thisButton = document.querySelector(`#truckMenu_card_button_${thisTruck.id}`);
 
-      if(thisTruck.resource === null){
-        thisButton.onclick = load;
-        thisButton.ontouchstart = load;
+
+      const destroyButton = document.querySelector(`#truckMenu_card_destroyButton_${thisTruck.id}`);
+      if(destroyButton){
+        destroyButton.onclick = destroy;
+        destroyButton.ontouchstart = destroy;
+
+        function destroy(){
+          closeMenu();
+          thisTruck.destroyRequest();
+        };
+      };
+
+      if(thisTruck.product === null){
+        if(factory){
+          MAIN.interface.deleteTouches(thisButton);
+          thisButton.onclick = load;
+          thisButton.ontouchstart = load;
+
+        }else{
+          thisButton.parentNode.removeChild(thisButton);
+        };
       }else{
+        MAIN.interface.deleteTouches(thisButton);
         thisButton.onclick = show;
         thisButton.ontouchstart = show;
       };
@@ -163,6 +201,7 @@ function openMenu(factory){
         closeMenu();
         loadTruck(thisTruck);
       };
+
     };
 
 
@@ -170,31 +209,42 @@ function openMenu(factory){
 
 
     function buyTruck(){
-      if(MAIN.game.data.playerData.balance >= MAIN.game.data.commonData.trucks.coast){
-        const data = {
-          player:MAIN.game.data.playerData.login,
-          gameID:MAIN.game.data.commonData.id,
+      if(!MAIN.game.data.playerData.gameOver){
+        if(MAIN.game.data.playerData.balance >= MAIN.game.data.commonData.trucks.coast){
+          const data = {
+            player:MAIN.game.data.playerData.login,
+            gameID:MAIN.game.data.commonData.id,
+          };
+          if(!MAIN.game.data.playerData.gameOver){
+            MAIN.socket.emit('GAME_truck_buy',data);
+          };
         };
-        MAIN.socket.emit('GAME_truck_buy',data);
       };
     };
 
     function loadTruck(truck){
-      if(MAIN.game.data.commonData.turnBasedGame){
-        if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
-          return;
+      if(!MAIN.game.data.playerData.gameOver){
+        if(MAIN.game.data.commonData.turnBasedGame){
+          if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
+            return;
+          };
         };
-      };
-      if(factory){
-        const data = {
-          player:MAIN.game.data.playerData.login,
-          gameID:MAIN.game.data.commonData.id,
-          factoryID:factory.id,
-          truckID:truck.id,
+        if(factory){
+          const data = {
+            player:MAIN.game.data.playerData.login,
+            gameID:MAIN.game.data.commonData.id,
+            factoryID:factory.id,
+            truckID:truck.id,
+          };
+          MAIN.socket.emit('GAME_truck_load',data);
         };
-        MAIN.socket.emit('GAME_truck_load',data);
       };
     };
+
+
+
+
+
 
 };
 function closeMenu(event){
@@ -219,28 +269,42 @@ function changeTrucksCount(){
 
 function openCard(truck){
   truck.cardOpened = true;
-  truck.clearNotification();
+  //либо коментить эту строку, либо уменьшить хитбокс города
+  // truck.clearNotification();
   const clicker =  document.querySelector('#trucksMenuSection');
   clicker.style.pointerEvents = 'auto';
+  let product
+  if(truck.product && truck.product != 1){
+    product = `
+      <div class="trucksMenu-card-resource resource-gag resource-bg-color-${truck.product.name}">
+        <div class="resource-gag-title">
+          ${truck.product.name}
+        </div>
+        <div class="resource-gag-quality">
+          Q${truck.product.quality}
+        </div>
+      </div>
+      <div class="trucksMenu-card-destroyButton" id="truckMenu_card_destroyButton_${truck.id}_card">×</div>
+    `
+  }else{
+    product = `
+      <div class="trucksMenu-card-resource resource-gag>
+        <div class="resource-hole">
+        </div>
+      </div>
+    `
+  };
 
-  const resource = `
-    <div class="trucksMenu-card-resource resource-gag resource-bg-color-${truck.resource.name}">
-      <div class="resource-gag-title">
-        ${truck.resource.name}
-      </div>
-      <div class="resource-gag-quality">
-        Q${truck.resource.quality}
-      </div>
-    </div>
-  `
 
   const cardContent = `
       <div class="card-header">
         TRUCK <span class="card-header-span"> | 0${truck.truckNumber}</span>
       </div>
-      ${resource}
-
+      <div style="display:flex">
+        ${product}
+      </div>
   `
+
 
 
 
@@ -249,11 +313,24 @@ function openCard(truck){
   truckCard.insertAdjacentHTML('beforeEnd',cardContent);
   truckCard.style.display = 'block';
 
+  const destroyButton = document.querySelector(`#truckMenu_card_destroyButton_${truck.id}_card`);
+  if(destroyButton){
+    destroyButton.onclick = destroy;
+    destroyButton.ontouchstart = destroy;
 
-  if(truck.ready){
+    function destroy(){
+      TRUCK.turningInterfase = false;
+      closeMenu();
+
+      truck.destroyRequest();
+    };
+  };
+
+
+  if(!truck.sended && truck.ready){
     const button = `
       <div class="trucksMenu-card-button" id="truckCard_button">
-        <span class="trucksMenu-card-button-span">send<span>
+        <span class="trucksMenu-card-button-span">${MAIN.interface.lang.truck.send[MAIN.interface.lang.flag]}<span>
       </div>
     `
     truckCard.insertAdjacentHTML('beforeEnd',button);
@@ -263,7 +340,9 @@ function openCard(truck){
     document.querySelector('#truckCard_button').ontouchstart = turn;
 
     function turn(){
-      truck.turn();
+      if(!MAIN.game.data.playerData.gameOver){
+        truck.turn();
+      };
     };
   };
 };
@@ -278,6 +357,7 @@ const TRUCK = {
   closeMenu,
   changeTrucksCount,
   openCard,
+  turningInterfase: false,
 };
 
 export {TRUCK}

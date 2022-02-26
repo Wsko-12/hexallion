@@ -16,12 +16,25 @@
 
 #turnInfo{
   position: fixed;
-  bottom:10px;
-  left: 50%;
+  bottom:10%;
+  right: 8%;
   transform: translateX(-50%);
 }
 
 #turnButton{
+  position: fixed;
+  width: 10vw;
+  height: 10vh;
+  font-size: 0.9em;
+  font-weight: 400;
+  bottom:15%;
+  right: 10%;
 
+
+  height: 50px;
+
+
+
+  pointer-events: auto;
   display: none;
 }

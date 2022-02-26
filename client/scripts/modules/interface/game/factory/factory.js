@@ -27,20 +27,18 @@ function init() {
   factoryMenuClicker.ontouchstart = closeMenu;
 };
 
-//надо для того, чтобы был апдейт если игрок смотрит меню фабрики
-let nowShowedFactoryMenu = null;
 
 function showMenu(factory) {
   const factoryMenuClicker = document.querySelector('#factoryMenuClicker');
   factoryMenuClicker.style.display = 'block';
-  nowShowedFactoryMenu = factory;
+  FACTORY.nowShowedFactoryMenu = factory;
   updateMenu(factory);
 };
+
 function closeMenu(event) {
-  nowShowedFactoryMenu = null;
   const factoryMenuClicker = document.querySelector('#factoryMenuClicker');
-  const factoryMenuSection = document.querySelector('#factoryMenu_Section');
-  if (event === undefined || event.target === factoryMenuClicker || event.target === factoryMenuSection) {
+  if (event === undefined || event.target === factoryMenuClicker) {
+    FACTORY.nowShowedFactoryMenu = null;
     factoryMenuClicker.style.display = 'none';
   };
 };
@@ -56,85 +54,102 @@ function updateMenu(factory) {
 };
 
 function showSettingsSetMenu(factory) {
-  nowShowedFactoryMenu = null;
+
+  FACTORY.nowShowedFactoryMenu = factory;
   const menu = document.querySelector('#factoryMenu');
-  let name = factory.type;
-  name = name.charAt(0).toUpperCase() + name.slice(1);
-  const section = `
-    <div id='factoryMenu_Container' class="factoryMenu_cardBackground_${factory.type}" >
-      <div id="factoryMenu_title">${name}</div>
-      <div id='factoryMenu_settings_points'>3</div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">speed</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_speed_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_speed_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_speed_plus" class="factoryMenu_settings_button">+</div>
-
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">quality</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_quality_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_quality_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_quality_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">low salary</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_salary_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_salary_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_salary_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      <div class="factoryMenu_settingsLine">
-        <div class="factoryMenu_settings_title">storage</div>
-        <div class="factoryMenu_settings_container">
-          <div id="factoryMenu_settings_storage_minus" class="factoryMenu_settings_button">-</div>
-          <div class="factoryMenu_settings_progress">
-            <div id="factoryMenu_settings_storage_progress" class="factoryMenu_settings_progressBar"></div>
-          </div>
-          <div id="factoryMenu_settings_storage_plus" class="factoryMenu_settings_button">+</div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div id="factoryMenu_Button">
-
-      <span style="margin:auto">OK</span>
-
-    </div>
-  `
-
-  menu.insertAdjacentHTML('beforeEnd', section);
-
-
-
+  const name = MAIN.game.configs.buildings[factory.type].name;
   const settings = {
     points: 4,
-    speed: 0,
-    salary: 0,
-    quality: 0,
-    storage: 0,
-    cardUsed: null,
+  };
+
+  if (factory.category === 'mining') {
+    settings.speed = 0;
+    settings.salary = 0;
+    settings.quality = 0;
+    settings.storage = 0;
+  };
+  if (factory.category === 'factory') {
+    settings.speed = 0;
+    settings.salary = 0;
+    settings.volume = 0;
+    settings.storage = 0;
   };
 
 
 
+  let settingsList = '';
+  for (let property in settings) {
+    if (property != 'points') {
+      const line = `
+        <div class="factory_body_settingsLine">
+          <div class="factory_body_settingsLine-left">
+            ${MAIN.interface.lang.factory[property][MAIN.interface.lang.flag]}
+          </div>
+          <div class="factory_body_settingsLine-right">
+            <div id="factoryMenu_settings_${property}_minus" class="factory_body_settingsLine-button">
+              -
+            </div>
+            <div class="factory_body_settingsLine-text">
+              <span id="factoryMenu_settings_${property}_value">0</span>
+            </div>
+            <div id="factoryMenu_settings_${property}_plus" class="factory_body_settingsLine-button">
+              +
+            </div>
+          </div>
+        </div>
+      `
+      settingsList += line;
+    };
+
+  };
+
+  settingsList += `
+            <div class="factory_body_settingsLine-accept">
+              <div id="factoryMenu_Button" class="factory_body_settings_acceptButton">
+                <span class="factory_body_settings_acceptButton-span">${MAIN.interface.lang.factory.run[MAIN.interface.lang.flag]}</span>
+              </div>
+            </div>`;
+
+  const section = `
+    <div class="factory_card">
+      <div class="factory_header factory_header_bg-${factory.type}">
+        <div class="factory_header_header">
+          <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
+          ${factory.settingsSetted ? `
+            <div class="factory_header_header-buttonsContainer">
+                      <div class="factory_header_header-button">
+
+                      </div>
+                      <div id="factory_cancelButton" class="factory_header_header-button icon-cancel">
+
+                      </div>
+            </div>`:''}
+
+        </div>
+        <div class="factory_header_body">
+          <div class="factory_header_body-left">
+            <span>${MAIN.interface.lang.factory.settings[MAIN.interface.lang.flag]}</span>
+          </div>
+          <div class="factory_header_body-right">
+            <span id="factoryMenu_settings_points">0${settings.points}</span>
+          </div>
+        </div>
+      </div>
+      <div class="factory_body">
+        <div class="factory_body_body-settings">
+          ${settingsList}
+        </div>
+      </div>
+    </div>
+  `;
+
+  menu.insertAdjacentHTML('beforeEnd', section);
+
   function changeSettings(plus, property) {
-    const progress = document.querySelector(`#factoryMenu_settings_${property}_progress`);
     if (plus) {
       if (settings.points > 0 && settings[property] < 3) {
         settings.points--;
-        settings[property]++
+        settings[property]++;
       };
     } else {
       if (settings[property] > 0) {
@@ -142,8 +157,9 @@ function showSettingsSetMenu(factory) {
         settings[property]--;
       };
     };
-    progress.style.width = (settings[property] / 3) * 100 + '%';
-    document.querySelector(`#factoryMenu_settings_points`).innerHTML = settings.points;
+    document.querySelector(`#factoryMenu_settings_points`).innerHTML = '0' + settings.points;
+
+    document.querySelector(`#factoryMenu_settings_${property}_value`).innerHTML = settings[property];
   };
 
   for (let property in settings) {
@@ -164,10 +180,17 @@ function showSettingsSetMenu(factory) {
     };
   };
 
-
-
   document.querySelector('#factoryMenu_Button').onclick = applySettings;
   document.querySelector('#factoryMenu_Button').ontouchstart = applySettings;
+
+  if (document.querySelector('#factory_cancelButton')) {
+    document.querySelector('#factory_cancelButton').onclick = () => {
+      showFactoryMenu(factory);
+    };
+    document.querySelector('#factory_cancelButton').ontouchstart = () => {
+      showFactoryMenu(factory);
+    };
+  };
 
   function applySettings() {
     closeMenu();
@@ -178,137 +201,663 @@ function showSettingsSetMenu(factory) {
       settings: settings,
     };
     factory.clearNotification();
-    MAIN.socket.emit('GAME_factory_applySettings', data);
+
+    if (!MAIN.game.data.playerData.gameOver) {
+      MAIN.socket.emit('GAME_factory_applySettings', data);
+    };
   };
 };
 
-//полностью фарматирует меню
-function showFactoryMenu(factory){
-  factory.clearNotification();
-  const menu = document.querySelector('#factoryMenu');
-  menu.innerHTML = '';
-  let name = factory.type;
-  name = name.charAt(0).toUpperCase() + name.slice(1);
+function updateFactoryAutosendBody(factory) {
+  const body = document.querySelector(`#factory_autosend_body_${factory.id}`);
+  if (!body) {
+    return;
+  }
+  body.innerHTML = '';
+  let autosend = '';
 
 
-  /* Заполняем прогресс*/
-  let progressLine = '';
-  factory.settings.productLine.forEach((ceil,i) => {
-    let line = '';
-    if(ceil === 0){
-       line = `<div id="factoryMenu_Card_ProgressLine_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Empty"></div>`;
-    }else{
-      line = `<div id="factoryMenu_Card_ProgressLine_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Gag factoryMenu_Card_Full_${factory.settings.quality}">
-          <div class="factoryMenu_Card_Full_Image factoryMenu_Card_Ceil_${factory.settings.resource}"></div>
-      </div>`;
-    };
-    progressLine += line;
-  });
+  MAIN.interface.returnTouches(body);
 
-  //забить дополнительно промежутки (можно закоментить)
-  const progressGags = factory.settings.stockSpeed - factory.settings.productLine.length;
-  for(let i=0;i<progressGags;i++){
-    const line = `<div class="factoryMenu_Card_Ceil factoryMenu_Card_Gag"></div>`;
-    progressLine += line
-  };
-  /* ***Заполняем прогресс*** */
 
-  /* Заполняем склад */
-  let storageLine = '';
-  factory.settings.storage.forEach((ceil,i) => {
-    let line = '';
-    if(ceil === 0){
-       line = `<div id="factoryMenu_Card_Storage_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Empty"></div>`;
-    }else{
-      line = `
-      <div id="factoryMenu_Card_Storage_Ceil_${i}" class="factoryMenu_Card_Ceil factoryMenu_Card_Gag factoryMenu_Card_Full_${factory.settings.quality}">
-          <div class="factoryMenu_Card_Full_Image factoryMenu_Card_Ceil_${factory.settings.resource}"></div>
-      </div>`;
-    };
-    storageLine += line;
-  });
-  //забить дополнительно промежутки (можно закоментить)
-  const storageGags = 3 - (factory.settings.storage.length - factory.settings.stockStorage);
-  for(let i=0;i<storageGags;i++){
-    const line = `<div class="factoryMenu_Card_Ceil factoryMenu_Card_Gag"></div>`;
-    storageLine += line;
+  //собираем все, что производит фабрика
+  const products = [];
+  if (factory.category === 'mining'){
+    products.push(factory.product);
+  }else if(factory.category === 'factory'){
+    factory.settings.products.forEach((product, i) => {
+      products.push(product.name);
+    });
   };
 
-  let actionButtonLine = null;
 
-  if(factory.settings.storage.includes(1)){
-    actionButtonLine = `
-      <div id='factoryMenu_ActionButton'>
-        <span style="margin:auto">Send truck</span>
+  products.forEach((product, i) => {
+    autosend += `
+     <div class="factory_footer_body_item">
+        <div class="factory_footer_body_item-header">
+          <div class="factory_footer_body_item-header_icon product-${product}"></div>
+
+          <div class="factory_footer_body_item-header_buttonsContainer">
+            <div class="factory_footer_body_item-header_buttonsContainer-icon icon-plus">
+            </div>
+            <div class="factory_footer_body_item-header_buttonsContainer-button" id="factoryCard_addDirection_bestPrise_${product}">
+             <div class="factory_footer_body_item-header_buttonsContainer-button-icon icon-bestPrice">
+
+             </div>
+            </div>
+            <div class="factory_footer_body_item-header_buttonsContainer-button" id="factoryCard_addDirection_findRoute_${product}">
+              <div class="factory_footer_body_item-header_buttonsContainer-button-icon icon-findRoute">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="factory_footer_body_item-header_icon icon-list" id="factoryCard_OpenDirectionsListButton_${product}"></div>
+        </div>
+
+        <!-- direction list -->
+        <div class="factory_footer_body_item_directionsList" id="factoryCard_directionsList_${product}">
+
+
+
+
+        </div>
+        <!-- /direction list -->
+
       </div>
-    `;
-    if(MAIN.game.data.commonData.turnBasedGame){
-      if(MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login){
-        actionButtonLine = null;
+     `;
+  });
+
+  body.insertAdjacentHTML('beforeEnd',autosend);
+
+
+
+  function updateDirectionLists(){
+    products.forEach((product, i) => {
+        const list = document.querySelector(`#factoryCard_directionsList_${product}`);
+        list.innerHTML = '';
+        for (let i = 0; i < factory.autosend.list[product].directions.length; i++) {
+          const thisDirection = factory.autosend.list[product].directions[i];
+          if(thisDirection.mode === 'price'){
+            const thisStr = `
+              <div id="factoryCard_direction_${product}_${i}"class="factory_footer_body_item_directionsList_item ${factory.autosend.list[product].current === i ?'factory_footer_body_item_directionsList_item-current':''}">
+                <div class="factory_footer_body_item_directionsList_item-icon icon-bestPrice">
+
+                </div>
+
+                <div class="factory_footer_body_item_directionsList_item-icon icon-cancel" id='factoryCard_deleteDirection_${product}_${i}'>
+
+                </div>
+              </div>
+            `;
+            list.insertAdjacentHTML('beforeEnd',thisStr);
+
+            function deleteDirection(){
+                factory.autosend.remove({
+                  product:product,
+                  index:i,
+                });
+                updateDirectionLists();
+            };
+            document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).onclick = deleteDirection;
+            document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).ontouchstart = deleteDirection;
+
+
+            function changeCurrent(e){
+              if(e.path[0] === document.querySelector(`#factoryCard_direction_${product}_${i}`)){
+                factory.autosend.changeCurrent({
+                  product:product,
+                  index:i,
+                });
+                updateDirectionLists();
+              };
+            };
+
+            document.querySelector(`#factoryCard_direction_${product}_${i}`).onclick = changeCurrent;
+            document.querySelector(`#factoryCard_direction_${product}_${i}`).ontouchstart = changeCurrent;
+          };
+          if(thisDirection.mode === 'route'){
+                let finalObject = ''
+                  if(thisDirection.finalObject.category === 'city'){
+                    finalObject =  thisDirection.finalObject.name;
+                  }else{
+                    let name = MAIN.game.configs.buildings[thisDirection.finalObject.type].title[MAIN.interface.lang.flag];
+                    name = name[0].toUpperCase() + name.slice(1);
+                    finalObject =  `${name} | ${thisDirection.finalObject.number}`
+                  };
+            const thisStr = `
+              <div id="factoryCard_direction_${product}_${i}"class="factory_footer_body_item_directionsList_item ${factory.autosend.list[product].current === i ?'factory_footer_body_item_directionsList_item-current':''}">
+                <div class="factory_footer_body_item_directionsList_item-icon icon-findRoute">
+
+                </div>
+
+                <div class="factory_footer_body_item_directionsList_item-text">
+                  ${finalObject}
+                </div>
+
+                <div id="factoryCard_deleteDirection_${product}_${i}" class="factory_footer_body_item_directionsList_item-icon icon-cancel" id='factoryCard_deleteDirection_${product}_${i}'>
+
+                </div>
+              </div>
+            `;
+            list.insertAdjacentHTML('beforeEnd',thisStr);
+          };
+
+          function deleteDirection(){
+              factory.autosend.remove({
+                product:product,
+                index:i,
+              });
+              updateDirectionLists();
+          };
+          document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).onclick = deleteDirection;
+          document.querySelector(`#factoryCard_deleteDirection_${product}_${i}`).ontouchstart = deleteDirection;
+
+
+          function changeCurrent(e){
+            if(e.target === document.querySelector(`#factoryCard_direction_${product}_${i}`)){
+              factory.autosend.changeCurrent({
+                product:product,
+                index:i,
+              });
+              updateDirectionLists();
+            };
+          };
+
+          document.querySelector(`#factoryCard_direction_${product}_${i}`).onclick = changeCurrent;
+          document.querySelector(`#factoryCard_direction_${product}_${i}`).ontouchstart = changeCurrent;
+
+        };
+    });
+  };
+  updateDirectionLists();
+
+
+
+  //applyFunctions
+  products.forEach((product, i) => {
+    const directions = {};
+    directions[product] = true;
+
+    function openDirectionList(){
+      const list = document.querySelector(`#factoryCard_directionsList_${product}`);
+      if(directions[product]){
+        list.style.display = 'none';
+        directions[product] = false;
+
+      }else{
+        list.style.display = 'block';
+        directions[product] = true;
+      };
+    };
+    document.querySelector(`#factoryCard_OpenDirectionsListButton_${product}`).onclick = openDirectionList;
+    document.querySelector(`#factoryCard_OpenDirectionsListButton_${product}`).ontouchstart = openDirectionList;
+
+
+    function addBestPriceDirection(){
+      factory.autosend.add({
+          product:product,
+          mode:'price',
+      });
+      updateDirectionLists();
+      if(!directions[product]){
+        openDirectionList()
       };
     };
 
-  };
 
-  const section = `
-        <div id="factoryMenu_Section">
-            <div id="factoryMenu_Card">
-                <div id="factoryMenu_Card_Title">${name}</div>
-                <div id="factoryMenu_Card_ProgressLine">
-                    <div id="factoryMenu_Card_ProgressLine_Title">
-                      Progress
-                    </div>
-                    <div id="factoryMenu_Card_ProgressLine_Container">
-                      ${progressLine}
-                    </div>
-                    <div id="factoryMenu_Card_ProgressLine_Price">
-                      $${factory.settings.stepPrice} per step
-                    </div>
-                </div>
+    document.querySelector(`#factoryCard_addDirection_bestPrise_${product}`).onclick = addBestPriceDirection;
+    document.querySelector(`#factoryCard_addDirection_bestPrise_${product}`).ontouchstart = addBestPriceDirection;
 
 
-                <div id="factoryMenu_Card_StorageLine">
-                    <div id="factoryMenu_Card_StorageLine_Title">
-                      Storage
-                    </div>
-                    <div id="factoryMenu_Card_StorageLine_Container">
-                        ${storageLine}
-                    </div>
-                </div>
-                <div id="factoryMenu_Card_TEST"></div>
-            </div>
-            ${actionButtonLine ? actionButtonLine : ''}
-        </div>
 
+    function addRouteDirection(){
+      const params = {
+        product:product,
+        callback:function(data){
+          factory.autosend.add({
+              product:product,
+              mode:'route',
+              finalObject:data.finalObject,
+              final:data.final,
+          });
+          updateDirectionLists();
+          if(!directions[product]){
+            openDirectionList()
+          };
+        },
 
-  `;
-  menu.insertAdjacentHTML('beforeEnd', section);
+      };
+      MAIN.interface.game.path.showWhereCanSendProduct(params);
+    };
 
+    document.querySelector(`#factoryCard_addDirection_findRoute_${product}`).onclick = addRouteDirection;
+    document.querySelector(`#factoryCard_addDirection_findRoute_${product}`).ontouchstart = addRouteDirection;
+  });
 
-  if(actionButtonLine){
-    const button = document.querySelector('#factoryMenu_ActionButton');
-    button.onclick = openTruckMenu;
-    button.ontouchstart = openTruckMenu;
+};
 
-    function openTruckMenu(){
-      closeMenu();
-      MAIN.interface.game.trucks.openMenu(factory);
+//полностью фарматирует меню
+function showFactoryMenu(factory) {
+
+  factory.clearNotification();
+  const menu = document.querySelector('#factoryMenu');
+  menu.innerHTML = '';
+  let name = MAIN.game.configs.buildings[factory.type].name;
+
+  let rawStorage = '<div class="factory_body_rawStorage">';
+  if (factory.category === 'factory') {
+    let line = '';
+    for (let product in factory.settings.rawStorage) {
+      const thisProduct = factory.settings.rawStorage[product];
+      //если на склад загружен
+      if (thisProduct) {
+        let quality = '';
+        for (let i = 0; i < thisProduct.quality; i++) {
+          quality += `<span class="product-quality"></span>`;
+        };
+        line = `<div class="factory_product-gap" id="factory_rawProduct_${product}">
+                   <div class="product-icon product-${product}"></div>
+                   <div class="product-qualityContainer">
+                     ${quality}
+                   </div>
+                 </div>`
+
+      } else {
+
+        line = `<div class="factory_product-hole factory_product-hole-rawStorage">
+                   <div class="product-icon product-${product}"></div>
+                </div>`
+      };
+      rawStorage += line;
+
     };
   };
+  rawStorage += `</div>`;
+
+
+  let progressBar = `<div class="factory_body_progressBar">`;
+
+  let scaleContainer = `<div class="factory_body_progressBar_scaleContainer">`;
+  const stepScale = 82 / (factory.settings.productLine.length - 1);
+  const scale = stepScale.toFixed(2);
+  for (let i = 0; i < factory.settings.productLine.length; i++) {
+    const line = `
+        <div class="factory_body_progressBar_scale
+             ${i === 0?'factory_body_progressBar_scale-first':''}
+             ${i === factory.settings.productLine.length - 1?'factory_body_progressBar_scale-last':''}"
+
+            style="${i===0?'':`width:${scale}%`}">
+          <span>${factory.settings.productLine.length - i}</span>
+        </div>
+      `
+    scaleContainer += line;
+  };
+  scaleContainer += `</div>`;
+  progressBar += scaleContainer;
+
+
+  const productIndex = factory.settings.productLine.indexOf(1);
+  let productContainer = `
+          <div class="factory_body_progressBar_productContainer"
+          style="left:${productIndex?productIndex*stepScale+'%':''}">`;
+
+
+  if (productIndex != -1) {
+    let quality = '';
+    for (let i = 0; i < factory.settings.productInProcess.quality; i++) {
+      quality += `<span class="product-quality"></span>`;
+    };
+    productContainer += `
+                          <div class="factory_product-gap">
+                             <div class="product-icon product-${factory.settings.productInProcess.name}"></div>
+                             <div class="product-qualityContainer">
+                               ${quality}
+                             </div>
+                           </div>`;
+  };
+  productContainer += `</div>`;
+  progressBar += productContainer;
+
+  progressBar += `</div>`;
+
+
+
+
+  let ingredientList = '';
+  if (factory.category === 'mining') {
+    ingredientList += `
+      <div class="factory_body_body-production-left">
+      <div class="factory_body_productHugeIcon product-${factory.product}"></div>`;
+  };
+
+  if (factory.category === 'factory') {
+    ingredientList += `<div class="factory_body_ingredientList">`;
+    for (let i = 0; i < factory.settings.products.length; i++) {
+      const thisProduct = factory.settings.products[i];
+      let ingredients = '';
+      for (let j = 0; j < thisProduct.raw.length; j++) {
+        const thisIngredient = thisProduct.raw[j];
+        ingredients += `
+              <div class=" factory_body_ingredientList-icon product-${thisIngredient}"></div>
+            `;
+      };
+
+      const arrow = `
+            <div class="factory_body_ingredientList-arrow">
+              <div class="factory_body_ingredientList-arrow-coast">
+                $${thisProduct.price}
+              </div>
+              <div class="factory_body_ingredientList-arrow-symbol">
+                →
+              </div>
+            </div>
+          `;
+      const product = `<div class="factory_body_ingredientList-icon product-${thisProduct.name}"></div>`
+
+      const volume = `
+              <div class="factory_body_ingredientList-volume">
+                <span>x${thisProduct.productionVolume + factory.settings.volumePoints}</span>
+              </div>
+          `;
+
+      ingredientList += `
+            <div class="factory_body_ingredientList-item ${factory.settings.productSelected === thisProduct.name ? 'factory_body_ingredientList-item-selected':''}" id="factory_body_ingredientList_item_${thisProduct.name}">
+              ${ingredients}
+              ${arrow}
+              ${product}
+              ${volume}
+            </div>
+          `;
+    };
+  };
+
+
+  ingredientList += '</div>';
+
+
+
+  let settingsPart = `<div class="factory_body_body-production-right">`;
+  const settings = {};
+  if (factory.category === 'mining') {
+    settings.ls = factory.settings.salaryPoints;
+    settings.q = factory.settings.qualityPoints;
+    settings.s = factory.settings.speedPoints;
+  };
+  if (factory.category === 'factory') {
+    settings.ls = factory.settings.salaryPoints;
+    settings.v = factory.settings.volumePoints;
+    settings.s = factory.settings.speedPoints;
+  };
+
+  for (let param in settings) {
+    let line = `<div class="factory_body_body-production_settings-list">`;
+
+    line += `<div class="factory_body_body-production_settings-text">
+      ${MAIN.interface.lang.factory[param][MAIN.interface.lang.flag]}
+      </div>`;
+    for (let i = 0; i < 3; i++) {
+      if (i < settings[param]) {
+        line += `<div class="factory_body_body-production_settings-gap"></div>`;
+      };
+      if (i >= settings[param]) {
+        line += `<div class="factory_body_body-production_settings-hole"></div>`;
+      }
+    };
+    line += `</div>`;
+    settingsPart += line;
+  };
+  settingsPart += '</div>';
+
+
+
+  let storagePart = ` <div class="factory_body_storage">`;
+
+  for (let i = 0; i < factory.settings.storage.length; i++) {
+    const product = factory.settings.storage[i];
+    if (product) {
+      let quality = ``;
+      for (let i = 0; i < product.quality; i++) {
+        quality += `<span class="product-quality"></span>`;
+      };
+      storagePart += `
+        <div class="factory_product-gap" id="factory_storage_${i}">
+          <div class="product-icon product-${product.name}"></div>
+          <div class="product-qualityContainer">
+            ${quality}
+          </div>
+        </div>`;
+    } else {
+      storagePart += `<div class="factory_product-hole"></div>`;
+    };
+  };
+
+
+  for (let i = 0; i < 5; i++) {
+    if (i >= factory.settings.storage.length) {
+      storagePart += `<div class="factory_storage-gap"></div>`;
+    };
+  };
+
+
+  storagePart += `</div>`;
+  const card = `
+          <div class="factory_card" id='factoryCard'>
+             <div class="factory_header factory_header_bg-${factory.type}">
+               <div class="factory_header_header">
+                 <span>${name} <span class="factory_header_header-span">| ${factory.number}</span></span>
+                 <div class="factory_header_header-buttonsContainer">
+                   <div id="factory_settingsButton" class="factory_header_header-button icon-settings">
+
+                   </div>
+                   <div id="factory_playButton" class="factory_header_header-button ${factory.settings.paused ? 'icon-play':'icon-pause'}">
+
+                   </div>
+                 </div>
+               </div>
+             </div>
+
+             <div class="factory_body">
+
+               <!-- raw storage -->
+               ${rawStorage}
+               <!-- /raw storage -->
+
+               <!-- body -->
+               <div style="position:relative; top:-28px; height:100%;">
+
+                 <!-- progress bar -->
+                 ${progressBar}
+                 <!-- /progress bar -->
+
+                 <!-- central part -->
+                 <div class="factory_body_body-production">
+                   ${ingredientList}
+                   ${settingsPart}
+                 </div>
+                 <!-- /central part -->
+
+                 <!-- storage part -->
+                 ${storagePart}
+                 <!-- /storage part -->
+
+               </div>
+               <!-- /body -->
+             </div>
+
+
+             <div class="factory_footer" id="factory_footer">
+               <div class="factory_footer_header" id="autosend_header">
+                 <span>${MAIN.interface.lang.factory.autosend[MAIN.interface.lang.flag]}</span>
+               </div>
+               <div class="factory_footer_body" id="factory_autosend_body_${factory.id}">
+               </div>
+             </div>
+
+           </div>
+
+           <div id="factory_card_error">
+
+           </div>
+  `;
+
+  menu.innerHTML = '';
+  menu.insertAdjacentHTML('beforeEnd', card);
+
+  document.querySelector(`#factory_card_error`).style.display = 'none';
+
+  const autosendFlag = {
+    flag: false,
+  }
+
+  function showAutosend() {
+    if (!autosendFlag.flag) {
+      document.querySelector('#factory_footer').style.top = '-79%';
+      autosendFlag.flag = true;
+    } else {
+      document.querySelector('#factory_footer').style.top = '-12.5%';
+      autosendFlag.flag = false;
+    };
+  };
+  document.querySelector('#autosend_header').onclick = showAutosend;
+  document.querySelector('#autosend_header').ontouchstart = showAutosend;
+
+  updateFactoryAutosendBody(factory);
+
+  factory.settings.storage.forEach((product, i) => {
+    if (product) {
+      document.querySelector(`#factory_storage_${i}`).onclick = () => {
+        factory.sendProduct(i)
+      };
+      document.querySelector(`#factory_storage_${i}`).ontouchstart = () => {
+        factory.sendProduct(i)
+      };
+    };
+  });
+
+  for (let product in factory.settings.rawStorage) {
+    if (factory.settings.rawStorage[product]) {
+      document.querySelector(`#factory_rawProduct_${product}`).onclick = () => {
+        factory.sendRawProduct(product)
+      };
+      document.querySelector(`#factory_rawProduct_${product}`).ontouchstart = () => {
+        factory.sendRawProduct(product)
+      };
+
+    };
+  };
+
+
+  if (factory.category === 'factory') {
+    for (let i = 0; i < factory.settings.products.length; i++) {
+
+      const thisProduct = factory.settings.products[i];
+      document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).onclick = () => {
+        factory.setProductSelected(thisProduct.name)
+      };
+      document.querySelector(`#factory_body_ingredientList_item_${thisProduct.name}`).ontouchstart = () => {
+        factory.setProductSelected(thisProduct.name)
+      }
+    };
+  };
+
+  document.querySelector('#factory_playButton').onclick = () => {
+    const data = {
+      player: MAIN.game.data.playerData.login,
+      gameID: MAIN.game.data.commonData.id,
+      factory: factory.id,
+    };
+
+    if (!MAIN.game.data.playerData.gameOver) {
+      MAIN.socket.emit('GAME_factory_stop', data);
+    };
+  };
+  document.querySelector('#factory_playButton').ontouchstart = () => {
+    const data = {
+      player: MAIN.game.data.playerData.login,
+      gameID: MAIN.game.data.commonData.id,
+      factory: factory.id,
+    };
+
+    if (!MAIN.game.data.playerData.gameOver) {
+      MAIN.socket.emit('GAME_factory_stop', data);
+    };
+  };
+
+  document.querySelector('#factory_settingsButton').onclick = () => {
+    showSettingsSetMenu(factory)
+  };
+  document.querySelector('#factory_settingsButton').ontouchstart = () => {
+    showSettingsSetMenu(factory)
+  };
+
 
 
 };
 //это только меняет значения
-function updateFactoryMenu(factory){
-  if(nowShowedFactoryMenu){
-    showFactoryMenu(nowShowedFactoryMenu);
+function updateFactoryMenu() {
+
+  if (FACTORY.nowShowedFactoryMenu) {
+    if (FACTORY.nowShowedFactoryMenu.settingsSetted) {
+      showFactoryMenu(FACTORY.nowShowedFactoryMenu);
+    };
   };
 };
+
+function showFactoryError(messageCode) {
+  const errors = {
+    roadEmpty: {
+      ru: 'дорога у фабрики занята',
+      eng: 'the road near the factory is occupied',
+    },
+    noTruck: {
+      ru: 'сначала купите грузовик',
+      eng: 'buy a truck first',
+    },
+    noFreeTruck: {
+      ru: 'нет свободных грузовиков',
+      eng: 'no free trucks',
+    },
+    turn: {
+      ru: 'дождитесь своего хода',
+      eng: 'wait for your turn',
+    },
+
+  };
+
+  const errorDiv = document.querySelector(`#factory_card_error`);
+
+  errorDiv.style.display = 'flex';
+  errorDiv.style.transitionDuration = '0s';
+  errorDiv.style.opacity = 1;
+  errorDiv.innerHTML = `<div class='factory_card_error_icon'>!</div><div class='factory_card_error_text'>${errors[messageCode][MAIN.interface.lang.flag]}</div>`;
+
+  const rand = Math.random().toString();
+  errorDiv.dataset.rand = rand;
+  setTimeout(() => {
+    errorDiv.style.transitionDuration = '4s';
+    errorDiv.style.opacity = 0;
+  }, 500);
+  setTimeout(() => {
+    if (errorDiv) {
+      if (errorDiv.dataset.rand === rand) {
+        errorDiv.style.display = 'none';
+      };
+    };
+  }, 4000);
+
+};
+
+
+
 const FACTORY = {
   init,
   showMenu,
-  nowShowedFactoryMenu,
+  closeMenu,
+  nowShowedFactoryMenu: null,
   updateFactoryMenu,
+  showFactoryError,
+  updateFactoryAutosendBody,
 };
 export {
   FACTORY

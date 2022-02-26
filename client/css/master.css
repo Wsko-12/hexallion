@@ -1,6 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;400;500;700&display=swap');
 
-*{
+* {
   box-sizing: border-box;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -8,35 +9,38 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+  /* disable double tap zoom */
+  touch-action: manipulation;
 }
 
 /* ===== Scrollbar CSS ===== */
-  /* Firefox */
-  * {
-    scrollbar-width: auto;
-    scrollbar-color: #303030 rgba(255,255,255,0.1);
-  }
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #303030 rgba(255, 255, 255, 0.1);
+}
 
-  /* Chrome, Edge, and Safari */
-  *::-webkit-scrollbar {
-    width: 2px;
-  }
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
 
-  *::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-  }
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(215, 53, 92, 1.0);
+  border-radius: 10px;
+  border: 0px none #000000;
+}
 
-  *::-webkit-scrollbar-thumb {
-    background-color: rgba(0,0,0,0.2);
-    border-radius: 0px;
-    border: 0px none #000000;
-  }
+input {
+  outline: none;
+}
 
-
-
-
-
-body{
+body {
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -44,14 +48,16 @@ body{
   width: 100vw;
   height: 100vh;
 }
-#gameInterface{
+
+#gameInterface {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
   display: flex;
   position: fixed;
 }
-#mobileConsole{
+
+#mobileConsole {
   width: 100vw;
   max-height: 30vh;
   font-size: 25px;
@@ -59,11 +65,11 @@ body{
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 1000;
   bottom: 0px;
-  overflow-y:scroll;
+  overflow-y: scroll;
   padding-left: 25px;
-
 }
-#screen{
+
+#screen {
   position: fixed;
   left: 0;
   top: 0;
@@ -71,15 +77,16 @@ body{
   height: 100vh;
   pointer-events: none;
 }
-#gameSceneNotification{
+
+#gameSceneNotification {
   width: 100vw;
   height: 100vh;
   position: fixed;
   overflow: hidden;
   pointer-events: none;
-
 }
-#renderer{
+
+#renderer {
   outline: none;
   position: fixed;
   left: 0;
@@ -88,7 +95,8 @@ body{
   height: 100vh;
   display: none;
 }
-#errorSection{
+
+#errorSection {
   outline: none;
   position: fixed;
   left: 0;
@@ -97,12 +105,14 @@ body{
   height: 100vh;
   display: flex;
 }
-#errorContainer{
+
+#errorContainer {
   width: 30vw;
   height: 40vh;
   margin: auto;
 }
-#errorText{
+
+#errorText {
   text-align: center;
   font-size: 2vw;
   font-weight: bold;
@@ -111,15 +121,14 @@ body{
   font-style: italic;
 }
 
-.fullSection{
+.fullSection {
   width: 100vw;
   height: 100vh;
   display: flex;
   outline: none;
   position: fixed;
 }
-.buttonSpan{
+
+.buttonSpan {
   margin: auto;
 }
-
-/* REGISTRATION */

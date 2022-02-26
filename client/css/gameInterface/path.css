@@ -1,29 +1,13 @@
-#pathSection{
+#pathSection {
   width: 100vw;
   height: 100vh;
   position: fixed;
   pointer-events: none;
   display: block;
+  z-index: 4;
 }
 
-#pathSection_sendButton{
-  width: 120px;
-  height: 40px;
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  position: fixed;
-  bottom: 10%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  color: white;
-  font-weight: 1.2em;
-  pointer-events: auto;
-  text-shadow: 0px 0px 1px black;
-  display: none;
-}
-
-#pathSection_notification{
+#pathSection_notification {
   text-align: center;
   font-weight: bold;
   color: #d30024;
@@ -31,4 +15,170 @@
   font-size: 0.8em;
   display: none;
   font-family: sans-serif;
+}
+
+#pathSection_ButtonsContainer {
+  pointer-events: auto;
+  transition-duration: 0.05s;
+  display: none;
+  width: 160px;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  height: 50px;
+  z-index: 10;
+}
+
+.pathSection_buttons-spaceHolder-city {
+  width: 55px;
+  height: 50px;
+  margin-right: 10px;
+  flex: 0 0 auto;
+}
+
+.pathSection_buttons-spaceHolder-factory {
+  width: 25px;
+  height: 50px;
+  margin-right: 10px;
+  flex: 0 0 auto;
+}
+
+.pathSection_buttons-spaceHolder-none {
+  width: 0px;
+  height: 50px;
+  flex: 0 0 auto;
+}
+
+.pathSection_buttons {
+  width: 50px;
+  flex: 0 0 auto;
+  height: 50px;
+  background-color: #FAF9F8;
+  border-radius: 50px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 5px black;
+}
+
+.pathSection_buttons:hover {
+  background-color: #A3D735;
+}
+
+.pathSection_buttons-noSpaceHolder {
+  position: relative;
+  left: -25px;
+}
+
+.pathSection_buttons_icon {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+#pathSection_neadersContainer {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  pointer-events: none;
+  display: block;
+}
+
+.pathSection_neadersContainer-item {
+  width: 50px;
+  height: 60px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition-duration: 0.05s;
+}
+
+.pathSection_neadersContainer-item-city {
+  width: 110px;
+  height: 60px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition-duration: 0.05s;
+}
+
+.pathSection_neadersContainer-iconBox {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: #FAF9F8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  border-radius: 50px 50px 0px 50px;
+  transform: rotate(45deg);
+  box-shadow: 0px 0px 5px black;
+}
+
+.pathSection_neadersContainer-iconBox-city {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pathSection_neadersContainer-icon-city {
+  width: 80%;
+  height: 80%;
+  background-size: cover;
+}
+
+.pathSection_neadersContainer-icon {
+  width: 80%;
+  height: 80%;
+  background-size: cover;
+  transform: rotate(-45deg);
+}
+
+.pathSection_neadersContainer-item::after {
+  content: '';
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid #303030;
+  transform: rotate(180deg);
+  position: relative;
+  z-index: -1;
+  top: -3px;
+}
+
+.pathSection_neadersContainer-item-city::after {
+  content: '';
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid #FAF9F8;
+  transform: rotate(180deg);
+  position: relative;
+  top: -1px;
+}
+
+.pathSection_neadersContainer-cityContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0px 0px 5px black;
+  background-color: #FAF9F8;
+}
+
+.pathSection_neadersContainer-price {
+  width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #303030;
+  font-size: 16px;
+  font-family: 'Roboto Condensed';
+  justify-content: center;
 }

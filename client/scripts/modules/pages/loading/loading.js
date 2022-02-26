@@ -3,10 +3,10 @@ import {
 } from '../../../main.js';
 
 //динаммически подключаем стили этой страницы
-const elem = document.createElement( 'link' );
+const elem = document.createElement('link');
 elem.rel = 'stylesheet';
 elem.type = 'text/css';
-document.body.appendChild( elem );
+document.body.appendChild(elem);
 elem.href = 'scripts/modules/pages/loading/loadingPage.css';
 
 
@@ -16,25 +16,25 @@ elem.href = 'scripts/modules/pages/loading/loadingPage.css';
 const LOADING = {};
 
 LOADING.animate = {
-  status:0,
+  status: 0,
   start: () => {
     LOADING.animate.status += 1;
-    if(LOADING.animate.status % 4 === 0){
+    if (LOADING.animate.status % 4 === 0) {
       LOADING.animate.status = 0;
     }
 
     const animDOM = document.querySelector('#loadingAnimation');
-    if(animDOM){
+    if (animDOM) {
 
       let string = ''
-      for(let i = 0;i<LOADING.animate.status;i++){
+      for (let i = 0; i < LOADING.animate.status; i++) {
         string += '.';
       };
 
       animDOM.innerHTML = string;
-      setTimeout(()=>{
+      setTimeout(() => {
         LOADING.animate.start();
-      },500);
+      }, 500);
     };
   }
 };
@@ -42,22 +42,22 @@ LOADING.animate = {
 LOADING.showPage = (parameters) => {
   MAIN.pages.screen.innerHTML = '';
 
-  if(!parameters){
+  if (!parameters) {
     parameters = {
-      bar:false,
+      bar: false,
       title: 'Loading',
-      comment:'',
+      comment: '',
     };
   };
 
   let legend = {
     title: parameters.title || 'Loading',
-    comment:parameters.comment || '',
+    comment: parameters.comment || '',
   };
 
 
   let section;
-  if(parameters.bar){
+  if (parameters.bar) {
     section = `
       <section id="loadingSection">
         <div id="loadingContainer">
@@ -71,7 +71,7 @@ LOADING.showPage = (parameters) => {
         </div>
       </section>
     `;
-  }else{
+  } else {
     section = `
       <section id="loadingSection">
         <div id="loadingContainer">
@@ -86,32 +86,32 @@ LOADING.showPage = (parameters) => {
 
 
   MAIN.pages.screen.innerHTML = section;
-  if(!parameters.bar){
+  if (!parameters.bar) {
     LOADING.animate.start();
   };
 };
 
 LOADING.changeComment = (comment) => {
   const commentDOM = document.querySelector('#loadingComment');
-  if(commentDOM){
+  if (commentDOM) {
     commentDOM.innerHTML = comment;
   };
 };
 
-LOADING.changeTitle= (title) => {
+LOADING.changeTitle = (title) => {
   const titleDOM = document.querySelector('#loadingTitle');
-  if(titleDOM){
+  if (titleDOM) {
     titleDOM.innerHTML = title;
   };
 };
 
 LOADING.changeProgress = (progress) => {
   const progressDOM = document.querySelector('#loadingProgress');
-  if(progressDOM){
-    if(progress > 0){
-      progress = progress/100;
+  if (progressDOM) {
+    if (progress > 0) {
+      progress = progress / 100;
     };
-    progressDOM.style.transform =`scale(${progress},1)`;
+    progressDOM.style.transform = `scale(${progress},1)`;
   };
 };
 

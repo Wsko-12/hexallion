@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-#sectorMenu{
+
+/* #sectorMenu{
   width: 200px;
   height: 200px;
   background-color: rgba(0,0,0,0.2);
@@ -10,15 +11,15 @@
   transform: translate(-50%, -50%);
   border-radius: 250px;
   z-index: 2;
-}
-#onCeilDoubleClick{
+} */
+/* #onCeilDoubleClick{
   width: 100vw;
   height: 100vh;
   position: fixed;
   pointer-events: none;
   display: none;
-}
-.changeSectorMenuButton{
+} */
+/* .changeSectorMenuButton{
   width: 50px;
   height: 50px;
   border-radius: 50px;
@@ -114,3 +115,404 @@
     border-radius: 10vw;
   }
 }
+
+
+ */
+/* #center{
+   z-index: 10;
+   width: 20px;
+   height: 20px;
+   background-color: red;
+   position: fixed;
+   top:50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+ } */
+#onCeilDoubleClick {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  pointer-events: none;
+  display: block;
+  perspective: 500px;
+  -webkit-perspective: 500px;
+  display: flex;
+  touch-action: manipulation;
+}
+
+.sectorMenu_centralButton{
+  position: absolute;
+  left: 50%;
+  top:50%;
+  width: 60px;
+  height: 60px;
+  pointer-events: auto;
+  background-color: rgba(250, 249, 247,0.1);
+  box-shadow: 0px 0px 5px black;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%,-50%);
+}
+.sectorMenu_centralButton-icon{
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+}
+
+.sectorMenu_menu{
+  width: 600px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  transform: translate(-50%);
+  touch-action: manipulation;
+
+  /* filter: drop-shadow(5px 5px 10px rgba(48, 48, 48,0.5)); */
+
+}
+.sectorMenu_menu-header{
+  touch-action: manipulation;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+  .sectorMenu_menu-header-button{
+    touch-action: manipulation;
+    pointer-events: auto;
+
+    width: 50px;
+    height: 50px;
+    background-color: #FAF9F8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(48, 48, 48,0.8);
+  }
+  .sectorMenu_menu-header-button-icon{
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+  }
+
+.sectorMenu_menu-body{
+  touch-action: manipulation;
+  pointer-events: auto;
+  width: 100%;
+  height: 160px;
+  overflow-x: scroll;
+  display: flex;
+  padding-top: 5px;
+}
+  .sectorMenu_menu-card{
+    touch-action: manipulation;
+
+    font-family: 'Roboto Condensed';
+    letter-spacing: -0.05em;
+    width: 120px;
+    height: 150px;
+    background-color: #FAF9F8;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    margin-left: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px rgba(48, 48, 48,0.8);
+
+  }
+  .sectorMenu_menu-card-header{
+    width: 100%;
+    height: 25px;
+    font-family: 'Roboto Condensed';
+    font-size: 7px;
+    letter-spacing: 0em;
+    color: #303030;
+    margin-bottom: -25px;
+    padding-top: 8px;
+    padding-left: 5px;
+    text-transform: uppercase;
+  }
+  .sectorMenu_menu-card-header-span-bold{
+    font-weight: bold;
+  }
+  .sectorMenu_menu-card-image{
+    
+    width: 120px;
+    height: 100px;
+    background-size: cover;
+  }
+  .sectorMenu_menu-card-description{
+    width: 120px;
+    height: 150px;
+    position: relative;
+    top:-100px;
+    font-weight: bold;
+  }
+  .sectorMenu_menu-card-description-gradient{
+    width: 100%;
+    height: 100px;
+    margin-bottom: -30px;
+    background: linear-gradient(0deg, rgba(250,249,248,0.9) 0%, rgba(250,249,248,0) 70%);
+  }
+  .sectorMenu_menu-card-description-productsList{
+    width: 100%;
+    height: 20px;
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .sectorMenu_menu-card-description-product{
+    touch-action: manipulation;
+
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    margin-left: 2px;
+  }
+  .sectorMenu_menu-card-description-title{
+    width: 100%;
+    height: 20px;
+    font-family: 'Roboto Condensed';
+    font-size: 12px;
+    letter-spacing: -0.05em;
+    padding: 0px 5px;
+    color: #303030;
+    line-height: 80%;
+  }
+  .sectorMenu_menu-card-description-button{
+    width: 70%;
+    margin: auto;
+    height: 25px;
+    box-shadow: 0px 0px 5px rgba(48, 48, 48,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #303030;
+    border-radius: 20px;
+  }
+  .sectorMenu_menu-card-description-button-nonActive{
+    width: 70%;
+    height: 25px;
+
+
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+
+    box-shadow: 0px 0px 5px rgba(48, 48, 48,0.1);
+    color: #b1b1b1;
+  }
+  .sectorMenu_menu-card-description-button:hover{
+    background-color: #D7355C;
+    color: white;
+  }
+#sectorMenu {
+   display: none;
+   z-index: 2;
+   width: 100vw;
+   height: 100vh;
+ }
+
+
+
+ .sectorMenu_build{
+   pointer-events: auto;
+    width: 340px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    height: 30px;
+    display: flex;
+    align-items: center;
+
+    font-family: 'Roboto Condensed';
+    color: #303030;
+    letter-spacing: -0.05em;
+
+    justify-content: space-around;
+    flex-direction: row-reverse;
+ }
+ .sectorMenu_build_card{
+   width: 130px;
+   background-color: #FAF9F8;
+   padding: 10px;
+   border-radius: 10px;
+   box-shadow: 0px 0px 10px rgba(48, 48, 48,0.5);
+   flex: 0 0 auto;
+ }
+ .sectorMenu_build_card-title{
+   font-family: 'Roboto Condensed';
+   color: #303030;
+   font-size: 13px;
+   font-weight: bold;
+   text-align: center;
+   letter-spacing: -0.05em;
+
+ }
+ .sectorMenu_build_card-price{
+   font-family: 'Roboto Condensed';
+   color: #303030;
+   font-size: 13px;
+   font-weight: bold;
+   text-align: center;
+   letter-spacing: -0.05em;
+ }
+ .sectorMenu_build_card-image{
+   width: 110px;
+   height: 110px;
+   margin: auto;
+   background-size: contain;
+   margin-top: -10px;
+   background-repeat: no-repeat;
+ }
+ .sectorMenu_build_card-productsList{
+   width: 100%;
+ }
+ .sectorMenu_build_card-productsList-item{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   height: 20px;
+   transform: scale(1.1);
+ }
+
+
+ .sectorMenu_build_button{
+   width: 80px;
+   border-radius: 30px;
+   height: 30px;
+   background-color: #FAF9F8;
+   box-shadow: 0px 0px 10px rgba(48, 48, 48,0.5);
+   margin: 0px 10px;
+   font-size: 12px;
+   font-weight: bold;
+   color: #303030;
+   font-size: 12px;
+   text-transform: uppercase;
+   letter-spacing: -0.05em;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+ .sectorMenu_build_button:hover{
+   background-color: #D7355C;
+   color: white;
+ }
+/*
+.sectorMenu_Left {
+  width: 200px;
+  height: 255px;
+  display: flex;
+}
+
+.sectorMenu_Top_CentralButton {
+  width: 60px;
+  height: 60px;
+  margin: auto;
+  pointer-events: auto;
+  background-color: rgba(250, 249, 247,0.1);
+  box-shadow: 0px 0px 5px black;
+  border-radius: 60px;
+}
+
+.sectorMenu_Right {
+  width: 170px;
+  height: 255px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.sectorMenu_button {
+  pointer-events: auto;
+  width: 80px;
+  height: 80px;
+  flex: 0 0 auto;
+  margin: 2px;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 14px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  transform: scale(0.7);
+  margin: -8px;
+}
+
+.sectorMenu_button_title {
+  width: 100%;
+}
+
+.sectorMenu_button_price {
+  width: 100%;
+  text-align: right;
+}
+
+#buildingMenu {
+  pointer-events: auto;
+  display: none;
+  justify-content: space-around;
+  z-index: 2;
+  margin: auto;
+  width: 290px;
+  height: 90px;
+  -webkit-transform: translateX(30%) rotateX(5deg);
+  transform: translateX(30%) rotateX(5deg);
+  align-items: center;
+}
+
+.buildingMenu_card {
+  height: 90px;
+  width: 90px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 13px;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.buildingMenu_button {
+  width: 80px;
+  height: 40px;
+  flex: 0 0 auto;
+  background-color: #EAEAEA;
+  display: flex;
+  color: #303030;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 14px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+}
+
+.buildingMenu_button:hover {
+  background-color: #303030;
+  color: white;
+}
+
+.buildingMenu_button-span {
+  margin: auto;
+}
+
+.buildingMenu_card_title {
+  width: 100%;
+}
+
+.buildingMenu_card_price {
+  width: 100%;
+  text-align: right;
+} */

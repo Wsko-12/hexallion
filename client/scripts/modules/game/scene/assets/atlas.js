@@ -40,31 +40,67 @@ ATLAS.models = [
   },
 
   { name:'forestCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'forestCeil.glb',
   },
   { name:'meadowCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'meadowCeil.glb',
   },
-  { name:'sandCeil',
+  { name:'meadowDecor_0',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_0.glb',
+  },
+  { name:'meadowDecor_1',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_1.glb',
+  },
+  { name:'meadowDecor_2',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_2.glb',
+  },
+  { name:'meadowDecor_3',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_3.glb',
+  },
+  { name:'meadowDecor_4',
+    folder:'ceils/meadowDecor/',
+    file:'meadowDecor_4.glb',
+  },
+
+
+
+
+
+
+
+
+  { name:'steelMineCeil',
     folder:'ceils/',
+    file:'steelMineCeil.glb',
+  },
+  { name:'sandCeil',
+    folder:'ceils/new/',
     file:'sandCeil.glb',
   },
   { name:'waterCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'waterCeil.glb',
   },
   { name:'waterBottom',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'waterBottom.glb',
   },
   { name:'mountainCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'mountainCeil.glb',
   },
+
+
+
+
   { name:'westownCeil',
-    folder:'ceils/',
+    folder:'ceils/new/',
     file:'westownCeil.glb',
   },
   { name:'westownLight',
@@ -110,11 +146,11 @@ ATLAS.models = [
 
 
   { name:'roadCenter',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'roadCenter.glb',
   },
   { name:'road',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'road.glb',
   },
 
@@ -139,6 +175,21 @@ ATLAS.models = [
     folder:'buildings/',
     file:'roadDecor4.glb',
   },
+  { name:'roadDecor5',
+    folder:'buildings/',
+    file:'roadDecor5.glb',
+  },
+
+  { name:'roadDecor6',
+    folder:'buildings/',
+    file:'roadDecor6.glb',
+  },
+  { name:'roadDecor7',
+    folder:'buildings/',
+    file:'roadDecor7.glb',
+  },
+
+
 
   { name:'bridge',
     folder:'buildings/',
@@ -165,10 +216,89 @@ ATLAS.models = [
     file:'bridgeLight.glb',
   },
 
+  { name:'cityStorage',
+    folder:'buildings/',
+    file:'cityStorage.glb',
+  },
+
+
+
+  { name:'truck_sand',
+    folder:'truck/',
+    file:'truck_sand.glb',
+  },
+  { name:'truck_water',
+    folder:'truck/',
+    file:'truck_water.glb',
+  },
+  { name:'truck_wood',
+    folder:'truck/',
+    file:'truck_wood.glb',
+  },
+  { name:'truck_steel',
+    folder:'truck/',
+    file:'truck_steel.glb',
+  },
+  { name:'truck_gold',
+    folder:'truck/',
+    file:'truck_gold.glb',
+  },
+  { name:'truck_oil',
+    folder:'truck/',
+    file:'truck_water.glb',
+  },
+
+
+
+  { name:'factoryBottom',
+    folder:'buildings/new/',
+    file:'factoryBottom.glb',
+  },
+
+
+
+
+  { name:'petrochemicalPlant',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
+  { name:'paperFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
+  { name:'glassFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
+  { name:'cementFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
+  { name:'buildingProductsFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+  { name:'jewelryFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+  { name:'furnitureFactory',
+    folder:'buildings/',
+    file:'factory_test.glb',
+  },
+
+
+
+
+
 
 
   { name:'sawmill',
-    folder:'buildings/',
+    folder:'buildings/new/',
     file:'sawmill.glb',
   },
   { name:'sawmillLight',
@@ -176,14 +306,41 @@ ATLAS.models = [
     file:'sawmillLight.glb',
   },
 
-  { name:'truck',
-    folder:'truck/',
-    file:'truck.glb',
+
+  { name:'oilWell',
+    folder:'buildings/',
+    file:'oilWell.glb',
   },
+
+  { name:'oilRefinery',
+    folder:'buildings/',
+    file:'oilRefinery.glb',
+  },
+
+
 
   { name:'truckHitBox',
     folder:'truck/',
     file:'truckHitBox.glb',
+  },
+
+
+  { name:'waterStation',
+    folder:'buildings/new/',
+    file:'waterStation.glb',
+  },
+
+  { name:'sandMine',
+    folder:'buildings/',
+    file:'sandMine.glb',
+  },
+  { name:'steelMill',
+    folder:'buildings/',
+    file:'steelMill_test.glb',
+  },
+  { name:'goldMill',
+    folder:'buildings/',
+    file:'goldMill.glb',
   },
 
 
@@ -200,6 +357,12 @@ ATLAS.models = [
     file:'pathMarker_bridgeStraight.glb',
   },
 
+  { name:'emptyGeometry',
+    folder:'',
+    file:'emptyGeometry.glb',
+  },
+
+
 ];
 ATLAS.textures = [
   { name:'sceneEnvMap',
@@ -213,6 +376,14 @@ ATLAS.textures = [
   { name:'lights',
     folder:'ceils/',
     file:'lights.png',
+  },
+  { name:'ceils',
+    folder:'ceils/',
+    file:'ceils.png',
+  },
+  { name:'ceils_256',
+    folder:'ceils/',
+    file:'roi.png',
   },
 
 ];

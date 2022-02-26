@@ -1,24 +1,36 @@
+#openTruckMenuButton{
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  background-color: red;
+  left: 10px;
+  bottom:10px;
+}
+
 #trucksMenuSection{
   width: 100vw;
   height: 100vh;
   position: fixed;
   overflow: hidden;
   z-index: 3;
-  perspective: 1000px;
-  -webkit-perspective:1000px;
+  perspective: 500px;
+  -webkit-perspective:500px;
 }
 #trucksMenuContainer{
   display: none;
   position: fixed;
+
+  overflow: hidden;
+  font-family: sans-serif;
+
+
   width: 400px;
   height: 120px;
   left: 50%;
   top:50%;
-  transform: translate(-50%,-50%);
-  overflow: hidden;
-  font-family: sans-serif;
+  -webkit-transform:translate(-50%,50%) scale(1.4) rotateX(20deg);
+  transform:translate(-50%,50%) scale(1.4) rotateX(20deg);
 
-  transform: translate(-50%,50%) rotateX(15deg);
 
 }
 
@@ -29,6 +41,7 @@
   overflow-x: scroll;
   display: flex;
 
+
 }
 
 
@@ -36,7 +49,7 @@
   width: 80px;
   height: 88px;
   flex:0 0 auto;
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 
@@ -55,13 +68,14 @@
   font-weight: bold;
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
 
 }
 
 .trucksMenu-card-button-span{
-  margin-left: 8px;
+  /* margin-left: 8px; */
+  margin: auto;
 }
 
 
@@ -106,6 +120,38 @@
   position: absolute;
   left: 50%;
   top:50%;
-  transform: translate(-50%,-50%) translateX(80%)rotateY(-25deg);
+  -webkit-transform: translate(50%,-50%) rotateY(-25deg) scale(1.5);
+  transform: translate(50%,-50%) rotateY(-25deg) scale(1.5);
   display: none;
+}
+
+
+#truckCancelButton{
+    position: fixed;
+    border-radius: 20px;
+    display: none;
+    transform: translate(50%, -50%);
+    top: 30%;
+    left: 50%;
+    padding: 0 15px;
+    height: 40px;
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+    text-align: center;
+    pointer-events: auto;
+    font-family: 'Roboto'
+}
+
+
+.trucksMenu-card-destroyButton{
+  width: 24px;
+  height: 24px;
+  background-color: #f62a2a;
+  flex:0 0 auto;
+  margin-left: 12px;
+  color: white;
+  text-align: center;
+  pointer-events: auto;
+  border-radius: 12px;
+  padding-top: 2px;
 }

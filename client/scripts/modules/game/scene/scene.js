@@ -19,6 +19,9 @@ import {
 import {
   PATH
 } from './path/path.js';
+import {
+  CLOUDS
+} from './clouds/clouds.js';
 import * as THREE from '../../../libs/ThreeJsLib/build/three.module.js';
 
 // import * as DAT from '../../../libs/gui/dat.gui.module.js';
@@ -32,21 +35,47 @@ async function create() {
     // MAIN.game.scene.testMesh = testMesh;
     // RENDERER.scene.add(testMesh);
 
+    MAIN.game.scene.colorsGeommetry = [];
+
+
+    for(let i = 0;i<MAIN.game.data.commonData.members.length;i++){
+      const emptyGeometry = MAIN.game.scene.assets.geometries.emptyGeometry.clone();
+      emptyGeometry.translate(0,-0.5,0);
+      const mesh = new THREE.Mesh(emptyGeometry,new THREE.MeshPhongMaterial({color:MAIN.game.data.commonData.playerColors[i]}))
+      mesh.name = `playerColor_${i}`
+      MAIN.game.scene.colorsGeommetry.push(
+        mesh
+      );
+      RENDERER.scene.add(mesh);
+    };
+
+
+
+
+    MAIN.game.scene.clouds = CLOUDS;
+    MAIN.game.scene.cloudsGroup = new THREE.Group();
+    MAIN.game.scene.cloudsGroup.name = 'cloudsGroup';
+    MAIN.game.scene.cloudsMaterial = new THREE.MeshPhongMaterial({color:0xffffff,transparent:true,opacity:0.8});
+    RENDERER.scene.add(MAIN.game.scene.cloudsGroup );
 
 
     MAIN.game.scene.path = PATH;
     MAIN.game.scene.pathGroup = new THREE.Group();
+    MAIN.game.scene.pathGroup.name = 'pathGroup';
     MAIN.game.scene.pathMaterial = new THREE.MeshBasicMaterial({color:0x66d28e});
+    MAIN.game.scene.pathMaterialRed = new THREE.MeshBasicMaterial({color:0xc43c3c});
     RENDERER.scene.add(MAIN.game.scene.pathGroup );
 
 
     MAIN.game.scene.hitBoxMaterial = new THREE.MeshBasicMaterial({color:0xff00ff,wireframe:true,visible:false});
-    MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.lights,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.15,shininess:0});
+    MAIN.game.scene.mainMaterial = new THREE.MeshPhongMaterial({map:MAIN.game.scene.assets.textures.ceils_256,envMap:MAIN.game.scene.assets.textures.sceneEnvMap,reflectivity:0.3,shininess:0,alphaTest:0.98});
 
     MAIN.game.scene.hitBoxGroup = new THREE.Group();
+    MAIN.game.scene.hitBoxGroup.name = 'hitBoxGroup';
     RENDERER.scene.add(MAIN.game.scene.hitBoxGroup);
 
     MAIN.game.scene.trucksGroup = new THREE.Group();
+    MAIN.game.scene.trucksGroup.name = 'trucksGroup';
     RENDERER.scene.add(MAIN.game.scene.trucksGroup);
 
 
@@ -57,6 +86,7 @@ async function create() {
     MAIN.game.scene.assets.textures.sceneEnvMap.mapping = THREE.EquirectangularReflectionMapping;
     RENDERER.scene.background = MAIN.game.scene.assets.textures.sceneEnvMap;
     const fieldBorder = new THREE.Mesh(MAIN.game.scene.assets.geometries.tableBorders.clone(), new THREE.MeshBasicMaterial());
+    fieldBorder.name = 'fieldBorder';
     fieldBorder.rotation.y = Math.PI / 2;
     RENDERER.scene.add(fieldBorder);
 
@@ -70,16 +100,19 @@ async function create() {
     MAIN.game.scene.lights = {};
     MAIN.game.scene.lights.buildingPointLights = [];
     const sky = new THREE.Mesh(new THREE.BoxBufferGeometry(100,100,100),new THREE.MeshBasicMaterial({color:0x000000,side:THREE.BackSide,transparent:true,opacity:0.5,}));
+    sky.name = 'sky';
     RENDERER.scene.add(sky);
     MAIN.game.scene.lights.sky = sky;
 
 
     //Группы, чтобы перемещать орбиты солнца
     const lightsGroup = new THREE.Group();
+    lightsGroup.name = 'lightsGroup';
     lightsGroup.rotation.z = Math.PI/8;
 
       //Группа света противоположного солнцу, подсвечивает все сзади
     const lightsAdditionalGroup = new THREE.Group();
+    lightsAdditionalGroup.name = 'lightsAdditionalGroup';
     lightsAdditionalGroup.rotation.z = -Math.PI/8;
 
     RENDERER.scene.add(lightsGroup);
@@ -88,6 +121,7 @@ async function create() {
 
       //Солнце
     const lightMain = new THREE.DirectionalLight(0xff896f, 1);
+    lightMain.name = 'lightMain';
     lightMain.castShadow = true;
     lightMain.shadow.camera.top = 10;
     lightMain.shadow.bias = -0.0012;
@@ -108,7 +142,8 @@ async function create() {
     MAIN.game.scene.lights.lightMain = lightMain;
 
     //Дополнительный свет который лежит напротив солнца
-    const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    const lightAdditional = new THREE.DirectionalLight(0xc4e6ff, 0.3);
+    lightAdditional.name = 'lightAdditional';
     lightsAdditionalGroup.add(lightAdditional);
     // const lightAdditionalMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xff0000}));
     // lightsAdditionalGroup.add(lightAdditionalMesh);
@@ -116,10 +151,12 @@ async function create() {
 
 
     const ambientLight = new THREE.AmbientLight(0x343434, 1.4);
+    ambientLight.name = 'ambientLight';
     MAIN.game.scene.lights.ambientLight = ambientLight;
     lightsGroup.add(ambientLight);
 
     const moonlight = new THREE.DirectionalLight(0xc4e6ff, 0.2);
+    moonlight.name = 'moonlight';
     // moonlight.castShadow = true;
     moonlight.position.set(5,5,5)
     MAIN.game.scene.lights.moonlight = moonlight;
@@ -132,6 +169,7 @@ async function create() {
 
     FIELD.create();
     TIME.init();
+    // CLOUDS.init();
     RENDERER.render();
 
     resolve('sceneReady');
@@ -144,11 +182,48 @@ async function create() {
   };
 };
 
+
+
+
+async function restoreBuildings(buildings){
+    let sceneRestoredPromise = new Promise((resolve, reject) => {
+      buildings.forEach((data, i) => {
+        MAIN.game.functions.applyBuilding(data);
+      });
+      resolve(true);
+
+    });
+    return sceneRestoredPromise;
+};
+
+
+// function clearThree(obj){
+//   while(obj.children.length > 0){
+//     clearThree(obj.children[0]);
+//     obj.remove(obj.children[0]);
+//   }
+//   if(obj.geometry) obj.geometry.dispose();
+//
+//   if(obj.material){
+//     //in case of map, bumpMap, normalMap, envMap ...
+//     Object.keys(obj.material).forEach(prop => {
+//       if(!obj.material[prop])
+//         return;
+//       if(obj.material[prop] !== null && typeof obj.material[prop].dispose === 'function')
+//         obj.material[prop].dispose();
+//     })
+//     obj.material.dispose();
+//   }
+// }
+//
+// clearThree(scene);
+
 const SCENE = {
   create,
   uTime: {
     value: 0
   },
+  restoreBuildings,
 };
 
 
