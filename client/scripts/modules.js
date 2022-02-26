@@ -25,7 +25,7 @@ import * as DAT from './libs/gui/dat.gui.module.js';
 const MODULES = {};
 MODULES.init = () => {
   MAIN.GUI = new DAT.GUI;
-  // MAIN.GUI.hide()
+  MAIN.GUI.hide()
   const fullScreenButton = {
     fullScreen: function() {
       if (!document.fullscreenElement) {
