@@ -1010,6 +1010,22 @@ const FUNCTIONS = {
     },
   },
 
+
+
+
+  exitGame(){
+    // console.log('exit')
+    MAIN.renderer.clear();
+    document.querySelector('#renderer').remove();
+    document.querySelector('#gameInterface').remove();
+    const exitData = {
+      game:MAIN.game.data.commonData.id,
+      player:MAIN.game.data.playerData.login,
+    };
+    MAIN.socket.emit('GAME_exit',exitData);
+    MAIN.pages.rooms.showPage();
+
+  },
 };
 
 

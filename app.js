@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 
 
 //сразу делает игру
-const DEV_GAMEPLAY = true;
+const DEV_GAMEPLAY = false;
 
 if (DEV_GAMEPLAY) {
   http.listen(PORT, '0.0.0.0', () => {
@@ -838,7 +838,7 @@ class GAME {
     };
 
     if(allPlayersOffline){
-      console.log('endGame offline')
+      // console.log('endGame offline')
       //очищаем все
       this.gameEnded = true;
       delete GAMES[this.id];
@@ -867,7 +867,7 @@ class GAME {
 
     if(allPlayersGameOver){
       this.gameEnded = true;
-      console.log('endGame game over');
+      // console.log('endGame game over');
       this.sendToAll('GAME_end');
       for(let player in this.players){
         this.playerExit(player, true);
@@ -3169,5 +3169,21 @@ io.on('connection', function(socket) {
     };
   })
 
+
+
+  socket.on('GAME_exit',(data)=>{
+    const game = GAMES[data.game];
+    if(game){
+      if(game.players[data.player]){
+        if(USERS[data.player]){
+          const user = USERS[data.player];
+          user.exitGame();
+          setTimeout(()=>{
+            user.lastGameRequest();
+          },2000);
+        };
+      };
+    };
+  });
 
 });

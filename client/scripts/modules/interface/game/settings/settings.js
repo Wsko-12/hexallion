@@ -189,6 +189,16 @@ function init() {
     };
   });
 
+
+
+
+  const exit = document.querySelector(`#settingsSection_exitGame`);
+  exit.onclick = ()=>{
+    MAIN.game.functions.exitGame();
+  };
+  exit.ontouchstart = ()=>{
+    MAIN.game.functions.exitGame();
+  };
 };
 
 

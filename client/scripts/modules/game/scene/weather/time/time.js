@@ -28,15 +28,15 @@ function init(){
   TIME.time = 'morning';
   update();
 
-  const timeGUI = MAIN.GUI.addFolder('time');
+  // const timeGUI = MAIN.GUI.addFolder('time');
 
-  timeGUI.add(TIME, 'time', { morning: 'morning', day: 'day', evening: 'evening' } ).onChange((value)=>{
-    TIME.time = value;
-    MAIN.game.scene.sun.update();
-    MAIN.renderer.renderer.shadowMap.needsUpdate = true;
-
-
-  });
+  // timeGUI.add(TIME, 'time', { morning: 'morning', day: 'day', evening: 'evening' } ).onChange((value)=>{
+  //   TIME.time = value;
+  //   MAIN.game.scene.sun.update();
+  //   MAIN.renderer.renderer.shadowMap.needsUpdate = true;
+  //
+  //
+  // });
 
 };
 

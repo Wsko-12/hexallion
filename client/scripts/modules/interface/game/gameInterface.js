@@ -36,9 +36,8 @@ import {
 
 function init(){
   const section = `
-
-  <section id='sceneNotifications'></section>
   <section id="gameInterface">
+    <section id='sceneNotifications'></section>
     <div id="leftMenu">
       <div class="leftMenu-buttons" id="leftMenu_openTruck">
         <div class="icon icon-truck"></div>
@@ -178,7 +177,7 @@ function init(){
               </div>
             </div>
 
-            <div class="settingsContainer-body-button">
+            <div class="settingsContainer-body-button" id="settingsSection_exitGame">
               exit game
             </div>
           </div>

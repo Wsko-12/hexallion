@@ -40,6 +40,7 @@ let clock = new THREE.Clock();
 
 
 function init() {
+  document.querySelector('body').insertAdjacentHTML('afterBegin','<canvas id="renderer"></canvas>');
   const canvasRenderer = document.querySelector('#renderer');
   canvasRenderer.style.display = 'block';
   RENDERER.stopRender = false;
@@ -58,10 +59,10 @@ function init() {
   RENDERER.renderer.toneMapping = THREE.LinearToneMapping;
 
   RENDERER.camera = new THREE.PerspectiveCamera(10, 2, 0.2, 500);
-  const cameraGUI = MAIN.GUI.addFolder('camera');
-  cameraGUI.add(RENDERER.camera, 'fov', 0, 100).step(1).name('fov').onChange(() => {
-    RENDERER.camera.updateProjectionMatrix();
-  });
+  // const cameraGUI = MAIN.GUI.addFolder('camera');
+  // cameraGUI.add(RENDERER.camera, 'fov', 0, 100).step(1).name('fov').onChange(() => {
+  //   RENDERER.camera.updateProjectionMatrix();
+  // });
   RENDERER.camera.position.set(30, 30, 0);
   RENDERER.camera.lookAt(0, 0, 0);
   RENDERER.scene = new THREE.Scene();
@@ -70,7 +71,7 @@ function init() {
 
 
 
-  const postrocessorsGUI = MAIN.GUI.addFolder('Postrocessors');
+  // const postrocessorsGUI = MAIN.GUI.addFolder('Postrocessors');
   RENDERER.postrocessors = {};
   RENDERER.composer = new EffectComposer(RENDERER.renderer);
   RENDERER.composer.addPass(new RenderPass(RENDERER.scene, RENDERER.camera));
@@ -261,20 +262,20 @@ function init() {
   // RENDERER.composer.addPass(RENDERER.postrocessors.bloomPass);
 
 
-  const bloomPassGUI = postrocessorsGUI.addFolder('bloomPass');
+  // const bloomPassGUI = postrocessorsGUI.addFolder('bloomPass');
 
 
-
-  bloomPassGUI.add(paramsBloom, 'bloomStrength', 0.0, 3.0).onChange(function(value) {
-    RENDERER.postrocessors.bloomPass.strength = Number(value);
-  });
-  bloomPassGUI.add(paramsBloom, 'bloomThreshold', 0.0, 1.0).onChange(function(value) {
-    RENDERER.postrocessors.bloomPass.threshold = Number(value);
-  });
-
-  bloomPassGUI.add(paramsBloom, 'bloomRadius', 0.0, 1.0).step(0.01).onChange(function(value) {
-    RENDERER.postrocessors.bloomPass.radius = Number(value);
-  });
+  //
+  // bloomPassGUI.add(paramsBloom, 'bloomStrength', 0.0, 3.0).onChange(function(value) {
+  //   RENDERER.postrocessors.bloomPass.strength = Number(value);
+  // });
+  // bloomPassGUI.add(paramsBloom, 'bloomThreshold', 0.0, 1.0).onChange(function(value) {
+  //   RENDERER.postrocessors.bloomPass.threshold = Number(value);
+  // });
+  //
+  // bloomPassGUI.add(paramsBloom, 'bloomRadius', 0.0, 1.0).step(0.01).onChange(function(value) {
+  //   RENDERER.postrocessors.bloomPass.radius = Number(value);
+  // });
 
 
   const postrocessorMerged = {
@@ -582,22 +583,22 @@ function init() {
 
   RENDERER.composer.addPass(RENDERER.postrocessors.postrocessorMerged);
 
-  const shadowNoiseGUI = postrocessorsGUI.addFolder('shadowNoise');
-  shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity, 'value', 0, 1).step(0.01).name('uIntensity');
-  shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright, 'value', -1, 1).step(0.01).name('uBright');
-  shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize, 'value', 0, 20).step(1).name('uSize');
-  const blurGUI = postrocessorsGUI.addFolder('blur');
-  blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength, 'value', 0, 20).step(1).name('uStrength');
-  blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus, 'value', 0, 1).step(0.01).name('uFocus');
+  // const shadowNoiseGUI = postrocessorsGUI.addFolder('shadowNoise');
+  // shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity, 'value', 0, 1).step(0.01).name('uIntensity');
+  // shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBright, 'value', -1, 1).step(0.01).name('uBright');
+  // shadowNoiseGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uSize, 'value', 0, 20).step(1).name('uSize');
+  // const blurGUI = postrocessorsGUI.addFolder('blur');
+  // blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength, 'value', 0, 20).step(1).name('uStrength');
+  // blurGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uFocus, 'value', 0, 1).step(0.01).name('uFocus');
 
 
-  const filterGUI = postrocessorsGUI.addFolder('Filter');
-  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast, 'value', 0, 1).step(0.01).name('uContrast');
-  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite, 'value', 0, 1).step(0.01).name('uBlackWhite');
-  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite, 'value', 0, 0.3).step(0.01).name('uShadowWhite');
-  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed, 'value', 0, 0.1).step(0.001).name('uRed');
-  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen, 'value', 0, 0.1).step(0.001).name('uGreen');
-  filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue, 'value', 0, 0.1).step(0.001).name('uBlue');
+  // const filterGUI = postrocessorsGUI.addFolder('Filter');
+  // filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uContrast, 'value', 0, 1).step(0.01).name('uContrast');
+  // filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlackWhite, 'value', 0, 1).step(0.01).name('uBlackWhite');
+  // filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite, 'value', 0, 0.3).step(0.01).name('uShadowWhite');
+  // filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uRed, 'value', 0, 0.1).step(0.001).name('uRed');
+  // filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uGreen, 'value', 0, 0.1).step(0.001).name('uGreen');
+  // filterGUI.add(RENDERER.postrocessors.postrocessorMerged.material.uniforms.uBlue, 'value', 0, 0.1).step(0.001).name('uBlue');
 
 
 
@@ -614,36 +615,36 @@ function init() {
     blur:true,
     shadowQuality:2048,
   }
-  const graficsGUI = MAIN.GUI.addFolder('grafics');
-  graficsGUI.add(graficsSetings, 'brighteningShadows').onChange((value)=>{
-    if(value){
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.25;
-    }else{
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0;
-    };
-  });
-  graficsGUI.add(graficsSetings, 'noise').onChange((value)=>{
-    if(value){
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.7;
-    }else{
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0;
-    };
-  });
-  graficsGUI.add(graficsSetings, 'blur').onChange((value)=>{
-    if(value){
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 2;
-    }else{
-      RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 0;
-    };
-  });
-  graficsGUI.add(graficsSetings, 'shadowQuality', { low:512, middle: 1024, high:2048 , ultra: 4096 } ).onChange((value)=>{
-    const light = MAIN.game.scene.lights.lightMain;
-    light.shadow.mapSize.width = value;
-    light.shadow.mapSize.height = value;
-    light.shadow.map.dispose(); // important
-    light.shadow.map = null;
-
-  });
+  // const graficsGUI = MAIN.GUI.addFolder('grafics');
+  // graficsGUI.add(graficsSetings, 'brighteningShadows').onChange((value)=>{
+  //   if(value){
+  //     RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0.25;
+  //   }else{
+  //     RENDERER.postrocessors.postrocessorMerged.material.uniforms.uShadowWhite.value = 0;
+  //   };
+  // });
+  // graficsGUI.add(graficsSetings, 'noise').onChange((value)=>{
+  //   if(value){
+  //     RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0.7;
+  //   }else{
+  //     RENDERER.postrocessors.postrocessorMerged.material.uniforms.uIntensity.value = 0;
+  //   };
+  // });
+  // graficsGUI.add(graficsSetings, 'blur').onChange((value)=>{
+  //   if(value){
+  //     RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 2;
+  //   }else{
+  //     RENDERER.postrocessors.postrocessorMerged.material.uniforms.uStrength.value = 0;
+  //   };
+  // });
+  // graficsGUI.add(graficsSetings, 'shadowQuality', { low:512, middle: 1024, high:2048 , ultra: 4096 } ).onChange((value)=>{
+  //   const light = MAIN.game.scene.lights.lightMain;
+  //   light.shadow.mapSize.width = value;
+  //   light.shadow.mapSize.height = value;
+  //   light.shadow.map.dispose(); // important
+  //   light.shadow.map = null;
+  //
+  // });
 
 };
 

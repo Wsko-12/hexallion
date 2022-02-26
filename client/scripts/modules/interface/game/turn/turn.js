@@ -28,23 +28,25 @@ function makeTimer(value, data) {
   timerId = random;
   const player = data.currentTurn;
   function animate() {
-    if (random === timerId) {
-      timer--;
-      if (timer > 0) {
-        if (player === MAIN.game.data.playerData.login) {
-          if (MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login && !MAIN.game.data.commonData.turnsPaused) {
-            document.querySelector('#turnButton').style.display = `flex`;
-            document.querySelector('#turnInfo').innerHTML = `${timer}sec`;
-            document.querySelector('#turnInfo').style.color = `#a7ff78`;
-            setTimeout(animate, 1000);
-          };
-        } else {
-          if (player === MAIN.game.data.commonData.queue && !MAIN.game.data.commonData.turnsPaused) {
-            document.querySelector('#turnButton').style.display = `none`;
-            document.querySelector('#turnInfo').style.color = 'white';
-            const message = `turn: <span style="color:${MAIN.game.data.commonData.playerColors[MAIN.game.data.commonData.members.indexOf(player)]}">${player}</span>  ${timer}sec`
-            document.querySelector('#turnInfo').innerHTML = message;
-            setTimeout(animate, 1000);
+    if(document.querySelector('#turnButton')){
+      if (random === timerId) {
+        timer--;
+        if (timer > 0) {
+          if (player === MAIN.game.data.playerData.login) {
+            if (MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login && !MAIN.game.data.commonData.turnsPaused) {
+              document.querySelector('#turnButton').style.display = `flex`;
+              document.querySelector('#turnInfo').innerHTML = `${timer}sec`;
+              document.querySelector('#turnInfo').style.color = `#a7ff78`;
+              setTimeout(animate, 1000);
+            };
+          } else {
+            if (player === MAIN.game.data.commonData.queue && !MAIN.game.data.commonData.turnsPaused) {
+              document.querySelector('#turnButton').style.display = `none`;
+              document.querySelector('#turnInfo').style.color = 'white';
+              const message = `turn: <span style="color:${MAIN.game.data.commonData.playerColors[MAIN.game.data.commonData.members.indexOf(player)]}">${player}</span>  ${timer}sec`
+              document.querySelector('#turnInfo').innerHTML = message;
+              setTimeout(animate, 1000);
+            };
           };
         };
       };
