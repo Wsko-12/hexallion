@@ -82,7 +82,7 @@ function init(){
     </section>
 
     <section id="settingsSection">
-      <div id="settingsButton"></div>
+      <div id="settingsButton" class="icon-settingsMenu"></div>
       <div class="settingsContainer" id="settingsContainer">
         <div class="settingsContainer-header">
           <div class="">
