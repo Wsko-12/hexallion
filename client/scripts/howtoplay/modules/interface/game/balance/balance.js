@@ -131,11 +131,11 @@ function addBalanceMessage(message,amount){
   let color;
   if(amount > 0){
     color = '#00a01e';
-    statistics.thisStepProfit += amount;
-    statistics.allGameProfit += amount;
+    // statistics.thisStepProfit += amount;
+    // statistics.allGameProfit += amount;
   }else{
-    statistics.thisStepLose += Math.abs(amount);
-    statistics.allGameLose += Math.abs(amount);
+    // statistics.thisStepLose += Math.abs(amount);
+    // statistics.allGameLose += Math.abs(amount);
     color = 'red';
   };
   if(amount === 0){
@@ -216,7 +216,7 @@ function addBalanceMessage(message,amount){
   document.querySelector('#balanceHistory_productsInCirculation').innerHTML = calculateProductsWorth();
 };
 function init(amount){
-  const interfaceSection = document.querySelector('#gameInterface')
+  const interfaceSection = document.querySelector('#gameInterface');
   // interfaceSection.insertAdjacentHTML('beforeEnd',section);
   const balanceSection = document.querySelector('#balanceSection');
   const balanceDiv = document.querySelector('#balanceDiv');
@@ -335,6 +335,9 @@ function init(amount){
   function showBalanceHistory(event){
     if(event.target === balanceDiv || event.target === balanceHistoryClicker || event.target === balanceDivSpan){
       if(balanceHistoryOpened){
+        if(MAIN.tutorial.step === 'balance'){
+          MAIN.tutorial.controls();
+        };
         balanceHistoryOpened = false;
         balanceHistoryClicker.style.display = 'none';
         balanceHistory.style.display = 'none';
@@ -356,7 +359,7 @@ function init(amount){
             button:'Далее',
             fn(){
               if(balanceHistoryOpened){
-                showBalanceHistory(balanceDiv);
+                showBalanceHistory({target:balanceDiv});
               };
             },
           });

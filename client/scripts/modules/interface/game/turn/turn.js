@@ -5,8 +5,10 @@ import {
 function init() {
   const section = `
     <section id="turnSection">
-      <div id="turnInfo"></div>
-      <div id="turnButton" class="card"><span style="margin:auto">end</span></div>
+      <div class="turn-container">
+        <div id="turnButton" class="turn-button"> Закончить ход</div>
+        <div id="turnInfo" class="turn-info"></div>
+      </div>
     </section>
   `
   document.querySelector('#gameInterface').insertAdjacentHTML('beforeEnd', section);

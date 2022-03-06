@@ -14,11 +14,15 @@ import {
 import {
   PRODUCTS
 } from './products/products.js';
+import {
+  FACTORIES
+} from './factories/factories.js';
 
 const CONFIGS = {
   buildings: BUILDINGS,
   credits: CREDITS,
   products: PRODUCTS,
+  factories:FACTORIES,
 };
 
 export {

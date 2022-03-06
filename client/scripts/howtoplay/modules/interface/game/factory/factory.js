@@ -194,16 +194,155 @@ function showSettingsSetMenu(factory) {
 
   function applySettings() {
     closeMenu();
-    const data = {
-      player: MAIN.game.data.playerData.login,
-      gameID: MAIN.game.data.commonData.id,
-      factory: factory.id,
-      settings: settings,
-    };
-    factory.clearNotification();
+    const points = 4;
+    const newSettings = {}
+    if (factory.category === 'mining') {
 
-    if (!MAIN.game.data.playerData.gameOver) {
-      MAIN.socket.emit('GAME_factory_applySettings', data);
+      newSettings.quality = settings.quality;
+      newSettings.qualityPoints = settings.quality;
+
+      newSettings.settingsSetted = true;
+
+      newSettings.productLine = [];
+      //сначала забиваем стандартом
+      for (let i = 0; i < MAIN.game.configs.factories[factory.type].speed; i++) {
+        newSettings.productLine.push(0);
+      };
+      //потом отрезаем скорости
+      for (let i = 0; i < settings.speed; i++) {
+        newSettings.productLine.pop();
+      };
+      newSettings.speedPoints = settings.speed;
+
+
+      //полная цена за все производство
+      const prise =  MAIN.game.configs.factories[factory.type].price
+
+      //каждый salary point сбивает цену производства на 15%
+      //сразу добавляем +15% к стоймости, если у игрока зарплаты на 0 прокачаны;
+
+      // const newPrise = prise + (prise*(0.15));
+      const newPrise = prise;
+
+      newSettings.price = Math.round(newPrise - (newPrise * (0.15 * settings.salary)));
+      newSettings.stepPrice = Math.round(newSettings.price / newSettings.productLine.length);
+      newSettings.salaryPoints = settings.salary;
+
+
+      newSettings.stockStorage = MAIN.game.configs.factories[factory.type].storage;
+      newSettings.storage = [];
+      for (let i = 0; i < MAIN.game.configs.factories[factory.type].storage + settings.storage; i++) {
+        newSettings.storage.push(null);
+      };
+      newSettings.storagePoints = settings.storage;
+
+
+      //надо для переназначения настроек фабрики
+      newSettings.productInProcess = null;
+      newSettings.productSelected = MAIN.game.configs.factories[factory.type].product;
+
+    };
+    //происходит, когда игрок меняет настройки
+
+    if (factory.category === 'factory') {
+
+      newSettings.productLine = [];
+      //сначала забиваем стандартом
+      for (let i = 0; i < MAIN.game.configs.factories[factory.type].speed; i++) {
+        newSettings.productLine.push(0);
+      };
+      //потом отрезаем скорости
+      for (let i = 0; i < settings.speed; i++) {
+        newSettings.productLine.pop();
+      };
+
+      newSettings.speedPoints = settings.speed;
+
+      //каждый salary point сбивает цену производства на 15%
+      newSettings.salaryPoints = settings.salary;
+
+
+      // this.price = Math.round(newPrise - (newPrise * (0.15 * settings.salary)));
+      // this.stepPrice = Math.round(this.price / this.productLine.length);
+
+      newSettings.stockStorage = MAIN.game.configs.factories[factory.type].storage;
+      newSettings.storage = [];
+      for (let i = 0; i <  MAIN.game.configs.factories[factory.type].storage + settings.storage; i++) {
+        //null потому что могут быть разные ресурсы на складе
+        newSettings.storage.push(null);
+      };
+      newSettings.storagePoints = settings.storage;
+
+
+      newSettings.volumePoints = settings.volume;
+
+
+      //надо для переназначения настроек фабрики
+      newSettings.productInProcess = null;
+      newSettings.productSelected = null;
+      newSettings.rawStorage = {};
+      const products = MAIN.game.configs.factories[factory.type].products;
+      products.forEach((product) => {
+        product.raw.forEach((raw) => {
+          newSettings.rawStorage[raw] = null;
+        });
+      });
+    };
+
+
+    if (factory.category === 'mining') {
+      const data = {
+        id: factory.id,
+        name: factory.type,
+        product: MAIN.game.configs.factories[factory.type].product,
+        storage: newSettings.storage,
+        //надо, чтобы забить на карточке клетки
+        stockStorage: newSettings.stockStorage,
+        stockSpeed: MAIN.game.configs.factories[factory.type].speed,
+        quality: newSettings.quality,
+        salary: newSettings.salaryPoints,
+        productLine: newSettings.productLine,
+        price: newSettings.price,
+        stepPrice: newSettings.stepPrice,
+
+        productInProcess:null,
+        speedPoints: newSettings.speedPoints,
+        salaryPoints: newSettings.salaryPoints,
+        qualityPoints: newSettings.qualityPoints,
+        storagePoints: newSettings.storagePoints,
+      };
+      if(MAIN.tutorial.step === 'factory_1'){
+        MAIN.tutorial.steps_1();
+      };
+      factory.applySettings(data);
+    }else if(factory.category === 'factory'){
+      const data = {
+        id: factory.id,
+        name: factory.type,
+        products: MAIN.game.configs.factories[factory.type].products,
+        storage: newSettings.storage,
+        //надо, чтобы забить на карточке клетки
+        productLine: newSettings.productLine,
+        stockStorage: newSettings.stockStorage,
+        stockSpeed: MAIN.game.configs.factories[factory.type].speed,
+        salary: newSettings.salaryPoints,
+        productSelected: null,
+        productInProcess:null,
+
+
+        speedPoints: newSettings.speedPoints,
+        salaryPoints: newSettings.salaryPoints,
+        volumePoints: newSettings.volumePoints,
+        storagePoints: newSettings.storagePoints,
+      };
+
+      data.rawStorage = {};
+      data.products.forEach((product) => {
+        product.raw.forEach((raw) => {
+          data.rawStorage[raw] = null;
+        });
+      });
+      factory.applySettings(data);
     };
   };
 };

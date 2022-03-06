@@ -30,19 +30,19 @@ const FUNCTIONS = {
         building:building,
       }
     */
-    const ceil = MAIN.game.data.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
+    const ceil = MAIN.gameData.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
     if (ceil.sectors[data.build.sector] === null) {
       ceil.buildOnSector(data.build.sector, data.build.building, data.player);
     };
   },
 
+  turn(){
+    MAIN.interface.game.turn.makeTimer();
+    
+  },
 
   endTurn() {
-    const data = {
-      player: MAIN.userData.login,
-      gameID: MAIN.game.data.commonData.id,
-    };
-    MAIN.socket.emit('GAME_endTurn', data);
+    this.turn();
   },
 
   buildFactory(configs) {
@@ -56,9 +56,8 @@ const FUNCTIONS = {
         sector: 5
       }
     */
-
     const factory = new Factory(configs);
-    MAIN.game.data.playerData.factories[factory.id] = factory;
+    MAIN.gameData.playerData.factories[factory.id] = factory;
   },
 
   applyTruckPurchase(data) {

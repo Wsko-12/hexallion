@@ -5,8 +5,10 @@ import {
 function init() {
   const section = `
     <section id="turnSection">
-      <div id="turnInfo"></div>
-      <div id="turnButton" class="card"><span style="margin:auto">end</span></div>
+      <div class="turn-container">
+        <div id="turnButton" class="turn-button"> Закончить ход</div>
+        <div id="turnInfo" class="turn-info"></div>
+      </div>
     </section>
   `
   document.querySelector('#gameInterface').insertAdjacentHTML('beforeEnd', section);
@@ -22,36 +24,24 @@ function init() {
 
 let timerId = null;
 
-function makeTimer(value, data) {
-  let timer = value;
-  let random = Math.random();
+function makeTimer() {
+  let timer = 20;
+  const random = Math.random();
   timerId = random;
-  const player = data.currentTurn;
-  function animate() {
-    if(document.querySelector('#turnButton')){
-      if (random === timerId) {
-        timer--;
-        if (timer > 0) {
-          if (player === MAIN.game.data.playerData.login) {
-            if (MAIN.game.data.commonData.queue === MAIN.game.data.playerData.login && !MAIN.game.data.commonData.turnsPaused) {
-              document.querySelector('#turnButton').style.display = `flex`;
-              document.querySelector('#turnInfo').innerHTML = `${timer}sec`;
-              document.querySelector('#turnInfo').style.color = `#a7ff78`;
-              setTimeout(animate, 1000);
-            };
-          } else {
-            if (player === MAIN.game.data.commonData.queue && !MAIN.game.data.commonData.turnsPaused) {
-              document.querySelector('#turnButton').style.display = `none`;
-              document.querySelector('#turnInfo').style.color = 'white';
-              const message = `turn: <span style="color:${MAIN.game.data.commonData.playerColors[MAIN.game.data.commonData.members.indexOf(player)]}">${player}</span>  ${timer}sec`
-              document.querySelector('#turnInfo').innerHTML = message;
-              setTimeout(animate, 1000);
-            };
-          };
-        };
+  function animate(){
+    timer--;
+    const message = `turn: player ${timer}sec`;
+    document.querySelector('#turnInfo').innerHTML = message;
+
+    if(timer <= 0){
+      MAIN.game.functions.turn();
+    }else{
+      if(timerId === random){
+        setTimeout(animate,1000);
       };
     };
   };
+
   animate();
 };
 

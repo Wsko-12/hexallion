@@ -34,6 +34,11 @@ function generateId(type, x) {
 
 const CEIL_MENU = {
   showSectorMenu(ceil, sector, buttons) {
+    if(MAIN.tutorial.step === 'building_1'){
+      if(ceil === MAIN.gameData.map[2][4] && sector === 3){
+        MAIN.tutorial.building_2();
+      };
+    };
     const section = document.querySelector('#onCeilDoubleClick');
     section.style.display = 'flex';
     const menu = document.querySelector('#sectorMenu');
@@ -144,7 +149,7 @@ const CEIL_MENU = {
                 ${configs.title[MAIN.interface.lang.flag]}
               </div>
 
-              <div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.game.data.playerData.balance ? '-nonActive': ''}">
+              <div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.gameData.playerData.balance ? '-nonActive': ''}">
                 <span>$ ${configs.coast}</span>
               </div>
             </div>
@@ -163,7 +168,7 @@ const CEIL_MENU = {
     buttons.forEach((building, i) => {
 
       const coast = MAIN.game.configs.buildings[building].coast;
-      if(coast <= MAIN.game.data.playerData.balance){
+      if(coast <= MAIN.gameData.playerData.balance){
         const buttonElement = document.querySelector(`#sectorMenu_card_buildButton_${building}`);
         buttonElement.onclick = () => {
           action(building);
@@ -193,7 +198,7 @@ const CEIL_MENU = {
         };
       } else {
         if (MAIN.gameData.commonData.turnBasedGame) {
-          if (MAIN.gameData.commonData.queue != MAIN.game.data.playerData.login || MAIN.gameData.commonData.turnsPaused) {
+          if (MAIN.gameData.commonData.queue != MAIN.gameData.playerData.login || MAIN.gameData.commonData.turnsPaused) {
 
             // исследование карты
             CEIL_MENU.hideSectorMenu();
@@ -327,7 +332,7 @@ const CEIL_MENU = {
         MAIN.game.scene.temporarySectorMesh.geometry.dispose();
         MAIN.game.scene.temporarySectorMesh.material.dispose();
       };
-      if (MAIN.game.data.playerData.balance >= MAIN.game.configs.buildings[building].coast) {
+      if (MAIN.gameData.playerData.balance >= MAIN.game.configs.buildings[building].coast) {
         CEIL_MENU.sendBuildRequest(ceil, sector, building);
       } else {
         MAIN.interface.game.balance.notEnoughMoney();
@@ -346,7 +351,7 @@ const CEIL_MENU = {
         MAIN.game.scene.temporarySectorMesh.material.dispose();
       };
 
-      if (MAIN.game.data.playerData.balance >= MAIN.game.configs.buildings[building].coast) {
+      if (MAIN.gameData.playerData.balance >= MAIN.game.configs.buildings[building].coast) {
         CEIL_MENU.sendBuildRequest(ceil, sector, building);
       } else {
         MAIN.interface.game.balance.notEnoughMoney();
@@ -356,28 +361,37 @@ const CEIL_MENU = {
   },
   sendBuildRequest(ceil, sector, building) {
     const data = {
-      player: MAIN.userData.login,
-      gameID: MAIN.gameData.commonData.id,
-      build: {
-        ceilIndex: ceil.indexes,
-        sector: sector,
-        building: building,
+      build:{
+        building:building,
+        indexes:ceil.indexes,
+        sector:sector,
+        ceilIndex:ceil.indexes,
       },
     };
-    //чтобы не строил на уже построеном при игре безпошаговом режиме
-    const chosenCeil = MAIN.game.data.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
+
+    const chosenCeil = MAIN.gameData.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
     if (chosenCeil.sectors[data.build.sector] === null) {
-      if (MAIN.gameData.commonData.turnBasedGame) {
-        if (MAIN.gameData.commonData.queue === MAIN.game.data.playerData.login) {
-          if (!MAIN.game.data.playerData.gameOver) {
-            MAIN.socket.emit('GAME_building', data);
+      if(MAIN.gameData.playerData.balance >= MAIN.game.configs.buildings[building].coast){
+        ;
+        MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance - MAIN.game.configs.buildings[building].coast);
+        MAIN.interface.game.balance.addBalanceMessage(`Сonstruction of the ${building}`, -MAIN.game.configs.buildings[building].coast);
+
+        MAIN.game.functions.applyBuilding(data);
+        if(MAIN.gameData.commonData.factoriesCount[data.build.building]){
+          MAIN.gameData.commonData.factoriesCount[data.build.building] -= 1;
+        };
+        
+        if(data.build.building != 'road' && data.build.building !="bridge"){
+          MAIN.game.functions.buildFactory(data);
+        };
+  
+        if(MAIN.tutorial.step === 'building_2'){
+          if(data.build.building === 'sawmill'){
+            MAIN.tutorial.building_3();
           };
         };
-      } else {
-        if (!MAIN.game.data.playerData.gameOver) {
-          MAIN.socket.emit('GAME_building', data);
-        };
       };
+
     };
   },
 };

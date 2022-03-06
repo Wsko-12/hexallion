@@ -65,6 +65,7 @@ MAIN.init = function(){
       playerData:{
         factories:{},
         trucks:{},
+        tax:{value:0,procent:0}
       },
     };
     MAIN.gameData = gameData;

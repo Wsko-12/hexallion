@@ -15,21 +15,23 @@ class Factory {
     //
     //   sector: 5
     // }
+    
 
-    this.id = properties.id;
+    this.id = properties.id || generateId(`${properties.build.building}`,5);
+    
     this.settingsSetted = false;
-    this.category = properties.category;
+    this.category = MAIN.game.configs.buildings[properties.build.building].category;
     //просто подраздел ('sawmill', 'waterStation')
-    this.type = properties.building;
-    this.number = properties.number;
-    this.fieldCeil = MAIN.game.data.map[properties.ceilIndex.z][properties.ceilIndex.x];
+    this.type = properties.build.building;
+    this.number = MAIN.gameData.commonData.factoriesCount[properties.build.building];
+    this.fieldCeil = MAIN.gameData.map[properties.build.ceilIndex.z][properties.build.ceilIndex.x];
 
-    this.product = properties.product;
-    this.sector = properties.sector;
-    this.position = this.fieldCeil.getSectorPosition(properties.sector);
-    this.fieldCeil.sectorsData[properties.sector] = this;
+    this.product = MAIN.game.configs.buildings[properties.build.building].product;
+    this.sector = properties.build.sector;
+    this.position = this.fieldCeil.getSectorPosition(properties.build.sector);
+    this.fieldCeil.sectorsData[properties.build.sector] = this;
 
-    const fieldCeil = MAIN.game.data.map[properties.ceilIndex.z][properties.ceilIndex.x];
+    const fieldCeil = MAIN.gameData.map[properties.build.ceilIndex.z][properties.build.ceilIndex.x];
 
 
     this.notification = null;
@@ -39,7 +41,7 @@ class Factory {
     this.hitBoxMesh.rotation.y = ((this.sector * (-60) - 30) * Math.PI / 180);
     this.hitBoxMesh.userData.position = this.position;
     this.hitBoxMesh.userData.onClick = function() {
-      fieldCeil.sectorsData[properties.sector].onClick();
+      fieldCeil.sectorsData[properties.build.sector].onClick();
     };
     MAIN.game.scene.hitBoxGroup.add(this.hitBoxMesh);
 
@@ -82,6 +84,10 @@ class Factory {
     //происходит при клике на сектор этой фабрики
     //на хитбокс фабрики
     //и на всплывающее уведомление
+
+    if(MAIN.tutorial.step === 'building_3'){
+      MAIN.tutorial.factory_1();
+    };
     MAIN.interface.game.factory.showMenu(this);
     MAIN.interface.game.camera.moveCameraTo(this.hitBoxMesh.position);
   };
@@ -151,6 +157,7 @@ class Factory {
 
 
   applySettings(settings) {
+    this.clearNotification();
     this.settingsSetted = true;
     this.settings = settings;
 
@@ -368,6 +375,13 @@ class Factory {
     } else {
       return [];
     };
+  };
+
+
+
+
+  turn(){
+    
   };
 };
 
