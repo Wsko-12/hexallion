@@ -49,6 +49,7 @@ class Factory {
       this.createNotification();
     };
 
+    this.paused = false;
     this.autosend = {
       add:function(parameters){
         const direction = {
@@ -90,6 +91,9 @@ class Factory {
     };
     MAIN.interface.game.factory.showMenu(this);
     MAIN.interface.game.camera.moveCameraTo(this.hitBoxMesh.position);
+    if(MAIN.tutorial.step === 'steps_2'){
+      MAIN.tutorial.factory_2();
+    }
   };
   clearNotification() {
     if (this.notification) {
@@ -210,12 +214,12 @@ class Factory {
       //сначала проверяем есть ли грузовики
       //если есть, то проверяем есть ли свободный
       //если нет там и там то открываем меню грузовиков и передаем туда параметр загрузки грузовика
-      if (MAIN.game.data.commonData.turnBasedGame) {
-        if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
-          MAIN.interface.game.factory.showFactoryError('turn');
-          return;
-        };
-      };
+      // if (MAIN.game.data.commonData.turnBasedGame) {
+      //   if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
+      //     MAIN.interface.game.factory.showFactoryError('turn');
+      //     return;
+      //   };
+      // };
 
       if (this.fieldCeil.checkRoadEmpty()) {
         const truckOnMap = this.fieldCeil.roadEmpty;
@@ -224,7 +228,7 @@ class Factory {
           return;
         };
       };
-      const truckList = MAIN.game.data.playerData.trucks;
+      const truckList = MAIN.gameData.playerData.trucks;
       if (Object.keys(truckList).length === 0) {
         MAIN.interface.game.factory.showFactoryError('noTruck');
         return;
@@ -240,16 +244,28 @@ class Factory {
       if (freeTrucks.length === 0) {
         MAIN.interface.game.factory.showFactoryError('noFreeTruck');
       } else {
-        const data = {
-          gameID: MAIN.game.data.commonData.id,
-          player: MAIN.game.data.playerData.login,
-          factoryID: this.id,
-          truckID: freeTrucks[0].id,
-          auto: false,
-          storageIndex: index,
-        };
+        // const data = {
+        //   gameID: MAIN.game.data.commonData.id,
+        //   player: MAIN.game.data.playerData.login,
+        //   factoryID: this.id,
+        //   truckID: freeTrucks[0].id,
+        //   auto: false,
+        //   storageIndex: index,
+        // };
+        // MAIN.interface.game.factory.closeMenu();
+        // MAIN.socket.emit('GAME_factory_sendProduct', data);
+
+        
+        freeTrucks[0].placeOnMap({
+          autosend:false,
+          product:this.settings.storage[index],
+          positionIndexes:{z:this.fieldCeil.indexes.z,x:this.fieldCeil.indexes.x},
+        });
+        this.settings.storage[index] = null;
         MAIN.interface.game.factory.closeMenu();
-        MAIN.socket.emit('GAME_factory_sendProduct', data);
+
+
+
       };
     } else {
       // auto = {
@@ -381,7 +397,86 @@ class Factory {
 
 
   turn(){
-    
+    if(this.category === 'mining'){
+      if (this.settingsSetted) {
+        if (this.paused) {
+          // if (this.game.cityEconomy) {
+          //   this.game.payToCities(Math.floor(this.stepPrice / 2));
+          // };
+          MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-Math.floor(this.settings.stepPrice / 2));
+          MAIN.interface.game.balance.addBalanceMessage(`Maintenance ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -Math.floor(this.settings.stepPrice / 2));
+          this.settings.productLine.forEach((item, i) => {
+            this.settings.productLine[i] = 0;
+          });
+          return;
+        };
+        //если в storage есть место
+        if (this.settings.storage.includes(null)) {
+          if (!this.settings.productLine.includes(1)) {
+            //если вообще не начато производство
+            if (!this.settings.productInProcess) {
+              this.settings.productInProcess = {
+                name: this.settings.product,
+                quality: this.settings.qualityPoints,
+              };
+            };
+            // if (this.game.cityEconomy) {
+            //   this.game.payToCities(this.stepPrice);
+            // };
+            MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-this.settings.stepPrice);
+            MAIN.interface.game.balance.addBalanceMessage(`Production on ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -this.settings.stepPrice);
+            this.settings.productLine[0] = 1;
+          } else {
+            //если производтсво кончилось
+            if (this.settings.productLine[this.settings.productLine.length - 1] === 1) {
+              const emptySpace = this.settings.storage.indexOf(null);
+              if (emptySpace != -1) {
+                this.settings.storage[emptySpace] = this.settings.productInProcess;
+              };
+              this.settings.productInProcess = null;
+
+              if (this.settings.storage.includes(0)) {
+                this.settings.productLine.unshift(this.settings.productLine.pop());
+              } else {
+                this.settings.productLine.forEach((item, i) => {
+                  this.settings.productLine[i] = 0;
+                });
+              };
+
+
+              this.turn();
+              if(MAIN.tutorial.step === 'sell_1'){
+                this.onClick();
+              };
+            } else {
+              // if (this.game.cityEconomy) {
+              //   this.game.payToCities(this.stepPrice);
+              // };
+              MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-this.settings.stepPrice);
+              MAIN.interface.game.balance.addBalanceMessage(`Production on ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -this.settings.stepPrice);
+              this.settings.productLine.unshift(this.settings.productLine.pop());
+            };
+          };
+        } else {
+          //в хранилище нет места
+          // if (this.game.cityEconomy) {
+          //   this.game.payToCities(Math.floor(this.stepPrice / 2));
+          // };
+          MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-Math.floor(this.settings.stepPrice / 2));
+          MAIN.interface.game.balance.addBalanceMessage(`Maintenance ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -Math.floor(this.settings.stepPrice / 2));
+          this.settings.productLine.forEach((item, i) => {
+            this.settings.productLine[i] = 0;
+          });
+        };
+      } else {
+        //выслать уведомление по настройке фабрики
+      };
+
+    }else if(this.category === 'factory'){
+
+
+    };
+    MAIN.interface.game.factory.updateFactoryMenu();
   };
 };
 

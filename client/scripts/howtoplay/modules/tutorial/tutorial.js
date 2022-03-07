@@ -245,7 +245,7 @@ TUTORIAL.building_2 = function(){
     body:`
       <br/>
       <br/>
-      купите и постройте лесопилку.
+      Купите и постройте лесопилку.
       <br/>
       <br/>
     `,
@@ -301,9 +301,164 @@ TUTORIAL.steps_1 = function(){
     fn(){
       MAIN.interface.game.turn.init();
       MAIN.interface.game.turn.makeTimer();
+      TUTORIAL.steps_2();
     },
   });
 };
 
+TUTORIAL.steps_2 = function(){
+  TUTORIAL.step = 'steps_2';
+  TUTORIAL.second({
+    body:`
+      Теперь вы можете понаблюдать за процессом производства на вашей фабрике.
+      <br/>
+      <br/>
+      Откройте карточку вашей фабрики кликнув два раза на фабрику.
+    `,
+  });
+};
+
+TUTORIAL.factory_2 = function(){
+  TUTORIAL.step = 'factory_2';
+  TUTORIAL.second({
+    body:`
+      В верхней части карточки фабрики находится <span class="tutorialSection-important">Линия производства</span>.
+      <div class="tutorialSection-imageDiv tutorialSection-image-factory_1"></div>
+      <br/>
+      <br/>
+      В линии производства показан прогресс продукта и сколько шагов ему осталось до того, как он произведется.
+      <div class="tutorialSection-imageDiv tutorialSection-image-factory_2"></div>
+      Чтобы уменьшить количество шагов для производства, нужно добавить очки к параметру <span class="tutorialSection-important">Скорость</span> в настройках фабрики.
+      <br/>
+      <br/>
+      Чтобы изменить настройки, кликните на <div class="tutorialSection-iconDiv icon-settings"></div> вверху карточки.
+      <br/>
+      <span class="tutorialSection-important">Важно!</span> При изменении настроек все продукты на фабрике пропадут
+      <br/>
+      <br/>
+      За каждый шаг с вашего баланса будет списываться расходы на этой фабрике.
+      <br/>
+      Чтобы уменьшить расходы производства, нужно добавить очки к параметру <span class="tutorialSection-important">Низкие затраты</span> в настройках фабрики.
+      <br/>
+      Если вы поставите фабрику на паузу <div class="tutorialSection-iconDiv icon-pause"></div>, то со счета будет списана только половина зарплаты на этой фабрике.
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.factory_3();
+    },
+  });
+};
+
+TUTORIAL.factory_3 = function(){
+  TUTORIAL.step = 'factory_3';
+  TUTORIAL.second({
+    body:`
+        Внизу карточки фабрики указан <span class="tutorialSection-important">Склад</span> фабрики.
+        <div class="tutorialSection-imageDiv tutorialSection-image-factory_3"></div>
+        <br/>
+        <br/>
+        После того, как ресурс будет готов, он попадет на <span class="tutorialSection-important">Склад</span> фабрики, который указан внизу фабрики
+        <div class="tutorialSection-imageDiv tutorialSection-image-factory_4"></div>
+        <span class="tutorialSection-important">Важно!</span> Если склад заполнен, то производство нового ресурса не начнется.
+        <br/>
+        Чтобы открыть дополнительные ячейки склада, нужно добавить очки к параметру <span class="tutorialSection-important">Склад</span> в настройках фабрики.
+        <br/>
+        <br/>
+        Точки на жетоне продукта показывают <span class="tutorialSection-important">Качество</span> этого ресурса.
+        <br/>
+         Качество увеличивает цену ресурса.
+         Чтобы увеличить качество, нужно добавить очки к параметру <span class="tutorialSection-important">Качество</span> в настройках фабрики.
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.road_1();
+    },
+  });
+};
+
+TUTORIAL.road_1 = function(){
+  MAIN.interface.game.factory.closeMenu();
+  TUTORIAL.step = 'road_1';
+  const ceil = MAIN.gameData.map[2][4];
+  MAIN.interface.game.camera.moveCameraTo(ceil.position);
+  ceil.addChosenSectorTemporaryMesh(2);
+  TUTORIAL.second({
+    body:`
+        Пока Ваша лесопилка добывает дерево, давайте позаботимся о том, как его продать.
+        <br/>
+        <br/>
+        Для начала, давайте построим дорогу к городу.
+        <br/>
+        <br/>
+        Выберите сектор ( <span class="tutorialSection-important">двойной клик</span> или  <span class="tutorialSection-important">двойной тап</span>) и постройте дорогу <div class="tutorialSection-iconDiv icon-road"></div>.
+    `,
+  });
+};
+
+TUTORIAL.road_2 = function(){
+  TUTORIAL.step = 'road_2';
+  TUTORIAL.second({
+    body:`
+      Дороги можно строить во всех 6 направлениях.
+      <br/>
+      <span class="tutorialSection-important">Важно!</span> При строительстве мостов помните, что их можно построить только в 2 направления. Это значит, что на мостах нет "перекрестков".
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.truck_1();
+    },
+  });
+};
+
+
+TUTORIAL.truck_1 = function(){
+  TUTORIAL.step = 'truck_1';
+  TUTORIAL.second({
+    body:`
+      Теперь приобретите себе <span class="tutorialSection-important">Грузовик</span>.
+      <br/>
+      На начальных этапах игры одного грузовика будет достаточно.
+      <br/>
+      <br/>
+      Кликните на <div class="tutorialSection-iconDiv-dark icon-truck"></div> в левой части экрана, чтобы открыть меню грузовиков.
+    `,
+  });
+};
+
+TUTORIAL.truck_2 = function(){
+  TUTORIAL.step = 'truck_2';
+  TUTORIAL.second({
+    body:`
+      <br/>
+      <br/>
+      Купите грузовик.
+      <br/>
+      <br/>
+    `,
+  });
+};
+
+TUTORIAL.sell_1 = function(){
+  TUTORIAL.step = 'sell_1';
+  TUTORIAL.second({
+    body:`
+      Отлично, все готово для продажи, кроме самого продукта.
+      <br/>
+      <br/>
+      Откройте карточку фабрики и нажимайте <span class="tutorialSection-important">Закончить ход</span> до тех пор, пока продукт не будет на складе.
+    `,
+  });
+};
+TUTORIAL.sell_2 = function(){
+  TUTORIAL.step = 'sell_2';
+  TUTORIAL.second({
+    body:`
+      Теперь можно продать продукт.
+      <br/>
+      <br/>
+      Кликните на жетон продукта на складе, чтобы загрузить его в грузовик.
+    `,
+  });
+};
 
 export {TUTORIAL};

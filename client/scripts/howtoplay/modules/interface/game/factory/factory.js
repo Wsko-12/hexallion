@@ -752,6 +752,11 @@ function showFactoryMenu(factory) {
 
   let storagePart = ` <div class="factory_body_storage">`;
 
+  if(MAIN.tutorial.step === 'sell_1'){
+    if(factory.settings.storage[0] != null){
+      MAIN.tutorial.sell_2();
+    };
+  };
   for (let i = 0; i < factory.settings.storage.length; i++) {
     const product = factory.settings.storage[i];
     if (product) {

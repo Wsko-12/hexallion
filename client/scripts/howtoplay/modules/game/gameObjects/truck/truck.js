@@ -8,7 +8,7 @@ import * as THREE from '../../../../../libs/ThreeJsLib/build/three.module.js';
 class Truck {
   constructor(properties) {
     this.id = properties.id;
-    this.player = properties.player;
+    this.player = 'player';
     this.truckNumber = properties.truckNumber;
     this.product = null;
 
@@ -67,12 +67,12 @@ class Truck {
 
     this.object3D.position.set(position.x, position.y, position.z);
     MAIN.game.scene.trucksGroup.add(this.object3D);
-    MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = this;
+    MAIN.gameData.map[this.place.z][this.place.x].roadEmpty = this;
     this.object3D.castShadow = true;
     this.object3D.receiveShadow = true;
 
     this.ready = true;
-    if (this.player === MAIN.game.data.playerData.login) {
+    if (this.player === MAIN.gameData.playerData.login) {
       this.hitBoxMesh = new THREE.Mesh(MAIN.game.scene.assets.geometries.truckHitBox.clone(), MAIN.game.scene.hitBoxMaterial);
       this.hitBoxMesh.name = this.id + '_hitBox';
       this.hitBoxMesh.position.set(position.x, position.y, position.z);
@@ -89,13 +89,13 @@ class Truck {
 
 
 
-    if (data.player === MAIN.game.data.playerData.login) {
+    // if (data.player === MAIN.game.data.playerData.login) {
       if (!this.autosend) {
         this.turn();
       } else {
         this.autosendTurn();
       };
-    };
+    // };
 
   };
 

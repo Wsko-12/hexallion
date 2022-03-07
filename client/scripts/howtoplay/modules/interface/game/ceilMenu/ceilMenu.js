@@ -390,6 +390,11 @@ const CEIL_MENU = {
             MAIN.tutorial.building_3();
           };
         };
+        if(MAIN.tutorial.step === 'road_1'){
+          if(data.build.building === 'road'){
+            MAIN.tutorial.road_2();
+          };
+        };
       };
 
     };

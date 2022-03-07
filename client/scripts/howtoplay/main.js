@@ -61,8 +61,14 @@ MAIN.init = function(){
           steelMill: 8,
           waterStation: 12,
         },
+        trucks:{
+          count:10,
+          coast:10000,
+          all:{},
+        },
       },
       playerData:{
+        login:'player',
         factories:{},
         trucks:{},
         tax:{value:0,procent:0}

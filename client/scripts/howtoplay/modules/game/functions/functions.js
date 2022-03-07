@@ -19,17 +19,8 @@ import {
 
 
 const FUNCTIONS = {
-  //trigger at socket.js MAIN.socket.on('GAME_applyBuilding')
   applyBuilding(data) {
-    /*data = {
-      player:MAIN.userData.login,
-      gameID:MAIN.game.commonData.id,
-      build:{
-        ceilIndex:ceil.indexes,
-        sector:sector,
-        building:building,
-      }
-    */
+
     const ceil = MAIN.gameData.map[data.build.ceilIndex.z][data.build.ceilIndex.x];
     if (ceil.sectors[data.build.sector] === null) {
       ceil.buildOnSector(data.build.sector, data.build.building, data.player);
@@ -38,6 +29,13 @@ const FUNCTIONS = {
 
   turn(){
     MAIN.interface.game.turn.makeTimer();
+    for(let factory in MAIN.gameData.playerData.factories){
+      const thisFactory = MAIN.gameData.playerData.factories[factory];
+      thisFactory.turn();
+    };
+
+
+
     
   },
 
@@ -82,10 +80,10 @@ const FUNCTIONS = {
 
     const truck = new Truck(properties);
 
-    MAIN.game.data.commonData.trucks.all[truck.id] = truck;
+    MAIN.gameData.commonData.trucks.all[truck.id] = truck;
 
-    if (data.player === MAIN.game.data.playerData.login) {
-      MAIN.game.data.playerData.trucks[truck.id] = truck;
+    if (data.player === MAIN.gameData.playerData.login) {
+      MAIN.gameData.playerData.trucks[truck.id] = truck;
 
 
       //подразумевается, что он все еще в меню, поэтому делаем реопен

@@ -135,6 +135,22 @@
   height: 55px;
   background-size: cover;
 }
+.tutorialSection-iconDiv{
+  background-color:  #FAF9F8;
+  display: inline-block;
+  border-radius: 5px;
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+}
+.tutorialSection-iconDiv-dark{
+  background-color:  #303030;
+  display: inline-block;
+  border-radius: 5px;
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+}
 
 .tutorialSection-image-controls_1{
   background-image: url(../img/tutorial/controls_1.png);
@@ -150,4 +166,16 @@
 }
 .tutorialSection-image-controls_5{
   background-image: url(../img/tutorial/controls_5.png);
+}
+.tutorialSection-image-factory_1{
+  background-image: url(../img/tutorial/factory_1.png);
+}
+.tutorialSection-image-factory_2{
+  background-image: url(../img/tutorial/factory_2.png);
+}
+.tutorialSection-image-factory_3{
+  background-image: url(../img/tutorial/factory_3.png);
+}
+.tutorialSection-image-factory_4{
+  background-image: url(../img/tutorial/factory_4.png);
 }
