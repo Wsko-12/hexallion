@@ -6,7 +6,7 @@
   pointer-events: none;
   position: fixed;
   touch-action: manipulation;
-  
+
 }
 
 #balanceDiv {
@@ -20,7 +20,7 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 0px 10px;
-  background-color: rgba(0, 0, 0, 0.3);
+  /* background-color: rgba(0, 0, 0, 0.3); */
 }
 
 #balanceDiv_span {

@@ -43,7 +43,7 @@ MODULES.init = () => {
 
 
 
-  //подключаем старницы
+  //подключаем модули
   MAIN.pages = PAGES;
   MAIN.game = GAME;
   MAIN.renderer = RENDERER;

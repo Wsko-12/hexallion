@@ -5,13 +5,13 @@
 }
 #settingsButton{
   pointer-events: auto;
-  width: 40px;
-  height: 40px;
-  background-color: red;
+  width: 30px;
+  height: 30px;
   position: absolute;
   right: 20px;
   top:20px;
   z-index: 1000;
+  background-size: cover;
 }
 .settingsContainer{
   overflow-y: scroll;
@@ -22,7 +22,6 @@
   top:50%;
   left: 50%;
   transform: translate(-50%,-50%);
-
   box-shadow: 4px 4px 10px rgba(48, 48, 48,0.5);
   border-radius: 20px;
   background-color: #FAF9F8;

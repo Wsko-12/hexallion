@@ -4,10 +4,10 @@
   position: fixed;
   overflow: hidden;
   z-index: 100;
-  font-family: 'Roboto';
-  background-color: rgba(0, 0, 0, 0.4);
+  font-family: 'Roboto Condensed';
+  /* background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); */
 }
 
 #chooseCreditMenuContainer {
@@ -16,7 +16,6 @@
   height: 300px;
   left: 50%;
   top: 15%;
-  overflow: hidden;
   font-family: sans-serif;
   -webkit-transform: translate(-50%, 0%);
   transform: translate(-50%, 0%);
@@ -35,22 +34,28 @@
 }
 
 #CreditMenu_Button {
-  width: 20%;
-  display: flex;
-  margin: auto;
-  margin-top: 10px;
-  height: 30px;
-  background-color: #EAEAEA;
-  text-align: center;
-  font-weight: bold;
-  color: #303030;
+  margin-top: 20px;
   font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background-color: #D7355C;
+  color:white;
+  width: 120px;
+  height: 40px;
+  margin: auto;
+  border-radius: 20px;
+  text-transform: uppercase;
+
+
+
 }
 
-#CreditMenu_Button:hover {
+/* #CreditMenu_Button:hover {
   background-color: #303030;
   color: white;
-}
+} */
 
 #CreditMenu_List {
   width: 100%;
@@ -60,6 +65,7 @@
   align-items: center;
   -webkit-transform: rotateX(10deg);
   transform: rotateX(10deg);
+  margin-bottom: 20px;
 }
 
 .CreditMenu_Card {
