@@ -375,7 +375,7 @@ const CEIL_MENU = {
         ;
         MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance - MAIN.game.configs.buildings[building].coast);
         MAIN.interface.game.balance.addBalanceMessage(`Сonstruction of the ${building}`, -MAIN.game.configs.buildings[building].coast);
-
+        MAIN.game.functions.payToCities(MAIN.game.configs.buildings[building].coast);
         MAIN.game.functions.applyBuilding(data);
         if(MAIN.gameData.commonData.factoriesCount[data.build.building]){
           MAIN.gameData.commonData.factoriesCount[data.build.building] -= 1;
@@ -393,6 +393,11 @@ const CEIL_MENU = {
         if(MAIN.tutorial.step === 'road_1'){
           if(data.build.building === 'road'){
             MAIN.tutorial.road_2();
+          };
+        };
+        if(MAIN.tutorial.step === 'factory_5'){
+          if(data.build.building === 'paperFactory'){
+            MAIN.tutorial.factory_6();
           };
         };
       };

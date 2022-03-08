@@ -222,15 +222,23 @@ function openMenu(factory){
       //     };
       //   };
       // };
-      MAIN.game.functions.applyTruckPurchase({
-        truckID:generateId('Truck',5),
-        player:'player',
-        truckNumber:MAIN.gameData.commonData.trucks.count,
-      });
-      MAIN.gameData.commonData.trucks.count--;
-      if(MAIN.tutorial.step === 'truck_2'){
-        MAIN.tutorial.sell_1();
+      if(MAIN.gameData.playerData.balance >= MAIN.gameData.commonData.trucks.coast){
+        
+        MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance - MAIN.gameData.commonData.trucks.coast);
+        MAIN.interface.game.balance.addBalanceMessage('Buying a truck', -MAIN.gameData.commonData.trucks.coast);
+        MAIN.game.functions.payToCities(MAIN.gameData.commonData.trucks.coast);
+        MAIN.game.functions.applyTruckPurchase({
+          truckID:generateId('Truck',5),
+          player:'player',
+          truckNumber:MAIN.gameData.commonData.trucks.count,
+        });
+        
+        MAIN.gameData.commonData.trucks.count--;
+        if(MAIN.tutorial.step === 'truck_2'){
+          MAIN.tutorial.sell_1();
+        };
       };
+
 
 
     };
@@ -353,7 +361,7 @@ function openCard(truck){
     document.querySelector('#truckCard_button').ontouchstart = turn;
 
     function turn(){
-      if(!MAIN.game.data.playerData.gameOver){
+      if(!MAIN.gameData.playerData.gameOver){
         truck.turn();
       };
     };

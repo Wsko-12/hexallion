@@ -33,6 +33,13 @@ function init(){
 };
 
 function updateProductsList(city,category){
+  if(MAIN.tutorial.step === 'economy_3'){
+    if(category === 'construction'){
+      MAIN.tutorial.economy_4();
+    };
+  };
+
+
   const productsList = document.querySelector('#cityCard_productsList');
   productsList.innerHTML = '';
 
@@ -95,6 +102,11 @@ function updateProductsList(city,category){
 
 };
 function openMenu(city){
+  if(city){
+    if(MAIN.tutorial.step === 'economy_1' && city.name === 'Westown'){
+      MAIN.tutorial.economy_2();
+    };
+  };
 
   //нужно для апдейта
   if(!city){
@@ -283,6 +295,14 @@ function openMenu(city){
 
 function closeMenu(event){
   const clicker =  document.querySelector('#cityMenuSection');
+  if(!event){
+    CITY.cardOpened = false;
+    document.querySelector('#cityCard').style.display = 'none';
+    clicker.style.pointerEvents = 'none';
+    return;
+  };
+
+
   if(event.target ===  clicker){
     CITY.cardOpened = false;
     document.querySelector('#cityCard').style.display = 'none';

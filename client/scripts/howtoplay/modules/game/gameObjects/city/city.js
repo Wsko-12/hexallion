@@ -109,6 +109,33 @@ class City {
 
   };
 
+
+  buyProduct(truck){
+    if(MAIN.tutorial.step === 'truck_3'){
+      MAIN.tutorial.economy_1();
+    };
+    const product = truck.product;
+    truck.clear();
+    const price = this.getCurrentProductPrice(product);
+    this.balance -= price;
+    MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance + price);
+    MAIN.interface.game.balance.addBalanceMessage(`Sale of ${product.name}`, price);
+    this.storage[product.name].fullness = 100;
+  };
+
+  turn(){
+    for(let product in this.storage){
+      const thisProduct = this.storage[product];
+      thisProduct.fullness -= thisProduct.speed;
+      if(thisProduct.fullness < 0){
+        thisProduct.fullness = 0;
+      };
+    };
+
+  };
+
+
+
 };
 
 

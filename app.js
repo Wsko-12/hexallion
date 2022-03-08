@@ -1563,7 +1563,11 @@ class FACTORY {
 
 
     if (this.category === 'factory') {
-
+      if(auto){
+        if(this.productInProcess){
+          return;
+        };
+      };
       //если продукт выбран
       if (this.productSelected) {
         if (this.paused) {

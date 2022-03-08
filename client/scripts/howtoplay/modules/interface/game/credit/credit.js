@@ -56,15 +56,7 @@ const CREDIT = {
 
           MAIN.interface.game.balance.init(MAIN.gameData.playerData.balance);
 
-          MAIN.tutorial.step = 'balance';
-          MAIN.tutorial.second({
-            body:`
-              Отлично, у Вас есть деньги.
-              </br>
-              </br>
-              Чтобы узнать состояние Вашего баланса, нажмите на сумму вашего счета вверху экрана
-            `,
-          });
+          MAIN.tutorial.balance_1();
 
       };
 

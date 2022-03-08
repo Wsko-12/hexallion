@@ -5,6 +5,7 @@ import {
 import * as THREE from '../../../../../libs/ThreeJsLib/build/three.module.js';
 
 
+
 class Truck {
   constructor(properties) {
     this.id = properties.id;
@@ -34,7 +35,13 @@ class Truck {
   };
 
   placeOnMap(data) {
+    if(MAIN.tutorial.step === 'sell_2'){
+      MAIN.tutorial.truck_3();
+    };
 
+    if(MAIN.tutorial.step === 'delivery_2'){
+      MAIN.tutorial.delivery_3();
+    };
     // const data = {
     //   autosend: false
     //   game: "Game_FraPKW"
@@ -115,6 +122,7 @@ class Truck {
       autosend: this.autosend,
     };
     const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
+
 
 
 
@@ -346,9 +354,9 @@ class Truck {
     this.product = null;
     this.autosend = null;
     //clear map for  destroy truck button
-    if (MAIN.game.data.map[this.place.z]) {
-      if (MAIN.game.data.map[this.place.z][this.place.x]) {
-        MAIN.game.data.map[this.place.z][this.place.x].roadEmpty = false;
+    if (MAIN.gameData.map[this.place.z]) {
+      if (MAIN.gameData.map[this.place.z][this.place.x]) {
+        MAIN.gameData.map[this.place.z][this.place.x].roadEmpty = false;
       };
     };
 
@@ -395,7 +403,12 @@ class Truck {
       MAIN.interface.game.trucks.turningInterfase = true;
       this.cardOpened = true;
       MAIN.interface.game.trucks.closeMenu();
-      const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
+      let value = Math.floor(1 + Math.random() * (6 + 1 - 1));
+      if(MAIN.tutorial.step === 'truck_3' || MAIN.tutorial.step === 'delivery_3'){
+        if(value === 6){
+          value = 5;
+        };
+      };
       const that = this;
 
       function diceAnimate() {
@@ -432,7 +445,7 @@ class Truck {
               MAIN.interface.dobleClickFunction.standard = false;
               MAIN.interface.dobleClickFunction.function = async function(object3D) {
                 const pathData = {
-                  start: MAIN.game.data.map[that.place.z][that.place.x],
+                  start: MAIN.gameData.map[that.place.z][that.place.x],
                   finish: object3D.userData,
                   value: value,
                   autosend: false,
@@ -481,13 +494,13 @@ class Truck {
 
 
     //указываем, что грузовик уехал
-    MAIN.game.data.map[data.path[0].z][data.path[0].x].roadEmpty = false;
+    MAIN.gameData.map[data.path[0].z][data.path[0].x].roadEmpty = false;
     //занимаем финальную точку
     const lastPoint = data.path[data.path.length - 1];
     //если грузовик ЕДЕТ на последнюю точку
     if (!data.sell && !data.delivery) {
-      if (!MAIN.game.data.map[lastPoint.z][lastPoint.x].cityCeil) {
-        MAIN.game.data.map[lastPoint.z][lastPoint.x].roadEmpty = this;
+      if (!MAIN.gameData.map[lastPoint.z][lastPoint.x].cityCeil) {
+        MAIN.gameData.map[lastPoint.z][lastPoint.x].roadEmpty = this;
       };
     };
 
@@ -510,7 +523,7 @@ class Truck {
         moveIndex += 1;
         if (pathIndex < data.path.length) {
           const centerCeilIndexes = data.path[pathIndex];
-          const fieldCeil = MAIN.game.data.map[centerCeilIndexes.z][centerCeilIndexes.x];
+          const fieldCeil = MAIN.gameData.map[centerCeilIndexes.z][centerCeilIndexes.x];
 
           const position = {
             x: fieldCeil.position.x,
@@ -522,7 +535,7 @@ class Truck {
             if (moveIndex > 5) {
               const radius = (moveIndex - 5) * (maxRadius / 10);
               const nextCenterCeilIndexes = data.path[pathIndex + 1];
-              const nextCeil = MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+              const nextCeil = MAIN.gameData.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
               const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
               const angle = angleIndex * 60 - 60;
               position.x += Math.cos(angle * (Math.PI / 180)) * radius;
@@ -532,7 +545,7 @@ class Truck {
             if (moveIndex < 5) {
               const radius = (5 - moveIndex) * (maxRadius / 10);
               const previousCenterCeilIndexes = data.path[pathIndex - 1];
-              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const previousCeil = MAIN.gameData.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
               const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
               const angle = angleIndex * 60 - 60;
               position.x += Math.cos(angle * (Math.PI / 180)) * radius;
@@ -542,7 +555,7 @@ class Truck {
             if (moveIndex < 5) {
               const radius = (5 - moveIndex) * (maxRadius / 10);
               const previousCenterCeilIndexes = data.path[pathIndex - 1];
-              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const previousCeil = MAIN.gameData.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
               const angleIndex = fieldCeil.neighbours.indexOf(previousCeil);
               const angle = angleIndex * 60 - 60;
               position.x += Math.cos(angle * (Math.PI / 180)) * radius;
@@ -556,7 +569,7 @@ class Truck {
             if (moveIndex > 5) {
               const radius = (moveIndex - 5) * (maxRadius / 10);
               const nextCenterCeilIndexes = data.path[pathIndex + 1];
-              const nextCeil = MAIN.game.data.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
+              const nextCeil = MAIN.gameData.map[nextCenterCeilIndexes.z][nextCenterCeilIndexes.x];
               const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
               const angle = angleIndex * 60 - 60;
               position.x += Math.cos(angle * (Math.PI / 180)) * radius;
@@ -569,7 +582,7 @@ class Truck {
           if (pathIndex === 0) {
             if (moveIndex > 5) {
               const nextCeilIndex = data.path[pathIndex + 1];
-              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const nextCeil = MAIN.gameData.map[nextCeilIndex.z][nextCeilIndex.x];
               const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
               const angle = angleIndex * -60;
               that.object3D.rotation.y = angle * (Math.PI / 180);
@@ -582,7 +595,7 @@ class Truck {
           } else {
             if (moveIndex > 5) {
               const nextCeilIndex = data.path[pathIndex + 1];
-              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const nextCeil = MAIN.gameData.map[nextCeilIndex.z][nextCeilIndex.x];
               const angleIndex = fieldCeil.neighbours.indexOf(nextCeil);
               const angle = angleIndex * -60;
               that.object3D.rotation.y = angle * (Math.PI / 180);
@@ -598,7 +611,7 @@ class Truck {
           if (pathIndex === 0) {
             if (moveIndex > 5) {
               const nextCeilIndex = data.path[pathIndex + 1];
-              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const nextCeil = MAIN.gameData.map[nextCeilIndex.z][nextCeilIndex.x];
               const sectorIndex = fieldCeil.neighbours.indexOf(nextCeil);
 
               sectorName = fieldCeil.sectors[sectorIndex];
@@ -614,7 +627,7 @@ class Truck {
 
             if (moveIndex < 5) {
               const previousCenterCeilIndexes = data.path[pathIndex - 1];
-              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const previousCeil = MAIN.gameData.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
               const sectorIndex = fieldCeil.neighbours.indexOf(previousCeil);
               sectorName = fieldCeil.sectors[sectorIndex];
             } else {
@@ -628,7 +641,7 @@ class Truck {
           } else {
             if (moveIndex < 5) {
               const previousCenterCeilIndexes = data.path[pathIndex - 1];
-              const previousCeil = MAIN.game.data.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
+              const previousCeil = MAIN.gameData.map[previousCenterCeilIndexes.z][previousCenterCeilIndexes.x];
               const sectorIndex = fieldCeil.neighbours.indexOf(previousCeil);
               sectorName = fieldCeil.sectors[sectorIndex];
             };
@@ -641,7 +654,7 @@ class Truck {
             };
             if (moveIndex > 5) {
               const nextCeilIndex = data.path[pathIndex + 1];
-              const nextCeil = MAIN.game.data.map[nextCeilIndex.z][nextCeilIndex.x];
+              const nextCeil = MAIN.gameData.map[nextCeilIndex.z][nextCeilIndex.x];
               const sectorIndex = fieldCeil.neighbours.indexOf(nextCeil);
               sectorName = fieldCeil.sectors[sectorIndex];
             };
@@ -684,62 +697,39 @@ class Truck {
           }, 25);
         } else {
 
-          // if(data.selling){
-          //   if(that.player === MAIN.game.data.playerData.login){
-          //     const sendData = {
-          //       gameID:MAIN.game.data.commonData.id,
-          //       player:that.player,
-          //       truckID:that.id,
-          //       city:data.city,
-          //     };
-          //     MAIN.socket.emit('GAME_product_sell',sendData)
-          //   };
-          // };
-          if (that.player === MAIN.game.data.playerData.login) {
+          if (that.player === MAIN.gameData.playerData.login) {
             if (that.autosend) {
               if (that.autosend.finished) {
                 if (that.autosend.sell) {
-                  const sendData = {
-                    game: MAIN.game.data.commonData.id,
-                    player: that.player,
-                    truck: that.id,
-                    city: that.autosend.finalObject,
-                    product: that.product.id,
-                  };
-                  MAIN.socket.emit('GAME_product_sell', sendData);
+                  MAIN.gameData.cities[that.autosend.finalObject].buyProduct(that);
+                  // const sendData = {
+                  //   game: MAIN.game.data.commonData.id,
+                  //   player: that.player,
+                  //   truck: that.id,
+                  //   city: that.autosend.finalObject,
+                  //   product: that.product.id,
+                  // };
+                  // MAIN.socket.emit('GAME_product_sell', sendData);
                 };
                 if (that.autosend.delivery) {
-                  const sendData = {
-                    game: MAIN.game.data.commonData.id,
-                    player: that.player,
-                    truck: that.id,
-                    factory: that.autosend.finalObject,
-                    product: that.product.id,
-                  };
-                  MAIN.socket.emit('GAME_product_delivery', sendData);
+                  MAIN.gameData.playerData[that.autosend.finalObject].receiveProduct(that);
+                  // const sendData = {
+                  //   game: MAIN.game.data.commonData.id,
+                  //   player: that.player,
+                  //   truck: that.id,
+                  //   factory: that.autosend.finalObject,
+                  //   product: that.product.id,
+                  // };
+                  // MAIN.socket.emit('GAME_product_delivery', sendData);
                 };
               };
               return;
             };
             if (data.sell) {
-              const sendData = {
-                game: MAIN.game.data.commonData.id,
-                player: that.player,
-                truck: that.id,
-                city: data.finalObject,
-                product: that.product.id,
-              };
-              MAIN.socket.emit('GAME_product_sell', sendData);
+              MAIN.gameData.cities[data.finalObject].buyProduct(that);
             };
             if (data.delivery) {
-              const sendData = {
-                game: MAIN.game.data.commonData.id,
-                player: that.player,
-                truck: that.id,
-                factory: data.finalObject,
-                product: that.product.id,
-              };
-              MAIN.socket.emit('GAME_product_delivery', sendData);
+              MAIN.gameData.playerData[data.finalObject].receiveProduct(that);
             };
 
           };

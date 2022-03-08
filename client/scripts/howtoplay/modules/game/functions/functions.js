@@ -29,14 +29,49 @@ const FUNCTIONS = {
 
   turn(){
     MAIN.interface.game.turn.makeTimer();
+    //до сих пор не работает на перерабатывающих фабриках
     for(let factory in MAIN.gameData.playerData.factories){
       const thisFactory = MAIN.gameData.playerData.factories[factory];
       thisFactory.turn();
     };
+    for(let truck in MAIN.gameData.playerData.trucks){
+      const thisTruck = MAIN.gameData.playerData.trucks[truck];
+        thisTruck.ready = true;
+        thisTruck.sended = false;
+        if (thisTruck.autosend) {
+          thisTruck.autosendTurn();
+        } else {
+          thisTruck.inAutosend = false;
+          if (thisTruck.onMap) {
+            if (!thisTruck.cardOpened) {
+              thisTruck.createNotification();
+            } else {
+              thisTruck.hitBoxMesh.userData.onClick();
+            };
+          };
+        };
+        if (thisTruck.product === 1) {
+          thisTruck.clear();
+        };
+    };
+    MAIN.interface.game.path.updateCityPrise();
 
-
-
+    for(let city in MAIN.gameData.cities){
+      const thisCity = MAIN.gameData.cities[city];
+      thisCity.turn();
+    };
+    MAIN.interface.game.city.openMenu();
     
+
+  },
+
+
+  payToCities(value){
+    const averageValue = Math.floor(value / 3);
+    for (let city in MAIN.gameData.cities) {
+      const thisCity = MAIN.gameData.cities[city];
+      thisCity.balance += averageValue;
+    };
   },
 
   endTurn() {
@@ -1012,15 +1047,15 @@ const FUNCTIONS = {
 
   exitGame(){
     // console.log('exit')
-    MAIN.renderer.clear();
-    document.querySelector('#renderer').remove();
-    document.querySelector('#gameInterface').remove();
-    const exitData = {
-      game:MAIN.game.data.commonData.id,
-      player:MAIN.game.data.playerData.login,
-    };
-    MAIN.socket.emit('GAME_exit',exitData);
-    MAIN.pages.rooms.showPage();
+    // MAIN.renderer.clear();
+    // document.querySelector('#renderer').remove();
+    // document.querySelector('#gameInterface').remove();
+    // const exitData = {
+    //   game:MAIN.game.data.commonData.id,
+    //   player:MAIN.game.data.playerData.login,
+    // };
+    // MAIN.socket.emit('GAME_exit',exitData);
+    // MAIN.pages.rooms.showPage();
 
   },
 };

@@ -54,6 +54,9 @@ function updateMenu(factory) {
 };
 
 function showSettingsSetMenu(factory) {
+  if(MAIN.tutorial.step === 'factory_6' && factory.type === 'paperFactory'){
+    MAIN.tutorial.factory_7();
+  };
 
   FACTORY.nowShowedFactoryMenu = factory;
   const menu = document.querySelector('#factoryMenu');
@@ -328,12 +331,15 @@ function showSettingsSetMenu(factory) {
         salary: newSettings.salaryPoints,
         productSelected: null,
         productInProcess:null,
-
+        downtimeCost: MAIN.game.configs.factories[factory.type].downtimeCost,
 
         speedPoints: newSettings.speedPoints,
         salaryPoints: newSettings.salaryPoints,
         volumePoints: newSettings.volumePoints,
         storagePoints: newSettings.storagePoints,
+      };
+      if(MAIN.tutorial.step === 'factory_7'){
+        MAIN.tutorial.factory_8();
       };
 
       data.rawStorage = {};
@@ -578,7 +584,9 @@ function updateFactoryAutosendBody(factory) {
 
 //полностью фарматирует меню
 function showFactoryMenu(factory) {
-
+  if(MAIN.tutorial.step === 'factory_8' && factory.type === 'paperFactory'){
+    MAIN.tutorial.factory_9();
+  };
   factory.clearNotification();
   const menu = document.querySelector('#factoryMenu');
   menu.innerHTML = '';
@@ -755,6 +763,11 @@ function showFactoryMenu(factory) {
   if(MAIN.tutorial.step === 'sell_1'){
     if(factory.settings.storage[0] != null){
       MAIN.tutorial.sell_2();
+    };
+  };
+  if(MAIN.tutorial.step === 'delivery_1'){
+    if(factory.settings.storage[0] != null){
+      MAIN.tutorial.delivery_2();
     };
   };
   for (let i = 0; i < factory.settings.storage.length; i++) {

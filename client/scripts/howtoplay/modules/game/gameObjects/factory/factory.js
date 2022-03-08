@@ -199,13 +199,12 @@ class Factory {
   };
 
   setProductSelected(product) {
-    const data = {
-      game: MAIN.game.data.commonData.id,
-      player: MAIN.game.data.playerData.login,
-      factory: this.id,
-      product: product,
-    }
-    MAIN.socket.emit('GAME_factory_setProductSelected', data);
+    this.settings.productSelected = product;
+    MAIN.interface.game.factory.updateFactoryMenu();
+    if(MAIN.tutorial.step === 'factory_9' && product === 'paper'){
+      MAIN.tutorial.delivery_1();
+    };
+    this.turn(true);
   };
 
   sendProduct(index, auto) {
@@ -299,12 +298,12 @@ class Factory {
     //сначала проверяем есть ли грузовики
     //если есть, то проверяем есть ли свободный
     //если нет там и там то открываем меню грузовиков и передаем туда параметр загрузки грузовика
-    if (MAIN.game.data.commonData.turnBasedGame) {
-      if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
-        MAIN.interface.game.factory.showFactoryError('turn');
-        return;
-      };
-    };
+    // if (MAIN.game.data.commonData.turnBasedGame) {
+    //   if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
+    //     MAIN.interface.game.factory.showFactoryError('turn');
+    //     return;
+    //   };
+    // };
 
 
 
@@ -313,7 +312,7 @@ class Factory {
       MAIN.interface.game.factory.showFactoryError('roadEmpty');
       return;
     };
-    const truckList = MAIN.game.data.playerData.trucks;
+    const truckList = MAIN.gameData.playerData.trucks;
     if (Object.keys(truckList).length === 0) {
       MAIN.interface.game.factory.showFactoryError('noTruck');
       return;
@@ -329,16 +328,24 @@ class Factory {
     if (freeTrucks.length === 0) {
       MAIN.interface.game.factory.showFactoryError('noFreeTruck');
     } else {
-      const data = {
-        gameID: MAIN.game.data.commonData.id,
-        player: MAIN.game.data.playerData.login,
-        factoryID: this.id,
-        truckID: freeTrucks[0].id,
-        auto: false,
-        product: product,
-      };
+      // const data = {
+      //   gameID: MAIN.game.data.commonData.id,
+      //   player: MAIN.game.data.playerData.login,
+      //   factoryID: this.id,
+      //   truckID: freeTrucks[0].id,
+      //   auto: false,
+      //   product: product,
+      // };
+      // MAIN.interface.game.factory.closeMenu();
+      // MAIN.socket.emit('GAME_factory_sendProduct_raw', data);
+
+      freeTrucks[0].placeOnMap({
+        autosend:false,
+        product:this.settings.rawStorage[product],
+        positionIndexes:{z:this.fieldCeil.indexes.z,x:this.fieldCeil.indexes.x},
+      });
+      this.settings.rawStorage[product] = null;
       MAIN.interface.game.factory.closeMenu();
-      MAIN.socket.emit('GAME_factory_sendProduct_raw', data);
     };
   };
 
@@ -394,9 +401,19 @@ class Factory {
   };
 
 
+  receiveProduct(truck){
+    this.settings.rawStorage[truck.product.name] = truck.product;
+    truck.clear();
+    this.turn(true);
+    if(MAIN.tutorial.step === 'delivery_3'){
+      MAIN.tutorial.delivery_4();
+    };
+  };
 
-
-  turn(){
+  turn(auto){
+    if (!this.settingsSetted) {
+      return;
+    };
     if(this.category === 'mining'){
       if (this.settingsSetted) {
         if (this.paused) {
@@ -405,6 +422,7 @@ class Factory {
           // };
           MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-Math.floor(this.settings.stepPrice / 2));
           MAIN.interface.game.balance.addBalanceMessage(`Maintenance ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -Math.floor(this.settings.stepPrice / 2));
+          MAIN.game.functions.payToCities(this.settings.stepPrice/2);
           this.settings.productLine.forEach((item, i) => {
             this.settings.productLine[i] = 0;
           });
@@ -425,6 +443,7 @@ class Factory {
             // };
             MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-this.settings.stepPrice);
             MAIN.interface.game.balance.addBalanceMessage(`Production on ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -this.settings.stepPrice);
+            MAIN.game.functions.payToCities(this.settings.stepPrice);
             this.settings.productLine[0] = 1;
           } else {
             //если производтсво кончилось
@@ -448,12 +467,16 @@ class Factory {
               if(MAIN.tutorial.step === 'sell_1'){
                 this.onClick();
               };
+              if(MAIN.tutorial.step === 'delivery_1'){
+                this.onClick();
+              };
             } else {
               // if (this.game.cityEconomy) {
               //   this.game.payToCities(this.stepPrice);
               // };
               MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-this.settings.stepPrice);
               MAIN.interface.game.balance.addBalanceMessage(`Production on ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -this.settings.stepPrice);
+              MAIN.game.functions.payToCities(this.settings.stepPrice);
               this.settings.productLine.unshift(this.settings.productLine.pop());
             };
           };
@@ -464,6 +487,7 @@ class Factory {
           // };
           MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-Math.floor(this.settings.stepPrice / 2));
           MAIN.interface.game.balance.addBalanceMessage(`Maintenance ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -Math.floor(this.settings.stepPrice / 2));
+          MAIN.game.functions.payToCities(this.settings.stepPrice/2);
           this.settings.productLine.forEach((item, i) => {
             this.settings.productLine[i] = 0;
           });
@@ -473,7 +497,150 @@ class Factory {
       };
 
     }else if(this.category === 'factory'){
-
+            if(auto){
+              if(this.settings.productInProcess){
+                return;
+              };
+            };
+            //если продукт выбран
+            if (this.settings.productSelected) {
+              if (this.paused) {
+                // if (this.game.cityEconomy) {
+                //   this.game.payToCities(this.downtimeCost);
+                // };
+                MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-this.settings.downtimeCost);
+                MAIN.interface.game.balance.addBalanceMessage(`Maintenance ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -this.settings.downtimeCost);
+                MAIN.game.functions.payToCities(this.settings.downtimeCost);
+                this.settings.productLine.forEach((item, i) => {
+                  this.settings.productLine[i] = 0;
+                });
+                return;
+              };
+              //если уже какой-то продукт производится
+              if (this.settings.productInProcess) {
+                //1. если это последний этап производства
+                if (this.settings.productLine[this.settings.productLine.length - 1] === 1) {
+                  //скидываем продукты на склад
+                  //0. очищаем productLine
+                  this.settings.productLine[this.settings.productLine.length - 1] = 0;
+                  //1. ищем стандары продукта
+                  const productConfigs = this.settings.products.find((product) => {
+                    if (product.name === this.settings.productInProcess.name) {
+                      return product;
+                    };
+                  });
+      
+                  //2. добавляем объем производства на фабрике к стандартному
+                  let productionVolume = productConfigs.productionVolume + this.settings.volumePoints;
+      
+                  //3. и запихиваем клоны ресурса во все свободные места на складе
+      
+                  this.settings.storage.forEach((place, i) => {
+                    if (place === null) {
+                      if (productionVolume > 0) {
+                        productionVolume--;
+                        this.settings.storage[i] = {
+                          name:this.settings.productInProcess.name,
+                          quality:this.settings.productInProcess.quality,
+                        };
+                      };
+                    };
+                  });
+      
+                  //4. очищаем продукт в процессе
+                  this.settings.productInProcess = null;
+      
+                  //5.запускаем функцию еще раз
+                  this.turn();
+                } else {
+                  //проводим ход
+                  this.settings.productLine.unshift(this.settings.productLine.pop());
+                  //считаем, сколько денег должен
+                  const productConfigs = this.settings.products.find((product) => {
+                    if (product.name === this.settings.productInProcess.name) {
+                      return product;
+                    };
+                  });
+      
+                  const productionPrice = Math.round(productConfigs.price - (productConfigs.price * (0.15 * this.settings.salaryPoints)));
+                  const thisPay = Math.floor(productionPrice / (this.settings.stockSpeed - this.settings.speedPoints));
+                  MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance - thisPay);
+                  MAIN.interface.game.balance.addBalanceMessage(`Production on ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -thisPay);
+                  MAIN.game.functions.payToCities(thisPay);
+                };
+              } else {
+                //если не начато производство продукта
+                //0. проверяем, есть ли вообще такой продукт на фабрике
+                //0.1  находим желаемый продукт
+                const productConfigs = this.settings.products.find((product) => {
+                  if (product.name === this.settings.productSelected) {
+                    return product;
+                  };
+                });
+      
+                //0.2 если undefined то выходим
+                if (!productConfigs) {
+                  return;
+                };
+      
+                //1. проверяем, есть ли все сырье для этого продукта
+                //1.2. смотрим есть ли на rawStorage нужные продукты
+                //изначально ставим, что у нас есть все продукты (потому что из forEach return не срабатывает)
+                let allProduct = true;
+                productConfigs.raw.forEach((rawProductName, i) => {
+                  //если хоть одного продукта не хватает
+                  if (!this.settings.rawStorage[rawProductName]) {
+                    allProduct = false;
+                  };
+                });
+      
+      
+                //2. если все продукты есть
+                if (allProduct) {
+                  //2.1 создаем массив сырья, чтобы посчитать качество будущего продукта
+                  const raw = [];
+      
+                  productConfigs.raw.forEach((rawProductName, i) => {
+                    //2.4 добавляем в массив нужных продуктов
+                    raw.push(this.settings.rawStorage[rawProductName]);
+                    //2.3 удаляем его со склада
+                    this.settings.rawStorage[rawProductName] = null;
+                  });
+      
+                  //3. считаем качество будущего продукта
+                  function calculateQuality() {
+                    // let sum = 0;
+                    // raw.forEach((product) => {
+                    //   sum += product.quality;
+                    // });
+                    // return Math.floor(sum/raw.length);
+      
+                    const sum = raw.reduce(function(accumulator, currentValue) {
+                      return accumulator + currentValue.quality
+                    }, 0);
+                    return Math.floor(sum / raw.length);
+                  };
+      
+                  let productQuality = calculateQuality();
+      
+                  //4. создаем нужный продукт
+                  const product = {
+                    name: productConfigs.name,
+                    quality: productQuality,
+                  };
+      
+                  this.settings.productInProcess = product;
+      
+                  //5. начинаем производство
+                  this.settings.productLine[0] = 1;
+                };
+              };
+      
+            } else {
+              MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-this.settings.downtimeCost);
+              MAIN.interface.game.balance.addBalanceMessage(`Maintenance ${this.settings.name.charAt(0).toUpperCase() + this.settings.name.slice(1)}`, -this.settings.downtimeCost);
+              MAIN.game.functions.payToCities(this.settings.downtimeCost);
+            };
 
     };
     MAIN.interface.game.factory.updateFactoryMenu();

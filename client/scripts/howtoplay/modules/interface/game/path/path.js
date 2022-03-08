@@ -308,8 +308,6 @@ function showActionsButton(data) {
     function action(act) {
 
       const sendData = {
-        game: MAIN.game.data.commonData.id,
-        player: MAIN.game.data.playerData.login,
         truck: data.truck.id,
         product: data.truck.product.id,
         path: [],
@@ -330,12 +328,20 @@ function showActionsButton(data) {
       };
 
 
-      MAIN.socket.emit('GAME_truck_send', sendData);
+      // MAIN.socket.emit('GAME_truck_send', sendData);
 
       MAIN.interface.game.path.closeAll();
       MAIN.game.scene.path.clear();
-    };
 
+      //продажа сразу
+      if(act === 'delivery' && data.path.length === 1){
+        MAIN.gameData.playerData.factories[data.finalObject.id].receiveProduct(data.truck);
+      }else if(act === 'sell' && data.path.length === 1){
+        MAIN.gameData.cities[data.finalObject.name].buyProduct(data.truck);
+      }else{
+        data.truck.moveAlongWay(sendData);
+      };
+    };
   };
   applyFunctions();
 
@@ -361,8 +367,8 @@ function showWhereProductIsNeeded(data) {
   container.innerHTML = '';
   PATH.truck = data.truck;
   let contant = '';
-  for (let factory in MAIN.game.data.playerData.factories) {
-    const thatFactory = MAIN.game.data.playerData.factories[factory];
+  for (let factory in MAIN.gameData.playerData.factories) {
+    const thatFactory = MAIN.gameData.playerData.factories[factory];
     if (thatFactory.category === 'factory') {
       if (thatFactory.settingsSetted) {
         if (thatFactory.settings.rawStorage[data.truck.product.name] === null) {
@@ -384,8 +390,8 @@ function showWhereProductIsNeeded(data) {
 
 
 
-  for (let city in MAIN.game.data.cities) {
-    const thatCity = MAIN.game.data.cities[city];
+  for (let city in MAIN.gameData.cities) {
+    const thatCity = MAIN.gameData.cities[city];
     let price = thatCity.getCurrentProductPrice(data.truck.product.name);
     price = Math.floor(price + (price * (0.15 * data.truck.product.quality)));
     const line = `<div class="pathSection_neadersContainer-item-city" id="pathSection_neader_${city}">
@@ -416,7 +422,7 @@ function showWhereProductIsNeeded(data) {
 
   async function findPath(finalObject) {
     const pathData = {
-      start: MAIN.game.data.map[data.truck.place.z][data.truck.place.x],
+      start: MAIN.gameData.map[data.truck.place.z][data.truck.place.x],
       finish: finalObject.fieldCeil,
       value: data.value,
       autosend: false,
@@ -443,8 +449,8 @@ function showWhereProductIsNeeded(data) {
 
 
   function applyFunctions() {
-    for (let factory in MAIN.game.data.playerData.factories) {
-      const thatFactory = MAIN.game.data.playerData.factories[factory];
+    for (let factory in MAIN.gameData.playerData.factories) {
+      const thatFactory = MAIN.gameData.playerData.factories[factory];
       if (thatFactory.category === 'factory') {
         if (thatFactory.settingsSetted) {
           if (thatFactory.settings.rawStorage[data.truck.product.name] === null) {
@@ -461,14 +467,14 @@ function showWhereProductIsNeeded(data) {
     };
 
 
-    for (let city in MAIN.game.data.cities) {
-      const thatCity = MAIN.game.data.cities[city];
+    for (let city in MAIN.gameData.cities) {
+      const thatCity = MAIN.gameData.cities[city];
       MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
       document.querySelector(`#pathSection_neader_${city}`).onclick = () => {
-        findPath(thatCity)
+        findPath(thatCity);
       };
       document.querySelector(`#pathSection_neader_${city}`).ontouchstart = () => {
-        findPath(thatCity)
+        findPath(thatCity);
       };
     };
 
@@ -503,7 +509,9 @@ function moveWhereProductIsNeeded() {
     tempV.project(MAIN.renderer.camera);
     const x = (tempV.x * .5 + .5) * MAIN.renderer.renderer.domElement.clientWidth;
     const y = (tempV.y * -.5 + .5) * MAIN.renderer.renderer.domElement.clientHeight;
-    document.querySelector(neader.boxId).style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+    // if(document.querySelector(neader.boxId)){
+        document.querySelector(neader.boxId).style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+    // };
   });
 
 

@@ -25,7 +25,7 @@ function init() {
 let timerId = null;
 
 function makeTimer() {
-  let timer = 40;
+  let timer = 60;
   const random = Math.random();
   timerId = random;
   function animate(){

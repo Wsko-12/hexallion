@@ -153,8 +153,23 @@ TUTORIAL.second = function(data){
 
 
 };
+
+TUTORIAL.balance_1 = function(){
+  TUTORIAL.step = 'balance';
+  TUTORIAL.second({
+    body:`
+      Отлично, у Вас есть деньги.
+      </br>
+      </br>
+      Чтобы узнать состояние Вашего <span class="tutorialSection-important">Баланса</span>, нажмите на сумму вашего счета вверху экрана
+    `,
+  });
+};
+
+
+
 TUTORIAL.controls = function(){
-  MAIN.tutorial.step = 'controls_1';
+  TUTORIAL.step = 'controls_1';
 
   TUTORIAL.second({
     body:`
@@ -169,9 +184,6 @@ TUTORIAL.controls = function(){
       TUTORIAL.step = 'controls_2';
       TUTORIAL.second({
         body:`
-          <br/>
-          <br/>
-          <br/>
           Для вращения камеры используйте <span class="tutorialSection-important">правую</span> кнопку мыши или <span class="tutorialSection-important">два</span> пальца на телефоне.
           <div class="tutorialSection-imageDiv tutorialSection-image-controls_2"></div>
         `,
@@ -180,9 +192,6 @@ TUTORIAL.controls = function(){
           TUTORIAL.step = 'controls_3';
           TUTORIAL.second({
             body:`
-              <br/>
-              <br/>
-              <br/>
               Для изменения угла камеры используйте <span class="tutorialSection-important">правую</span> кнопку мыши или <span class="tutorialSection-important">два</span> пальца на телефоне.
               <div class="tutorialSection-imageDiv tutorialSection-image-controls_3"></div>
             `,
@@ -191,9 +200,6 @@ TUTORIAL.controls = function(){
               TUTORIAL.step = 'controls_4';
               TUTORIAL.second({
                 body:`
-                  <br/>
-                  <br/>
-                  <br/>
                   Для изменения зума камеры используйте <span class="tutorialSection-important">колесико</span> мыши или <span class="tutorialSection-important">два</span> пальца на телефоне.
                   <div class="tutorialSection-imageDiv tutorialSection-image-controls_4"></div>
                 `,
@@ -202,9 +208,6 @@ TUTORIAL.controls = function(){
                   TUTORIAL.step = 'controls_4';
                   TUTORIAL.second({
                     body:`
-                      <br/>
-                      <br/>
-                      <br/>
                       Для взаимодействия с объектами используйте <span class="tutorialSection-important">двойной клик</span> или <span class="tutorialSection-important">двойной тап</span> на телефоне.
                       <div class="tutorialSection-imageDiv tutorialSection-image-controls_5"></div>
                     `,
@@ -244,9 +247,7 @@ TUTORIAL.building_2 = function(){
   TUTORIAL.second({
     body:`
       <br/>
-      <br/>
       Купите и постройте лесопилку.
-      <br/>
       <br/>
     `,
   });
@@ -280,7 +281,7 @@ TUTORIAL.factory_1 = function(){
       <span class="tutorialSection-important">Склад</span> увеличивает вместимость склада.
       <br/>
       <br/>
-      Установите настройки и запустите производство.
+      Установите настройки и <span class="tutorialSection-important">Запустите</span> производство.
 
     `,
   });
@@ -310,10 +311,10 @@ TUTORIAL.steps_2 = function(){
   TUTORIAL.step = 'steps_2';
   TUTORIAL.second({
     body:`
-      Теперь вы можете понаблюдать за процессом производства на вашей фабрике.
+      Теперь Вы можете понаблюдать за процессом производства на вашей фабрике.
       <br/>
       <br/>
-      Откройте карточку вашей фабрики кликнув два раза на фабрику.
+      Откройте <span class="tutorialSection-important">Карточку</span> вашей фабрики кликнув два раза на фабрику.
     `,
   });
 };
@@ -340,7 +341,7 @@ TUTORIAL.factory_2 = function(){
       <br/>
       Чтобы уменьшить расходы производства, нужно добавить очки к параметру <span class="tutorialSection-important">Низкие затраты</span> в настройках фабрики.
       <br/>
-      Если вы поставите фабрику на паузу <div class="tutorialSection-iconDiv icon-pause"></div>, то со счета будет списана только половина зарплаты на этой фабрике.
+      Если Вы поставите фабрику на паузу <div class="tutorialSection-iconDiv icon-pause"></div>, то со счета будет списана только половина зарплаты на этой фабрике.
     `,
     button:'Далее',
     fn(){
@@ -458,6 +459,246 @@ TUTORIAL.sell_2 = function(){
       <br/>
       Кликните на жетон продукта на складе, чтобы загрузить его в грузовик.
     `,
+  });
+};
+
+TUTORIAL.truck_3 = function(){
+  TUTORIAL.step = 'truck_3';
+  TUTORIAL.second({
+    body:`
+      Тут как в настольной игре, когда на стол ставится грузовик, игрок кидает кубик и может ходить на столько шагов, сколько выпало на кубике.
+      <br/>
+      <br/>
+      <span class="tutorialSection-important">Важно!</span> При выпадении 6 грузовик пропускает ход.
+      <br/>
+      <br/>
+      Грузовик может передвигаться только по свободным дорогам. Если на перекрестке будет стоять другой грузовик — он не сможет проехать в этом месте.
+      <br/>
+      Но это не касается городов. Если в городе стоит грузовик, то через него могут проезжать другие.
+      <br/>
+      <br/>
+      Кликнете на город и продайте продукт <div class="tutorialSection-iconDiv icon-money"></div> 
+
+    `,
+  });
+};
+
+TUTORIAL.economy_1 = function(){
+  TUTORIAL.step = 'economy_1';
+  TUTORIAL.second({
+    body:`
+      Поздравляю с первой выручкой! :)
+      <br/>
+      Пора поговорить про экономику.
+      <br/>
+      <br/>
+      Кликните на <span class="tutorialSection-important">Город</span> в котором вы совершили продажу два раза чтобы открыть его планшет.
+    `,
+  });
+};
+
+
+TUTORIAL.economy_2 = function(){
+  TUTORIAL.step = 'economy_2';
+  TUTORIAL.second({
+    body:`
+      На планшете города Вы можете видеть склады города и его <span class="tutorialSection-important">Баланс</span>.
+      <br/>
+      <br/>
+      Всякий раз, когда Вы тратите деньги (выплаты кредита, постройки, покупка грузовиков, зарплаты и тд), они распределяются между всеми городами поровну.
+      <br/>
+      Но если Вы что-то продаете в город, то идет списание только с его счета на ваш баланс.
+      <br/>
+      <br/>
+      Это значит, что если торговать только с одним городом, то вскоре Вы не сможете продавать в этот город продукты по хорошей цене, из-за того, что у города попросту не будет денег чтобы с вами расплатиться.
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.economy_3();
+    },
+  });
+};
+
+TUTORIAL.economy_3 = function(){
+  TUTORIAL.step = 'economy_3';
+  TUTORIAL.second({
+    body:`
+      Перейдите во вкладку стройматериалов <div class="tutorialSection-iconDiv icon-shop-construction"></div>
+    `,
+  });
+};
+
+TUTORIAL.economy_4 = function(){
+  TUTORIAL.step = 'economy_4';
+  TUTORIAL.second({
+    body:`
+      Город потребляет продукты с определенной скоростью в шаг со своего склада.
+      <br/>
+      <br/>
+      Городу не выгодно покупать продукты, если его склад этого продукта заполнен, поэтому, он купит у Вас этот продукт со <span class="tutorialSection-important">Скидкой</span>.
+      <br/>
+      Скидка будет равна проценту заполнености склада.
+      <br/>
+      <br/>
+      Это значит, что если склад продукта в городе будет заполнен на 100%, город купит продукт у Вас за бесплатно.
+      <br/>
+      Поэтому внимательно следите, что и куда поставляют ваши конкуренты.
+    `,
+    button:'Понятно',
+    fn(){
+      MAIN.interface.game.city.closeMenu();
+      TUTORIAL.factory_4();
+    },
+  });
+};
+
+TUTORIAL.factory_4 = function(){
+  TUTORIAL.step = 'factory_4';
+  TUTORIAL.second({
+    body:`
+      <br/>
+      Давайте займемся не только <span class="tutorialSection-important">Добычей</span> продукта, а так же их <span class="tutorialSection-important">Переработкой</span>.
+      <br/>
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.factory_5();
+    },
+  });
+};
+TUTORIAL.factory_5 = function(){
+  TUTORIAL.step = 'factory_5';
+  const ceil = MAIN.gameData.map[2][4];
+  MAIN.interface.game.camera.moveCameraTo(ceil.position);
+  ceil.addChosenSectorTemporaryMesh(5);
+  TUTORIAL.second({
+    body:`
+      <br/>
+      Выберите сектор и постройте на нем <span class="tutorialSection-important">Картонажная фабрика</span>.
+      <br/>
+    `,
+  });
+};
+TUTORIAL.factory_6 = function(){
+  TUTORIAL.step = 'factory_6';
+  TUTORIAL.second({
+    body:`
+      У <span class="tutorialSection-important">Перерабатывающих заводов</span> немного другие настройки
+      <br/>
+      <br/>
+      Кликнете на завод, чтобы открыть меню настроек
+    `,
+  });
+};
+
+TUTORIAL.factory_7 = function(){
+  TUTORIAL.step = 'factory_7';
+  TUTORIAL.second({
+    body:`
+      <span class="tutorialSection-important">Объем производства</span> указывает, сколько произведется продуктов за раз. 
+      <br/>
+      По стандарту на всех заводах производится 2 продукта из одного. (Например, из одного дерева получается 2 бумаги).
+      <br/>
+      Повышая этот параметр нужно также повысить параметр <span class="tutorialSection-important">Склада</span>, потому что по стандарту на складе 2 свободных места.
+      <br/>
+      <br/>
+      Так же на этих заводах нет параметра <span class="tutorialSection-important">Качество</span> — оно зависит от того, какого качества перерабатываемые продукты.
+      <br/>
+      <br/>
+      Установите настройки и <span class="tutorialSection-important">Запустите</span> завод.
+    `,
+  });
+};
+
+
+TUTORIAL.factory_8 = function(){
+  TUTORIAL.step = 'factory_8';
+  TUTORIAL.second({
+    body:`
+      <br/>
+      Откройте <span class="tutorialSection-important">Карточку</span> Картонажного завода.
+      <br/>
+    `,
+  });
+};
+
+TUTORIAL.factory_9 = function(){
+  TUTORIAL.step = 'factory_9';
+  TUTORIAL.second({
+    body:`
+      На <span class="tutorialSection-important">Перерабатывающие</span> заводы нужно поставлять сырье.
+      <br/>
+      В верхней части карточки находится <span class="tutorialSection-important">Склад сырья</span>.
+      <div class="tutorialSection-imageDiv tutorialSection-image-factory_5"></div>
+      <br/>
+      <br/>
+      Если в <span class="tutorialSection-important">Рецептах</span> выбран продукт и сырье есть на складе, то производство начнется автоматически.
+      <div class="tutorialSection-imageDiv tutorialSection-image-factory_6"></div>
+      <br/> 
+      Продукты, которые находятся на складе сырья также можно загружать в грузовик.
+      <br/>
+      <br/> 
+      Производство на перерабатывающих заводах будет начинаться, даже если весь склад заполнен.
+      <br/>
+      <br/>   
+      Выберите продукт <span class="tutorialSection-important">Бумага</span>(<div class="tutorialSection-iconDiv product-paper"></div> ) в <span class="tutorialSection-important">Рецептах</span>
+    `,
+  });
+};
+
+TUTORIAL.delivery_1 = function(){
+  TUTORIAL.step = 'delivery_1';
+  TUTORIAL.second({
+    body:`
+      Откройте карточку  <span class="tutorialSection-important">Лесопилки</span> и нажимайте <span class="tutorialSection-important">Закончить ход</span> до тех пор, пока продукт не будет на складе.
+    `,
+  });
+};
+
+TUTORIAL.delivery_2 = function(){
+  TUTORIAL.step = 'delivery_2';
+  TUTORIAL.second({
+    body:`
+    Теперь нужно доставить дерево на <span class="tutorialSection-important">Картонажную фабрику</span>.
+    <br/>
+    <br/>
+    Кликните на жетон продукта на складе, чтобы загрузить его в грузовик.
+    `,
+  });
+};
+
+TUTORIAL.delivery_3 = function(){
+  TUTORIAL.step = 'delivery_3';
+  TUTORIAL.second({
+    body:`
+    <br/>
+    Доставьте дерево на <span class="tutorialSection-important">Картонажную фабрику</span>.
+
+    Кликнете на ярлык Картонажной фабрики и затем на доставку <div class="tutorialSection-iconDiv icon-delivery"></div> 
+    <br/>
+    `,
+  });
+};
+TUTORIAL.delivery_4 = function(){
+  TUTORIAL.step = 'delivery_4';
+  TUTORIAL.second({
+    body:`
+      Отлично, еще один завод заработал!
+      <br/>
+      <br/>
+      Последнее, о чем я хочу рассказать, это  <span class="tutorialSection-important">Автоотправка</span> грузовиков.
+    `,
+    button:'Продолжить',
+    fn(){
+      TUTORIAL.autosending_1();
+    },
+  });
+};
+
+TUTORIAL.autosending_1 = function(){
+  TUTORIAL.step = 'autosending_1';
+  TUTORIAL.second({
+    body:``,
   });
 };
 
