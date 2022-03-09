@@ -19,6 +19,7 @@ MAIN.interface = INTERFACE;
 MAIN.tutorial = TUTORIAL;
 MAIN.init = function(){
   MAIN.game.scene.assets.load().then((res)=>{
+    document.querySelector('#loading').remove();
     MAIN.renderer.init();
     const map = [
       'meadow', 'meadow', 'steelMine', 'mountain', 'meadow',
@@ -79,7 +80,7 @@ MAIN.init = function(){
     MAIN.interface.init();
     MAIN.interface.startedCheckEvents = true;
     MAIN.tutorial.start();
-    console.log(MAIN)
+    // console.log(MAIN)
 
   });
 };

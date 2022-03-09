@@ -115,24 +115,20 @@ class Truck {
     this.ready = false;
     // MAIN.game.functions.autosending.turn();
     const sendData = {
-      game: MAIN.game.data.commonData.id,
-      player: MAIN.game.data.playerData.login,
       truck: this.id,
       product: this.product.id,
       autosend: this.autosend,
     };
-    const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
-
-
-
+    // const value = Math.floor(1 + Math.random() * (6 + 1 - 1));
+    let value = 5;
 
     /*  чтобы грузовик перепроверял лучшую цену  */
 
     if (this.autosend.sell) {
       const product = this.product.name;
       const prices = [];
-      for (let city in MAIN.game.data.cities) {
-        const thisCity = MAIN.game.data.cities[city];
+      for (let city in MAIN.gameData.cities) {
+        const thisCity = MAIN.gameData.cities[city];
         prices.push({
           city: thisCity,
           price: thisCity.getCurrentProductPrice(this.product),
@@ -152,7 +148,7 @@ class Truck {
                   autosend: true,
                   finalObject: prices[index].city,
                   finish: prices[index].city.fieldCeil,
-                  start: MAIN.game.data.map[truck.place.z][truck.place.x],
+                  start: MAIN.gameData.map[truck.place.z][truck.place.x],
                   value: null,
                   dontCheckTrafficJam: false,
                 };
@@ -225,8 +221,8 @@ class Truck {
     /* c объездом пробок */
     if (value < 6) {
       const lastPoint = this.autosend.fullPath[this.autosend.fullPath.length - 1];
-      const finalCeil = MAIN.game.data.map[lastPoint.z][lastPoint.x];
-      const startCeil = MAIN.game.data.map[this.place.z][this.place.x];
+      const finalCeil = MAIN.gameData.map[lastPoint.z][lastPoint.x];
+      const startCeil = MAIN.gameData.map[this.place.z][this.place.x];
       let finalObject;
       if (finalCeil.cityCeil) {
         finalObject = finalCeil.city;
@@ -269,7 +265,22 @@ class Truck {
           if (lastPointFullPathIndexes.x === lastPointCuttedPathIndexes.x && lastPointFullPathIndexes.z === lastPointCuttedPathIndexes.z) {
             sendData.autosend.finished = true;
           };
-          MAIN.socket.emit('GAME_truck_send', sendData);
+          //значит, грузовик в той же клетке, где и финальная точка
+          if(sendData.path.length === 1){
+            if(sendData.autosend.sell){
+              MAIN.gameData.cities[sendData.autosend.finalObject].buyProduct(this);
+            };
+            if(sendData.autosend.delivery){
+              //setTimeout чисто для визуала
+              setTimeout(()=>{
+                MAIN.gameData.playerData.factories[sendData.autosend.finalObject].receiveProduct(this);
+              },500);
+              
+            };
+
+          }else{
+            this.moveAlongWay(sendData);
+          };
         } else {
           //тут выкинуть предупреждение, что грузовик застрял
           console.log('truck stuck');
@@ -389,12 +400,13 @@ class Truck {
   };
 
   destroyRequest() {
-    const data = {
-      gameID: MAIN.game.data.commonData.id,
-      player: this.player,
-      truckID: this.id,
-    };
-    MAIN.socket.emit('GAME_truck_destroy', data);
+    this.clear();
+    // const data = {
+    //   gameID: MAIN.game.data.commonData.id,
+    //   player: this.player,
+    //   truckID: this.id,
+    // };
+    // MAIN.socket.emit('GAME_truck_destroy', data);
   };
 
   turn() {
@@ -702,25 +714,12 @@ class Truck {
               if (that.autosend.finished) {
                 if (that.autosend.sell) {
                   MAIN.gameData.cities[that.autosend.finalObject].buyProduct(that);
-                  // const sendData = {
-                  //   game: MAIN.game.data.commonData.id,
-                  //   player: that.player,
-                  //   truck: that.id,
-                  //   city: that.autosend.finalObject,
-                  //   product: that.product.id,
-                  // };
-                  // MAIN.socket.emit('GAME_product_sell', sendData);
                 };
-                if (that.autosend.delivery) {
-                  MAIN.gameData.playerData[that.autosend.finalObject].receiveProduct(that);
-                  // const sendData = {
-                  //   game: MAIN.game.data.commonData.id,
-                  //   player: that.player,
-                  //   truck: that.id,
-                  //   factory: that.autosend.finalObject,
-                  //   product: that.product.id,
-                  // };
-                  // MAIN.socket.emit('GAME_product_delivery', sendData);
+                //bug fix, потому что в autosend.sell выше чистит autosend
+                if(that.autosend){
+                  if (that.autosend.delivery) {
+                    MAIN.gameData.playerData[that.autosend.finalObject].receiveProduct(that);
+                  };
                 };
               };
               return;

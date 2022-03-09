@@ -49,6 +49,7 @@ ASSETS.load = async function(){
   let modelsPromise = new Promise((resolve, reject) => {
     function loadModels(){
       modelIndex++;
+      document.querySelector('#loadingProgress').style.width = `${((modelIndex/ATLAS.models.length)*100)/2}%`
       if(modelIndex < ATLAS.models.length){
         const modelData = ATLAS.models[modelIndex];
 
@@ -79,6 +80,7 @@ ASSETS.load = async function(){
 
      function loadTextures(){
        textureIndex++;
+       document.querySelector('#loadingProgress').style.width = `${50+((textureIndex/ATLAS.textures.length)*100)/2}%`
        if(textureIndex < ATLAS.textures.length){
          const textureData = ATLAS.textures[textureIndex];
 

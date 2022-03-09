@@ -1,0 +1,21 @@
+#loading{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 100000;
+    background-color: black;
+    display: flex;
+}
+.loading-container{
+    width: 180px;
+    height: 5px;
+    background-color: rgb(94, 94, 94);
+    margin: auto;
+    overflow: hidden;
+    border-radius: 10px;
+}
+#loadingProgress{
+    width: 0%;
+    height: 100%;
+    background-color: #D7355C;
+}

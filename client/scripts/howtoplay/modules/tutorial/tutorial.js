@@ -20,6 +20,10 @@ TUTORIAL.start = function(){
         <br/>
         <br/>
         Однако, не все так просто. Нужно следить за спросом на продукцию, за логистикой, ну и элемент удачи никуда не пропадал.
+        <br/>
+        Каждую игру клетки на поле будут раскладываться случайным образом, поэтому выстраивать победную тактику придется по-разному.
+        <br/>
+        <br/>
         Ваша задача - выбить всех конкурентов с рынка, обонкротив их. Ну, обо всем по порядку.
         <br/>
         <br/>
@@ -341,7 +345,7 @@ TUTORIAL.factory_2 = function(){
       <br/>
       Чтобы уменьшить расходы производства, нужно добавить очки к параметру <span class="tutorialSection-important">Низкие затраты</span> в настройках фабрики.
       <br/>
-      Если Вы поставите фабрику на паузу <div class="tutorialSection-iconDiv icon-pause"></div>, то со счета будет списана только половина зарплаты на этой фабрике.
+      Если Вы поставите фабрику на паузу <div class="tutorialSection-iconDiv icon-pause"></div>, то со счета будет списана только половина зарплаты на этой фабрике и удалится текущий производимый продукт.
     `,
     button:'Далее',
     fn(){
@@ -457,7 +461,7 @@ TUTORIAL.sell_2 = function(){
       Теперь можно продать продукт.
       <br/>
       <br/>
-      Кликните на жетон продукта на складе, чтобы загрузить его в грузовик.
+      Кликните на <span class="tutorialSection-important">жетон</span> продукта на складе, чтобы загрузить его в грузовик.
     `,
   });
 };
@@ -662,7 +666,7 @@ TUTORIAL.delivery_2 = function(){
     Теперь нужно доставить дерево на <span class="tutorialSection-important">Картонажную фабрику</span>.
     <br/>
     <br/>
-    Кликните на жетон продукта на складе, чтобы загрузить его в грузовик.
+    Кликните на <span class="tutorialSection-important">жетон</span> продукта на складе, чтобы загрузить его в грузовик.
     `,
   });
 };
@@ -671,11 +675,10 @@ TUTORIAL.delivery_3 = function(){
   TUTORIAL.step = 'delivery_3';
   TUTORIAL.second({
     body:`
+    Доставьте дерево на Картонажную фабрику.
     <br/>
-    Доставьте дерево на <span class="tutorialSection-important">Картонажную фабрику</span>.
-
-    Кликнете на ярлык Картонажной фабрики и затем на доставку <div class="tutorialSection-iconDiv icon-delivery"></div> 
     <br/>
+    Кликнете на <span class="tutorialSection-important">Ярлык</span> Картонажной фабрики и затем на доставку <div class="tutorialSection-iconDiv icon-delivery"></div> 
     `,
   });
 };
@@ -698,8 +701,172 @@ TUTORIAL.delivery_4 = function(){
 TUTORIAL.autosending_1 = function(){
   TUTORIAL.step = 'autosending_1';
   TUTORIAL.second({
-    body:``,
+    body:`
+    <span class="tutorialSection-important">Автоотправка</span> нужна для того, что когда у Вас будет много фабрик, Вы могли выстраивать автоматические очереди отправки продуктов с завода на завод или в город.
+    <br/>
+    <br/>
+    Откройте <span class="tutorialSection-important">Карточку</span> лесопилки, и перейдите в меню <span class="tutorialSection-important">Автоотправка</span> внизу карточки`,
   });
 };
+
+
+TUTORIAL.autosending_2 = function(){
+  TUTORIAL.step = 'autosending_2';
+  TUTORIAL.second({
+    body:`
+      В меню <span class="tutorialSection-important">Автоотправка</span>  будет <span class="tutorialSection-important">Список</span> продуктов, которые производит данное производство. На лесопилке всего один — дерево.
+      <br/>
+      <br/>
+      Есть два вида отправки:
+      <br/>
+      <div class="tutorialSection-iconDiv icon-bestPrice"></div> — отправляет грузовик с продуктом в город, где лучшая цена.
+      <br/>
+      <div class="tutorialSection-iconDiv icon-findRoute"></div> — отправляет грузовик в конечную точку, которую задаете Вы.
+      <br/>
+      <br/>
+      Когда <span class="tutorialSection-important">Очередь</span> автооправок создана и продукт появится на складе предприятия, он сразу отправится по нужному маршруту из очереди(При наличии свободных грузовиков). 
+      <br/>
+      <br/>
+      Когда очередь дойдет до конца, она возобновится <span class="tutorialSection-important">Сначала</span>.
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.autosending_3();
+    }
+  });
+};
+
+TUTORIAL.autosending_3 = function(){
+  TUTORIAL.step = 'autosending_3';
+  TUTORIAL.second({
+    body:`
+      Давайте сделаем <span class="tutorialSection-important">Очередь</span> автоотправок.
+      <br/>
+      <br/>
+      Сделаем так: сначала, когда продукт произведется, пусть он едет продаваться в город, а следующий готовый продукт поедет на картонажную фабрику.
+      <br/>
+      <br/>
+      Для этого сначала добавим маршрут <span class="tutorialSection-important">Лучшая цена</span>.
+      <br/>
+      <br/>
+      Кликнете на <div class="tutorialSection-iconDiv icon-bestPrice"></div> чтобы добавить маршрут в очередь.
+
+    `,
+  });
+};
+
+TUTORIAL.autosending_4 = function(){
+  TUTORIAL.step = 'autosending_4';
+  TUTORIAL.second({
+    body:`
+      Теперь добавим в очередь <span class="tutorialSection-important">Конечную точку</span> — Картонажную фабрику.
+      <br/>
+      <br/>
+      Кликнете на <div class="tutorialSection-iconDiv icon-findRoute"></div> указать конечную точку.
+    `,
+  });
+};
+
+TUTORIAL.autosending_5 = function(){
+  TUTORIAL.step = 'autosending_5';
+  TUTORIAL.second({
+    body:`
+      <br/>
+      Теперь кликнете на <span class="tutorialSection-important">ярлык</span>  Картонажной фабрики, чтобы указать конечную точку.
+    `,
+  });
+};
+
+
+TUTORIAL.autosending_6 = function(){
+  TUTORIAL.step = 'autosending_6';
+  TUTORIAL.second({
+    body:`
+      Отлично, <span class="tutorialSection-important">очередь</span> отправок готова.
+      <br/>
+      <br/>
+      Теперь, когда продукт будет готов, он автоматически отправится по нужным маршрутам.
+      <br/>
+      <br/>
+      Маршрут, по которому отправится грузовик следующим помечен зеленым цветом.
+      <br/>
+      Вы можете поменять его, кликнув на <span class="tutorialSection-important">другой маршрут</span> из этой очереди.
+      <br/>
+      <br/>
+      Вам остается только следить за тем, чтобы на дороге не создавались заторы и все отлично работало. 
+    `,
+    button:'Понятно',
+    fn(){
+      TUTORIAL.products_1();
+    },
+  });
+};
+
+TUTORIAL.products_1 = function(){
+  TUTORIAL.step = 'products_1';
+  TUTORIAL.second({
+    body:`
+      И пару слов о природных продуктах.
+      <br/>
+      <br/>
+      Такие продукты как:
+      <br/>
+      Дерево (<div class="tutorialSection-iconDiv product-wood"></div>), 
+      <br/>
+      Вода (<div class="tutorialSection-iconDiv product-water"></div>), 
+      <br/>
+      Песок (<div class="tutorialSection-iconDiv product-sand"></div>),
+      <br/>
+      находятся "на поверхности", то есть видны сразу.
+      <br/>
+      <br/>
+      Чтобы добывать воду, потройте Водоочистительную станцию <span class="tutorialSection-important">рядом</span> с водой, как строили лесопилку рядом с лесом.
+      <br/>
+      <br/>
+      Песок добывается на той же клетке, где песок.
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.products_2();
+    },
+  });
+};
+
+TUTORIAL.products_2 = function(){
+  TUTORIAL.step = 'products_2';
+  TUTORIAL.second({
+    body:`
+      Однако, есть еще "скрытые" продукты, такие как:
+      <br/>
+      Cталь (<div class="tutorialSection-iconDiv product-steel"></div>), 
+      <br/>
+      Нефть (<div class="tutorialSection-iconDiv product-oil"></div>),
+      <br/>
+      Золото (<div class="tutorialSection-iconDiv product-gold"></div>).
+      <br/>
+      <br/>
+      Вы их обнаружите, когда начнете строить на клетке, где лежат эти ресурсы. Вы обнаружите, что можно будет построить Нефтяную вышку, Сталелитейный завод или Золотодобывающий рудник.
+      <br/>
+      <br/>
+      Поэтому, исследуйте карту, когда есть на это время.
+    `,
+    button:'Далее',
+    fn(){
+      TUTORIAL.end();
+    },
+  });
+};
+TUTORIAL.end = function(){
+  TUTORIAL.step = 'freePlay';
+  TUTORIAL.second({
+    body:`
+      Вы находитесь в режиме свободной игры.
+      <br/>
+      <br/>
+      Играйте вместе с друзьями онлайн на  <a href="http://kapitalisttest.herokuapp.com" style="text-decoration-color: white"><span class="tutorialSection-important">kapitalisttest.herokuapp.com</span></a>.
+    `,
+  });
+};
+
 
 export {TUTORIAL};

@@ -533,8 +533,8 @@ function showWhereCanSendProduct(data) {
   const container = document.querySelector('#pathSection_neadersContainer');
   container.innerHTML = '';
   let contant = '';
-  for (let factory in MAIN.game.data.playerData.factories) {
-    const thatFactory = MAIN.game.data.playerData.factories[factory];
+  for (let factory in MAIN.gameData.playerData.factories) {
+    const thatFactory = MAIN.gameData.playerData.factories[factory];
     if (thatFactory.category === 'factory') {
       if (thatFactory.settingsSetted) {
         if (thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]) {
@@ -554,8 +554,8 @@ function showWhereCanSendProduct(data) {
     };
   };
 
-  for (let city in MAIN.game.data.cities) {
-    const thatCity = MAIN.game.data.cities[city];
+  for (let city in MAIN.gameData.cities) {
+    const thatCity = MAIN.gameData.cities[city];
     const line = `<div class="pathSection_neadersContainer-item" id="pathSection_neader_${city}">
                    <div class="pathSection_neadersContainer-iconBox">
                        <div class="pathSection_neadersContainer-icon product-${data.product}"></div>
@@ -573,8 +573,8 @@ function showWhereCanSendProduct(data) {
   container.insertAdjacentHTML('beforeEnd', contant);
 
   function applyFunctions() {
-    for (let factory in MAIN.game.data.playerData.factories) {
-      const thatFactory = MAIN.game.data.playerData.factories[factory];
+    for (let factory in MAIN.gameData.playerData.factories) {
+      const thatFactory = MAIN.gameData.playerData.factories[factory];
       if (thatFactory.category === 'factory') {
         if (thatFactory.settingsSetted) {
           if (thatFactory.settings.rawStorage[data.product] === null || thatFactory.settings.rawStorage[data.product]) {
@@ -585,43 +585,21 @@ function showWhereCanSendProduct(data) {
                 finalObject: thatFactory,
               });
               hideWhereCanSendProduct();
+              if(thatFactory.settings.name === 'paperFactory' && MAIN.tutorial.step === 'autosending_5'){
+                MAIN.tutorial.autosending_6();
+              };
             };
             document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = action;
             document.querySelector(`#pathSection_neader_${thatFactory.id}`).ontouchstart = action;
 
-
-            // document.querySelector(`#pathSection_neader_${thatFactory.id}`).onclick = () => {
-            //   hideWhereCanSendProduct();
-            //   const autosendData = {
-            //     mode: 'route',
-            //     factory: data.factory,
-            //     product: data.product,
-            //     final: thatFactory.fieldCeil,
-            //     finalObject: thatFactory,
-            //   };
-            //   MAIN.game.functions.autosending.addFactory(autosendData);
-            //   MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
-            // };
-            // document.querySelector(`#pathSection_neader_${thatFactory.id}`).ontouchstart = () => {
-            //   hideWhereCanSendProduct();
-            //   const autosendData = {
-            //     mode: 'route',
-            //     factory: data.factory,
-            //     product: data.product,
-            //     final: thatFactory.fieldCeil,
-            //     finalObject: thatFactory,
-            //   };
-            //   MAIN.game.functions.autosending.addFactory(autosendData);
-            //   MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
-            // };
           };
         };
       };
     };
 
 
-    for (let city in MAIN.game.data.cities) {
-      const thatCity = MAIN.game.data.cities[city];
+    for (let city in MAIN.gameData.cities) {
+      const thatCity = MAIN.gameData.cities[city];
       MAIN.interface.deleteTouches(document.querySelector(`#pathSection_neader_${city}`));
       function action(){
         data.callback({
@@ -632,32 +610,6 @@ function showWhereCanSendProduct(data) {
       };
       document.querySelector(`#pathSection_neader_${city}`).onclick = action;
       document.querySelector(`#pathSection_neader_${city}`).ontouchstart = action;
-
-
-      // document.querySelector(`#pathSection_neader_${city}`).onclick = () => {
-      //   hideWhereCanSendProduct();
-      //   const autosendData = {
-      //     mode: 'route',
-      //     factory: data.factory,
-      //     product: data.product,
-      //     final: thatCity.fieldCeil,
-      //     finalObject: thatCity,
-      //   };
-      //   MAIN.game.functions.autosending.addFactory(autosendData);
-      //   MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
-      // };
-      // document.querySelector(`#pathSection_neader_${city}`).ontouchstart = () => {
-      //   hideWhereCanSendProduct();
-      //   const autosendData = {
-      //     mode: 'route',
-      //     factory: data.factory,
-      //     product: data.product,
-      //     final: thatCity.fieldCeil,
-      //     finalObject: thatCity,
-      //   };
-      //   MAIN.game.functions.autosending.addFactory(autosendData);
-      //   MAIN.interface.game.factory.updateFactoryAutosendBody(data.factory);
-      // };
     };
 
   };

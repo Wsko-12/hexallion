@@ -49,7 +49,16 @@ const CREDIT = {
 
           const creditData = MAIN.game.configs.credits[globalChoosenCredit];
           MAIN.gameData.playerData.balance = creditData.amount;
-          MAIN.gameData.playerData.credit = creditData;
+          MAIN.gameData.playerData.credit = {
+            title:creditData.title,
+            pays:creditData.pays,
+            amount:creditData.amount,
+            deferment:creditData.deferment,
+            procent:creditData.procent,
+          };
+
+
+
           MAIN.gameData.playerData.credit.creditName = globalChoosenCredit;
           MAIN.gameData.playerData.credit.allPays = creditData.pays;
           document.querySelector('#chooseCreditMenuSection').remove();

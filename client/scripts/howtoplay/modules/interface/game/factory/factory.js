@@ -548,6 +548,9 @@ function updateFactoryAutosendBody(factory) {
       if(!directions[product]){
         openDirectionList()
       };
+      if(MAIN.tutorial.step === 'autosending_3'){
+        MAIN.tutorial.autosending_4();
+      };
     };
 
 
@@ -572,6 +575,9 @@ function updateFactoryAutosendBody(factory) {
           };
         },
 
+      };
+      if(MAIN.tutorial.step === 'autosending_4'){
+        MAIN.tutorial.autosending_5();
       };
       MAIN.interface.game.path.showWhereCanSendProduct(params);
     };
@@ -770,6 +776,9 @@ function showFactoryMenu(factory) {
       MAIN.tutorial.delivery_2();
     };
   };
+  if(MAIN.tutorial.step === 'autosending_1'){
+      MAIN.tutorial.autosending_2();
+  };
   for (let i = 0; i < factory.settings.storage.length; i++) {
     const product = factory.settings.storage[i];
     if (product) {
@@ -807,7 +816,7 @@ function showFactoryMenu(factory) {
                    <div id="factory_settingsButton" class="factory_header_header-button icon-settings">
 
                    </div>
-                   <div id="factory_playButton" class="factory_header_header-button ${factory.settings.paused ? 'icon-play':'icon-pause'}">
+                   <div id="factory_playButton" class="factory_header_header-button ${factory.paused ? 'icon-play':'icon-pause'}">
 
                    </div>
                  </div>
@@ -918,27 +927,26 @@ function showFactoryMenu(factory) {
     };
   };
 
-  document.querySelector('#factory_playButton').onclick = () => {
-    const data = {
-      player: MAIN.game.data.playerData.login,
-      gameID: MAIN.game.data.commonData.id,
-      factory: factory.id,
+  function pauseFactory(){
+    if(factory.paused){
+      factory.paused = false;
+    }else{
+      factory.paused = true;
+      factory.settings.productInProcess = null;
+      factory.settings.productLine.forEach((item,i)=>{
+        factory.settings.productLine[i] = 0;
+      });
     };
 
-    if (!MAIN.game.data.playerData.gameOver) {
-      MAIN.socket.emit('GAME_factory_stop', data);
-    };
+    MAIN.interface.game.factory.updateFactoryMenu();
+  };
+
+
+  document.querySelector('#factory_playButton').onclick = () => {
+    pauseFactory();
   };
   document.querySelector('#factory_playButton').ontouchstart = () => {
-    const data = {
-      player: MAIN.game.data.playerData.login,
-      gameID: MAIN.game.data.commonData.id,
-      factory: factory.id,
-    };
-
-    if (!MAIN.game.data.playerData.gameOver) {
-      MAIN.socket.emit('GAME_factory_stop', data);
-    };
+    pauseFactory();
   };
 
   document.querySelector('#factory_settingsButton').onclick = () => {

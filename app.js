@@ -1920,8 +1920,8 @@ class CREDIT {
       if (this.pays > 0) {
         this.pays -= 1;
         const pay = (this.amount / this.paysParts) + (this.amount / this.paysParts) * (this.procent / 100);
-        this.player.balance -= pay;
-        this.player.sendBalanceMessage('Credit payment', (-pay));
+        this.player.balance -=Math.floor(pay);
+        this.player.sendBalanceMessage('Credit payment', (-Math.floor(pay)));
         send();
       };
     };

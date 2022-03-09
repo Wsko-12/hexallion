@@ -112,17 +112,17 @@ function addBalanceMessage(message,amount){
     document.querySelector('#balanceMenu_balanceList').insertAdjacentHTML('afterBegin',div);
     updatePayPerStep();
 
-    statistics.lastStepProfit = statistics.thisStepProfit;
-    statistics.lastStepLose = statistics.thisStepLose;
-    statistics.thisStepProfit = 0;
-    statistics.thisStepLose = 0;
-    if(statistics.lastStepProfit > statistics.maxProfit){
-      statistics.maxProfit = statistics.lastStepProfit;
-    };
-    if(statistics.lastStepLose > statistics.maxLose){
-      statistics.maxLose = statistics.lastStepLose;
-    };
-    console.log(statistics);
+    // statistics.lastStepProfit = statistics.thisStepProfit;
+    // statistics.lastStepLose = statistics.thisStepLose;
+    // statistics.thisStepProfit = 0;
+    // statistics.thisStepLose = 0;
+    // if(statistics.lastStepProfit > statistics.maxProfit){
+    //   statistics.maxProfit = statistics.lastStepProfit;
+    // };
+    // if(statistics.lastStepLose > statistics.maxLose){
+    //   statistics.maxLose = statistics.lastStepLose;
+    // };
+    // console.log(statistics);
     return;
 
 
