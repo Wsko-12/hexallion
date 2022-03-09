@@ -272,24 +272,41 @@ class Factory {
       //   mode:'route',
       //   truck:send.freeTruck,
       // }
-      if (MAIN.game.data.commonData.turnBasedGame) {
-        if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
-          auto.truck.product = null;
-          return;
-        };
-      };
 
 
-      const data = {
-        gameID: MAIN.game.data.commonData.id,
-        player: MAIN.game.data.playerData.login,
-        factoryID: this.id,
-        truckID: auto.truck.id,
-        storageIndex: index,
-      };
-      delete auto.truck;
-      data.auto = auto;
-      MAIN.socket.emit('GAME_factory_sendProduct', data);
+      // if (MAIN.game.data.commonData.turnBasedGame) {
+      //   if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login) {
+      //     auto.truck.product = null;
+      //     return;
+      //   };
+      // };
+
+
+      // const data = {
+      //   gameID: MAIN.game.data.commonData.id,
+      //   player: MAIN.game.data.playerData.login,
+      //   factoryID: this.id,
+      //   truckID: auto.truck.id,
+      //   storageIndex: index,
+      // };
+      // delete auto.truck;
+      // data.auto = auto;
+      // MAIN.socket.emit('GAME_factory_sendProduct', data);
+
+      const product = this.settings.storage[index];
+      this.settings.storage[index] = null;
+
+
+      auto.truck.placeOnMap({
+        autosend:auto,
+        product:product,
+        positionIndexes:{z:this.fieldCeil.indexes.z,x:this.fieldCeil.indexes.x},
+      });
+
+
+      MAIN.interface.game.factory.updateFactoryMenu();
+
+      // console.log('here')
     };
   };
 
