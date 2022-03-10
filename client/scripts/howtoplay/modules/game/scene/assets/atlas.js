@@ -265,7 +265,7 @@ ATLAS.models = [
 
   { name:'paperFactory',
     folder:'buildings/',
-    file:'factory_test.glb',
+    file:'paperFactory.glb',
   },
 
   { name:'glassFactory',

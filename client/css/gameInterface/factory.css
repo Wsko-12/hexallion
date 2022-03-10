@@ -65,6 +65,9 @@
 .factory_header_bg-sandMine {
   background-image: url(../img/factoryCards/sandmine.png);
 }
+.factory_header_bg-paperFactory {
+  background-image: url(../img/factoryCards/paperFactory.png);
+}
 
 .factory_header_header {
   font-size: 8px;
