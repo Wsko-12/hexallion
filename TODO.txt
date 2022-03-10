@@ -5,7 +5,7 @@
 таблицу лидеров
 грузовики цвета игрока
 factories corner menu
-how to play;
+
 
 
 
@@ -29,3 +29,7 @@ how to play;
 game over queue
 player statistic
 player exp
+
+
+
+how to play:

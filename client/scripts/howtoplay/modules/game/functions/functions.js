@@ -28,7 +28,25 @@ const FUNCTIONS = {
   },
 
   turn(){
+    MAIN.interface.game.balance.addBalanceMessage(null);
     MAIN.interface.game.turn.makeTimer();
+
+    const credit = MAIN.gameData.playerData.credit;
+    if (credit.deferment > 0) {
+      credit.deferment -= 1;
+    } else {
+      if (credit.pays > 0) {
+        credit.pays -= 1;
+        const pay = (credit.amount / credit.allPays) + (credit.amount / credit.allPays) * (credit.procent / 100);
+        // MAIN.interface.game.balance.change(MAIN.gameData.playerData.balance-Math.floor(pay));
+        MAIN.interface.game.balance.addBalanceMessage('Credit payment', (-Math.floor(pay)));
+        MAIN.interface.game.balance.addBalanceMessage('Возврат платежа по кредиту (ОБУЧЕНИЕ)',Math.floor(pay));
+        MAIN.game.functions.payToCities(Math.floor(pay));
+      };
+    };
+    MAIN.interface.game.balance.updateCreditHistory();
+
+
     //до сих пор не работает на перерабатывающих фабриках
     for(let factory in MAIN.gameData.playerData.factories){
       const thisFactory = MAIN.gameData.playerData.factories[factory];
@@ -61,7 +79,7 @@ const FUNCTIONS = {
       thisCity.turn();
     };
     MAIN.interface.game.city.openMenu();
-    
+    this.autosending.turn();
 
   },
 
@@ -551,9 +569,9 @@ const FUNCTIONS = {
         } else {
           const indexes = path[i]
           //при автоматической
-          if (MAIN.game.data.map[indexes.z]) {
-            if (MAIN.game.data.map[indexes.z][indexes.x]) {
-              if (MAIN.game.data.map[indexes.z][indexes.x].checkRoadEmpty()) {
+          if (MAIN.gameData.map[indexes.z]) {
+            if (MAIN.gameData.map[indexes.z][indexes.x]) {
+              if (MAIN.gameData.map[indexes.z][indexes.x].checkRoadEmpty()) {
                 break;
               };
             };
@@ -577,7 +595,6 @@ const FUNCTIONS = {
     inProgressCounter:0,
 
     turn: async function() {
-
       const that = this;
       function repeat(){
         setTimeout(()=>{
@@ -585,11 +602,11 @@ const FUNCTIONS = {
           that.turn();
         },500);
       };
-      if (MAIN.game.data.commonData.turnBasedGame) {
-        if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
-          return;
-        };
-      };
+      // if (MAIN.gameData.commonData.turnBasedGame) {
+      //   if (MAIN.game.data.commonData.queue != MAIN.game.data.playerData.login || MAIN.game.data.commonData.turnsPaused) {
+      //     return;
+      //   };
+      // };
       if(this.inProgress){
         this.inProgressCounter++;
         if(this.inProgressCounter >= 2){
@@ -602,7 +619,7 @@ const FUNCTIONS = {
       this.inProgress = true;
 
 
-      const playerData = MAIN.game.data.playerData;
+      const playerData = MAIN.gameData.playerData;
       //сначала смотрим есть ли свободные грузовики
       let freeTruck = null;
 
@@ -612,6 +629,7 @@ const FUNCTIONS = {
           freeTruck = thisTruck;
         };
       };
+      
       if(!freeTruck){
         repeat();
         return;
@@ -691,8 +709,8 @@ const FUNCTIONS = {
       if (factoryToSend.direction.mode === 'price') {
         const product = factoryToSend.product.name;
         const prices = [];
-        for (let city in MAIN.game.data.cities) {
-          const thisCity = MAIN.game.data.cities[city];
+        for (let city in MAIN.gameData.cities) {
+          const thisCity = MAIN.gameData.cities[city];
           prices.push({
             city: thisCity,
             price: thisCity.getCurrentProductPrice(product),

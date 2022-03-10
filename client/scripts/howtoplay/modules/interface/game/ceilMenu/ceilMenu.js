@@ -360,6 +360,13 @@ const CEIL_MENU = {
 
   },
   sendBuildRequest(ceil, sector, building) {
+    if(MAIN.tutorial.step != 'building_2' && MAIN.tutorial.step != 'road_1' && MAIN.tutorial.step != 'factory_5' && MAIN.tutorial.step != 'freePlay'){
+      return;
+    };
+
+
+
+
     const data = {
       build:{
         building:building,
