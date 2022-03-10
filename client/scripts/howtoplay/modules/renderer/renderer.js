@@ -681,6 +681,11 @@ function setSize() {
   const windowWidth = document.body.clientWidth;
   const windowHeight = document.body.clientHeight;
 
+  if(windowWidth < windowHeight){
+    document.querySelector('#turnDeviceSection').style.display = 'flex';
+  }else{
+    document.querySelector('#turnDeviceSection').style.display = 'none';
+  };
 
 
 
