@@ -336,7 +336,7 @@ ATLAS.models = [
   },
   { name:'steelMill',
     folder:'buildings/',
-    file:'steelMill_test.glb',
+    file:'steelMill.glb',
   },
   { name:'goldMill',
     folder:'buildings/',

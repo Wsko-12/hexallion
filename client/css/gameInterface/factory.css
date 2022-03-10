@@ -68,6 +68,9 @@
 .factory_header_bg-paperFactory {
   background-image: url(../img/factoryCards/paperFactory.png);
 }
+.factory_header_bg-steelMill {
+  background-image: url(../img/factoryCards/steelMill.png);
+}
 
 .factory_header_header {
   font-size: 8px;
