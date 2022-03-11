@@ -34,6 +34,7 @@ function generateId(type, x) {
 
 const CEIL_MENU = {
   showSectorMenu(ceil, sector, buttons) {
+    
     if(MAIN.tutorial.step === 'building_1'){
       if(ceil === MAIN.gameData.map[2][4] && sector === 3){
         MAIN.tutorial.building_2();
@@ -127,9 +128,26 @@ const CEIL_MENU = {
           `;
         });
 
+        let buildingButtonFn = false;
+        let buildingButton = `<div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button-nonActive">`;
+        if(MAIN.tutorial.step === 'freePlay' ){
+          buildingButtonFn = true;
+          buildingButton = `<div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.gameData.playerData.balance ? '-nonActive': ''}">`;
+        };
+        if(MAIN.tutorial.step === 'building_2' && building === 'sawmill'){
+          buildingButtonFn = true;
+          buildingButton = `<div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.gameData.playerData.balance ? '-nonActive': ''}">`;
+        };
+        
+        if(MAIN.tutorial.step === 'factory_5' && building === 'paperFactory'){
+          buildingButtonFn = true;
+          buildingButton = `<div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.gameData.playerData.balance ? '-nonActive': ''}">`;
+        };
+
+
 
         const card = `
-          <div class="sectorMenu_menu-card">
+          <div class="sectorMenu_menu-card" style="${!buildingButtonFn ? 'opacity:0.5' :'' }">
             <div class="sectorMenu_menu-card-header">
               <span>${configs.title.eng} <span  class="sectorMenu_menu-card-header-span-bold">| ${factoryCount}</span></span>
             </div>
@@ -149,7 +167,7 @@ const CEIL_MENU = {
                 ${configs.title[MAIN.interface.lang.flag]}
               </div>
 
-              <div id="sectorMenu_card_buildButton_${building}" class="sectorMenu_menu-card-description-button${configs.coast > MAIN.gameData.playerData.balance ? '-nonActive': ''}">
+              ${buildingButton}
                 <span>$ ${configs.coast}</span>
               </div>
             </div>
@@ -170,12 +188,42 @@ const CEIL_MENU = {
       const coast = MAIN.game.configs.buildings[building].coast;
       if(coast <= MAIN.gameData.playerData.balance){
         const buttonElement = document.querySelector(`#sectorMenu_card_buildButton_${building}`);
-        buttonElement.onclick = () => {
-          action(building);
+
+        if(MAIN.tutorial.step === 'freePlay' ){
+          buttonElement.onclick = () => {
+            action(building);
+          };
+          buttonElement.ontouchstart = () => {
+            action(building);
+          };
         };
-        buttonElement.ontouchstart = () => {
-          action(building);
+        if(MAIN.tutorial.step === 'building_2' && building === 'sawmill'){
+          buttonElement.onclick = () => {
+            action(building);
+          };
+          buttonElement.ontouchstart = () => {
+            action(building);
+          };
         };
+
+        if(MAIN.tutorial.step === 'factory_5' && building === 'paperFactory'){
+          buttonElement.onclick = () => {
+            action(building);
+          };
+          buttonElement.ontouchstart = () => {
+            action(building);
+          };
+        };
+        
+        if(building === 'road' || building === 'bridge'){
+          buttonElement.onclick = () => {
+            action(building);
+          };
+          buttonElement.ontouchstart = () => {
+            action(building);
+          };
+        };
+
       };
     });
 
@@ -239,6 +287,7 @@ const CEIL_MENU = {
     buildingMenu.style.display = 'none';
   },
   showBuildingMenu(ceil, sector, building) {
+    
     const sectorMenu = document.querySelector('#sectorMenu');
     sectorMenu.style.display = 'none';
     const menu = document.querySelector('#buildingMenu');
