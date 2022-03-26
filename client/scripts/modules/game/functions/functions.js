@@ -154,6 +154,12 @@ const FUNCTIONS = {
 
       //массив всех путей
       const paths = [];
+
+      //массив добавочных путей
+      const otherPosiblePaths = [];
+
+
+
       //если найдет дорогу, по которой еще можно поехать
       let anotherWayIsPossible = false;
 
@@ -177,6 +183,9 @@ const FUNCTIONS = {
           };
         });
 
+
+
+       
         async function findFirstPath() {
           const firstPathPromise = new Promise((resFirstPath, reject) => {
             const path = [];
@@ -188,9 +197,7 @@ const FUNCTIONS = {
               };
               path.push(ceil);
               checked.push(ceil);
-
-              const nextPathCeils = [];
-
+              
 
               //ищем следующую клетку
               ceil.neighbours.forEach((neighbour, i) => {
@@ -205,8 +212,16 @@ const FUNCTIONS = {
                             //если к соседу проложена дорога
                             const index = neighbour.neighbours.indexOf(ceil);
                             if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
-                              //если от соседа проложена дорога
                               const distance = neighbour.getDistanceToCeil(data.finish);
+
+                              //закидываем этот путь как еще возможный
+                              otherPosiblePaths.push({
+                                path:[...path,neighbour],
+                                checked:[...checked],
+                                distance:distance,
+                              });
+                              //если от соседа проложена дорога
+                              
                               //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
                               if (distance < minDistanceToFinish.distance) {
                                 minDistanceToFinish.neighbour = neighbour;
@@ -227,19 +242,23 @@ const FUNCTIONS = {
               if (minDistanceToFinish.neighbour === null) {
                 //если ничего не нашли, значит путь прерван и нужно возвращаться назад
 
+                //сохраняем в пути этот путь как не законченный
+                paths.push({
+                  finished: false,
+                  path: [...path],
+                });
+
                 //удаляем ее из массива
                 //и вкидываем, что ее уже проверили
                 path.pop();
-                checked.push(ceil);
-
                 //если в path есть еще клетки,
                 if (path.length > 0) {
                   //перепроверяем опять с предыдущей клетки
                   if (path[path.length - 1] === ceil) {
                     path.pop();
                   };
-                  if (path.length > 0) {
-                    resFirstPath(searcher(path[path.length - 1]));
+                  if (path.length > 0) {                  
+                    resFirstPath(searcher(path.pop()));
                   } else {
                     //????? если больше ничего нет, то сразу выкидываем что нет пути
                     resPath(false);
@@ -250,6 +269,35 @@ const FUNCTIONS = {
                 };
               } else {
                 //если все же нашли следующую подходящую клетку
+
+
+
+
+              //это пригодится, если мы "отскочили назад"
+              //мы смотрим, что такой путь уже есть в еще возможный и чтобы не перепроверять его еще раз потом в findMoreWays сразу его удалим
+              const posibleWaysChildsIndexes = {};
+              
+              otherPosiblePaths.forEach((item, pathIndex) =>{
+                item.path.forEach((parentCeil, i) =>{
+                  if(parentCeil === ceil){
+                    if(item.path[i+1]){
+                      const child = item.path[i+1];
+                      //просто чтобы хоть на что-то ссылаться, возьмем uuid хит бокса
+                      posibleWaysChildsIndexes[child.hitBox.uuid] = pathIndex;
+                    };
+                  }
+                });
+              });
+              
+              //теперь, если мы нашли его в posibleWaysChildsIndexes
+              const indexIn_OtherPosiblePaths = posibleWaysChildsIndexes[minDistanceToFinish.neighbour.hitBox.uuid];
+              if(indexIn_OtherPosiblePaths){
+                //то нужно удалить его в otherPosiblePaths чтобы не проверять еще раз в findMoreWays
+                otherPosiblePaths.splice(indexIn_OtherPosiblePaths,1);
+              };
+              
+
+                
                 if (minDistanceToFinish.distance === 0) {
                   path.push(minDistanceToFinish.neighbour);
                   paths.push({
@@ -273,177 +321,183 @@ const FUNCTIONS = {
         let lastOtherRoadLength = 0;
         async function findMorePaths() {
           const otherPathPromise = new Promise((resOtherPath, reject) => {
-            const path = [];
-            const checked = [];
-            async function searcher(ceil) {
-              let minDistanceToFinish = {
-                neighbour: null,
-                distance: 1000,
-              };
-              path.push(ceil);
-              checked.push(ceil);
+            console.log(otherPosiblePaths)
+            resOtherPath(paths);
+
+      //       const path = [];
+      //       const checked = [];
+      //       async function searcher(ceil) {
+      //         let minDistanceToFinish = {
+      //           neighbour: null,
+      //           distance: 1000,
+      //         };
+      //         path.push(ceil);
+      //         checked.push(ceil);
 
 
-              const nextPathCeils = [];
-              ceil.neighbours.forEach((neighbour, i) => {
-                if (neighbour) { //если не  null
-                  //смотрим, не проверяли ли мы ее уже (надо для возврата)
-                  if (checked.indexOf(neighbour) === -1) {
-                    if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
-                      if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
-                        if (!neighbour.checkRoadEmpty() || data.dontCheckTrafficJam) { //она не занята грузовиком
-                          if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
-                            //если к соседу проложена дорога
-                            const index = neighbour.neighbours.indexOf(ceil);
-                            if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
-                              //если от соседа проложена дорога
-                              paths.forEach((pathObj, i) => {
-                                // проверяем у этой клетки индекс в этих путях
-                                const currentCeilIndex = pathObj.path.indexOf(ceil);
-                                //смотрим следующую клеткту в путях
-                                if (currentCeilIndex != -1) {
-                                  if (pathObj.path[currentCeilIndex + 1]) {
-                                    //если клетка не та, что уже проверена, то скидываем в возможные дороги
-                                    if (pathObj.path[currentCeilIndex + 1] != neighbour) {
-                                      if (otherRoads.indexOf(neighbour) === -1) {
-                                        otherRoads.push(neighbour);
-                                      };
-                                    };
-                                  };
-                                };
-                              });
-                            };
-                          };
-                        };
-                      };
-                    };
-                  };
-                };
-              });
+      //         //массив путей, по которым уже шли
+      //         const checkedChilds = [];
+      //         paths.forEach((pathObj, i) => {
+      //           const currentCeilIndex = pathObj.path.indexOf(ceil);
+      //           if(currentCeilIndex != -1){
+      //             if (pathObj.path[currentCeilIndex + 1]) {
+      //               checkedChilds.push(pathObj.path[currentCeilIndex + 1]);
+      //             };
+      //           }else{
+      //             // !!!
+      //           }
+
+      //         })
 
 
-              //если другие дороги найдены
-              if (otherRoads.length != lastOtherRoadLength) {
-                anotherWayIsPossible = true;
-                lastOtherRoadLength = otherRoads.length;
-                otherRoads.forEach((neighbour, i) => {
-                  const distance = neighbour.getDistanceToCeil(data.finish);
-                  //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
-                  if (distance < minDistanceToFinish.distance) {
-                    minDistanceToFinish.neighbour = neighbour;
-                    minDistanceToFinish.distance = distance;
-                  };
-                });
-                resOtherPath(paths);
-              } else {
-                anotherWayIsPossible = false;
-                //если других дорог нет, то берем такие как уже было
-                ceil.neighbours.forEach((neighbour, i) => {
-                  if (neighbour) { //если не  null
-                    //смотрим, не проверяли ли мы ее уже (надо для возврата)
-                    if (checked.indexOf(neighbour) === -1) {
-                      if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
-                        if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
-                          //если она не занята грузовиком
-                          if (!neighbour.checkRoadEmpty()) {
-                            if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
-                              //если к соседу проложена дорога
-                              const index = neighbour.neighbours.indexOf(ceil);
-                              if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
-                                //если от соседа проложена дорога
-                                const distance = neighbour.getDistanceToCeil(data.finish);
-                                //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
-                                if (distance < minDistanceToFinish.distance) {
-                                  minDistanceToFinish.neighbour = neighbour;
-                                  minDistanceToFinish.distance = distance;
-                                };
-                              };
-                            };
-                            //если она не занята грузовиком
-                          };
-                        };
-                      };
-                    };
-                  };
-                });
-              };
 
-              if (ceil.neighbours.indexOf(minDistanceToFinish.neighbour) === -1) {
-                minDistanceToFinish.neighbour = null;
-              };
 
-              //идем дальше, смотрим какую клетку мы нашли
-              if (minDistanceToFinish.neighbour === null) {
-                //если ничего не нашли, значит путь прерван и нужно возвращаться назад
+      //         ceil.neighbours.forEach((neighbour, i) => {
+      //           if (neighbour) { //если не  null
+      //             //смотрим, не проверяли ли мы ее уже (надо для возврата)
+      //             if (checked.indexOf(neighbour) === -1) {
+      //               if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
+      //                 if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
+      //                   if (!neighbour.checkRoadEmpty() || data.dontCheckTrafficJam) { //она не занята грузовиком
+      //                     if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
+      //                       //если к соседу проложена дорога
+      //                       const index = neighbour.neighbours.indexOf(ceil);
+      //                       if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
+      //                         //если от соседа проложена дорога
+      //                         //проверяем, есть ли уже такой маршрут
+      //                         if(checkedChilds.indexOf(neighbour) != -1){
+      //                           if (otherRoads.indexOf(neighbour) === -1) {
+      //                                 otherRoads.push(neighbour);
+      //                             };
+      //                         };
+      //                       };
+      //                     };
+      //                   };
+      //                 };
+      //               };
+      //             };
+      //           };
+      //         });
 
-                //вкидываем в возможные пути
-                paths.push({
-                  finished: false,
-                  path: [...path]
-                });
 
-                //удаляем ее из массива
-                path.pop();
+      //         //если другие дороги найдены
+      //         if (otherRoads.length != lastOtherRoadLength) {
+      //           anotherWayIsPossible = true;
+      //           lastOtherRoadLength = otherRoads.length;
+      //           otherRoads.forEach((neighbour, i) => {
+      //             const distance = neighbour.getDistanceToCeil(data.finish);
+      //             //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
+      //             if (distance < minDistanceToFinish.distance) {
+      //               minDistanceToFinish.neighbour = neighbour;
+      //               minDistanceToFinish.distance = distance;
+      //             };
+      //           });
+      //           resOtherPath(paths);
+      //         } else {
+      //           anotherWayIsPossible = false;
+      //           //если других дорог нет, то берем такие как уже было
+      //           ceil.neighbours.forEach((neighbour, i) => {
+      //             if (neighbour) { //если не  null
+      //               //смотрим, не проверяли ли мы ее уже (надо для возврата)
+      //               if (checked.indexOf(neighbour) === -1) {
+      //                 if (!neighbour.blockCeil || neighbour.cityCeil) { //на клетку можно передвигаться
+      //                   if (neighbour.centralRoad || neighbour.cityCeil) { //на клетке есть дорога
+      //                     //если она не занята грузовиком
+      //                     if (!neighbour.checkRoadEmpty()) {
+      //                       if (ceil.sectors[i] === 'road' || ceil.sectors[i] === 'bridgeStraight' || ceil.sectors[i] === 'bridge' || ceil.cityCeil) {
+      //                         //если к соседу проложена дорога
+      //                         const index = neighbour.neighbours.indexOf(ceil);
+      //                         if (neighbour.sectors[index] === 'road' || neighbour.sectors[index] === 'bridgeStraight' || neighbour.sectors[index] === 'bridge' || neighbour.cityCeil) {
+      //                           //если от соседа проложена дорога
+      //                           const distance = neighbour.getDistanceToCeil(data.finish);
+      //                           //если дистанция от нее меньше до цели чем у других, то вкидываем ее на проверку
+      //                           if (distance < minDistanceToFinish.distance) {
+      //                             minDistanceToFinish.neighbour = neighbour;
+      //                             minDistanceToFinish.distance = distance;
+      //                           };
+      //                         };
+      //                       };
+      //                       //если она не занята грузовиком
+      //                     };
+      //                   };
+      //                 };
+      //               };
+      //             };
+      //           });
+      //         };
 
-                //и вкидываем, что ее уже проверили
-                checked.push(ceil);
+      //         if (ceil.neighbours.indexOf(minDistanceToFinish.neighbour) === -1) {
+      //           minDistanceToFinish.neighbour = null;
+      //         };
 
-                //если в path есть еще клетки,
-                if (path.length > 0) {
-                  //перепроверяем опять с предыдущей клетки
-                  if (path[path.length - 1] === ceil) {
-                    path.pop();
-                  };
-                  if (path.length > 0) {
-                    searcher(path[path.length - 1]);
-                    return;
-                  } else {
-                    // MAIN.interface.game.path.showNotification(fieldCeil.position);
-                    //bugFix
-                    //если мы ищем дополнительный, то точно уже есть основной финишный
-                    findMorePaths();
-                    return;
-                  };
-                } else {
-                  // MAIN.interface.game.path.showNotification(fieldCeil.position);
-                  //bugFix
-                  //если мы ищем дополнительный, то точно уже есть основной финишный
-                  findMorePaths();
-                  return;
-                };
-              } else {
-                //если все же нашли следующую подходящую клетку
-                if (minDistanceToFinish.distance === 0) {
-                  setTimeout(() => {
-                    path.push(minDistanceToFinish.neighbour);
-                    // MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
-                    paths.push({
-                      finished: true,
-                      path: [...path],
-                    });
-                    //если есть еще дороги, то чекаем еще раз
-                    if (anotherWayIsPossible) {
-                      findMorePaths();
-                      return;
-                    } else {
-                      //Нашли все возможные пути
-                      resOtherPath(paths);
-                    };
-                  });
-                } else {
-                  //кидаем в алгоритм следующую клетку
-                  // setTimeout(() => {
-                  searcher(minDistanceToFinish.neighbour);
-                  return;
-                  // });
-                };
-              };
-            };
-            setTimeout(() => {
-              //Maximum call stack size resolve
-              searcher(data.start);
+      //         //идем дальше, смотрим какую клетку мы нашли
+      //         if (minDistanceToFinish.neighbour === null) {
+      //           //если ничего не нашли, значит путь прерван и нужно возвращаться назад
+      //           //вкидываем в возможные пути
+      //           paths.push({
+      //             finished: false,
+      //             path: [...path]
+      //           });
 
-            })
+      //           //удаляем ее из массива
+      //           path.pop();
+      //           //и вкидываем, что ее уже проверили
+      //           checked.push(ceil);
+      //           //если в path есть еще клетки,
+      //           if (path.length > 0) {
+      //             //перепроверяем опять с предыдущей клетки
+      //             if (path[path.length - 1] === ceil) {
+      //               path.pop();
+      //             };
+      //             if (path.length > 0) {
+      //               searcher(path[path.length - 1]);
+      //               return;
+      //             } else {
+      //               // MAIN.interface.game.path.showNotification(fieldCeil.position);
+      //               //bugFix
+      //               //если мы ищем дополнительный, то точно уже есть основной финишный
+      //               findMorePaths();
+      //               return;
+      //             };
+      //           } else {
+      //             // MAIN.interface.game.path.showNotification(fieldCeil.position);
+      //             //bugFix
+      //             //если мы ищем дополнительный, то точно уже есть основной финишный
+      //             findMorePaths();
+      //             return;
+      //           };
+      //         } else {
+      //           //если все же нашли следующую подходящую клетку
+      //           if (minDistanceToFinish.distance === 0) {
+      //             setTimeout(() => {
+      //               path.push(minDistanceToFinish.neighbour);
+      //               // MAIN.game.scene.testMesh.position.set(minDistanceToFinish.neighbour.position.x,minDistanceToFinish.neighbour.position.y,minDistanceToFinish.neighbour.position.z);
+      //               paths.push({
+      //                 finished: true,
+      //                 path: [...path],
+      //               });
+      //               //если есть еще дороги, то чекаем еще раз
+      //               if (anotherWayIsPossible) {
+      //                 findMorePaths();
+      //                 return;
+      //               } else {
+      //                 //Нашли все возможные пути
+      //                 resOtherPath(paths);
+      //               };
+      //             });
+      //           } else {
+      //             //кидаем в алгоритм следующую клетку
+      //             // setTimeout(() => {
+      //             searcher(minDistanceToFinish.neighbour);
+      //             return;
+      //             // });
+      //           };
+      //         };
+      //       };
+      //       setTimeout(() => {
+      //         //Maximum call stack size resolve
+      //         searcher(data.start);
+      //       })
           });
           return otherPathPromise;
         };
