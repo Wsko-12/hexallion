@@ -286,7 +286,7 @@ const FUNCTIONS = {
         async function findMorePaths() {
           const otherPathPromise = new Promise((resOtherPath, reject) => {
 
-            let checkNow = [];
+            let checkNow = {};
             let loops = 0;
             const maxLoops = 50;
 
@@ -326,7 +326,7 @@ const FUNCTIONS = {
               const preparetedPosiblePaths = [];
               const searcherPromise = new Promise(searcherResolve =>{
 
-                debugger
+                // debugger
                 ceil.neighbours.forEach((neighbor, i) => {
                     if(checkNeighbor(ceil,i,neighbor,checked)){
                       let itReturnsBack = false;
