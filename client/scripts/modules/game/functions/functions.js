@@ -235,7 +235,6 @@ const FUNCTIONS = {
                 };
               });
 
-
               //удаляем тот путь, который похож на этот
               OTHER_POSSIBLE_PATHS.forEach(pathData =>{
                 const parentIndx = pathData.path.indexOf(ceil);
@@ -245,8 +244,6 @@ const FUNCTIONS = {
                 };
               });
               OTHER_POSSIBLE_PATHS = OTHER_POSSIBLE_PATHS.filter(item =>  !item.delete);
-
-              OTHER_POSSIBLE_PATHS.sort((a, b) => a.distance - b.distance);
 
               //смотрим какую клетку мы нашли
               if (minDistanceToFinish.neighbor === null) {
@@ -288,7 +285,7 @@ const FUNCTIONS = {
 
         async function findMorePaths() {
           const otherPathPromise = new Promise((resOtherPath, reject) => {
-            
+
             let checkNow = [];
             let loops = 0;
             const maxLoops = 50;
