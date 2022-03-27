@@ -2014,28 +2014,28 @@ class PLAYER {
     if (this.balance + this.productsWorth < 0) {
 
       //если у другого игрока не выбран кредит, то он тоже банкротится
-      for(let aPlayer in this.game.players){
-        const anotherPlayer = this.game.players[aPlayer];
-        if(!anotherPlayer.credit){
-          anotherPlayer.gameOver = true;
-          anotherPlayer.emit('GAME_over');
-        };
-      };
+      // for(let aPlayer in this.game.players){
+      //   const anotherPlayer = this.game.players[aPlayer];
+      //   if(!anotherPlayer.credit){
+      //     anotherPlayer.gameOver = true;
+      //     anotherPlayer.emit('GAME_over');
+      //   };
+      // };
 
 
 
 
-      this.gameOver = true;
-      this.emit('GAME_over');
+      // this.gameOver = true;
+      // this.emit('GAME_over');
 
-      for (let truck in this.trucks) {
-        this.trucks[truck].clear();
-      };
-      if (this.game.turnBasedGame) {
-        this.game.nextTurn();
-      };
-      this.game.endGame();
-      return;
+      // for (let truck in this.trucks) {
+      //   this.trucks[truck].clear();
+      // };
+      // if (this.game.turnBasedGame) {
+      //   this.game.nextTurn();
+      // };
+      // this.game.endGame();
+      // return;
     };
 
 

@@ -142,6 +142,7 @@ class FieldCeil {
     return sector
   };
   onClick(intersectCoords) {
+    console.log(this)
     //для режима пошагового меню не показывается если не ход игрока
     if (this.cityCeil) {
       MAIN.interface.game.city.openMenu(MAIN.game.data.cities[this.type]);

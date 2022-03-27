@@ -122,7 +122,7 @@ function addBalanceMessage(message,amount){
     if(statistics.lastStepLose > statistics.maxLose){
       statistics.maxLose = statistics.lastStepLose;
     };
-    console.log(statistics);
+    // console.log(statistics);
     return;
 
 
