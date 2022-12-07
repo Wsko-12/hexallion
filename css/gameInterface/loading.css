@@ -1,0 +1,54 @@
+#loading{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 100000;
+    background-color: black;
+    display: flex;
+}
+.loading-container{
+    width: 180px;
+    height: 5px;
+    background-color: rgb(94, 94, 94);
+    margin: auto;
+    overflow: hidden;
+    border-radius: 10px;
+}
+#loadingProgress{
+    width: 0%;
+    height: 100%;
+    background-color: #D7355C;
+}
+
+
+
+#turnDeviceSection{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 99990;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.turnDeviceSection-icon{
+    width: 250px;
+    height: 250px;
+    background-size: cover;
+    background-image: url(../img/icons/turnDevice.png);
+    margin: auto;
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 1024px) and (-webkit-device-pixel-ratio : 2) and (orientation : portrait) {
+    /* mobile and tablets portrait*/
+    #turnDeviceSection{
+        display: flex;
+    }
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 1024px) and (-webkit-device-pixel-ratio : 3) and (orientation : portrait) {
+    /* mobile and tablets portrait iphone 6plus X*/
+    #turnDeviceSection{
+        display: flex;
+    }
+}

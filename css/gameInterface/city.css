@@ -1,0 +1,241 @@
+#cityMenuSection {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  z-index: 3;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  display: flex;
+  filter: drop-shadow(0px 0px 10px black);
+  touch-action: manipulation;
+
+}
+
+.cityCard{
+  width: 420px;
+  height: 360px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 10px;
+  font-family: 'Roboto';
+  /* box-shadow: 0px 0px 10px black; */
+}
+.cityCard_header{
+  width: 100%;
+}
+.cityCard_header_bg{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 10px;
+  padding-bottom: 40px;
+  background-size: cover;
+  background-image: url(../img/cityCards/city.png);
+
+}
+
+.cityCard_header-header{
+  font-size: 10px;
+  text-transform: uppercase;
+  font-family: 'Roboto Condensed';
+  color: white;
+  text-shadow: 0px 0px 10px black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.cityCard_header-header-span{
+  font-weight: bold;
+}
+
+.cityCard_header-title{
+  font-family: 'Roboto Condensed';
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  text-shadow: 0px 0px 10px black;
+}
+.cityCard_header-balance{
+  font-family: 'Roboto Condensed';
+  font-size: 20px;
+  text-align: center;
+
+  font-weight: bold;
+  color: white;
+  text-shadow: 0px 0px 10px black;
+
+}
+/* background-color: #FAF9F8; */
+
+.cityCard_body{
+  width: 100%;
+  position: relative;
+  top: -30px;
+  display: flex;
+  border-radius: 15px 15px 0px 0px;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px #000000;
+}
+.cityCard_body-menu{
+  width: 35px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.cityCard_body-menu-item{
+  height: 35px;
+  width: 35px;
+  background-color: #bebebe;
+  border-radius: 10px 0px 0px 10px;
+  padding: 5px;
+  font-family: 'Roboto Condensed';
+  font-size: 12px;
+  color: #303030;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cityCard_body-menu-item-icon{
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+}
+.cityCard_body-menu-item-selected{
+  background-color: #FAF9F8;
+  box-shadow: 0px 0px 10px #000000;
+  z-index: 1;
+}
+
+.cityCard_body-body{
+  position: relative;
+  width: 100%;
+  height: 260px;
+  z-index: 2;
+  background-color: #FAF9F8;
+
+}
+.cityCard_body_list{
+  width: 385px;
+  height: 98%;
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+}
+.cityCard_body_list-item{
+  width: 50px;
+  margin: 5px;
+  height: 230px;
+  flex: 0 0 auto;
+}
+.cityCard_body_list-item-price{
+  font-family: 'Roboto Condensed';
+  font-size: 12px;
+  color: #303030;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.cityCard_body_list-item-progressBar{
+  width: 28px;
+  margin: auto;
+  /* height: 160 + 28px; */
+  height: 188px;
+  background-color: #E4E4E4;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+.cityCard_body_list-item-progressBar-start{
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cityCard_body_list-item-progressBar-start-icon{
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+}
+.cityCard_body_list-item-progressBar-division{
+  width: 100%;
+  height: 8px;
+  border-top: 1px solid #8a8686;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #606060;
+  font-size: 7px;
+}
+.cityCard_body_list-item-progressBar-color{
+  width: 28px;
+  height: 188px;
+  position: absolute;
+  top:0px;
+  border-radius: 8px;
+  overflow: hidden;
+  /* red #D7355C
+  green #A3D735 */
+}
+.cityCard_body_list-item-progressBar-color-red{
+  background-color: rgba(215, 53, 92,0.35);
+  width: 100%;
+}
+.cityCard_body_list-item-progressBar-color-green{
+  background-color: rgba(163, 215, 53,0.35);
+  width: 100%;
+}
+.cityCard_body_list-item-progressBar-product{
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background-color: #FAF9F8;
+  border: 1px solid #303030;
+  margin-right: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top:16px;
+}
+.cityCard_body_list-item-progressBar-product-icon{
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+}
+.cityCard_body_list-item-speed{
+  font-family: 'Roboto Condensed';
+  width: 100%;
+  height: 20px;
+  font-size: 10px;
+  color: #303030;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  background-color: #E4E4E4;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cityCard_body_list-item-speed-gap{
+  font-family: 'Roboto Condensed';
+  width: 100%;
+  height: 20px;
+  font-size: 10px;
+  color: #303030;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  background-color: #A3D735;
+  border-radius: 8px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

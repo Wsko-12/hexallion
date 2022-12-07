@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
+
+  <title>hexallion</title>
+  <link rel="stylesheet" href="./css/master.css">
+  <link rel="stylesheet" href="./css/gameInterface/rooms.css">
+  <link rel="stylesheet" href="./css/gameInterface/tutorial.css">
+  <link rel="stylesheet" href="./css/gameInterface/loading.css">
+
+
+
+  <link rel="stylesheet" href="./css/gameInterface/gameScreen.css">
+  <link rel="stylesheet" href="./css/gameInterface/auth.css">
+
+  <link rel="stylesheet" href="./css/gameInterface/icons.css">
+
+  <link rel="stylesheet" href="./css/gameInterface/product.css">
+  <link rel="stylesheet" href="./css/gameInterface/images.css">
+  <link rel="stylesheet" href="./css/gameInterface/settings.css">
+
+
+  <link rel="stylesheet" href="./css/gameInterface/ceilMenu.css">
+  <link rel="stylesheet" href="./css/gameInterface/balance.css">
+  <link rel="stylesheet" href="./css/gameInterface/turn.css">
+  <link rel="stylesheet" href="./css/gameInterface/factory.css">
+  <link rel="stylesheet" href="./css/gameInterface/trucksMenu.css">
+  <link rel="stylesheet" href="./css/gameInterface/path.css">
+  <link rel="stylesheet" href="./css/gameInterface/gameNotifications.css">
+  <link rel="stylesheet" href="./css/gameInterface/creditMenu.css">
+  <link rel="stylesheet" href="./css/gameInterface/city.css">
+  <link rel="stylesheet" href="./css/gameInterface/card.css">
+  <link rel="stylesheet" href="./css/gameInterface/resource.css">
+
+
+
+
+
+
+
+  <!-- disable standard pinch -->
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0', shrink-to-fit=no"> -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
+  </style>
+</head>
+
+<body>
+
+  <section id="loading">
+    <div class="loading-container">
+      <div id="loadingProgress"></div>
+    </div>
+  </section>
+  <section id="turnDeviceSection">
+    <div class="turnDeviceSection-icon"></div>
+  </section>
+
+  <section id="screen">
+
+  </section>
+
+</body>
+<script>
+  function generateId(type, x) {
+    if (type === undefined) {
+      type = 'u'
+    }
+    if (x === undefined) {
+      x = 5;
+    }
+    let letters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnPpQqRrSsTtUuVvWwXxYyZz';
+
+    let numbers = '0123456789';
+    let lettersMix, numbersMix;
+    for (let i = 0; i < 10; i++) {
+      lettersMix += letters;
+      numbersMix += numbers;
+    }
+
+    let mainArr = lettersMix.split('').concat(numbersMix.split(''));
+    let shuffledArr = mainArr.sort(function() {
+      return Math.random() - 0.5;
+    });
+    let id = type + '_';
+    for (let i = 0; i <= x; i++) {
+      id += shuffledArr[i];
+    };
+    return id;
+  };
+</script>
+<script type="module">
+  // import {
+  //   MAIN
+  // } from './scripts/main.js';
+  // import {
+  //   MODULES
+  // } from './scripts/modules.js';
+  import {
+    MAIN
+  } from './scripts/howtoplay/main.js';
+
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+  });
+</script>
+
+</html>

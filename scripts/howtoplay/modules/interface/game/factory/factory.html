@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <link rel="stylesheet" href="../../../../../../css/master.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/rooms.css">
+
+
+
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/gameScreen.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/auth.css">
+
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/icons.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/product.css">
+
+
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/ceilMenu.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/balance.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/turn.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/factory.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/trucksMenu.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/path.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/gameNotifications.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/creditMenu.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/city.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/card.css">
+    <link rel="stylesheet" href="../../../../../../css/gameInterface/resource.css">
+
+  </head>
+  <!-- SETTINGS -->
+  <!-- <body>
+    <section id="factorySection">
+      <div id="factoryNotifications"></div>
+      <div id="factoryMenuClicker">
+        <div id="factoryMenu">
+
+
+          <div class="factory_card">
+            <div class="factory_header factory_header_bg-oilWell">
+              <div class="factory_header_header">
+                oil well <span class="factory_header_header-span">| 10</span>
+              </div>
+              <div class="factory_header_body">
+                <div class="factory_header_body-left">
+                  <span>Settings</span>
+                </div>
+                <div class="factory_header_body-right">
+                  <span>04</span>
+                </div>
+              </div>
+            </div>
+            <div class="factory_body">
+              <div class="factory_body_body-settings">
+
+
+                <div class="factory_body_settingsLine">
+                  <div class="factory_body_settingsLine-left">
+                    низкие затраты
+                  </div>
+                  <div class="factory_body_settingsLine-right">
+                    <div class="factory_body_settingsLine-button">
+                      -
+                    </div>
+                    <div class="factory_body_settingsLine-text">
+                      <span>4</span>
+                    </div>
+                    <div class="factory_body_settingsLine-button">
+                      +
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="factory_body_settingsLine-accept">
+                  <div class="factory_body_settings_acceptButton">
+                    <span class="factory_body_settings_acceptButton-span">accept</span>
+                  </div>
+                </div>
+              </div>
+              <div class="factory_body_footer">
+                <div class="factory_body_footer_button">
+
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="factory_footer">
+              <div class="factory_footer_header">
+                <span>автоотправка</span>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="factory_card">
+            <div class="factory_header factory_header_bg-oilWell">
+              <div class="factory_header_header">
+                oil well <span class="factory_header_header-span">| 10</span>
+              </div>
+              <div class="factory_header_body">
+                <div class="factory_header_body-left">
+                  <span>Settings</span>
+                </div>
+                <div class="factory_header_body-right">
+                  <span>04</span>
+                </div>
+              </div>
+            </div>
+            <div class="factory_body">
+              <div class="factory_body_body-settings">
+
+
+                <div class="factory_body_settingsLine">
+                  <div class="factory_body_settingsLine-left">
+                    низкие затраты
+                  </div>
+                  <div class="factory_body_settingsLine-right">
+                    <div class="factory_body_settingsLine-button">
+                      -
+                    </div>
+                    <div class="factory_body_settingsLine-text">
+                      <span>4</span>
+                    </div>
+                    <div class="factory_body_settingsLine-button">
+                      +
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="factory_body_settingsLine-accept">
+                  <div class="factory_body_settings_acceptButton">
+                    <span class="factory_body_settings_acceptButton-span">accept</span>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </body> -->
+
+
+
+
+
+
+ <body>
+   <section id="factorySection">
+     <div id="factoryNotifications"></div>
+     <div id="factoryMenuClicker">
+       <div id="factoryMenu">
+
+         <!-- factory card -->
+         <div class="factory_card">
+           <div class="factory_header factory_header_bg-oilWell">
+             <div class="factory_header_header">
+               <span>oil well <span class="factory_header_header-span">| 10</span></span>
+               <div class="factory_header_header-buttonsContainer">
+                 <div class="factory_header_header-button icon-settings">
+
+                 </div>
+                 <div class="factory_header_header-button icon-pause">
+
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <div class="factory_body">
+
+             <!-- raw storage -->
+             <div class="factory_body_rawStorage">
+               <div class="factory_product-hole factory_product-hole-rawStorage">
+                 <div class="product-icon product-oil"></div>
+               </div>
+
+               <div class="factory_product-gap">
+                 <div class="product-icon product-petrol"></div>
+                 <div class="product-qualityContainer">
+                   <span class="product-quality"></span>
+                   <span class="product-quality"></span>
+                   <span class="product-quality"></span>
+                 </div>
+               </div>
+             </div>
+             <!-- /raw storage -->
+
+             <!-- body -->
+             <div style="position:relative; top:-28px; height:100%;">
+
+               <!-- progress bar -->
+               <div class="factory_body_progressBar">
+                 <div class="factory_body_progressBar_scaleContainer">
+
+                   <!-- 82% / (steps - 1) -->
+                   <div class="factory_body_progressBar_scale factory_body_progressBar_scale-first">
+                     <span>8</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>7</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>6</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>5</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>4</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>3</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale" style="width:11.71%">
+                     <span>2</span>
+                   </div>
+                   <div class="factory_body_progressBar_scale factory_body_progressBar_scale-last" style="width:11.71%">
+                     <span>1</span>
+                   </div>
+
+                 </div>
+
+                 <div class="factory_body_progressBar_productContainer" style="left:11.71%">
+                   <div class="factory_product-gap">
+                     <div class="product-icon product-petrol"></div>
+                     <div class="product-qualityContainer">
+                       <span class="product-quality"></span>
+                       <span class="product-quality"></span>
+                       <span class="product-quality"></span>
+                     </div>
+                   </div>
+                 </div>
+
+               </div>
+               <!-- /progress bar -->
+
+
+
+
+                <!-- central part -->
+               <div class="factory_body_body-production">
+                 <!-- <div class="factory_body_ingredientList">
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+
+                   <div class="factory_body_ingredientList-item factory_body_ingredientList-item-selected">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-sand"></div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-icon product-wood"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-sand"></div>
+                     <div class="factory_body_ingredientList-icon product-steel"></div>
+                     <div class="factory_body_ingredientList-icon product-gold"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+                   <div class="factory_body_ingredientList-item">
+                     <div class="factory_body_ingredientList-icon product-oil"></div>
+                     <div class="factory_body_ingredientList-icon product-sand"></div>
+                     <div class="factory_body_ingredientList-icon product-steel"></div>
+                     <div class="factory_body_ingredientList-icon product-gold"></div>
+                     <div class="factory_body_ingredientList-arrow">
+                       <div class="factory_body_ingredientList-arrow-coast">
+                         $30000
+                       </div>
+                       <div class="factory_body_ingredientList-arrow-symbol">
+                         →
+                       </div>
+                     </div>
+                     <div class="factory_body_ingredientList-icon product-petrol"></div>
+                     <div class="factory_body_ingredientList-volume">
+                       <span>x2</span>
+                     </div>
+                   </div>
+
+
+
+
+                 </div> -->
+
+                 <div class="factory_body_body-production-left">
+                   <div class="factory_body_productHugeIcon product-wood"></div>
+                 </div>
+
+
+
+
+
+                 <div class="factory_body_body-production-right">
+                   <div class="factory_body_body-production_settings-list">
+                     <div class="factory_body_body-production_settings-text">ls</div>
+                     <div class="factory_body_body-production_settings-gap"></div>
+                     <div class="factory_body_body-production_settings-hole"></div>
+                     <div class="factory_body_body-production_settings-hole"></div>
+
+                   </div>
+                   <div class="factory_body_body-production_settings-list">
+                     <div class="factory_body_body-production_settings-text">v</div>
+                     <div class="factory_body_body-production_settings-gap"></div>
+                     <div class="factory_body_body-production_settings-hole"></div>
+                     <div class="factory_body_body-production_settings-hole"></div>
+                   </div>
+                   <div class="factory_body_body-production_settings-list">
+                     <div class="factory_body_body-production_settings-text">s</div>
+                     <div class="factory_body_body-production_settings-gap"></div>
+                     <div class="factory_body_body-production_settings-hole"></div>
+                     <div class="factory_body_body-production_settings-hole"></div>
+                   </div>
+                 </div>
+               </div>
+               <!-- /central part -->
+
+
+               <div class="factory_body_storage">
+                 <div class="factory_product-gap">
+                   <div class="product-icon product-petrol"></div>
+                   <div class="product-qualityContainer">
+                     <span class="product-quality"></span>
+                     <span class="product-quality"></span>
+                     <span class="product-quality"></span>
+                   </div>
+                 </div>
+
+                 <div class="factory_product-hole"></div>
+
+                 <div class="factory_product-hole"></div>
+
+                 <div class="factory_storage-gap"></div>
+
+                 <div class="factory_storage-gap"></div>
+
+               </div>
+             </div>
+
+
+
+
+
+
+             <!-- /body -->
+
+
+
+           </div>
+
+
+           <div class="factory_footer" style="top:-79%">
+             <div class="factory_footer_header">
+               <span>автоотправка</span>
+             </div>
+             <div class="factory_footer_body">
+
+              <!-- item -->
+               <div class="factory_footer_body_item">
+                 <div class="factory_footer_body_item-header">
+                   <div class="factory_footer_body_item-header_icon product-sand"></div>
+
+                   <div class="factory_footer_body_item-header_buttonsContainer">
+                     <div class="factory_footer_body_item-header_buttonsContainer-icon icon-plus">
+                     </div>
+                     <div class="factory_footer_body_item-header_buttonsContainer-button">
+                      <div class="factory_footer_body_item-header_buttonsContainer-button-icon icon-bestPrice">
+
+                      </div>
+                     </div>
+                     <div class="factory_footer_body_item-header_buttonsContainer-button">
+                       <div class="factory_footer_body_item-header_buttonsContainer-button-icon icon-findRoute">
+
+                       </div>
+                     </div>
+                   </div>
+
+                   <div class="factory_footer_body_item-header_icon icon-list"></div>
+                 </div>
+
+                 <!-- direction list -->
+                 <div class="factory_footer_body_item_directionsList">
+                   <div class="factory_footer_body_item_directionsList_item ">
+                     <div class="factory_footer_body_item_directionsList_item-icon icon-findRoute">
+
+                     </div>
+
+                     <div class="factory_footer_body_item_directionsList_item-text">
+                       Westown
+                     </div>
+
+
+                     <div class="factory_footer_body_item_directionsList_item-icon icon-cancel">
+
+                     </div>
+                   </div>
+
+                   <div class="factory_footer_body_item_directionsList_item factory_footer_body_item_directionsList_item-current">
+                     <div class="factory_footer_body_item_directionsList_item-icon icon-bestPrice">
+
+                     </div>
+
+                     <div class="factory_footer_body_item_directionsList_item-icon icon-cancel">
+
+                     </div>
+                   </div>
+                 </div>
+                 <!-- direction list -->
+
+               </div>
+               <!-- /item -->
+
+
+
+             </div>
+           </div>
+         </div>
+
+         <!-- /factory card -->
+
+         <div id="factory_card_error">
+           <div class='factory_card_error_icon'>!</div>
+           <div class='factory_card_error_text'>дорога около фабрики занята</div>
+         </div>
+
+
+       </div>
+
+     </div>
+   </section>
+ </body>
+</html>

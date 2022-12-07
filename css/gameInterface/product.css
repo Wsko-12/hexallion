@@ -1,0 +1,99 @@
+.product-icon {
+  background-size: cover;
+  width: 20px;
+  height: 20px;
+}
+
+.product-qualityContainer {
+  display: flex;
+  align-items: center;
+}
+
+.product-quality {
+  width: 3px;
+  height: 3px;
+  border-radius: 3px;
+  background-color: #303030;
+  margin: 0px 1px;
+}
+
+.product-sand {
+  background-image: url(../img/product/sand.png);
+}
+
+.product-water {
+  background-image: url(../img/product/water.png);
+}
+
+.product-wood {
+  background-image: url(../img/product/wood.png);
+}
+
+.product-steel {
+  background-image: url(../img/product/steel.png);
+}
+
+.product-gold {
+  background-image: url(../img/product/gold.png);
+}
+
+.product-oil {
+  background-image: url(../img/product/oil.png);
+}
+
+
+
+.product-petrol {
+  background-image: url(../img/product/petrol.png);
+}
+
+
+
+.product-plastic {
+  background-image: url(../img/product/plastic.png);
+}
+
+.product-dye {
+  background-image: url(../img/product/dye.png);
+}
+
+.product-rubber {
+  background-image: url(../img/product/rubber.png);
+}
+
+.product-glue {
+  background-image: url(../img/product/glue.png);
+}
+
+
+.product-paper {
+  background-image: url(../img/product/paper.png);
+}
+.product-cardboard {
+  background-image: url(../img/product/cardboard.png);
+}
+
+
+.product-glass {
+  background-image: url(../img/product/glass.png);
+}
+
+.product-cement {
+  background-image: url(../img/product/cement.png);
+}
+
+.product-sheetSteel {
+  background-image: url(../img/product/sheetSteel.png);
+}
+.product-buildingComponents {
+  background-image: url(../img/product/buildingComponents.png);
+}
+.product-jewelry {
+  background-image: url(../img/product/jewelry.png);
+}
+.product-furnitureWood {
+  background-image: url(../img/product/furnitureWood.png);
+}
+.product-furniturePlastic {
+  background-image: url(../img/product/furniturePlastic.png);
+}

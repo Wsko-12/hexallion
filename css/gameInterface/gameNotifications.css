@@ -1,0 +1,75 @@
+#fullScreenButton {
+  width: 5vw;
+  height: 2vw;
+  position: fixed;
+  right: 10%;
+  top: 10%;
+  z-index: 1000;
+  font-size: 5px;
+}
+
+.gameSceneNotification {
+  pointer-events: auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  color: #ffffff;
+  border: 2px dotted #ffffff;
+  position: absolute;
+  font-size: 1.2em;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
+  opacity: 0.9;
+  transition-duration: 0.1s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+}
+
+.truckNotification {
+  pointer-events: auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 0px;
+  color: #ffffff;
+  border: 2px dotted #ffffff;
+  position: absolute;
+  font-size: 1.2em;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
+  opacity: 0.9;
+  transition-duration: 0.1s;
+  /* backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); */
+  display: flex;
+}
+
+.factoryNotification {
+  pointer-events: auto;
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border: 2px dotted #ffffff;
+  position: absolute;
+  font-size: 1.2em;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
+  opacity: 0.9;
+  transition-duration: 0.1s;
+  /* backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); */
+  display: flex;
+}
+
+.redNotification {
+  color: #ff2626;
+  border-color: #ff2626;
+}
+
+.span-notification {
+  margin: auto;
+}
