@@ -61,6 +61,7 @@ ASSETS.load = async function(){
 
 
         const path = ATLAS.modelsPath + modelData.folder + modelData.file;
+        console.log(path);
         loader.load(path,(model)=>{
           ASSETS.geometries[modelData.name] = model.scene.children[0].geometry;
           loadModels();
