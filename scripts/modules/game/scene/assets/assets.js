@@ -12,6 +12,7 @@ import {
   ATLAS
 } from './atlas.js';
 import {GLTFLoader} from '../../../../libs/ThreeJsLib/examples/jsm/loaders/GLTFLoader.js';
+import e from 'cors';
 
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
@@ -45,6 +46,7 @@ ASSETS.textures = {};
 
 
 ASSETS.load = async function(){
+  console.log('load assets')
   let modelIndex = -1;
   let modelsPromise = new Promise((resolve, reject) => {
     function loadModels(){
@@ -61,7 +63,8 @@ ASSETS.load = async function(){
 
 
         const path = ATLAS.modelsPath + modelData.folder + modelData.file;
-        console.log(path);
+        console.log(path)
+
         loader.load(path,(model)=>{
           ASSETS.geometries[modelData.name] = model.scene.children[0].geometry;
           loadModels();
