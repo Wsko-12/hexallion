@@ -12,8 +12,8 @@ const ATLAS = {};
 
 
 
-ATLAS.modelsPath = './scripts/modules/game/scene/assets/models/';
-ATLAS.texturePath = './scripts/modules/game/scene/assets/textures/';
+ATLAS.modelsPath = './hexallion/scripts/modules/game/scene/assets/models/';
+ATLAS.texturePath = './hexallion/scripts/modules/game/scene/assets/textures/';
 
 
 ATLAS.models = [

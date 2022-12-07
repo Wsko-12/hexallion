@@ -60,10 +60,9 @@ ASSETS.load = async function(){
         // /перезагрузка
 
 
-        const path = ATLAS.modelsPath+modelData.folder+modelData.file;
+        const path = ATLAS.modelsPath + modelData.folder + modelData.file;
         loader.load(path,(model)=>{
           ASSETS.geometries[modelData.name] = model.scene.children[0].geometry;
-          // ASSETS.geometries[modelData.name].scale(0.98,0.98,0.98);
           loadModels();
         });
       }else{
