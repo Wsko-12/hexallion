@@ -2,4 +2,4 @@
 Digital board game.
 
 How to play:
-http://kapitalisttest.herokuapp.com/howtoplay.html
+https://wsko-12.github.io/hexallion/
